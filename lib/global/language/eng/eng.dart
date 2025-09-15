@@ -25,7 +25,7 @@ Map<String, String> english = {
   AppStrings.login: "Login",
   AppStrings.phnNumber: "Phone Number",
   AppStrings.forgot: "Forgot",
-  AppStrings.alreadyHaveaAccount: "Already have an account?",
+  AppStrings.alreadyHaveAnAccount: "Already have an account?",
   AppStrings.verification: "Verification",
   AppStrings.client: "Client",
   AppStrings.worker: "Worker",

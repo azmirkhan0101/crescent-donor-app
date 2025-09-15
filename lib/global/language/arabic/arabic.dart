@@ -1,4 +1,4 @@
-import '../../../utils/static_strings/static_strings.dart';
+import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 
 Map<String, String> arabic = {
   //=============================Initial================================
@@ -25,7 +25,7 @@ Map<String, String> arabic = {
   AppStrings.login: "تسجيل الدخول",
   AppStrings.phnNumber: "رقم الهاتف",
   AppStrings.forgot: "نسيت",
-  AppStrings.alreadyHaveaAccount: "هل لديك حساب بالفعل؟",
+  AppStrings.alreadyHaveAnAccount: "هل لديك حساب بالفعل؟",
   AppStrings.verification: "التحقق",
   AppStrings.client: "عميل",
   AppStrings.worker: "عامل",
@@ -99,7 +99,6 @@ Map<String, String> arabic = {
   // AppStrings.newOrder: "التاريخ: ",
   // AppStrings.spam: "التاريخ: ",
   // AppStrings.reload: "التاريخ: ",
-
   AppStrings.contactNumber: "رقم الاتصال: ",
   AppStrings.address: "العنوان",
   AppStrings.dateOfBirth: "تاريخ الميلاد",

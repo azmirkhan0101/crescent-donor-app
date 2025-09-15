@@ -1,4 +1,11 @@
 class AppStrings {
+  // /== ==================== Onboarding ========================
+  static const String turnYourSmallChangeIntoRealChange =
+      "Turn your small change into real change.";
+
+  static const String discoverRewards =
+      "Discover rewards, shop smarter, and help causes — all in one tap.";
+
   ///====================== Initial ========================
   static const String signInAsWorker = "Sign in as a worker";
   static const String signInAsClient = "Sign in as a client";
@@ -12,12 +19,14 @@ class AppStrings {
 
   static const String enterValidEmail = "Enter a valid email";
   static RegExp emailRegexp = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+  );
   static const String password = "Password";
   static const String passWordMustBeAtLeast =
       "Password must contain at least one uppercase letter, one lowercase letter, one number";
-  static RegExp passRegexp =
-      RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
+  static RegExp passRegexp = RegExp(
+    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$',
+  );
   static const fieldCantNotBeEmpty = "Field can't be empty";
   static const String passwordLengthAndContain =
       "Password must be at least 8 characters long and at least one uppercase letter, one lowercase letter, one number";
@@ -30,7 +39,7 @@ class AppStrings {
   static const String phnNumber = "Phome Number";
 
   static const String forgot = "Forgot";
-  static const String alreadyHaveaAccount = "Already have a account?";
+  static const String alreadyHaveAnAccount = "Already have an account?";
   static const String verification = "Verification";
 
   static const String client = "Client";
@@ -62,8 +71,10 @@ class AppStrings {
   static const String confirmPayment = "Confirm Payment";
 
   static const String couponCode = "Coupon Code";
-  static String ifYouUseOurCouponCode(
-          {required String price, required String percentage}) =>
+  static String ifYouUseOurCouponCode({
+    required String price,
+    required String percentage,
+  }) =>
       "If you use our coupon code on your total price of $price, you will get $percentage discount.";
   static const String applyCouponCode = "Apply Coupon Code";
   static const String enterYourCouponCode = "Enter your coupon code";
