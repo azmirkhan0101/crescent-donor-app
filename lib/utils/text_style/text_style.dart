@@ -1,7 +1,46 @@
+import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:io';
 
+import 'package:google_fonts/google_fonts.dart';
+
+class AppTextStyles {
+  AppTextStyles._();
+
+  /// base text style
+  static TextStyle baseStyle([TextStyle? style]) {
+    TextStyle fontFamily = style ?? GoogleFonts.familjenGrotesk();
+    return fontFamily.copyWith(
+      fontSize: 14.rfs,
+      fontWeight: FontWeight.w400,
+      color: const Color(0xFF808080),
+      letterSpacing: -0.5.rfs,
+    );
+  }
+
+  /// f28 w700 letterSpacing -2% styles
+  static TextStyle f28W700([TextStyle? style]) {
+    TextStyle fontFamily = style ?? GoogleFonts.familjenGrotesk();
+    return fontFamily.copyWith(
+      fontSize: 28.rfs,
+      fontWeight: FontWeight.w700,
+      color: const Color(0xFF000C0B),
+      letterSpacing: -2.rfs / 100 * 28,
+    );
+  }
+
+  ///
+}
+
+/// Extensions
+extension TextStyleModifier on String {
+  Text baseStyle({TextStyle? style}) {
+    return Text(this, style: AppTextStyles.baseStyle(style));
+  }
+}
+
+///
 const interLight = TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w300);
 
 const interExtraLight = TextStyle(

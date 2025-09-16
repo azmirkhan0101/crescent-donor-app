@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 
 class GeneralController extends GetxController {
@@ -63,27 +62,27 @@ class GeneralController extends GetxController {
   }
 
   /// =========================== Pop Up Loader ===========================
-  showPopUpLoader({required BuildContext context}) {
-    return showDialog(
-      barrierDismissible: true,
-      barrierColor: Colors.transparent,
-      context: context,
-      builder: (context) {
-        return SizedBox(
-          height: 70,
-          child: AlertDialog(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            content: Assets.lottie.screenLoadingAni.lottie(
-              height: 100,
-              width: 100,
-              fit: BoxFit.contain,
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // showPopUpLoader({required BuildContext context}) {
+  //   return showDialog(
+  //     barrierDismissible: true,
+  //     barrierColor: Colors.transparent,
+  //     context: context,
+  //     builder: (context) {
+  //       return SizedBox(
+  //         height: 70,
+  //         child: AlertDialog(
+  //           elevation: 0,
+  //           backgroundColor: Colors.transparent,
+  //           content: Assets.lottie.screenLoadingAni.lottie(
+  //             height: 100,
+  //             width: 100,
+  //             fit: BoxFit.contain,
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   ///============================= Pick Image ===============================
 

@@ -1,18 +1,20 @@
 import 'package:cresent_charge_user_app/comon-widgets/fill-button/custom_filled_button.dart';
-import 'package:cresent_charge_user_app/gen/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
+import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
-class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({super.key});
+class GetStartPage extends StatelessWidget {
+  const GetStartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme style = Theme.of(context).textTheme;
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -21,46 +23,38 @@ class OnboardingPage extends StatelessWidget {
             24.rh.heightWidth,
 
             // app logo
-            Assets.images.appLogoName.svgAsset(width: 150.rw, height: 40.rh),
+            Assets.images.appLogoName.svg(width: 150.rw, height: 40.rh),
             38.rh.heightWidth,
 
             // saving coins illustration image
-            Assets.images.onboardingSavingCoins.svgAsset(
+            Assets.images.onboardingSavingCoins.svg(
               width: 177.rw,
               height: 304.rh,
             ),
             38.rh.heightWidth,
 
             // Turn your small change into real change
-            AppStrings.turnYourSmallChangeIntoRealChange.mediumHeadingText(),
+            AppStrings.turnYourSmallChangeIntoRealChange.centerText(
+              AppTextStyles.f28W700(),
+            ),
 
             12.rh.heightWidth,
 
             // Discover rewards and cash back offers
-            AppStrings.discoverRewards.normalText(),
+            AppStrings.discoverRewards.centerText(AppTextStyles.baseStyle()),
             58.rh.heightWidth,
 
             // Get Started button
             CustomPrimaryButton(
               title: "Get Started",
               onTap: () {
-                // debugPrint("Getx width: ${Get.width}, height: ${Get.height}");
+                context.pushNamed(RoutePath.howToWorkPage);
               },
             ),
             15.rh.heightWidth,
 
             // Already have an account? Sign In
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppStrings.alreadyHaveAnAccount.normalText(),
-                4.rw.heightWidth,
-                "Sign In"
-                    .normalText()
-                    .fontWeight(FontWeight.w700)
-                    .color(Colors.black),
-              ],
-            ),
+            HaveAccountWidget(haveAccount: true),
           ],
         ).paddingSymmetric(horizontal: 40.rw),
       ),

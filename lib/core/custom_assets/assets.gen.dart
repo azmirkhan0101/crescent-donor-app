@@ -1,3 +1,5 @@
+// dart format width=80
+
 /// GENERATED CODE - DO NOT MODIFY BY HAND
 /// *****************************************************
 ///  FlutterGen
@@ -5,147 +7,51 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
+// ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
-import 'package:lottie/lottie.dart' as _lottie;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
-
-class $AssetsIconsGen {
-  const $AssetsIconsGen();
-
-  /// File path: assets/icons/apple.svg
-  SvgGenImage get apple => const SvgGenImage('assets/icons/apple.svg');
-
-  /// File path: assets/icons/clock.svg
-  SvgGenImage get clock => const SvgGenImage('assets/icons/clock.svg');
-
-  /// File path: assets/icons/edit.svg
-  SvgGenImage get edit => const SvgGenImage('assets/icons/edit.svg');
-
-  /// File path: assets/icons/history.svg
-  SvgGenImage get history => const SvgGenImage('assets/icons/history.svg');
-
-  /// File path: assets/icons/image.svg
-  SvgGenImage get image => const SvgGenImage('assets/icons/image.svg');
-
-  /// File path: assets/icons/language.svg
-  SvgGenImage get language => const SvgGenImage('assets/icons/language.svg');
-
-  /// File path: assets/icons/location.svg
-  SvgGenImage get location => const SvgGenImage('assets/icons/location.svg');
-
-  /// File path: assets/icons/logout.svg
-  SvgGenImage get logout => const SvgGenImage('assets/icons/logout.svg');
-
-  /// File path: assets/icons/menu.svg
-  SvgGenImage get menu => const SvgGenImage('assets/icons/menu.svg');
-
-  /// File path: assets/icons/notification.svg
-  SvgGenImage get notification =>
-      const SvgGenImage('assets/icons/notification.svg');
-
-  /// File path: assets/icons/notification_green.svg
-  SvgGenImage get notificationGreen =>
-      const SvgGenImage('assets/icons/notification_green.svg');
-
-  /// File path: assets/icons/profile.svg
-  SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
-
-  /// File path: assets/icons/signUp.svg
-  SvgGenImage get signUp => const SvgGenImage('assets/icons/signUp.svg');
-
-  /// File path: assets/icons/subscription.svg
-  SvgGenImage get subscription =>
-      const SvgGenImage('assets/icons/subscription.svg');
-
-  /// List of all assets
-  List<SvgGenImage> get values => [
-    apple,
-    clock,
-    edit,
-    history,
-    image,
-    language,
-    location,
-    logout,
-    menu,
-    notification,
-    notificationGreen,
-    profile,
-    signUp,
-    subscription,
-  ];
-}
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/chooseRole.png
-  AssetGenImage get chooseRole =>
-      const AssetGenImage('assets/images/chooseRole.png');
+  /// File path: assets/images/app-logo-name.svg
+  SvgGenImage get appLogoName =>
+      const SvgGenImage('assets/images/app-logo-name.svg');
 
-  /// File path: assets/images/forget.png
-  AssetGenImage get forget => const AssetGenImage('assets/images/forget.png');
+  /// File path: assets/images/how-to-work.png
+  AssetGenImage get howToWork =>
+      const AssetGenImage('assets/images/how-to-work.png');
 
-  /// File path: assets/images/login.png
-  AssetGenImage get login => const AssetGenImage('assets/images/login.png');
-
-  /// File path: assets/images/mapImage.png
-  AssetGenImage get mapImage =>
-      const AssetGenImage('assets/images/mapImage.png');
-
-  /// File path: assets/images/onBoarding.png
-  AssetGenImage get onBoarding =>
-      const AssetGenImage('assets/images/onBoarding.png');
-
-  /// File path: assets/images/splashLogo.png
-  AssetGenImage get splashLogo =>
-      const AssetGenImage('assets/images/splashLogo.png');
+  /// File path: assets/images/onboarding-saving-coins.svg
+  SvgGenImage get onboardingSavingCoins =>
+      const SvgGenImage('assets/images/onboarding-saving-coins.svg');
 
   /// List of all assets
-  List<AssetGenImage> get values => [
-    chooseRole,
-    forget,
-    login,
-    mapImage,
-    onBoarding,
-    splashLogo,
-  ];
-}
-
-class $AssetsLottieGen {
-  const $AssetsLottieGen();
-
-  /// File path: assets/lottie/loading.json
-  LottieGenImage get loading =>
-      const LottieGenImage('assets/lottie/loading.json');
-
-  /// File path: assets/lottie/screenLoadingAni.json
-  LottieGenImage get screenLoadingAni =>
-      const LottieGenImage('assets/lottie/screenLoadingAni.json');
-
-  /// List of all assets
-  List<LottieGenImage> get values => [loading, screenLoadingAni];
+  List<dynamic> get values => [appLogoName, howToWork, onboardingSavingCoins];
 }
 
 class Assets {
-  Assets._();
+  const Assets._();
 
-  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
-  static const $AssetsLottieGen lottie = $AssetsLottieGen();
 }
 
 class AssetGenImage {
-  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
+  const AssetGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+    this.animation,
+  });
 
   final String _assetName;
 
   final Size? size;
   final Set<String> flavors;
+  final AssetGenImageAnimation? animation;
 
   Image image({
     Key? key,
@@ -165,10 +71,10 @@ class AssetGenImage {
     ImageRepeat repeat = ImageRepeat.noRepeat,
     Rect? centerSlice,
     bool matchTextDirection = false,
-    bool gaplessPlayback = false,
+    bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -209,6 +115,18 @@ class AssetGenImage {
   String get keyName => _assetName;
 }
 
+class AssetGenImageAnimation {
+  const AssetGenImageAnimation({
+    required this.isAnimation,
+    required this.duration,
+    required this.frames,
+  });
+
+  final bool isAnimation;
+  final Duration duration;
+  final int frames;
+}
+
 class SvgGenImage {
   const SvgGenImage(this._assetName, {this.size, this.flavors = const {}})
     : _isVecFormat = false;
@@ -235,6 +153,7 @@ class SvgGenImage {
     String? semanticsLabel,
     bool excludeFromSemantics = false,
     _svg.SvgTheme? theme,
+    _svg.ColorMapper? colorMapper,
     ColorFilter? colorFilter,
     Clip clipBehavior = Clip.hardEdge,
     @deprecated Color? color,
@@ -254,6 +173,7 @@ class SvgGenImage {
         assetBundle: bundle,
         packageName: package,
         theme: theme,
+        colorMapper: colorMapper,
       );
     }
     return _svg.SvgPicture(
@@ -273,67 +193,6 @@ class SvgGenImage {
           (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
-    );
-  }
-
-  String get path => _assetName;
-
-  String get keyName => _assetName;
-}
-
-class LottieGenImage {
-  const LottieGenImage(this._assetName, {this.flavors = const {}});
-
-  final String _assetName;
-  final Set<String> flavors;
-
-  _lottie.LottieBuilder lottie({
-    Animation<double>? controller,
-    bool? animate,
-    _lottie.FrameRate? frameRate,
-    bool? repeat,
-    bool? reverse,
-    _lottie.LottieDelegates? delegates,
-    _lottie.LottieOptions? options,
-    void Function(_lottie.LottieComposition)? onLoaded,
-    _lottie.LottieImageProviderFactory? imageProviderFactory,
-    Key? key,
-    AssetBundle? bundle,
-    Widget Function(BuildContext, Widget, _lottie.LottieComposition?)?
-    frameBuilder,
-    ImageErrorWidgetBuilder? errorBuilder,
-    double? width,
-    double? height,
-    BoxFit? fit,
-    AlignmentGeometry? alignment,
-    String? package,
-    bool? addRepaintBoundary,
-    FilterQuality? filterQuality,
-    void Function(String)? onWarning,
-  }) {
-    return _lottie.Lottie.asset(
-      _assetName,
-      controller: controller,
-      animate: animate,
-      frameRate: frameRate,
-      repeat: repeat,
-      reverse: reverse,
-      delegates: delegates,
-      options: options,
-      onLoaded: onLoaded,
-      imageProviderFactory: imageProviderFactory,
-      key: key,
-      bundle: bundle,
-      frameBuilder: frameBuilder,
-      errorBuilder: errorBuilder,
-      width: width,
-      height: height,
-      fit: fit,
-      alignment: alignment,
-      package: package,
-      addRepaintBoundary: addRepaintBoundary,
-      filterQuality: filterQuality,
-      onWarning: onWarning,
     );
   }
 
