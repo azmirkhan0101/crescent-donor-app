@@ -14,6 +14,23 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/arrow-right-circle-button.svg
+  SvgGenImage get arrowRightCircleButton =>
+      const SvgGenImage('assets/icons/arrow-right-circle-button.svg');
+
+  /// File path: assets/icons/dot-grey.svg
+  SvgGenImage get dotGrey => const SvgGenImage('assets/icons/dot-grey.svg');
+
+  /// File path: assets/icons/small-star.svg
+  SvgGenImage get smallStar => const SvgGenImage('assets/icons/small-star.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [arrowRightCircleButton, dotGrey, smallStar];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -36,6 +53,7 @@ class $AssetsImagesGen {
 class Assets {
   const Assets._();
 
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 

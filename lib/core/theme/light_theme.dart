@@ -11,7 +11,7 @@ const lightThemeFont = "Inter", darkThemeFont = "Inter";
 
 final lightTheme = ThemeData(
   primaryColor: AppColors.primaryColor,
-  scaffoldBackgroundColor: AppColors.grayColor,
+  scaffoldBackgroundColor: Colors.white,
   brightness: Brightness.light,
   useMaterial3: true,
   fontFamily: lightThemeFont,
@@ -98,7 +98,7 @@ const BottomNavigationBarThemeData bottomNavigationBarTheme =
       selectedLabelStyle: TextStyle(color: AppColors.primaryColor),
     );
 
-// ===================== Comon colors =========================
+// ===================== Common colors =========================
 const Color lightThemeColor = Colors.white,
     white = Colors.white,
     black = Colors.black,

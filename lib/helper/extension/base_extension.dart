@@ -31,7 +31,7 @@ extension HeightWidthDoubleExt on double {
   }
 }
 
-// /=--------- Widget on Widget --------=/
+// /=--------- Widget -> Widget --------=/
 extension WidgetOnWidgetExt on Widget {
   // center
   Widget get center => Center(child: this);
@@ -146,4 +146,19 @@ extension StringValidationExt on String {
   bool get isEmail => RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$').hasMatch(this);
 
   bool get isNumeric => double.tryParse(this) != null;
+}
+
+// <== ! ==> Gesture Detectors <== ! ==>
+extension GestureDetectors on Widget {
+  Widget onTap(VoidCallback onTap) {
+    return GestureDetector(onTap: onTap, child: this);
+  }
+
+  Widget onDoubleTap(VoidCallback onDoubleTap) {
+    return GestureDetector(onDoubleTap: onDoubleTap, child: this);
+  }
+
+  Widget onLongPress(VoidCallback onLongPress) {
+    return GestureDetector(onLongPress: onLongPress, child: this);
+  }
 }
