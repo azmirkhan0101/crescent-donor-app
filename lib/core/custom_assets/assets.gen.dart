@@ -17,6 +17,16 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/Eye.svg
+  SvgGenImage get eye => const SvgGenImage('assets/icons/Eye.svg');
+
+  /// File path: assets/icons/Lock.svg
+  SvgGenImage get lock => const SvgGenImage('assets/icons/Lock.svg');
+
+  /// File path: assets/icons/arrow-left-circle-button.svg
+  SvgGenImage get arrowLeftCircleButton =>
+      const SvgGenImage('assets/icons/arrow-left-circle-button.svg');
+
   /// File path: assets/icons/arrow-right-circle-button.svg
   SvgGenImage get arrowRightCircleButton =>
       const SvgGenImage('assets/icons/arrow-right-circle-button.svg');
@@ -24,11 +34,26 @@ class $AssetsIconsGen {
   /// File path: assets/icons/dot-grey.svg
   SvgGenImage get dotGrey => const SvgGenImage('assets/icons/dot-grey.svg');
 
+  /// File path: assets/icons/mail.svg
+  SvgGenImage get mail => const SvgGenImage('assets/icons/mail.svg');
+
+  /// File path: assets/icons/moon-star.svg
+  SvgGenImage get moonStar => const SvgGenImage('assets/icons/moon-star.svg');
+
   /// File path: assets/icons/small-star.svg
   SvgGenImage get smallStar => const SvgGenImage('assets/icons/small-star.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [arrowRightCircleButton, dotGrey, smallStar];
+  List<SvgGenImage> get values => [
+    eye,
+    lock,
+    arrowLeftCircleButton,
+    arrowRightCircleButton,
+    dotGrey,
+    mail,
+    moonStar,
+    smallStar,
+  ];
 }
 
 class $AssetsImagesGen {

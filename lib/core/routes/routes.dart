@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/features/auth/pages/login_page.dart';
 import 'package:cresent_charge_user_app/features/onboarding/pages/get_start_page.dart';
 import 'package:cresent_charge_user_app/features/onboarding/pages/how_to_work_page.dart';
 import 'package:go_router/go_router.dart';
@@ -15,17 +16,18 @@ class AppRouter {
         name: RoutePath.getStartPage,
         path: RoutePath.getStartPage.addBasePath,
         builder: (context, state) => const GetStartPage(),
-        // redirect: (context, state) {
-        //   // Future.delayed(const Duration(seconds: 1), () {
-        //   //   AppRouter.route.replaceNamed(RoutePath.chooseRole);
-        //   // });
-        //   // return null;
-        // },
       ),
+
       GoRoute(
         path: RoutePath.howToWorkPage.addBasePath,
         name: RoutePath.howToWorkPage,
         builder: (context, state) => const HowToWorkPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.login.addBasePath,
+        name: RoutePath.login,
+        builder: (context, state) => const LoginPage(),
       ),
     ],
   );

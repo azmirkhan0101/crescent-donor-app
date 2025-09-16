@@ -17,7 +17,7 @@ final lightTheme = ThemeData(
   fontFamily: lightThemeFont,
   splashColor: Colors.transparent,
   inputDecorationTheme: inputDecorationTheme,
-  drawerTheme: const DrawerThemeData(backgroundColor: AppColors.whiteColor),
+  drawerTheme: const DrawerThemeData(backgroundColor: AppColors.white),
   textTheme: TextTheme(
     bodySmall: const TextStyle(color: AppColors.blackLightColor),
     bodyMedium: GoogleFonts.inter(
@@ -72,13 +72,13 @@ final AppBarTheme appBarTheme = AppBarTheme(
   elevation: 0,
   centerTitle: true,
   iconTheme: const IconThemeData(color: AppColors.blackLightColor),
-  backgroundColor: AppColors.whiteColor,
+  backgroundColor: AppColors.white,
   scrolledUnderElevation: 0,
   titleTextStyle: interMedium.copyWith(fontSize: 16.sp, color: black),
   actionsIconTheme: const IconThemeData(color: AppColors.blackLightColor),
   systemOverlayStyle: const SystemUiOverlayStyle(
     // Status bar color
-    statusBarColor: AppColors.whiteColor,
+    statusBarColor: AppColors.white,
     // Status bar brightness (optional)
     statusBarIconBrightness: Brightness.light, // For Android (dark icons)
     statusBarBrightness: Brightness.light, // For iOS (dark icons)
@@ -88,7 +88,7 @@ final AppBarTheme appBarTheme = AppBarTheme(
 ///========================= Bottom NavigationBar ==============================
 const BottomNavigationBarThemeData bottomNavigationBarTheme =
     BottomNavigationBarThemeData(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor: AppColors.white,
       elevation: 1,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: AppColors.primaryColor,

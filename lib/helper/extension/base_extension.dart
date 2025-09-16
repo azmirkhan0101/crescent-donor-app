@@ -57,6 +57,10 @@ extension TextToStyles on Text {
   Text color(Color color) {
     return Text(data ?? '', style: style?.copyWith(color: color));
   }
+
+  Text fontFamily(String? fontFamily) {
+    return Text(data ?? '', style: style?.copyWith(fontFamily: fontFamily));
+  }
 }
 
 /// ----------------------
@@ -78,7 +82,7 @@ extension SpacingExt on num {
 /// ----------------------
 extension StringWidgetExt on String {
   /// Convert string to Text widget
-  Text get text => Text(this);
+  Text text([TextStyle? style]) => Text(this, style: style);
 
   /// Convert Text align to center
   Text centerText([TextStyle? style]) =>

@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
+import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,10 +10,12 @@ class CustomPrimaryButton extends StatelessWidget {
     this.onTap,
     this.fillColor,
     this.textColor,
+    this.borderColor,
   });
   final String? title;
   final VoidCallback? onTap;
   final Color? fillColor;
+  final Color? borderColor;
   final Color? textColor;
 
   @override
@@ -21,8 +24,14 @@ class CustomPrimaryButton extends StatelessWidget {
       onPressed: onTap ?? () {},
       style: FilledButton.styleFrom(
         backgroundColor: fillColor ?? AppColors.secondaryColor,
-        fixedSize: const Size(double.maxFinite, 56),
+        fixedSize: Size(double.maxFinite, 52.rh),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        side: BorderSide(
+          color:
+              borderColor ??
+              (fillColor == null ? Colors.transparent : AppColors.black),
+          width: 1,
+        ),
       ),
       child: Text(
         title ?? "Get Started",

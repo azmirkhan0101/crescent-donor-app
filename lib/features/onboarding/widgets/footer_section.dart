@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/onboarding/controllers/how_to_works_controller.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -6,6 +7,7 @@ import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -16,9 +18,9 @@ class FooterSection extends StatelessWidget {
     return Row(
       children: [
         // Skip button
-        AppStrings.skip
-            .centerText(AppTextStyles.baseStyle())
-            .onTap(onClickSkip),
+        AppStrings.skip.centerText(AppTextStyles.baseStyle()).onTap(() {
+          onClickSkip(context);
+        }),
 
         const Spacer(),
         // Dots indicator
@@ -42,26 +44,25 @@ class FooterSection extends StatelessWidget {
         // Next button
         Assets.icons.arrowRightCircleButton
             .svg(width: 40.rh, height: 40.rh)
-            .onTap(() => onTapNext(controller)),
+            .onTap(() => onTapNext(controller, context)),
       ],
     ).paddingSymmetric(horizontal: 16.rw);
   }
 
-
-  void onClickSkip() {
-    // Get.toNamed(RoutePath.home);
+  void onClickSkip(BuildContext context) {
+    context.pushReplacement(RoutePath.login.addBasePath);
   }
 
   void onClickDot(int index, HowToWorksController controller) {
     controller.updateIndex(index);
   }
 
-  void onTapNext(HowToWorksController controller) {
+  void onTapNext(HowToWorksController controller, BuildContext context) {
     if (controller.currentIndex.value < 3) {
       controller.updateIndex(controller.currentIndex.value + 1);
     } else {
       // Navigate to next screen or perform final action
-      // Get.toNamed(RoutePath.home);
+      context.pushReplacement(RoutePath.login.addBasePath);
     }
   }
 }
