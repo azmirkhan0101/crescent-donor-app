@@ -64,26 +64,40 @@ class TermsAgreementPage extends StatelessWidget {
           Row(
             spacing: 4.rh,
             children: [
-              Container(
-                padding: EdgeInsets.all(2.rfs),
-                decoration: BoxDecoration(
-                  color: AppColors.secondaryColor,
-                  borderRadius: BorderRadius.circular(4.rfs),
-                ),
-                child: Icon(
-                  Icons.check,
-                  size: 14.rfs,
-                  color: signupController.agreeToTerms.value
-                      ? AppColors.black
-                      : AppColors.secondaryColor,
-                ).obx(),
-              ),
+              Obx(() {
+                return Container(
+                  padding: EdgeInsets.all(2.rfs),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.rfs),
+                    border: Border.all(
+                      color: signupController.agreeToTerms.value
+                          ? AppColors.secondaryColor
+                          : Colors.black,
+                      width: 0.5,
+                    ),
+                    color: signupController.agreeToTerms.value
+                        ? AppColors.secondaryColor
+                        : Colors.transparent,
+                  ),
+                  child: Icon(
+                    Icons.check,
+                    size: 12.rfs,
+                    color: signupController.agreeToTerms.value
+                        ? Colors.black
+                        : Colors.white,
+                  ),
+                );
+              }),
 
               "I agree with the Terms & Conditions."
                   .text(AppTextStyles.f14W400())
                   .color(AppColors.black),
             ],
-          ),
+          ).onTap(() {
+            signupController.agreeToTerms.value =
+                !signupController.agreeToTerms.value;
+          }),
+
           8.rh.heightWidth,
 
           "By clicking here, I state that I have read and understood the terms and conditions."
@@ -95,21 +109,12 @@ class TermsAgreementPage extends StatelessWidget {
             children: [
               // Continue button
               CustomPrimaryButton(
-                title: AppStrings.continueText,
+                title: "Agree & Continue",
                 onTap: () {
-                  context.pushNamed(RoutePath.termsAgreement);
+                  // context.pushNamed(RoutePath.termsAgreement);
                 },
               ),
-              16.heightWidth,
 
-              // I'll do this later text
-              AppStrings.illDoThisLater.centerText(
-                AppTextStyles.baseStyle().copyWith(
-                  fontFamily: AppStrings.interDisplay,
-                  fontSize: 14.rfs,
-                  color: AppColors.grayColor,
-                ),
-              ),
               24.heightWidth,
             ],
           ).paddingSymmetric(horizontal: 40.rw),

@@ -13,4 +13,7 @@ class RoutePath {
   static const String uploadProfilePicture = 'uploadProfilePicture';
   static const String addCard = 'addCard';
   static const String termsAgreement = 'termsAgreement';
+  static const String forgotPassword = 'forgotPassword';
+  static const String verifyOtp = 'verifyOtp';
+  static const String resetPassword = 'resetPassword';
 }

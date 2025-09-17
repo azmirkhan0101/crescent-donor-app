@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
@@ -11,6 +12,7 @@ import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
@@ -140,24 +142,24 @@ class _LoginPageState extends State<LoginPage> {
 
                       Text(
                         "Remember Password",
-                        style: AppTextStyles.baseStyle().copyWith(
-                          color: "#000C0B".hexColor,
+                        style: AppTextStyles.f14W400().copyWith(
+                          color: AppColors.black,
                           height: 20.rw / 14.rw,
-                          fontFamily: GoogleFonts.inter().fontFamily,
+                          fontFamily: AppStrings.interDisplay,
                         ),
                       ),
                     ],
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Handle forgot password
+                      context.pushNamed(RoutePath.forgotPassword);
                     },
                     child: Text(
                       "Forgot Password?",
-                      style: AppTextStyles.baseStyle().copyWith(
+                      style: AppTextStyles.f14W400().copyWith(
                         color: AppColors.black,
                         decoration: TextDecoration.underline,
-                        fontFamily: GoogleFonts.inter().fontFamily,
+                        fontFamily: AppStrings.interDisplay,
                       ),
                     ),
                   ),

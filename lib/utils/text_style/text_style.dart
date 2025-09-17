@@ -23,12 +23,11 @@ class AppTextStyles {
 
   /// f14 w400 styles
   static TextStyle f14W400() {
-    return TextStyle(
-      fontFamily: AppStrings.interDisplay,
+    return GoogleFonts.inter(
       fontSize: 14.rfs,
       fontWeight: FontWeight.w400,
       color: AppColors.grayColor,
-      height: 22.rh / 14.rfs,
+      height: 20.rh / 14.rfs,
     );
   }
 

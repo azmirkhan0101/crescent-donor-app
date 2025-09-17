@@ -61,6 +61,23 @@ class CustomInputField extends StatelessWidget {
           minWidth: 16.rw,
           minHeight: 14.rh,
         ),
+        suffixIcon: obscureText == true
+            ? GestureDetector(
+                onTap: () {
+                  // toggle password visibility
+                },
+                child: Assets.icons.eye.svg().paddingOnly(right: 16.rw),
+                // child: Icon(
+                //   Icons.visibility_off,
+                //   color: "#CCCCCC".hexColor,
+                //   size: 20.rw,
+                // ).paddingOnly(right: 16.rw),
+              )
+            : null,
+        suffixIconConstraints: BoxConstraints(
+          minWidth: 16.rw,
+          minHeight: 10.rh,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.rw),
           borderSide: BorderSide(color: "#E4E4E4".hexColor, width: 1),

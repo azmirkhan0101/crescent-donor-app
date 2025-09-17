@@ -52,10 +52,6 @@ extension WidgetOnWidgetExt on Widget {
     return Scaffold(body: SafeArea(child: this));
   }
 
-  // Obx
-  Widget obx() {
-    return Obx(() => this);
-  }
 }
 
 // ====================== Scaffold ======================

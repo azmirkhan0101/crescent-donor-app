@@ -1,9 +1,12 @@
 import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/few_details_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/forgot_password_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/login_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/reset_password_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/signup_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/terms_agreement_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/upload_profile_picture_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/verify_otp_page.dart';
 import 'package:cresent_charge_user_app/features/onboarding/pages/get_start_page.dart';
 import 'package:cresent_charge_user_app/features/onboarding/pages/how_to_work_page.dart';
 import 'package:go_router/go_router.dart';
@@ -63,6 +66,24 @@ class AppRouter {
         path: RoutePath.termsAgreement.addBasePath,
         name: RoutePath.termsAgreement,
         builder: (context, state) => const TermsAgreementPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.forgotPassword.addBasePath,
+        name: RoutePath.forgotPassword,
+        builder: (context, state) => const ForgotPasswordPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.verifyOtp.addBasePath,
+        name: RoutePath.verifyOtp,
+        builder: (context, state) => const VerifyOtpPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.resetPassword.addBasePath,
+        name: RoutePath.resetPassword,
+        builder: (context, state) => const ResetPasswordPage(),
       ),
     ],
   );
