@@ -37,7 +37,7 @@ class CustomPrimaryButton extends StatelessWidget {
         title ?? "Get Started",
         style: GoogleFonts.familjenGrotesk(
           fontSize: 18,
-          color: textColor ?? AppColors.blackLightColor,
+          color: textColor ?? AppColors.black,
           fontWeight: FontWeight.w700,
         ),
       ),

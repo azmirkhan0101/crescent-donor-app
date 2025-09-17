@@ -105,8 +105,8 @@ class GeneralController extends GetxController {
     return "";
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  // }
 }

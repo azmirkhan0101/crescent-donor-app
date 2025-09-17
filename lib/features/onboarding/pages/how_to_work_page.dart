@@ -1,5 +1,4 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/onboarding/controllers/how_to_works_controller.dart';
 import 'package:cresent_charge_user_app/features/onboarding/widgets/footer_section.dart';
 import 'package:cresent_charge_user_app/features/onboarding/widgets/reword_section.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';

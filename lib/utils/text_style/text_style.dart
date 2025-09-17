@@ -1,4 +1,6 @@
+import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
+import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:io';
@@ -16,6 +18,17 @@ class AppTextStyles {
       fontWeight: FontWeight.w400,
       color: const Color(0xFF808080),
       letterSpacing: -0.5.rfs,
+    );
+  }
+
+  /// f14 w400 styles
+  static TextStyle f14W400() {
+    return TextStyle(
+      fontFamily: AppStrings.interDisplay,
+      fontSize: 14.rfs,
+      fontWeight: FontWeight.w400,
+      color: AppColors.grayColor,
+      height: 22.rh / 14.rfs,
     );
   }
 

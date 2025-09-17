@@ -1,11 +1,13 @@
-import 'package:cresent_charge_user_app/comon-widgets/fill-button/custom_filled_button.dart';
+import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
+import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
@@ -22,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _rememberPassword = false;
-  bool _isPasswordVisible = false;
+  final bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -48,19 +50,9 @@ class _LoginPageState extends State<LoginPage> {
 
               32.heightWidth,
 
-              // Welcome Back title
-              "Welcome Back!".centerText(
-                AppTextStyles.f28W700().copyWith(
-                  color: "#171717".hexColor,
-                  fontSize: 32.rfs,
-                ),
-              ),
-
-              8.heightWidth,
-
-              // Subtitle
-              "We missed your business growth.".centerText(
-                AppTextStyles.baseStyle(),
+              AuthTileSection(
+                title: AppStrings.welcomeBack,
+                subtitle: AppStrings.weMissedYourBusinessGrowth,
               ),
 
               32.rh.heightWidth,
@@ -130,9 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                             border: Border.all(
                               color: _rememberPassword
                                   ? AppColors.primaryColor
-                                  : AppColors.blackLightColor.withValues(
-                                      alpha: 0.3,
-                                    ),
+                                  : AppColors.black.withValues(alpha: 0.3),
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(4.rw),
@@ -180,6 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   CustomPrimaryButton(title: "Login"),
                   16.heightWidth,
+
                   HaveAccountWidget(),
 
                   16.rh.heightWidth,

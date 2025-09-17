@@ -31,6 +31,10 @@ class $AssetsIconsGen {
   SvgGenImage get arrowRightCircleButton =>
       const SvgGenImage('assets/icons/arrow-right-circle-button.svg');
 
+  /// File path: assets/icons/circle-i-button.svg
+  SvgGenImage get circleIButton =>
+      const SvgGenImage('assets/icons/circle-i-button.svg');
+
   /// File path: assets/icons/dot-grey.svg
   SvgGenImage get dotGrey => const SvgGenImage('assets/icons/dot-grey.svg');
 
@@ -49,6 +53,7 @@ class $AssetsIconsGen {
     lock,
     arrowLeftCircleButton,
     arrowRightCircleButton,
+    circleIButton,
     dotGrey,
     mail,
     moonStar,
@@ -63,6 +68,9 @@ class $AssetsImagesGen {
   SvgGenImage get appLogoName =>
       const SvgGenImage('assets/images/app-logo-name.svg');
 
+  /// File path: assets/images/card-info.svg
+  SvgGenImage get cardInfo => const SvgGenImage('assets/images/card-info.svg');
+
   /// File path: assets/images/how-to-work.png
   AssetGenImage get howToWork =>
       const AssetGenImage('assets/images/how-to-work.png');
@@ -71,8 +79,18 @@ class $AssetsImagesGen {
   SvgGenImage get onboardingSavingCoins =>
       const SvgGenImage('assets/images/onboarding-saving-coins.svg');
 
+  /// File path: assets/images/upload-profile-picture.svg
+  SvgGenImage get uploadProfilePicture =>
+      const SvgGenImage('assets/images/upload-profile-picture.svg');
+
   /// List of all assets
-  List<dynamic> get values => [appLogoName, howToWork, onboardingSavingCoins];
+  List<dynamic> get values => [
+    appLogoName,
+    cardInfo,
+    howToWork,
+    onboardingSavingCoins,
+    uploadProfilePicture,
+  ];
 }
 
 class Assets {

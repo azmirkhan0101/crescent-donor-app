@@ -1,4 +1,9 @@
+import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/few_details_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/login_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/signup_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/terms_agreement_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/upload_profile_picture_page.dart';
 import 'package:cresent_charge_user_app/features/onboarding/pages/get_start_page.dart';
 import 'package:cresent_charge_user_app/features/onboarding/pages/how_to_work_page.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +33,36 @@ class AppRouter {
         path: RoutePath.login.addBasePath,
         name: RoutePath.login,
         builder: (context, state) => const LoginPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.signup.addBasePath,
+        name: RoutePath.signup,
+        builder: (context, state) => const SignupPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.fewDetails.addBasePath,
+        name: RoutePath.fewDetails,
+        builder: (context, state) => const FewDetailsPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.uploadProfilePicture.addBasePath,
+        name: RoutePath.uploadProfilePicture,
+        builder: (context, state) => const UploadProfilePicturePage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.addCard.addBasePath,
+        name: RoutePath.addCard,
+        builder: (context, state) => const AddCardPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.termsAgreement.addBasePath,
+        name: RoutePath.termsAgreement,
+        builder: (context, state) => const TermsAgreementPage(),
       ),
     ],
   );

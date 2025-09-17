@@ -16,6 +16,8 @@ class CustomInputField extends StatelessWidget {
     this.textInputAction,
     this.hintText,
     this.prefixIcon,
+    this.isPrefixIcon = true,
+    this.minLines = 1,
   });
 
   final TextEditingController? controller;
@@ -24,15 +26,20 @@ class CustomInputField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final String? hintText;
   final Widget? prefixIcon;
+  final bool isPrefixIcon;
+  final int minLines;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      minLines: minLines,
+      maxLines: minLines,
+      textAlignVertical: TextAlignVertical.top,
       keyboardType: keyboardType ?? TextInputType.emailAddress,
       textInputAction: textInputAction ?? TextInputAction.next,
       style: AppTextStyles.baseStyle().copyWith(
-        color: AppColors.blackLightColor,
+        color: AppColors.black,
         fontWeight: FontWeight.w500,
         fontFamily: GoogleFonts.inter().fontFamily,
       ),
@@ -44,10 +51,12 @@ class CustomInputField extends StatelessWidget {
             fontFamily: GoogleFonts.inter().fontFamily,
           ),
         ),
-        prefixIcon: (prefixIcon ?? Assets.icons.mail.svg()).paddingOnly(
-          left: 16.rw,
-          right: 8.rw,
-        ),
+        prefixIcon: isPrefixIcon
+            ? (prefixIcon ?? Assets.icons.mail.svg()).paddingOnly(
+                left: 16.rw,
+                right: 8.rw,
+              )
+            : null,
         prefixIconConstraints: BoxConstraints(
           minWidth: 16.rw,
           minHeight: 14.rh,
@@ -65,7 +74,10 @@ class CustomInputField extends StatelessWidget {
           borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
         ),
         isDense: true,
-        contentPadding: EdgeInsets.symmetric(vertical: 16.rh),
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 16.rh,
+          horizontal: 16.rw,
+        ),
       ),
     );
   }

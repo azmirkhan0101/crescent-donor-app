@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:get/get.dart';
 
 // /=--------- Route Base Path Extension --------=/
 extension RouteBasePathExt on String {
@@ -39,6 +40,35 @@ extension WidgetOnWidgetExt on Widget {
   // aspect ratio
   Widget aspectRatio(double width, double height) {
     return AspectRatio(aspectRatio: width / height, child: this);
+  }
+
+  // scaffold safe area
+  Widget scaffold() {
+    return Scaffold(body: this);
+  }
+
+  // scaffold safe area
+  Widget scaffoldSafeArea() {
+    return Scaffold(body: SafeArea(child: this));
+  }
+
+  // Obx
+  Widget obx() {
+    return Obx(() => this);
+  }
+}
+
+// ====================== Scaffold ======================
+extension ListOfWidgetExt on List<Widget> {
+  Widget scaffoldSafeAreaColumn({double? horizontalPadding}) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 0),
+          child: Column(children: this),
+        ),
+      ),
+    );
   }
 }
 

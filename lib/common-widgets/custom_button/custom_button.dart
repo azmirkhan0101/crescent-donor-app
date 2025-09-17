@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:cresent_charge_user_app/comon-widgets/custom_text/custom_text.dart';
+import 'package:cresent_charge_user_app/common-widgets/custom_text/custom_text.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 
@@ -15,7 +15,7 @@ class CustomButton extends StatelessWidget {
     this.marginVerticel = 0,
     this.marginHorizontal = 0,
     this.fillColor = AppColors.primaryColor,
-    this.textColor = AppColors.blackLightColor,
+    this.textColor = AppColors.black,
     this.borderColor = AppColors.primaryColor,
   });
 
