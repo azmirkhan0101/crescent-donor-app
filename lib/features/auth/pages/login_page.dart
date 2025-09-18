@@ -1,42 +1,26 @@
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/login_form_fields.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
-import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:get/utils.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _rememberPassword = false;
-  final bool _isPasswordVisible = false;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final LoginController loginController = Get.put(LoginController());
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -48,7 +32,11 @@ class _LoginPageState extends State<LoginPage> {
               16.heightWidth,
 
               // Back button and theme toggle
-              AuthHeader(),
+              AuthHeader(
+                onTap: () {
+                  context.pushReplacementNamed(RoutePath.getStartPage);
+                },
+              ),
 
               32.heightWidth,
 
@@ -59,150 +47,112 @@ class _LoginPageState extends State<LoginPage> {
 
               32.rh.heightWidth,
 
-              // Email field
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  "Email"
-                      .text(AppTextStyles.baseStyle())
-                      .color("#000C0B".hexColor),
-
-                  8.rh.heightWidth,
-                  CustomInputField(
-                    controller: _emailController,
-                    hintText: "Enter Email Address",
-                    prefixIcon: Assets.onboarding.mail.svg(),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                ],
-              ),
-
-              24.heightWidth,
-
-              // Password field
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  "Password"
-                      .text(AppTextStyles.baseStyle())
-                      .color("#000C0B".hexColor),
-
-                  8.rh.heightWidth,
-
-                  CustomInputField(
-                    controller: _passwordController,
-                    hintText: "***********",
-                    prefixIcon: Assets.onboarding.lock.svg(),
-                    obscureText: !_isPasswordVisible,
-                    textInputAction: TextInputAction.done,
-                  ),
-                ],
-              ),
-
-              16.heightWidth,
-
-              // Remember password and forgot password
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _rememberPassword = !_rememberPassword;
-                          });
-                        },
-                        child: Container(
-                          width: 20.rh,
-                          height: 20.rh,
-                          decoration: BoxDecoration(
-                            color: _rememberPassword
-                                ? AppColors.primaryColor
-                                : Colors.transparent,
-                            border: Border.all(
-                              color: _rememberPassword
-                                  ? AppColors.primaryColor
-                                  : AppColors.black.withValues(alpha: 0.3),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(4.rw),
-                          ),
-                          child: _rememberPassword
-                              ? Icon(
-                                  Icons.check,
-                                  color: AppColors.white,
-                                  size: 14.rw,
-                                )
-                              : null,
-                        ),
-                      ),
-                      8.heightWidth,
-
-                      Text(
-                        "Remember Password",
-                        style: AppTextStyles.f14W400().copyWith(
-                          color: AppColors.black,
-                          height: 20.rw / 14.rw,
-                          fontFamily: AppStrings.interDisplay,
-                        ),
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      context.pushNamed(RoutePath.forgotPassword);
-                    },
-                    child: Text(
-                      "Forgot Password?",
-                      style: AppTextStyles.f14W400().copyWith(
-                        color: AppColors.black,
-                        decoration: TextDecoration.underline,
-                        fontFamily: AppStrings.interDisplay,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Login form fields widget
+              LoginFormFields(controller: loginController),
 
               const Spacer(),
 
-              Column(
-                children: [
-                  CustomPrimaryButton(
-                    title: "Login",
-                    onTap: () {
-                      context.pushNamed(RoutePath.home);
-                    },
-                  ),
-                  16.heightWidth,
-
-                  HaveAccountWidget(),
-
-                  16.rh.heightWidth,
-
-                  "OR"
-                      .centerText(AppTextStyles.baseStyle().copyWith())
-                      .fontFamily(GoogleFonts.inter().fontFamily),
-                  16.rh.heightWidth,
-
-                  // Login as guest button
-                  CustomPrimaryButton(
-                    title: "Login as a Guest",
-                    fillColor: Colors.transparent,
-                    onTap: () {
-                      context.pushNamed(RoutePath.home);
-                    },
-                  ),
-
-                  24.heightWidth,
-                ],
-              ).paddingSymmetric(horizontal: 56.rw),
+              // Login buttons and actions
+              _buildLoginActions(context, loginController),
             ],
           ),
         ),
       ),
     );
+  }
+
+  /// Build login actions section (login button, guest login, etc.)
+  Widget _buildLoginActions(BuildContext context, LoginController controller) {
+    return GetX<LoginController>(
+      builder: (controller) {
+        return Column(
+          children: [
+            // Login button
+            CustomPrimaryButton(
+              title: "Login",
+              onTap: controller.isLoading.value
+                  ? null
+                  : () => _handleLogin(context, controller),
+            ),
+
+            16.heightWidth,
+
+            HaveAccountWidget(),
+
+            16.rh.heightWidth,
+
+            "OR"
+                .centerText(
+                  controller.isLoading.value
+                      ? TextStyle(color: AppColors.grayColor)
+                      : const TextStyle(),
+                )
+                .fontFamily(GoogleFonts.inter().fontFamily),
+
+            16.rh.heightWidth,
+
+            // Login as guest button
+            CustomPrimaryButton(
+              title: controller.isLoading.value
+                  ? "Please wait..."
+                  : "Login as a Guest",
+              fillColor: Colors.transparent,
+              onTap: controller.isLoading.value
+                  ? null
+                  : () => _handleGuestLogin(context, controller),
+            ),
+
+            24.heightWidth,
+          ],
+        ).paddingSymmetric(horizontal: 56.rw);
+      },
+    );
+  }
+
+  /// Handle login button press
+  Future<void> _handleLogin(
+    BuildContext context,
+    LoginController controller,
+  ) async {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+
+    final success = await controller.login();
+
+    if (success && context.mounted) {
+      // Navigate to home on successful login
+      context.pushNamed(RoutePath.home);
+
+      // Show success message
+      Get.snackbar(
+        'Login Successful',
+        'Welcome back!',
+        backgroundColor: AppColors.primaryColor.withValues(alpha: 0.1),
+        colorText: AppColors.black,
+        duration: const Duration(seconds: 2),
+      );
+    }
+  }
+
+  /// Handle guest login button press
+  Future<void> _handleGuestLogin(
+    BuildContext context,
+    LoginController controller,
+  ) async {
+    final success = await controller.loginAsGuest();
+
+    if (success && context.mounted) {
+      // Navigate to home on successful guest login
+      context.pushNamed(RoutePath.home);
+
+      // Show guest mode message
+      Get.snackbar(
+        'Guest Mode',
+        'You are now browsing as a guest',
+        backgroundColor: AppColors.grayColor.withValues(alpha: 0.1),
+        colorText: AppColors.black,
+        duration: const Duration(seconds: 2),
+      );
+    }
   }
 }

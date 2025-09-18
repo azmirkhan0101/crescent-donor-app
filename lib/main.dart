@@ -1,7 +1,8 @@
-import 'package:cresent_charge_user_app/core/routes/routes.dart';
+import 'package:cresent_charge_user_app/core/routes/app_router.dart';
 import 'package:cresent_charge_user_app/core/theme/light_theme.dart';
 import 'package:cresent_charge_user_app/dependency_injection/getx_injection.dart';
 import 'package:cresent_charge_user_app/global/language/controller/language_controller.dart';
+import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/service/socket_service.dart';
 import 'package:cresent_charge_user_app/utils/system_utils/system_utils.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,14 @@ import 'package:get/get.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemUtil.setStatusBarColor(color: Colors.transparent);
+
+  try {
+    await AppStorageService.init();
+    debugPrint('Storage service initialized successfully');
+  } catch (e) {
+    debugPrint('Failed to initialize storage service: $e');
+    // Handle initialization error appropriately
+  }
 
   initGetx();
   // initDependencies();
@@ -38,9 +47,9 @@ class MyApp extends StatelessWidget {
           return GetMaterialApp.router(
             debugShowCheckedModeBanner: false,
             theme: lightTheme,
-            routeInformationParser: AppRouter.route.routeInformationParser,
-            routerDelegate: AppRouter.route.routerDelegate,
-            routeInformationProvider: AppRouter.route.routeInformationProvider,
+            routeInformationParser: AppRouter.router.routeInformationParser,
+            routerDelegate: AppRouter.router.routerDelegate,
+            routeInformationProvider: AppRouter.router.routeInformationProvider,
             //locale: const Locale("ar", "SA"),
             fallbackLocale: const Locale("en", "US"),
             translations: Language(),

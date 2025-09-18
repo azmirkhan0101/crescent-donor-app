@@ -4,7 +4,8 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 class AuthHeader extends StatelessWidget {
-  const AuthHeader({super.key});
+  const AuthHeader({super.key, this.onTap});
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +14,12 @@ class AuthHeader extends StatelessWidget {
       children: [
         Assets.onboarding.arrowLeftCircleButton
             .svg(width: 28.rw, height: 28.rw)
-            .onTap(() {
-              context.pop();
-            }),
+            .onTap(
+              onTap ??
+                  () {
+                    context.pop();
+                  },
+            ),
         Assets.onboarding.moonStar.svg(width: 24.rw, height: 24.rw),
       ],
     );

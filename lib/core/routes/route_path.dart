@@ -19,4 +19,7 @@ class RoutePath {
 
   //=================== Home screens ===================
   static const String home = 'home';
+  static const String favorites = 'favorites';
+  static const String donation = 'donation';
+  static const String profile = 'profile';
 }
