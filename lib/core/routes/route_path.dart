@@ -16,4 +16,7 @@ class RoutePath {
   static const String forgotPassword = 'forgotPassword';
   static const String verifyOtp = 'verifyOtp';
   static const String resetPassword = 'resetPassword';
+
+  //=================== Home screens ===================
+  static const String home = 'home';
 }

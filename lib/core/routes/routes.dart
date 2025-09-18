@@ -7,6 +7,7 @@ import 'package:cresent_charge_user_app/features/auth/pages/signup_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/terms_agreement_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/upload_profile_picture_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/verify_otp_page.dart';
+import 'package:cresent_charge_user_app/features/home/pages/home_page.dart';
 import 'package:cresent_charge_user_app/features/onboarding/pages/get_start_page.dart';
 import 'package:cresent_charge_user_app/features/onboarding/pages/how_to_work_page.dart';
 import 'package:go_router/go_router.dart';
@@ -84,6 +85,12 @@ class AppRouter {
         path: RoutePath.resetPassword.addBasePath,
         name: RoutePath.resetPassword,
         builder: (context, state) => const ResetPasswordPage(),
+      ),
+
+      GoRoute(
+        path: RoutePath.home.addBasePath,
+        name: RoutePath.home,
+        builder: (context, state) => const HomePage(),
       ),
     ],
   );

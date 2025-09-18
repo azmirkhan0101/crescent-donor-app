@@ -170,7 +170,12 @@ class _LoginPageState extends State<LoginPage> {
 
               Column(
                 children: [
-                  CustomPrimaryButton(title: "Login"),
+                  CustomPrimaryButton(
+                    title: "Login",
+                    onTap: () {
+                      context.pushNamed(RoutePath.home);
+                    },
+                  ),
                   16.heightWidth,
 
                   HaveAccountWidget(),
@@ -187,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                     title: "Login as a Guest",
                     fillColor: Colors.transparent,
                     onTap: () {
-                      // Handle guest login
+                      context.pushNamed(RoutePath.home);
                     },
                   ),
 
