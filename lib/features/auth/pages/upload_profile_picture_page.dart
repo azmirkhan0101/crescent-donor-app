@@ -21,7 +21,7 @@ class UploadProfilePicturePage extends StatelessWidget {
       32.heightWidth,
       AuthTileSection(title: AppStrings.uploadProfilePicture),
       Spacer(),
-      Assets.images.uploadProfilePicture.svg(),
+      Assets.onboarding.uploadProfilePicture.svg(),
       16.heightWidth,
       Text(
         AppStrings.tapToAddProfilePicture.tr,

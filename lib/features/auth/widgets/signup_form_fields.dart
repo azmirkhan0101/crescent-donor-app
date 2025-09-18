@@ -35,7 +35,7 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
               CustomInputField(
                 controller: signupController.emailController,
                 hintText: "Enter Email Address",
-                prefixIcon: Assets.icons.mail.svg(),
+                prefixIcon: Assets.onboarding.mail.svg(),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -55,7 +55,7 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
               CustomInputField(
                 controller: signupController.passwordController,
                 hintText: "***********",
-                prefixIcon: Assets.icons.lock.svg(),
+                prefixIcon: Assets.onboarding.lock.svg(),
                 obscureText: !signupController.isPasswordVisible.value,
                 textInputAction: TextInputAction.next,
               ),
@@ -95,7 +95,7 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
               CustomInputField(
                 controller: signupController.confirmPasswordController,
                 hintText: "***********",
-                prefixIcon: Assets.icons.lock.svg(),
+                prefixIcon: Assets.onboarding.lock.svg(),
                 obscureText: !signupController.isConfirmPasswordVisible.value,
                 textInputAction: TextInputAction.done,
               ),
@@ -108,7 +108,7 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
             mainAxisAlignment: MainAxisAlignment.start,
             spacing: 4.rw,
             children: [
-              Assets.icons.circleIButton.svg(width: 14.rw, height: 14.rh),
+              Assets.onboarding.circleIButton.svg(width: 14.rw, height: 14.rh),
               Expanded(
                 child: Text(
                   AppStrings.strongPasswordRequirements,

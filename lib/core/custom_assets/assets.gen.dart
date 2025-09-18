@@ -14,81 +14,179 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
-class $AssetsIconsGen {
-  const $AssetsIconsGen();
+class $AssetsBottomNavGen {
+  const $AssetsBottomNavGen();
 
-  /// File path: assets/icons/Eye.svg
-  SvgGenImage get eye => const SvgGenImage('assets/icons/Eye.svg');
+  /// File path: assets/bottom-nav/Donation.svg
+  SvgGenImage get donation =>
+      const SvgGenImage('assets/bottom-nav/Donation.svg');
 
-  /// File path: assets/icons/Lock.svg
-  SvgGenImage get lock => const SvgGenImage('assets/icons/Lock.svg');
+  /// File path: assets/bottom-nav/Home.svg
+  SvgGenImage get home => const SvgGenImage('assets/bottom-nav/Home.svg');
 
-  /// File path: assets/icons/arrow-left-circle-button.svg
-  SvgGenImage get arrowLeftCircleButton =>
-      const SvgGenImage('assets/icons/arrow-left-circle-button.svg');
+  /// File path: assets/bottom-nav/Star Emphasis.svg
+  SvgGenImage get starEmphasis =>
+      const SvgGenImage('assets/bottom-nav/Star Emphasis.svg');
 
-  /// File path: assets/icons/arrow-right-circle-button.svg
-  SvgGenImage get arrowRightCircleButton =>
-      const SvgGenImage('assets/icons/arrow-right-circle-button.svg');
-
-  /// File path: assets/icons/circle-i-button.svg
-  SvgGenImage get circleIButton =>
-      const SvgGenImage('assets/icons/circle-i-button.svg');
-
-  /// File path: assets/icons/dot-grey.svg
-  SvgGenImage get dotGrey => const SvgGenImage('assets/icons/dot-grey.svg');
-
-  /// File path: assets/icons/mail.svg
-  SvgGenImage get mail => const SvgGenImage('assets/icons/mail.svg');
-
-  /// File path: assets/icons/moon-star.svg
-  SvgGenImage get moonStar => const SvgGenImage('assets/icons/moon-star.svg');
-
-  /// File path: assets/icons/small-star.svg
-  SvgGenImage get smallStar => const SvgGenImage('assets/icons/small-star.svg');
+  /// File path: assets/bottom-nav/User.svg
+  SvgGenImage get user => const SvgGenImage('assets/bottom-nav/User.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [
-    eye,
-    lock,
-    arrowLeftCircleButton,
-    arrowRightCircleButton,
-    circleIButton,
-    dotGrey,
-    mail,
-    moonStar,
-    smallStar,
-  ];
+  List<SvgGenImage> get values => [donation, home, starEmphasis, user];
 }
 
-class $AssetsImagesGen {
-  const $AssetsImagesGen();
+class $AssetsHomeGen {
+  const $AssetsHomeGen();
 
-  /// File path: assets/images/app-logo-name.svg
-  SvgGenImage get appLogoName =>
-      const SvgGenImage('assets/images/app-logo-name.svg');
+  /// File path: assets/home/OBJECTS.svg
+  SvgGenImage get objects => const SvgGenImage('assets/home/OBJECTS.svg');
 
-  /// File path: assets/images/card-info.svg
-  SvgGenImage get cardInfo => const SvgGenImage('assets/images/card-info.svg');
+  /// File path: assets/home/Search.svg
+  SvgGenImage get search => const SvgGenImage('assets/home/Search.svg');
 
-  /// File path: assets/images/how-to-work.png
-  AssetGenImage get howToWork =>
-      const AssetGenImage('assets/images/how-to-work.png');
+  /// File path: assets/home/donate-cause-banner-1.png
+  AssetGenImage get donateCauseBanner1 =>
+      const AssetGenImage('assets/home/donate-cause-banner-1.png');
 
-  /// File path: assets/images/onboarding-saving-coins.svg
-  SvgGenImage get onboardingSavingCoins =>
-      const SvgGenImage('assets/images/onboarding-saving-coins.svg');
+  /// File path: assets/home/donate-cause-banner-2.png
+  AssetGenImage get donateCauseBanner2 =>
+      const AssetGenImage('assets/home/donate-cause-banner-2.png');
 
-  /// File path: assets/images/upload-profile-picture.svg
-  SvgGenImage get uploadProfilePicture =>
-      const SvgGenImage('assets/images/upload-profile-picture.svg');
+  /// File path: assets/home/donate-cause-profile-2.png
+  AssetGenImage get donateCauseProfile2 =>
+      const AssetGenImage('assets/home/donate-cause-profile-2.png');
+
+  /// File path: assets/home/donatie-cause-profile-1.png
+  AssetGenImage get donatieCauseProfile1 =>
+      const AssetGenImage('assets/home/donatie-cause-profile-1.png');
+
+  /// File path: assets/home/notification.svg
+  SvgGenImage get notification =>
+      const SvgGenImage('assets/home/notification.svg');
+
+  /// File path: assets/home/premium-checkmark.svg
+  SvgGenImage get premiumCheckmark =>
+      const SvgGenImage('assets/home/premium-checkmark.svg');
+
+  /// File path: assets/home/profile-image.svg
+  SvgGenImage get profileImage =>
+      const SvgGenImage('assets/home/profile-image.svg');
+
+  /// File path: assets/home/red-dot.svg
+  SvgGenImage get redDot => const SvgGenImage('assets/home/red-dot.svg');
+
+  /// File path: assets/home/user-1.png
+  AssetGenImage get user1 => const AssetGenImage('assets/home/user-1.png');
+
+  /// File path: assets/home/user-2.png
+  AssetGenImage get user2 => const AssetGenImage('assets/home/user-2.png');
+
+  /// File path: assets/home/user-3.png
+  AssetGenImage get user3 => const AssetGenImage('assets/home/user-3.png');
+
+  /// File path: assets/home/user-4.png
+  AssetGenImage get user4 => const AssetGenImage('assets/home/user-4.png');
+
+  /// File path: assets/home/varified-charities-blog-1.png
+  AssetGenImage get varifiedCharitiesBlog1 =>
+      const AssetGenImage('assets/home/varified-charities-blog-1.png');
+
+  /// File path: assets/home/varified-charities-blog-2.png
+  AssetGenImage get varifiedCharitiesBlog2 =>
+      const AssetGenImage('assets/home/varified-charities-blog-2.png');
 
   /// List of all assets
   List<dynamic> get values => [
+    objects,
+    search,
+    donateCauseBanner1,
+    donateCauseBanner2,
+    donateCauseProfile2,
+    donatieCauseProfile1,
+    notification,
+    premiumCheckmark,
+    profileImage,
+    redDot,
+    user1,
+    user2,
+    user3,
+    user4,
+    varifiedCharitiesBlog1,
+    varifiedCharitiesBlog2,
+  ];
+}
+
+class $AssetsOnboardingGen {
+  const $AssetsOnboardingGen();
+
+  /// File path: assets/onboarding/Eye.svg
+  SvgGenImage get eye => const SvgGenImage('assets/onboarding/Eye.svg');
+
+  /// File path: assets/onboarding/Lock.svg
+  SvgGenImage get lock => const SvgGenImage('assets/onboarding/Lock.svg');
+
+  /// File path: assets/onboarding/app-logo-name.svg
+  SvgGenImage get appLogoName =>
+      const SvgGenImage('assets/onboarding/app-logo-name.svg');
+
+  /// File path: assets/onboarding/arrow-left-circle-button.svg
+  SvgGenImage get arrowLeftCircleButton =>
+      const SvgGenImage('assets/onboarding/arrow-left-circle-button.svg');
+
+  /// File path: assets/onboarding/arrow-right-circle-button.svg
+  SvgGenImage get arrowRightCircleButton =>
+      const SvgGenImage('assets/onboarding/arrow-right-circle-button.svg');
+
+  /// File path: assets/onboarding/card-info.svg
+  SvgGenImage get cardInfo =>
+      const SvgGenImage('assets/onboarding/card-info.svg');
+
+  /// File path: assets/onboarding/circle-i-button.svg
+  SvgGenImage get circleIButton =>
+      const SvgGenImage('assets/onboarding/circle-i-button.svg');
+
+  /// File path: assets/onboarding/dot-grey.svg
+  SvgGenImage get dotGrey =>
+      const SvgGenImage('assets/onboarding/dot-grey.svg');
+
+  /// File path: assets/onboarding/how-to-work.png
+  AssetGenImage get howToWork =>
+      const AssetGenImage('assets/onboarding/how-to-work.png');
+
+  /// File path: assets/onboarding/mail.svg
+  SvgGenImage get mail => const SvgGenImage('assets/onboarding/mail.svg');
+
+  /// File path: assets/onboarding/moon-star.svg
+  SvgGenImage get moonStar =>
+      const SvgGenImage('assets/onboarding/moon-star.svg');
+
+  /// File path: assets/onboarding/onboarding-saving-coins.svg
+  SvgGenImage get onboardingSavingCoins =>
+      const SvgGenImage('assets/onboarding/onboarding-saving-coins.svg');
+
+  /// File path: assets/onboarding/small-star.svg
+  SvgGenImage get smallStar =>
+      const SvgGenImage('assets/onboarding/small-star.svg');
+
+  /// File path: assets/onboarding/upload-profile-picture.svg
+  SvgGenImage get uploadProfilePicture =>
+      const SvgGenImage('assets/onboarding/upload-profile-picture.svg');
+
+  /// List of all assets
+  List<dynamic> get values => [
+    eye,
+    lock,
     appLogoName,
+    arrowLeftCircleButton,
+    arrowRightCircleButton,
     cardInfo,
+    circleIButton,
+    dotGrey,
     howToWork,
+    mail,
+    moonStar,
     onboardingSavingCoins,
+    smallStar,
     uploadProfilePicture,
   ];
 }
@@ -96,8 +194,9 @@ class $AssetsImagesGen {
 class Assets {
   const Assets._();
 
-  static const $AssetsIconsGen icons = $AssetsIconsGen();
-  static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsBottomNavGen bottomNav = $AssetsBottomNavGen();
+  static const $AssetsHomeGen home = $AssetsHomeGen();
+  static const $AssetsOnboardingGen onboarding = $AssetsOnboardingGen();
 }
 
 class AssetGenImage {

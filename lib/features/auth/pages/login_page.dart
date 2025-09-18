@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                   CustomInputField(
                     controller: _emailController,
                     hintText: "Enter Email Address",
-                    prefixIcon: Assets.icons.mail.svg(),
+                    prefixIcon: Assets.onboarding.mail.svg(),
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                   CustomInputField(
                     controller: _passwordController,
                     hintText: "***********",
-                    prefixIcon: Assets.icons.lock.svg(),
+                    prefixIcon: Assets.onboarding.lock.svg(),
                     obscureText: !_isPasswordVisible,
                     textInputAction: TextInputAction.done,
                   ),

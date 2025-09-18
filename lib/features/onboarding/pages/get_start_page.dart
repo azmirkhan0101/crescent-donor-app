@@ -23,11 +23,11 @@ class GetStartPage extends StatelessWidget {
             24.rh.heightWidth,
 
             // app logo
-            Assets.images.appLogoName.svg(width: 150.rw, height: 40.rh),
+            Assets.onboarding.appLogoName.svg(width: 150.rw, height: 40.rh),
             38.rh.heightWidth,
 
             // saving coins illustration image
-            Assets.images.onboardingSavingCoins.svg(
+            Assets.onboarding.onboardingSavingCoins.svg(
               width: 177.rw,
               height: 304.rh,
             ),

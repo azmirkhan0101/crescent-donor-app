@@ -52,7 +52,7 @@ class CustomInputField extends StatelessWidget {
           ),
         ),
         prefixIcon: isPrefixIcon
-            ? (prefixIcon ?? Assets.icons.mail.svg()).paddingOnly(
+            ? (prefixIcon ?? Assets.onboarding.mail.svg()).paddingOnly(
                 left: 16.rw,
                 right: 8.rw,
               )
@@ -66,7 +66,7 @@ class CustomInputField extends StatelessWidget {
                 onTap: () {
                   // toggle password visibility
                 },
-                child: Assets.icons.eye.svg().paddingOnly(right: 16.rw),
+                child: Assets.onboarding.eye.svg().paddingOnly(right: 16.rw),
                 // child: Icon(
                 //   Icons.visibility_off,
                 //   color: "#CCCCCC".hexColor,

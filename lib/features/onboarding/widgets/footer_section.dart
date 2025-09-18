@@ -30,10 +30,10 @@ class FooterSection extends StatelessWidget {
             children: List.generate(
               4,
               (index) => index == controller.currentIndex.value
-                  ? Assets.icons.smallStar
+                  ? Assets.onboarding.smallStar
                         .svg(width: 12.rw, height: 12.rh)
                         .onTap(() => onClickDot(index, controller))
-                  : Assets.icons.dotGrey
+                  : Assets.onboarding.dotGrey
                         .svg(width: 8.rw, height: 8.rh)
                         .onTap(() => onClickDot(index, controller)),
             ),
@@ -42,7 +42,7 @@ class FooterSection extends StatelessWidget {
         const Spacer(),
 
         // Next button
-        Assets.icons.arrowRightCircleButton
+        Assets.onboarding.arrowRightCircleButton
             .svg(width: 40.rh, height: 40.rh)
             .onTap(() => onTapNext(controller, context)),
       ],

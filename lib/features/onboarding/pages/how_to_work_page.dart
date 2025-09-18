@@ -25,7 +25,7 @@ class HowToWorkPage extends StatelessWidget {
             Spacer(),
             // Image
             AssetGenImage(
-              Assets.images.howToWork.path,
+              Assets.onboarding.howToWork.path,
             ).image(width: 343.rw, height: 304.rh),
             Spacer(),
 

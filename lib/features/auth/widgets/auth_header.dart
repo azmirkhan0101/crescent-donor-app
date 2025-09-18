@@ -11,12 +11,12 @@ class AuthHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Assets.icons.arrowLeftCircleButton
+        Assets.onboarding.arrowLeftCircleButton
             .svg(width: 28.rw, height: 28.rw)
             .onTap(() {
               context.pop();
             }),
-        Assets.icons.moonStar.svg(width: 24.rw, height: 24.rw),
+        Assets.onboarding.moonStar.svg(width: 24.rw, height: 24.rw),
       ],
     );
   }

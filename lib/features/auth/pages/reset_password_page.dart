@@ -178,7 +178,7 @@ class ResetPasswordPage extends StatelessWidget {
         ),
         prefixIcon: Padding(
           padding: EdgeInsets.all(12.rw),
-          child: Assets.icons.lock.svg(
+          child: Assets.onboarding.lock.svg(
             width: 20.rw,
             height: 20.rh,
             colorFilter: ColorFilter.mode(AppColors.grayColor, BlendMode.srcIn),
@@ -188,7 +188,7 @@ class ResetPasswordPage extends StatelessWidget {
           onTap: onToggleVisibility,
           child: Padding(
             padding: EdgeInsets.all(12.rw),
-            child: Assets.icons.eye.svg(
+            child: Assets.onboarding.eye.svg(
               width: 20.rw,
               height: 20.rh,
               colorFilter: ColorFilter.mode(

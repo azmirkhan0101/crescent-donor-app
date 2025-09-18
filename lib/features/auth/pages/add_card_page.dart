@@ -32,7 +32,7 @@ class AddCardPage extends StatelessWidget {
           ),
           12.rh.heightWidth,
 
-          Assets.images.cardInfo.svg(),
+          Assets.onboarding.cardInfo.svg(),
           32.rh.heightWidth,
 
           AddCardFormFields(),
