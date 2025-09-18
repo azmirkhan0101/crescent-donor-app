@@ -4,7 +4,7 @@ import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
 
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
@@ -26,7 +26,7 @@ class VerifyOtpPage extends StatelessWidget {
       children: [
         AuthHeader(),
         32.heightWidth,
-        AuthTileSection(title: "Enter Verification Code"),
+        AuthTitleSection(title: "Enter Verification Code"),
         Row(
           children: [
             "We’ve sent a code to ".text(AppTextStyles.f14W400()),

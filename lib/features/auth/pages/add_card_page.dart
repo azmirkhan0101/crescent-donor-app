@@ -3,7 +3,7 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/add_card_form_fields.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -26,7 +26,7 @@ class AddCardPage extends StatelessWidget {
           AuthHeader(),
           32.heightWidth,
 
-          AuthTileSection(
+          AuthTitleSection(
             title: AppStrings.startGivingEffortlessly,
             subtitle: AppStrings.secureYourWallet,
           ),

@@ -3,7 +3,7 @@ import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
 
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -23,7 +23,7 @@ class ForgotPasswordPage extends StatelessWidget {
       children: [
         AuthHeader(),
         32.heightWidth,
-        AuthTileSection(
+        AuthTitleSection(
           title: "Forgot Password?",
           subtitle: "Enter your email to reset password",
         ),

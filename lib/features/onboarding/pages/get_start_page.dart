@@ -1,3 +1,5 @@
+import 'package:cresent_charge_user_app/common-widgets/custom_loader/loader_usage_examples.dart';
+import 'package:cresent_charge_user_app/common-widgets/custom_loader/login_integration_example.dart';
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
@@ -49,6 +51,14 @@ class GetStartPage extends StatelessWidget {
               title: "Get Started",
               onTap: () {
                 context.pushNamed(RoutePath.howToWorkPage);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) {
+                //       return const LoaderExamplesPage();
+                //     },
+                //   ),
+                // );
               },
             ),
             15.rh.heightWidth,

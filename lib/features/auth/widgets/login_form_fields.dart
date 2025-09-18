@@ -1,4 +1,4 @@
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/common-widgets/form-fields/form_fields.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
@@ -51,179 +51,27 @@ class LoginFormFields extends StatelessWidget {
 
   /// Build email input field
   Widget _buildEmailField(LoginController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        "Email".text(AppTextStyles.baseStyle()).color("#000C0B".hexColor),
-
-        8.rh.heightWidth,
-
-        TextFormField(
-          controller: controller.emailController,
-          keyboardType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.next,
-          style: AppTextStyles.baseStyle().copyWith(
-            color: AppColors.black,
-            fontWeight: FontWeight.w500,
-          ),
-          validator: controller.validateEmail,
-          onChanged: (value) {
-            // Clear email error when user starts typing
-            if (controller.emailError.value.isNotEmpty) {
-              controller.emailError.value = '';
-            }
-          },
-          decoration: InputDecoration(
-            hintText: "Enter Email Address",
-            hintStyle: AppTextStyles.baseStyle().copyWith(
-              fontWeight: FontWeight.w500,
-              color: "#CCCCCC".hexColor,
-            ),
-            prefixIcon: Assets.onboarding.mail.svg().paddingOnly(
-              left: 16.rw,
-              right: 8.rw,
-            ),
-            prefixIconConstraints: BoxConstraints(
-              minWidth: 16.rw,
-              minHeight: 14.rh,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: "#E4E4E4".hexColor, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: "#E4E4E4".hexColor, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: AppColors.redColor, width: 1.5),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: AppColors.redColor, width: 1.5),
-            ),
-            isDense: true,
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 16.rh,
-              horizontal: 16.rw,
-            ),
-          ),
-        ),
-
-        // Email specific error message
-        if (controller.emailError.value.isNotEmpty)
-          Padding(
-            padding: EdgeInsets.only(top: 4.rh),
-            child: Text(
-              controller.emailError.value,
-              style: AppTextStyles.f14W400().copyWith(
-                color: AppColors.redColor,
-                fontSize: 12.rfs,
-              ),
-            ),
-          ),
-      ],
+    return LoginEmailField(
+      controller: controller.emailController,
+      onChanged: (value) {
+        // Clear email error when user starts typing
+        if (controller.emailError.value.isNotEmpty) {
+          controller.emailError.value = '';
+        }
+      },
     );
   }
 
   /// Build password input field
   Widget _buildPasswordField(LoginController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        "Password".text(AppTextStyles.baseStyle()).color("#000C0B".hexColor),
-
-        8.rh.heightWidth,
-
-        TextFormField(
-          controller: controller.passwordController,
-          obscureText: !controller.isPasswordVisible.value,
-          textInputAction: TextInputAction.done,
-          style: AppTextStyles.baseStyle().copyWith(
-            color: AppColors.black,
-            fontWeight: FontWeight.w500,
-          ),
-          validator: controller.validatePassword,
-          onChanged: (value) {
-            // Clear password error when user starts typing
-            if (controller.passwordError.value.isNotEmpty) {
-              controller.passwordError.value = '';
-            }
-          },
-          decoration: InputDecoration(
-            hintText: "***********",
-            hintStyle: AppTextStyles.baseStyle().copyWith(
-              fontWeight: FontWeight.w500,
-              color: "#CCCCCC".hexColor,
-            ),
-            prefixIcon: Assets.onboarding.lock.svg().paddingOnly(
-              left: 16.rw,
-              right: 8.rw,
-            ),
-            prefixIconConstraints: BoxConstraints(
-              minWidth: 16.rw,
-              minHeight: 14.rh,
-            ),
-            suffixIcon: GestureDetector(
-              onTap: () => controller.togglePasswordVisibility(),
-              child: Icon(
-                controller.isPasswordVisible.value
-                    ? Icons.visibility
-                    : Icons.visibility_off,
-                color: AppColors.black.withValues(alpha: 0.6),
-                size: 20.rw,
-              ).paddingOnly(right: 16.rw),
-            ),
-            suffixIconConstraints: BoxConstraints(
-              minWidth: 16.rw,
-              minHeight: 10.rh,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: "#E4E4E4".hexColor, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: "#E4E4E4".hexColor, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: AppColors.redColor, width: 1.5),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.rw),
-              borderSide: BorderSide(color: AppColors.redColor, width: 1.5),
-            ),
-            isDense: true,
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 16.rh,
-              horizontal: 16.rw,
-            ),
-          ),
-        ),
-
-        // Password specific error message
-        if (controller.passwordError.value.isNotEmpty)
-          Padding(
-            padding: EdgeInsets.only(top: 4.rh),
-            child: Text(
-              controller.passwordError.value,
-              style: AppTextStyles.f14W400().copyWith(
-                color: AppColors.redColor,
-                fontSize: 12.rfs,
-              ),
-            ),
-          ),
-      ],
+    return LoginPasswordField(
+      controller: controller.passwordController,
+      onChanged: (value) {
+        // Clear password error when user starts typing
+        if (controller.passwordError.value.isNotEmpty) {
+          controller.passwordError.value = '';
+        }
+      },
     );
   }
 

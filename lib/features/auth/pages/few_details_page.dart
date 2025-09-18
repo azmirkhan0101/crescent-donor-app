@@ -3,7 +3,7 @@ import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/few_details_form_fields.dart';
 
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -21,7 +21,7 @@ class FewDetailsPage extends StatelessWidget {
       16.heightWidth,
       AuthHeader(),
       32.heightWidth,
-      AuthTileSection(
+      AuthTitleSection(
         title: AppStrings.fewDetails,
         subtitle: AppStrings.helpUsGetToKnowYouBetter,
       ),

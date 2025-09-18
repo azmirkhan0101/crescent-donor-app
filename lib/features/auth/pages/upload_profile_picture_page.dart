@@ -2,7 +2,7 @@ import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -19,7 +19,7 @@ class UploadProfilePicturePage extends StatelessWidget {
     return [
       AuthHeader(),
       32.heightWidth,
-      AuthTileSection(title: AppStrings.uploadProfilePicture),
+      AuthTitleSection(title: AppStrings.uploadProfilePicture),
       Spacer(),
       Assets.onboarding.uploadProfilePicture.svg(),
       16.heightWidth,

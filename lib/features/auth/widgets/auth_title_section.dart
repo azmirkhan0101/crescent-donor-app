@@ -3,8 +3,8 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 
-class AuthTileSection extends StatelessWidget {
-  const AuthTileSection({super.key, required this.title, this.subtitle});
+class AuthTitleSection extends StatelessWidget {
+  const AuthTitleSection({super.key, required this.title, this.subtitle});
   final String title;
   final String? subtitle;
 

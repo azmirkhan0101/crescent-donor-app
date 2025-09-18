@@ -2,7 +2,7 @@ import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/signup_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -36,7 +36,7 @@ class TermsAgreementPage extends StatelessWidget {
           AuthHeader(),
           24.heightWidth,
 
-          AuthTileSection(
+          AuthTitleSection(
             title: AppStrings.reviewAndAccept,
             subtitle: AppStrings.readAndAcceptTerms,
           ),

@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_loader.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,14 @@ class CustomPrimaryButton extends StatelessWidget {
     this.fillColor,
     this.textColor,
     this.borderColor,
+    this.loadingText,
   });
   final String? title;
   final VoidCallback? onTap;
   final Color? fillColor;
   final Color? borderColor;
   final Color? textColor;
+  final String? loadingText;
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +36,32 @@ class CustomPrimaryButton extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: Text(
-        title ?? "Get Started",
-        style: GoogleFonts.familjenGrotesk(
-          fontSize: 18,
-          color: textColor ?? AppColors.black,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+      child: loadingText != null
+          ? Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LoadingIndicator.small(color: AppColors.black),
+                  SizedBox(width: 12.rw),
+                  Text(
+                    loadingText!,
+                    style: GoogleFonts.familjenGrotesk(
+                      fontSize: 18,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Text(
+              title ?? "Get Started",
+              style: GoogleFonts.familjenGrotesk(
+                fontSize: 18,
+                color: textColor ?? AppColors.black,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
     );
   }
 }

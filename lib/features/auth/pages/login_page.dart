@@ -1,8 +1,9 @@
+import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_loader.dart';
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/auth_tile_section.dart';
+import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/login_form_fields.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
@@ -40,7 +41,7 @@ class LoginPage extends StatelessWidget {
 
               32.heightWidth,
 
-              AuthTileSection(
+              AuthTitleSection(
                 title: AppStrings.welcomeBack,
                 subtitle: AppStrings.weMissedYourBusinessGrowth,
               ),
@@ -67,12 +68,10 @@ class LoginPage extends StatelessWidget {
       builder: (controller) {
         return Column(
           children: [
-            // Login button
             CustomPrimaryButton(
               title: "Login",
-              onTap: controller.isLoading.value
-                  ? null
-                  : () => _handleLogin(context, controller),
+              loadingText: controller.isLoading.value ? "Logging In..." : null,
+              onTap: () => _handleLogin(context, controller),
             ),
 
             16.heightWidth,
