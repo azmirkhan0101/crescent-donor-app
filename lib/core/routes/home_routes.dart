@@ -1,15 +1,14 @@
-import 'package:go_router/go_router.dart';
+import 'package:cresent_charge_user_app/core/routes/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/routes/route_config.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
-import 'package:cresent_charge_user_app/core/routes/auth_guard.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
-
+import 'package:cresent_charge_user_app/features/donation/pages/donation_page.dart';
+import 'package:cresent_charge_user_app/features/favorites/pages/favorites_page.dart';
 // Import home/main app pages
 import 'package:cresent_charge_user_app/features/home/pages/home_page.dart';
-import 'package:cresent_charge_user_app/features/favorites/pages/favorites_page.dart';
-import 'package:cresent_charge_user_app/features/donation/pages/donation_page.dart';
-import 'package:cresent_charge_user_app/features/profile/pages/profile_page.dart';
 import 'package:cresent_charge_user_app/features/main-layout/pages/main_layout_page.dart';
+import 'package:cresent_charge_user_app/features/profile/pages/profile_page.dart';
+import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:go_router/go_router.dart';
 
 /// Home Routes Configuration
 ///

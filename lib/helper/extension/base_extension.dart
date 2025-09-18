@@ -1,8 +1,7 @@
 // import 'package:cresent_charge_user_app/gen/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
-import 'package:get/get.dart';
 
 // /=--------- Route Base Path Extension --------=/
 extension RouteBasePathExt on String {
@@ -51,7 +50,6 @@ extension WidgetOnWidgetExt on Widget {
   Widget scaffoldSafeArea() {
     return Scaffold(body: SafeArea(child: this));
   }
-
 }
 
 // ====================== Scaffold ======================

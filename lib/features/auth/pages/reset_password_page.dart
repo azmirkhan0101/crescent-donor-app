@@ -173,7 +173,7 @@ class ResetPasswordPage extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: AppTextStyles.baseStyle().copyWith(
-          color: AppColors.grayColor.withOpacity(0.6),
+          color: AppColors.grayColor.withValues(alpha: 0.6),
           fontWeight: FontWeight.w400,
         ),
         prefixIcon: Padding(
@@ -201,14 +201,14 @@ class ResetPasswordPage extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.rw),
           borderSide: BorderSide(
-            color: AppColors.grayColor.withOpacity(0.3),
+            color: AppColors.grayColor.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.rw),
           borderSide: BorderSide(
-            color: AppColors.grayColor.withOpacity(0.3),
+            color: AppColors.grayColor.withValues(alpha: 0.3),
             width: 1,
           ),
         ),

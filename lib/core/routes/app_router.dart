@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
-
-// Import route modules
-import 'package:cresent_charge_user_app/core/routes/onboarding_routes.dart';
 import 'package:cresent_charge_user_app/core/routes/auth_routes.dart';
 import 'package:cresent_charge_user_app/core/routes/home_routes.dart';
+// Import route modules
+import 'package:cresent_charge_user_app/core/routes/onboarding_routes.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Main Application Router
 ///

@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_loader.dart';
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';

@@ -1,5 +1,3 @@
-import 'package:cresent_charge_user_app/common-widgets/custom_loader/loader_usage_examples.dart';
-import 'package:cresent_charge_user_app/common-widgets/custom_loader/login_integration_example.dart';
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
@@ -44,7 +42,7 @@ class GetStartPage extends StatelessWidget {
 
             // Discover rewards and cash back offers
             AppStrings.discoverRewards.centerText(AppTextStyles.baseStyle()),
-            58.rh.heightWidth,
+            Spacer(),
 
             // Get Started button
             CustomPrimaryButton(
