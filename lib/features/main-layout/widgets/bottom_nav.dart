@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
+import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,11 +24,11 @@ class BottomNav extends StatelessWidget {
     });
 
     return Container(
-      height: 80.rh,
+      height: 60.rh,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(
-          40.rw,
+          24.rw,
         ), // Fully rounded for floating effect
         boxShadow: [
           BoxShadow(
@@ -46,7 +47,7 @@ class BottomNav extends StatelessWidget {
       ),
       child: Obx(() {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildNavItem(
               context: context,
@@ -54,8 +55,8 @@ class BottomNav extends StatelessWidget {
               icon: Assets.bottomNav.home.svg(
                 colorFilter: ColorFilter.mode(
                   controller.isTabSelected(0)
-                      ? Colors.white
-                      : const Color(0xFF94A3B8),
+                      ? const Color(0xFF40520A)
+                      : const Color(0xFF8D8F88),
                   BlendMode.srcIn,
                 ),
               ),
@@ -67,8 +68,8 @@ class BottomNav extends StatelessWidget {
               icon: Assets.bottomNav.starEmphasis.svg(
                 colorFilter: ColorFilter.mode(
                   controller.isTabSelected(1)
-                      ? Colors.white
-                      : const Color(0xFF94A3B8),
+                      ? const Color(0xFF40520A)
+                      : const Color(0xFF8D8F88),
                   BlendMode.srcIn,
                 ),
               ),
@@ -80,8 +81,8 @@ class BottomNav extends StatelessWidget {
               icon: Assets.bottomNav.donation.svg(
                 colorFilter: ColorFilter.mode(
                   controller.isTabSelected(2)
-                      ? Colors.white
-                      : const Color(0xFF94A3B8),
+                      ? const Color(0xFF40520A)
+                      : const Color(0xFF8D8F88),
                   BlendMode.srcIn,
                 ),
               ),
@@ -93,8 +94,8 @@ class BottomNav extends StatelessWidget {
               icon: Assets.bottomNav.user.svg(
                 colorFilter: ColorFilter.mode(
                   controller.isTabSelected(3)
-                      ? Colors.white
-                      : const Color(0xFF94A3B8),
+                      ? const Color(0xFF40520A)
+                      : const Color(0xFF8D8F88),
                   BlendMode.srcIn,
                 ),
               ),
@@ -121,25 +122,16 @@ class BottomNav extends StatelessWidget {
         // Navigate to the route
         context.goNamed(routePath);
       },
-      child: Container(
-        width: 56.rw,
-        height: 56.rh,
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFBEF264) : Colors.transparent,
-          borderRadius: BorderRadius.circular(28.rw), // Fully rounded
-        ),
-        child: Center(
-          child: Container(
-            width: 48.rw,
-            height: 48.rh,
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.black : Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: SizedBox(width: 24.rw, height: 24.rh, child: icon),
-            ),
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Container(
+          width: 64.rw,
+          height: 56.rh,
+          decoration: BoxDecoration(
+            color: isSelected ? "#D1FF43".hexColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(24.rw),
           ),
+          child: Center(child: Center(child: icon)),
         ),
       ),
     );

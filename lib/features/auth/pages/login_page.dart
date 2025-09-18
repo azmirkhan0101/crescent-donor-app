@@ -103,7 +103,7 @@ class LoginPage extends StatelessWidget {
 
             24.heightWidth,
           ],
-        ).paddingSymmetric(horizontal: 56.rw);
+        ).paddingXY(horizontal: 56.rw);
       },
     );
   }

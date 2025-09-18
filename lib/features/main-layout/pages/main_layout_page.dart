@@ -25,7 +25,7 @@ class MainLayoutPage extends StatelessWidget {
           Positioned(
             left: 24.rw,
             right: 24.rw,
-            bottom: 31.rh,
+            bottom: 10.rh,
             child: const BottomNav(),
           ),
         ],

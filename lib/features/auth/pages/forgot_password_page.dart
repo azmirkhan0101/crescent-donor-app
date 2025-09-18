@@ -60,7 +60,7 @@ class ForgotPasswordPage extends StatelessWidget {
             16.heightWidth,
             HaveAccountWidget(),
           ],
-        ).paddingSymmetric(horizontal: 40.rw),
+        ).paddingXY(horizontal: 40.rw),
       ],
     ).paddingAll(16.rw).scaffoldSafeArea();
   }

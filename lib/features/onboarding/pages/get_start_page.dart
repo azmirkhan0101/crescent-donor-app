@@ -66,7 +66,7 @@ class GetStartPage extends StatelessWidget {
             // Already have an account? Sign In
             HaveAccountWidget(haveAccount: true),
           ],
-        ).paddingSymmetric(horizontal: 40.rw),
+        ).paddingXY(horizontal: 40.rw),
       ),
     );
   }

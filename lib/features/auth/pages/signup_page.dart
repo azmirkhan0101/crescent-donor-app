@@ -67,7 +67,7 @@ class _SignupPageState extends State<SignupPage> {
 
                   24.heightWidth,
                 ],
-              ).paddingSymmetric(horizontal: 56.rw),
+              ).paddingXY(horizontal: 56.rw),
             ],
           ),
         ),

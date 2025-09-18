@@ -69,6 +69,7 @@ class AppStrings {
   static const String arabic = "Arabic";
 
   // ====> Fonts <====
+  static const String familjenGrotesk = "'Familjen Grotesk'";
   static const String poppins = "Poppins";
   static const String inter = "Inter";
   static const String interDisplay = "Inter Display";

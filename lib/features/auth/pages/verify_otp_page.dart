@@ -1,11 +1,8 @@
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 
-import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
-
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -87,7 +84,7 @@ class VerifyOtpPage extends StatelessWidget {
               ],
             ),
           ],
-        ).paddingSymmetric(horizontal: 32.rw),
+        ).paddingXY(horizontal: 32.rw),
       ],
     ).paddingAll(16.rw).scaffoldSafeArea();
   }

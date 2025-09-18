@@ -3,6 +3,7 @@ import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 /// Home Page
 ///
@@ -16,24 +17,21 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.rw),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              40.rh.heightWidth, // Top spacing
-              _buildHeader(),
-              24.rh.heightWidth,
-              _buildImpactSection(),
-              32.rh.heightWidth,
-              _buildCauseCategories(),
-              32.rh.heightWidth,
-              _buildVerifiedCharities(),
-              32.rh.heightWidth,
-              _buildDonateForCause(),
-              100.rh.heightWidth, // Bottom spacing for navigation
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            8.rh.heightWidth.paddingXY(), // Top spacing
+            _buildHeader(),
+            20.rh.heightWidth,
+            _buildImpactSection(),
+            20.rh.heightWidth,
+            _buildCauseCategories(),
+            20.rh.heightWidth,
+            _buildVerifiedCharities(),
+            20.rh.heightWidth,
+            _buildDonateForCause(),
+            100.rh.heightWidth, // Bottom spacing for navigation
+          ],
         ),
       ),
     );
@@ -41,83 +39,74 @@ class HomePage extends StatelessWidget {
 
   /// Build the header with welcome message, profile, and notification
   Widget _buildHeader() {
-    return Row(
-      children: [
-        // Profile image
-        Container(
-          width: 48.rw,
-          height: 48.rh,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color(0xFF8B5CF6),
+    return SizedBox(
+      // height: 44.rh,
+      child: Row(
+        children: [
+          // Profile image
+          Container(
+            width: 46.rw,
+            height: 46.rh,
+            decoration: const BoxDecoration(shape: BoxShape.circle),
+            child: Center(
+              child: Assets.home.profileImage.svg(fit: BoxFit.cover),
+            ),
           ),
-          child: Center(
-            child: Assets.home.profileImage.svg(width: 32.rw, height: 32.rh),
+
+          16.rw.heightWidth,
+
+          // Welcome text
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Welcome back!", style: AppTextStyles.f14W400()),
+                Text("Talha S.", style: AppTextStyles.f20w600()),
+              ],
+            ),
           ),
-        ),
-        16.rw.heightWidth,
-        // Welcome text
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // Search and notification icons
+          Row(
             children: [
-              Text(
-                "Welcome back!",
-                style: AppTextStyles.f14W400().copyWith(
-                  color: const Color(0xFF64748B),
-                  fontSize: 14.rfs,
+              Container(
+                width: 44.rw,
+                height: 44.rh,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.rw),
+                ),
+                child: Center(
+                  child: Assets.home.search.svg(width: 20.rw, height: 20.rh),
                 ),
               ),
-              4.rh.heightWidth,
-              Text(
-                "Talha S.",
-                style: AppTextStyles.baseStyle().copyWith(
-                  fontSize: 20.rfs,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
+              12.rw.heightWidth,
+              Container(
+                width: 40.rw,
+                height: 40.rh,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.rw),
+                ),
+                child: Center(
+                  child: Stack(
+                    children: [
+                      Assets.home.notification.svg(width: 20.rw, height: 20.rh),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Assets.home.redDot.svg(
+                          width: 8.rw,
+                          height: 8.rh,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-        // Search and notification icons
-        Row(
-          children: [
-            Container(
-              width: 40.rw,
-              height: 40.rh,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.rw),
-              ),
-              child: Center(
-                child: Assets.home.search.svg(width: 20.rw, height: 20.rh),
-              ),
-            ),
-            12.rw.heightWidth,
-            Container(
-              width: 40.rw,
-              height: 40.rh,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.rw),
-              ),
-              child: Center(
-                child: Stack(
-                  children: [
-                    Assets.home.notification.svg(width: 20.rw, height: 20.rh),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Assets.home.redDot.svg(width: 8.rw, height: 8.rh),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -126,21 +115,11 @@ class HomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "You're making real change!",
-          style: AppTextStyles.baseStyle().copyWith(
-            fontSize: 24.rfs,
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
-          ),
-        ),
-        8.rh.heightWidth,
+        Text("You're making real change!", style: AppTextStyles.f20w600()),
+        2.rh.heightWidth,
         Text(
           "Track your impact, explore causes, and donate on your terms.",
-          style: AppTextStyles.f14W400().copyWith(
-            color: const Color(0xFF64748B),
-            fontSize: 16.rfs,
-          ),
+          style: AppTextStyles.f14W400(),
         ),
       ],
     );
@@ -149,38 +128,36 @@ class HomePage extends StatelessWidget {
   /// Build the cause categories chips
   Widget _buildCauseCategories() {
     final categories = [
-      {"icon": "💧", "label": "Water", "color": const Color(0xFFDDEFFF)},
-      {"icon": "📚", "label": "Education", "color": const Color(0xFFD4F8D4)},
-      {"icon": "🍯", "label": "Food", "color": const Color(0xFFFFF2D4)},
-      {"icon": "👫", "label": "Youth", "color": const Color(0xFFE0F7FA)},
+      {"icon": "💧", "label": "Water", "color": const Color(0xFFCCEEFF)},
+      {"icon": "📚", "label": "Education", "color": const Color(0xFFDAFFDB)},
+      {"icon": "🍯", "label": "Food", "color": const Color(0xFFFFE8CB)},
+      {"icon": "👫", "label": "Youth", "color": const Color(0xFFC6FEFC)},
     ];
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
+        spacing: 8.rw,
         children: categories.map((category) {
           return Container(
-            margin: EdgeInsets.only(right: 12.rw),
-            padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 12.rh),
+            padding: EdgeInsets.all(12.rw),
             decoration: BoxDecoration(
               color: category["color"] as Color,
-              borderRadius: BorderRadius.circular(20.rw),
+              borderRadius: BorderRadius.circular(24.rw),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   category["icon"] as String,
-                  style: TextStyle(fontSize: 16.rfs),
+                  style: AppTextStyles.f14W400(),
                 ),
-                8.rw.heightWidth,
+                4.rw.heightWidth,
                 Text(
                   category["label"] as String,
-                  style: AppTextStyles.baseStyle().copyWith(
-                    fontSize: 14.rfs,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
+                  style: AppTextStyles.f14W400().copyWith(color: Colors.black),
                 ),
               ],
             ),
@@ -197,14 +174,7 @@ class HomePage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Verified Charities",
-              style: AppTextStyles.baseStyle().copyWith(
-                fontSize: 20.rfs,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ),
-            ),
+            Text("Verified Charities", style: AppTextStyles.f20w600()),
             Text(
               "View all",
               style: AppTextStyles.f14W400().copyWith(

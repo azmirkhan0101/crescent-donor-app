@@ -22,23 +22,38 @@ class AppTextStyles {
   }
 
   /// f14 w400 styles
-  static TextStyle f14W400() {
-    return GoogleFonts.inter(
+  static TextStyle f14W400([String? fontFamily]) {
+    return TextStyle(
       fontSize: 14.rfs,
       fontWeight: FontWeight.w400,
       color: AppColors.grayColor,
       height: 20.rh / 14.rfs,
+      letterSpacing: -0.5.rfs / 100 * 14,
+      fontFamily: fontFamily ?? AppStrings.interDisplay,
+    );
+  }
+
+  /// f20 w600 styles
+  static TextStyle f20w600([String? fontFamily]) {
+    return TextStyle(
+      fontSize: 20.rfs,
+      fontWeight: FontWeight.w600,
+      color: const Color(0xFF171717),
+      height: 24.rh / 20.rfs,
+      letterSpacing: -1.rfs / 100 * 20,
+      fontFamily: fontFamily ?? AppStrings.familjenGrotesk,
     );
   }
 
   /// f28 w700 letterSpacing -2% styles
-  static TextStyle f28W700([TextStyle? style]) {
-    TextStyle fontFamily = style ?? GoogleFonts.familjenGrotesk();
-    return fontFamily.copyWith(
+  static TextStyle f28W700([String? style]) {
+    return TextStyle(
       fontSize: 28.rfs,
       fontWeight: FontWeight.w700,
       color: const Color(0xFF000C0B),
       letterSpacing: -2.rfs / 100 * 28,
+      height: 36.rh / 28.rfs,
+      fontFamily: style ?? AppStrings.familjenGrotesk,
     );
   }
 
