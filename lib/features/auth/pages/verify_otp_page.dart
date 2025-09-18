@@ -84,7 +84,7 @@ class VerifyOtpPage extends StatelessWidget {
               ],
             ),
           ],
-        ).paddingXY(horizontal: 32.rw),
+        ).paddingXY(X: 32.rw),
       ],
     ).paddingAll(16.rw).scaffoldSafeArea();
   }

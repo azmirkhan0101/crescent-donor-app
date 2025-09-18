@@ -37,7 +37,7 @@ class UploadProfilePicturePage extends StatelessWidget {
         onTap: () {
           context.pushNamed(RoutePath.addCard);
         },
-      ).paddingXY(horizontal: 40.rw),
+      ).paddingXY(X: 40.rw),
       60.rh.heightWidth,
     ].scaffoldSafeAreaColumn(horizontalPadding: 16.rw);
   }

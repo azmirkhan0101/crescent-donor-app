@@ -3,7 +3,7 @@ import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/get_utils.dart';
+import 'package:get/utils.dart';
 
 /// Home Page
 ///
@@ -20,10 +20,10 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            8.rh.heightWidth.paddingXY(), // Top spacing
-            _buildHeader(),
+            8.rh.heightWidth, // Top spacing
+            _buildHeader().paddingR(16.rw),
             20.rh.heightWidth,
-            _buildImpactSection(),
+            _buildImpactSection().paddingR(16.rw),
             20.rh.heightWidth,
             _buildCauseCategories(),
             20.rh.heightWidth,
@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
             _buildDonateForCause(),
             100.rh.heightWidth, // Bottom spacing for navigation
           ],
-        ),
+        ).paddingL(16.rw),
       ),
     );
   }
@@ -184,8 +184,8 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ],
-        ),
-        16.rh.heightWidth,
+        ).paddingR(16.rw),
+        12.rh.heightWidth,
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -220,89 +220,93 @@ class HomePage extends StatelessWidget {
     Color backgroundColor,
     String imagePath,
   ) {
-    return Container(
-      width: 200.rw,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.rw),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+    return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.rw),
+        side: BorderSide(color: "#EDEDED".hexColor, width: 1),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Charity image/icon
-          Container(
-            width: double.infinity,
-            height: 120.rh,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.rw),
-                topRight: Radius.circular(16.rw),
+
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
+        child: Column(
+          children: [
+            Container(
+              width: 154.rw,
+              height: 120.rh,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(8.rw),
+              ),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Assets.home.premiumCheckmark.svg(
+                  width: 20.rw,
+                  height: 20.rh,
+                ),
+              ).paddingXY(X: 10.rw, Y: 8.rh),
+            ),
+            Container(
+              width: 162.rw,
+              height: 226.rh,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.rw),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Charity image/icon
+                  Padding(
+                    padding: EdgeInsets.all(16.rw),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          category,
+                          style: AppTextStyles.f14W400().copyWith(
+                            color: const Color(0xFF10B981),
+                            fontSize: 12.rfs,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        4.rh.heightWidth,
+                        Text(
+                          title,
+                          style: AppTextStyles.baseStyle().copyWith(
+                            fontSize: 16.rfs,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        4.rh.heightWidth,
+                        Text(
+                          location,
+                          style: AppTextStyles.f14W400().copyWith(
+                            color: const Color(0xFF64748B),
+                            fontSize: 12.rfs,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  bottom: 8.rh,
-                  right: 8.rw,
-                  child: Container(
-                    padding: EdgeInsets.all(8.rw),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Assets.home.premiumCheckmark.svg(
-                      width: 16.rw,
-                      height: 16.rh,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.rw),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  category,
-                  style: AppTextStyles.f14W400().copyWith(
-                    color: const Color(0xFF10B981),
-                    fontSize: 12.rfs,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                4.rh.heightWidth,
-                Text(
-                  title,
-                  style: AppTextStyles.baseStyle().copyWith(
-                    fontSize: 16.rfs,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                4.rh.heightWidth,
-                Text(
-                  location,
-                  style: AppTextStyles.f14W400().copyWith(
-                    color: const Color(0xFF64748B),
-                    fontSize: 12.rfs,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

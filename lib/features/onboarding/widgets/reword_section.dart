@@ -22,7 +22,7 @@ class RewordSection extends StatelessWidget {
             AppTextStyles.baseStyle().copyWith(letterSpacing: 1),
           ),
         ],
-      ).paddingXY(horizontal: 40.rw);
+      ).paddingXY(X: 40.rw);
     });
   }
 }

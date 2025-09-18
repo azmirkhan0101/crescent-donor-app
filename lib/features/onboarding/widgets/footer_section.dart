@@ -46,7 +46,7 @@ class FooterSection extends StatelessWidget {
             .svg(width: 40.rh, height: 40.rh)
             .onTap(() => onTapNext(controller, context)),
       ],
-    ).paddingXY(horizontal: 16.rw);
+    ).paddingXY(X: 16.rw);
   }
 
   void onClickSkip(BuildContext context) {

@@ -149,7 +149,7 @@ class ResetPasswordPage extends StatelessWidget {
               ],
             ),
           ],
-        ).paddingXY(horizontal: 40.rw),
+        ).paddingXY(X: 40.rw),
       ],
     ).paddingAll(16.rw).scaffoldSafeArea();
   }

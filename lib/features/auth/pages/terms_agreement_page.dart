@@ -116,9 +116,9 @@ class TermsAgreementPage extends StatelessWidget {
 
               24.heightWidth,
             ],
-          ).paddingXY(horizontal: 40.rw),
+          ).paddingXY(X: 40.rw),
         ],
-      ).paddingXY(horizontal: 16.rw),
+      ).paddingXY(X: 16.rw),
     ).scaffoldSafeArea();
   }
 }

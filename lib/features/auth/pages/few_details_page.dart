@@ -45,7 +45,7 @@ class FewDetailsPage extends StatelessWidget {
 
           24.heightWidth,
         ],
-      ).paddingXY(horizontal: 40.rw),
+      ).paddingXY(X: 40.rw),
     ].scaffoldSafeAreaColumn(horizontalPadding: 16.rw);
   }
 }
