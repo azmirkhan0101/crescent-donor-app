@@ -249,62 +249,46 @@ class HomePage extends StatelessWidget {
                 ),
               ).paddingXY(X: 10.rw, Y: 8.rh),
             ),
-            Container(
-              width: 162.rw,
-              height: 226.rh,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.rw),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
+
+            8.rh.heightWidth,
+
+            SizedBox(
+              width: 154.rw,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Charity image/icon
-                  Padding(
-                    padding: EdgeInsets.all(16.rw),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          category,
-                          style: AppTextStyles.f14W400().copyWith(
-                            color: const Color(0xFF10B981),
-                            fontSize: 12.rfs,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        4.rh.heightWidth,
-                        Text(
-                          title,
-                          style: AppTextStyles.baseStyle().copyWith(
-                            fontSize: 16.rfs,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        4.rh.heightWidth,
-                        Text(
-                          location,
-                          style: AppTextStyles.f14W400().copyWith(
-                            color: const Color(0xFF64748B),
-                            fontSize: 12.rfs,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    category,
+                    style: AppTextStyles.f14W400().copyWith(
+                      color: const Color(0xFF10B981),
+                      fontSize: 12.rfs,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  4.rh.heightWidth,
+                  Text(
+                    title,
+                    style: AppTextStyles.baseStyle().copyWith(
+                      fontSize: 16.rfs,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  4.rh.heightWidth,
+                  Text(
+                    location,
+                    style: AppTextStyles.f14W400().copyWith(
+                      color: const Color(0xFF64748B),
+                      fontSize: 12.rfs,
                     ),
                   ),
                 ],
               ),
-            ),
+            ).paddingXY(X: 8.rw),
           ],
         ),
       ),
