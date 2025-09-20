@@ -1,4 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/features/home/wigets/donation_cause_card.dart';
+import 'package:cresent_charge_user_app/features/home/wigets/verified_charity_card.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -29,7 +31,7 @@ class HomePage extends StatelessWidget {
             20.rh.heightWidth,
             _buildVerifiedCharities(),
             20.rh.heightWidth,
-            _buildDonateForCause(),
+            _buildDonateForCause().paddingR(16.rw),
             100.rh.heightWidth, // Bottom spacing for navigation
           ],
         ).paddingL(16.rw),
@@ -190,108 +192,31 @@ class HomePage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _buildCharityCard(
-                "Hope for Learning Foundation",
-                "South Asia",
-                "🎓 Education",
-                const Color(0xFFFFB5B5),
-                Assets.home.varifiedCharitiesBlog1.path,
+              VerifiedCharityCard(
+                title: "Hope for Learning Foundation",
+                location: "South Asia",
+                category: "🎓 Education",
+                backgroundColor: const Color(0xFFFFB5B5),
+                imagePath: Assets.home.varifiedCharitiesBlog1.path,
               ),
-              12.rw.heightWidth,
-              _buildCharityCard(
-                "Healing Hands International",
-                "Sydney, Australia",
-                "🏥 Health",
-                const Color(0xFFE6D7FF),
-                Assets.home.varifiedCharitiesBlog2.path,
+              VerifiedCharityCard(
+                title: "Healing Hands International",
+                location: "Sydney, Australia",
+                category: "🏥 Health",
+                backgroundColor: const Color(0xFFE6D7FF),
+                imagePath: Assets.home.varifiedCharitiesBlog2.path,
+              ),
+              VerifiedCharityCard(
+                title: "Hope for Learning Foundation",
+                location: "South Asia",
+                category: "🎓 Education",
+                backgroundColor: const Color(0xFFFFB5B5),
+                imagePath: Assets.home.varifiedCharitiesBlog1.path,
               ),
             ],
           ),
         ),
       ],
-    );
-  }
-
-  /// Build individual charity card
-  Widget _buildCharityCard(
-    String title,
-    String location,
-    String category,
-    Color backgroundColor,
-    String imagePath,
-  ) {
-    return Card(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.rw),
-        side: BorderSide(color: "#EDEDED".hexColor, width: 1),
-      ),
-
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
-        child: Column(
-          children: [
-            Container(
-              width: 154.rw,
-              height: 120.rh,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(8.rw),
-              ),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Assets.home.premiumCheckmark.svg(
-                  width: 20.rw,
-                  height: 20.rh,
-                ),
-              ).paddingXY(X: 10.rw, Y: 8.rh),
-            ),
-
-            8.rh.heightWidth,
-
-            SizedBox(
-              width: 154.rw,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    category,
-                    style: AppTextStyles.f14W400().copyWith(
-                      color: const Color(0xFF10B981),
-                      fontSize: 12.rfs,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  4.rh.heightWidth,
-                  Text(
-                    title,
-                    style: AppTextStyles.baseStyle().copyWith(
-                      fontSize: 16.rfs,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  4.rh.heightWidth,
-                  Text(
-                    location,
-                    style: AppTextStyles.f14W400().copyWith(
-                      color: const Color(0xFF64748B),
-                      fontSize: 12.rfs,
-                    ),
-                  ),
-                ],
-              ),
-            ).paddingXY(X: 8.rw),
-          ],
-        ),
-      ),
     );
   }
 
@@ -323,258 +248,28 @@ class HomePage extends StatelessWidget {
         16.rh.heightWidth,
         Column(
           children: [
-            _buildDonationCard(
-              "Bringing education to rural villages.",
-              "🍯 Food",
-              "\$8,328",
-              "+983 People have already donated",
-              Assets.home.donateCauseBanner1.path,
+            DonationCauseCard(
+              index: 0,
+              title: "Bringing education to rural villages.",
+              category: "🍯 Food",
+              amount: "\$8,328",
+              donors: "+983 People have already donated",
+              bannerPath: Assets.home.donateCauseBanner1.path,
+              profilePath: Assets.home.donatieCauseProfile1.path,
             ),
             16.rh.heightWidth,
-            _buildDonationCard(
-              "Healing Hands International",
-              "🎓 Education",
-              "\$8,328",
-              "+983 People have already donated",
-              Assets.home.donateCauseBanner2.path,
+            DonationCauseCard(
+              index: 1,
+              title: "Healing Hands International",
+              category: "🎓 Education",
+              amount: "\$8,328",
+              donors: "+983 People have already donated",
+              bannerPath: Assets.home.donateCauseBanner2.path,
+              profilePath: Assets.home.donateCauseProfile2.path,
             ),
           ],
         ),
       ],
-    );
-  }
-
-  /// Build individual donation card
-  Widget _buildDonationCard(
-    String title,
-    String category,
-    String amount,
-    String donors,
-    String imagePath,
-  ) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.rw),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Campaign image
-          Container(
-            width: double.infinity,
-            height: 180.rh,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.rw),
-                topRight: Radius.circular(16.rw),
-              ),
-              image: DecorationImage(
-                image: AssetImage(imagePath),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Stack(
-              children: [
-                Positioned(
-                  bottom: 12.rh,
-                  left: 12.rw,
-                  child: Container(
-                    padding: EdgeInsets.all(8.rw),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Assets.home.premiumCheckmark.svg(
-                      width: 24.rw,
-                      height: 24.rh,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 12.rh,
-                  right: 12.rw,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.rw,
-                      vertical: 6.rh,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFF2D4),
-                      borderRadius: BorderRadius.circular(12.rw),
-                    ),
-                    child: Text(
-                      category,
-                      style: AppTextStyles.f14W400().copyWith(
-                        color: Colors.black,
-                        fontSize: 12.rfs,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Campaign details
-          Padding(
-            padding: EdgeInsets.all(16.rw),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyles.baseStyle().copyWith(
-                    fontSize: 18.rfs,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
-                16.rh.heightWidth,
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16.rw),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFDDEFFF),
-                    borderRadius: BorderRadius.circular(12.rw),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Total Donations",
-                        style: AppTextStyles.f14W400().copyWith(
-                          color: const Color(0xFF64748B),
-                          fontSize: 14.rfs,
-                        ),
-                      ),
-                      4.rh.heightWidth,
-                      Row(
-                        children: [
-                          // Profile images stack
-                          SizedBox(
-                            width: 80.rw,
-                            height: 24.rh,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  child: Container(
-                                    width: 24.rw,
-                                    height: 24.rh,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 2,
-                                      ),
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          Assets.home.user1.path,
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 16.rw,
-                                  child: Container(
-                                    width: 24.rw,
-                                    height: 24.rh,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 2,
-                                      ),
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          Assets.home.user2.path,
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 32.rw,
-                                  child: Container(
-                                    width: 24.rw,
-                                    height: 24.rh,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 2,
-                                      ),
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          Assets.home.user3.path,
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 48.rw,
-                                  child: Container(
-                                    width: 24.rw,
-                                    height: 24.rh,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 2,
-                                      ),
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          Assets.home.user4.path,
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          8.rw.heightWidth,
-                          Text(
-                            donors,
-                            style: AppTextStyles.f14W400().copyWith(
-                              color: const Color(0xFF64748B),
-                              fontSize: 12.rfs,
-                            ),
-                          ),
-                        ],
-                      ),
-                      8.rh.heightWidth,
-                      Text(
-                        amount,
-                        style: AppTextStyles.baseStyle().copyWith(
-                          fontSize: 28.rfs,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

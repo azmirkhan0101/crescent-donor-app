@@ -1,10 +1,9 @@
+import 'dart:io';
+
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
-
-import 'dart:io';
-
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTextStyles {
@@ -30,6 +29,17 @@ class AppTextStyles {
       height: 20.rh / 14.rfs,
       letterSpacing: -0.5.rfs / 100 * 14,
       fontFamily: fontFamily ?? AppStrings.interDisplay,
+    );
+  }
+
+  /// f16 w500 styles
+  static TextStyle f16W500([String? fontFamily]) {
+    return TextStyle(
+      color: const Color(0xFF000C0B) /* Colors-Off-Black */,
+      fontSize: 16.rfs,
+      fontFamily: 'Inter Display',
+      fontWeight: FontWeight.w500,
+      height: 1.25,
     );
   }
 
