@@ -19,33 +19,28 @@ class LoginFormFields extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginController = controller ?? Get.find<LoginController>();
 
-    return GetX<LoginController>(
-      init: loginController,
-      builder: (controller) {
-        return Form(
-          key: controller.formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Email field
-              _buildEmailField(controller),
+    return Form(
+      key: loginController.formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Email field
+          _buildEmailField(loginController),
 
-              24.heightWidth,
+          24.heightWidth,
 
-              // Password field
-              _buildPasswordField(controller),
+          // Password field
+          _buildPasswordField(loginController),
 
-              16.heightWidth,
+          16.heightWidth,
 
-              // Remember password and forgot password row
-              _buildRememberAndForgotRow(controller, context),
+          // Remember password and forgot password row
+          _buildRememberAndForgotRow(loginController, context),
 
-              // Error message display
-              _buildErrorMessage(controller),
-            ],
-          ),
-        );
-      },
+          // Error message display
+          Obx(() => _buildErrorMessage(loginController)),
+        ],
+      ),
     );
   }
 

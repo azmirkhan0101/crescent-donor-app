@@ -14,13 +14,38 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final LoginController loginController = Get.put(LoginController());
+  State<LoginPage> createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
+  late final LoginController loginController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if controller already exists to avoid duplicate creation
+    loginController = Get.isRegistered<LoginController>()
+        ? Get.find<LoginController>()
+        : Get.put(LoginController());
+  }
+
+  @override
+  void dispose() {
+    // Clean up form errors when leaving the page
+    if (Get.isRegistered<LoginController>()) {
+      loginController.clearErrors();
+      // Delete the controller when the page is disposed
+      Get.delete<LoginController>();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -63,48 +88,46 @@ class LoginPage extends StatelessWidget {
 
   /// Build login actions section (login button, guest login, etc.)
   Widget _buildLoginActions(BuildContext context, LoginController controller) {
-    return GetX<LoginController>(
-      builder: (controller) {
-        return Column(
-          children: [
-            CustomPrimaryButton(
-              title: "Login",
-              loadingText: controller.isLoading.value ? "Logging In..." : null,
-              onTap: () => _handleLogin(context, controller),
-            ),
+    return Obx(() {
+      return Column(
+        children: [
+          CustomPrimaryButton(
+            title: "Login",
+            loadingText: controller.isLoading.value ? "Logging In..." : null,
+            onTap: () => _handleLogin(context, controller),
+          ),
 
-            16.heightWidth,
+          16.heightWidth,
 
-            HaveAccountWidget(),
+          HaveAccountWidget(),
 
-            16.rh.heightWidth,
+          16.rh.heightWidth,
 
-            "OR"
-                .centerText(
-                  controller.isLoading.value
-                      ? TextStyle(color: AppColors.grayColor)
-                      : const TextStyle(),
-                )
-                .fontFamily(GoogleFonts.inter().fontFamily),
+          "OR"
+              .centerText(
+                controller.isLoading.value
+                    ? TextStyle(color: AppColors.grayColor)
+                    : const TextStyle(),
+              )
+              .fontFamily(GoogleFonts.inter().fontFamily),
 
-            16.rh.heightWidth,
+          16.rh.heightWidth,
 
-            // Login as guest button
-            CustomPrimaryButton(
-              title: controller.isLoading.value
-                  ? "Please wait..."
-                  : "Login as a Guest",
-              fillColor: Colors.transparent,
-              onTap: controller.isLoading.value
-                  ? null
-                  : () => _handleGuestLogin(context, controller),
-            ),
+          // Login as guest button
+          CustomPrimaryButton(
+            title: controller.isLoading.value
+                ? "Please wait..."
+                : "Login as a Guest",
+            fillColor: Colors.transparent,
+            onTap: controller.isLoading.value
+                ? null
+                : () => _handleGuestLogin(context, controller),
+          ),
 
-            24.heightWidth,
-          ],
-        ).paddingXY(X: 56.rw);
-      },
-    );
+          24.heightWidth,
+        ],
+      ).paddingXY(X: 56.rw);
+    });
   }
 
   /// Handle login button press
@@ -118,17 +141,18 @@ class LoginPage extends StatelessWidget {
     final success = await controller.login();
 
     if (success && context.mounted) {
-      // Navigate to home on successful login
-      context.pushNamed(RoutePath.home);
-
-      // Show success message
-      Get.snackbar(
-        'Login Successful',
-        'Welcome back!',
-        backgroundColor: AppColors.primaryColor.withValues(alpha: 0.1),
-        colorText: AppColors.black,
-        duration: const Duration(seconds: 2),
+      // Show success message before navigation
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Welcome back!'),
+          backgroundColor: AppColors.primaryColor.withValues(alpha: 0.9),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
+
+      // Navigate to home on successful login (replace current route)
+      context.goNamed(RoutePath.home);
     }
   }
 
@@ -140,17 +164,18 @@ class LoginPage extends StatelessWidget {
     final success = await controller.loginAsGuest();
 
     if (success && context.mounted) {
-      // Navigate to home on successful guest login
-      context.pushNamed(RoutePath.home);
-
-      // Show guest mode message
-      Get.snackbar(
-        'Guest Mode',
-        'You are now browsing as a guest',
-        backgroundColor: AppColors.grayColor.withValues(alpha: 0.1),
-        colorText: AppColors.black,
-        duration: const Duration(seconds: 2),
+      // Show guest mode message before navigation
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('You are now browsing as a guest'),
+          backgroundColor: AppColors.grayColor.withValues(alpha: 0.9),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
+
+      // Navigate to home on successful guest login (replace current route)
+      context.goNamed(RoutePath.home);
     }
   }
 }

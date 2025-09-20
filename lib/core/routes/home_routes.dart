@@ -6,6 +6,7 @@ import 'package:cresent_charge_user_app/features/favorites/pages/favorites_page.
 // Import home/main app pages
 import 'package:cresent_charge_user_app/features/home/pages/home_page.dart';
 import 'package:cresent_charge_user_app/features/main-layout/pages/main_layout_page.dart';
+import 'package:cresent_charge_user_app/features/notification/pages/notification_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/profile_page.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +34,15 @@ class HomeRoutes extends AppRouteConfig {
           builder: (context, state) => const HomePage(),
           // Allow both authenticated users and guests
           redirect: AuthGuard.guestAllowed.redirect,
+        ),
+
+        /// Notification Page - User notifications and alerts
+        /// AUTH REQUIRED: Notifications are user-specific and require login
+        GoRoute(
+          name: RoutePath.notifications,
+          path: RoutePath.notifications.addBasePath,
+          builder: (context, state) => const NotificationsPage(),
+          redirect: AuthGuard.authRequired.redirect,
         ),
 
         /// Favorites Page - User's favorite charities

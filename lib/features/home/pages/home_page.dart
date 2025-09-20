@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/home/wigets/donation_cause_card.dart';
 import 'package:cresent_charge_user_app/features/home/wigets/verified_charity_card.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
@@ -6,6 +7,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
+import 'package:go_router/go_router.dart';
 
 /// Home Page
 ///
@@ -23,7 +25,7 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             8.rh.heightWidth, // Top spacing
-            _buildHeader().paddingR(16.rw),
+            _buildHeader(context).paddingR(16.rw),
             20.rh.heightWidth,
             _buildImpactSection().paddingR(16.rw),
             20.rh.heightWidth,
@@ -40,7 +42,7 @@ class HomePage extends StatelessWidget {
   }
 
   /// Build the header with welcome message, profile, and notification
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return SizedBox(
       // height: 44.rh,
       child: Row(
@@ -82,6 +84,8 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               12.rw.heightWidth,
+
+              // Notification icon with red dot
               Container(
                 width: 40.rw,
                 height: 40.rh,
@@ -104,7 +108,9 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
+              ).onTap(() {
+                context.pushNamed(RoutePath.notifications);
+              }),
             ],
           ),
         ],

@@ -130,13 +130,12 @@ class LoginController extends GetxController {
       isLoading.value = true;
 
       // Simulate API call - replace with actual authentication
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
       // TODO: Replace with actual API authentication
       if (emailController.text.isEmail && passwordController.text.isNotEmpty) {
         // Simulate successful login
-        String authToken =
-            'sample_auth_token_${DateTime.now().millisecondsSinceEpoch}';
+        String authToken = '1234567890';
 
         // Save auth token
         await AppStorageService.saveAuthToken(authToken);

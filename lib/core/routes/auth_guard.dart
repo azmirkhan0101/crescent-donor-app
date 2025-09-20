@@ -1,10 +1,10 @@
-import 'package:cresent_charge_user_app/service/app_storage_service.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:cresent_charge_user_app/helper/local_db/local_db.dart';
-import 'package:cresent_charge_user_app/utils/app_const/app_const.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/helper/local_db/local_db.dart';
+import 'package:cresent_charge_user_app/service/app_storage_service.dart';
+import 'package:cresent_charge_user_app/utils/app_const/app_const.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Authentication guard for protecting routes
 /// This class handles checking if user is authenticated and redirecting if needed
@@ -14,7 +14,7 @@ class AuthGuard {
     try {
       // final token = await SharePrefsHelper.getString(AppConstants.token);
       final String token = await AppStorageService.getAuthToken() ?? '';
-      
+
       final isLoggedIn = token.isNotEmpty;
 
       debugPrint('🔐 Auth Guard: User authenticated = $isLoggedIn');
@@ -113,13 +113,14 @@ class AuthGuard {
   /// [requiresAuth] - Whether the route requires authentication
   /// [allowGuest] - Whether guest users can access this route
   /// [authRequired] - Strict authentication (only authenticated users, no guests)
-  static String? Function(BuildContext, GoRouterState) createRedirect({
+  static Future<String?> Function(BuildContext context, GoRouterState state)
+  createRedirect({
     bool requiresAuth = false,
     bool allowGuest = true,
     bool authRequired = false,
   }) {
-    return (BuildContext context, GoRouterState state) {
-      return _syncRedirectCheck(
+    return (BuildContext context, GoRouterState state) async {
+      return await _syncRedirectCheck(
         currentPath: state.fullPath ?? '',
         requiresAuth: requiresAuth,
         allowGuest: allowGuest,
@@ -129,12 +130,12 @@ class AuthGuard {
   }
 
   /// Synchronous redirect check
-  static String? _syncRedirectCheck({
+  static Future<String?> _syncRedirectCheck({
     required String currentPath,
     required bool requiresAuth,
     required bool allowGuest,
     required bool authRequired,
-  }) {
+  }) async {
     // This is a simplified synchronous version
     // In production, you might want to store auth state in a way that's synchronously accessible
 
@@ -144,17 +145,34 @@ class AuthGuard {
     if (authRequired) {
       // Only authenticated users allowed, no guests
       debugPrint('🔐 Auth Guard: Route requires strict auth - checking token');
-      // Here you would check for actual authentication token
-      // For now, we'll redirect to login if strict auth is required
-      return RoutePath.login.addBasePath;
+      // Check for authentication token using the correct method
+      final token = await AppStorageService.getAuthToken();
+      if (token == null || token.isEmpty) {
+        debugPrint(
+          '🔐 Auth Guard: No valid token found - redirecting to login',
+        );
+        return RoutePath.login.addBasePath;
+      } else {
+        debugPrint('🔐 Auth Guard: Valid token found - access granted');
+        return null;
+      }
     }
 
     if (requiresAuth && !allowGuest) {
       // Requires auth but no guest access
       debugPrint(
-        '🔐 Auth Guard: Route requires auth, no guest - redirecting to login',
+        '🔐 Auth Guard: Route requires auth, no guest - checking token',
       );
-      return RoutePath.login.addBasePath;
+      final token = await AppStorageService.getAuthToken();
+      if (token == null || token.isEmpty) {
+        debugPrint(
+          '🔐 Auth Guard: No valid token found - redirecting to login',
+        );
+        return RoutePath.login.addBasePath;
+      } else {
+        debugPrint('🔐 Auth Guard: Valid token found - access granted');
+        return null;
+      }
     }
 
     // For guest-allowed routes, no redirect needed
@@ -203,7 +221,8 @@ class RouteGuardConfig {
   });
 
   /// Create redirect function for this configuration
-  String? Function(BuildContext, GoRouterState) get redirect {
+  Future<String?> Function(BuildContext context, GoRouterState state)
+  get redirect {
     return AuthGuard.createRedirect(
       requiresAuth: requiresAuth,
       allowGuest: allowGuest,

@@ -35,6 +35,42 @@ class $AssetsBottomNavGen {
   List<SvgGenImage> get values => [donation, home, starEmphasis, user];
 }
 
+class $AssetsCommonGen {
+  const $AssetsCommonGen();
+
+  /// File path: assets/common/alert.svg
+  SvgGenImage get alert => const SvgGenImage('assets/common/alert.svg');
+
+  /// File path: assets/common/arrow-left.svg
+  SvgGenImage get arrowLeft =>
+      const SvgGenImage('assets/common/arrow-left.svg');
+
+  /// File path: assets/common/campaign-love-box.svg
+  SvgGenImage get campaignLoveBox =>
+      const SvgGenImage('assets/common/campaign-love-box.svg');
+
+  /// File path: assets/common/dot-gray.svg
+  SvgGenImage get dotGray => const SvgGenImage('assets/common/dot-gray.svg');
+
+  /// File path: assets/common/heart-on-hand.svg
+  SvgGenImage get heartOnHand =>
+      const SvgGenImage('assets/common/heart-on-hand.svg');
+
+  /// File path: assets/common/star-filled.svg
+  SvgGenImage get starFilled =>
+      const SvgGenImage('assets/common/star-filled.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+    alert,
+    arrowLeft,
+    campaignLoveBox,
+    dotGray,
+    heartOnHand,
+    starFilled,
+  ];
+}
+
 class $AssetsHomeGen {
   const $AssetsHomeGen();
 
@@ -195,6 +231,7 @@ class Assets {
   const Assets._();
 
   static const $AssetsBottomNavGen bottomNav = $AssetsBottomNavGen();
+  static const $AssetsCommonGen common = $AssetsCommonGen();
   static const $AssetsHomeGen home = $AssetsHomeGen();
   static const $AssetsOnboardingGen onboarding = $AssetsOnboardingGen();
 }
