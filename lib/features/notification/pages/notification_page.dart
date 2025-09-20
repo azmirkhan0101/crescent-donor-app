@@ -1,4 +1,7 @@
+import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
+import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/notification/controllers/notification_controller.dart';
+import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -21,42 +24,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
-      appBar: _buildAppBar(),
+      appBar: CustomAppBar(
+        title: "Notifications",
+        backgroundColor: const Color(0xFFF7F7F7),
+      ),
       body: Column(
         children: [
           _buildCategoryFilter(),
           Expanded(child: _buildNotificationList()),
         ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: const Color(0xFFF7F7F7),
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      title: Text(
-        'Notifications',
-        style: TextStyle(
-          color: const Color(0xFF000C0B),
-          fontSize: 20.rfs,
-          fontWeight: FontWeight.w700,
-          fontFamily: 'Inter',
-        ),
-      ),
-      centerTitle: true,
-      leading: IconButton(
-        onPressed: () => Navigator.pop(context),
-        icon: SvgPicture.asset(
-          'assets/common/arrow-left.svg',
-          width: 24.rw,
-          height: 24.rh,
-          colorFilter: const ColorFilter.mode(
-            Color(0xFF000C0B),
-            BlendMode.srcIn,
-          ),
-        ),
       ),
     );
   }
@@ -212,7 +188,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
               _buildNotificationIcon(notification),
               SizedBox(width: 12.rw),
               Expanded(child: _buildNotificationContent(notification)),
-              if (notification.hasRedDot) _buildRedDotIndicator(),
             ],
           ),
           if (notification.isReminder && notification.reminderDate != null)
@@ -224,33 +199,35 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Widget _buildNotificationIcon(NotificationItem notification) {
     Color backgroundColor;
-    IconData iconData;
-    Color iconColor = Colors.white;
+    SvgGenImage svgGenImage;
+    Color iconColor = "#000C0B".hexColor;
 
     switch (notification.type) {
       case NotificationType.campaigns:
-        backgroundColor = const Color(0xFF5DADE2);
-        iconData = Icons.mail_outline;
+        backgroundColor = const Color(0xFFADDFFF);
+        svgGenImage = Assets.common.campaignLoveBox;
         break;
       case NotificationType.impact:
-        backgroundColor = const Color(0xFFF39C12);
-        iconData = Icons.circle_outlined;
+        backgroundColor = const Color(0xFFFFEE99);
+        svgGenImage = Assets.common.heartCircle;
         break;
       case NotificationType.donations:
-        backgroundColor = const Color(0xFF48C9B0);
-        iconData = Icons.arrow_upward;
+        backgroundColor = const Color(0xFFA6F6E6);
+        svgGenImage = Assets.common.heartOnHand;
         break;
       case NotificationType.rewards:
-        backgroundColor = const Color(0xFFE674EC);
-        iconData = Icons.star_outline;
+        backgroundColor = const Color(0xFFFFBFDF);
+        svgGenImage = Assets.common.starFilled;
         break;
       case NotificationType.alert:
-        backgroundColor = const Color(0xFFE74C3C);
-        iconData = Icons.warning_outlined;
+        backgroundColor = const Color(0xFFF0323C);
+        svgGenImage = Assets.common.alert;
+        iconColor = Colors.white;
         break;
       case NotificationType.system:
-        backgroundColor = const Color(0xFF95A5A6);
-        iconData = Icons.settings_outlined;
+        backgroundColor = const Color(0xFFF0323C);
+        svgGenImage = Assets.common.alert;
+        iconColor = Colors.white;
         break;
     }
 
@@ -261,7 +238,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Icon(iconData, color: iconColor, size: 20.rw),
+      child: svgGenImage
+          .svg(
+            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+            fit: BoxFit.cover,
+          )
+          .paddingAll(10.rw),
+      // child: Icon(iconPath, color: iconColor, size: 20.rw),
     );
   }
 
@@ -269,17 +252,23 @@ class _NotificationsPageState extends State<NotificationsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          notification.title,
-          style: TextStyle(
-            color: const Color(0xFF000C0B),
-            fontSize: 16.rfs,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
-            height: 1.2,
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        Row(
+          children: [
+            if (notification.hasRedDot) _buildRedDotIndicator(),
+            SizedBox(width: 8.rw),
+            Text(
+              notification.title,
+              style: TextStyle(
+                color: const Color(0xFF000C0B),
+                fontSize: 16.rfs,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+                height: 1.2,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
         SizedBox(height: 4.rh),
         Text(

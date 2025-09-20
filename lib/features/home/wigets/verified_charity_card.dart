@@ -1,9 +1,11 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
+import 'package:go_router/go_router.dart';
 
 class VerifiedCharityCard extends StatelessWidget {
   const VerifiedCharityCard({
@@ -98,6 +100,8 @@ class VerifiedCharityCard extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ).onTap(() {
+      context.pushNamed(RoutePath.organizationDetails);
+    });
   }
 }

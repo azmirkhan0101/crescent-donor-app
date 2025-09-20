@@ -3,8 +3,12 @@ import 'package:cresent_charge_user_app/core/routes/route_config.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/donation_page.dart';
 import 'package:cresent_charge_user_app/features/favorites/pages/favorites_page.dart';
+import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart';
 // Import home/main app pages
 import 'package:cresent_charge_user_app/features/home/pages/home_page.dart';
+import 'package:cresent_charge_user_app/features/home/pages/organization_details_page.dart';
+import 'package:cresent_charge_user_app/features/home/pages/search_page.dart';
+import 'package:cresent_charge_user_app/features/home/pages/verified_charities_page.dart';
 import 'package:cresent_charge_user_app/features/main-layout/pages/main_layout_page.dart';
 import 'package:cresent_charge_user_app/features/notification/pages/notification_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/profile_page.dart';
@@ -34,15 +38,6 @@ class HomeRoutes extends AppRouteConfig {
           builder: (context, state) => const HomePage(),
           // Allow both authenticated users and guests
           redirect: AuthGuard.guestAllowed.redirect,
-        ),
-
-        /// Notification Page - User notifications and alerts
-        /// AUTH REQUIRED: Notifications are user-specific and require login
-        GoRoute(
-          name: RoutePath.notifications,
-          path: RoutePath.notifications.addBasePath,
-          builder: (context, state) => const NotificationsPage(),
-          redirect: AuthGuard.authRequired.redirect,
         ),
 
         /// Favorites Page - User's favorite charities
@@ -77,13 +72,50 @@ class HomeRoutes extends AppRouteConfig {
       ],
     ),
 
-    // Additional routes that might be added in the future:
-    //
-    // Settings Page - Would use AuthGuard.authRequired
-    // Help & Support - Would use AuthGuard.guestAllowed
-    // Notifications - Would use AuthGuard.authRequired
-    // Payment Methods - Would use AuthGuard.strictAuth
-    // Admin Panel - Would use AuthGuard.strictAuth
+    /// Search Page - User search functionality
+    /// AUTH REQUIRED: Search is user-specific and requires login
+    GoRoute(
+      name: RoutePath.search,
+      path: RoutePath.search.addBasePath,
+      builder: (context, state) => const SearchPage(),
+      redirect: AuthGuard.guestAllowed.redirect,
+    ),
+
+    /// Search Page - User search functionality
+    /// AUTH REQUIRED: Search is user-specific and requires login
+    GoRoute(
+      name: RoutePath.charities,
+      path: RoutePath.charities.addBasePath,
+      builder: (context, state) => const CharitiesPage(),
+      redirect: AuthGuard.guestAllowed.redirect,
+    ),
+
+    /// Search Page - User search functionality
+    /// AUTH REQUIRED: Search is user-specific and requires login
+    GoRoute(
+      name: RoutePath.verifiedCharities,
+      path: RoutePath.verifiedCharities.addBasePath,
+      builder: (context, state) => const VerifiedCharitiesPage(),
+      redirect: AuthGuard.guestAllowed.redirect,
+    ),
+
+    /// Search Page - User search functionality
+    /// AUTH REQUIRED: Search is user-specific and requires login
+    GoRoute(
+      name: RoutePath.organizationDetails,
+      path: RoutePath.organizationDetails.addBasePath,
+      builder: (context, state) => const OrganizationDetailsPage(),
+      redirect: AuthGuard.guestAllowed.redirect,
+    ),
+
+    /// Notification Page - User notifications and alerts
+    /// AUTH REQUIRED: Notifications are user-specific and require login
+    GoRoute(
+      name: RoutePath.notifications,
+      path: RoutePath.notifications.addBasePath,
+      builder: (context, state) => const NotificationsPage(),
+      redirect: AuthGuard.authRequired.redirect,
+    ),
   ];
 }
 

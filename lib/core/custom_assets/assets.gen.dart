@@ -45,12 +45,20 @@ class $AssetsCommonGen {
   SvgGenImage get arrowLeft =>
       const SvgGenImage('assets/common/arrow-left.svg');
 
+  /// File path: assets/common/arrow_down.svg
+  SvgGenImage get arrowDown =>
+      const SvgGenImage('assets/common/arrow_down.svg');
+
   /// File path: assets/common/campaign-love-box.svg
   SvgGenImage get campaignLoveBox =>
       const SvgGenImage('assets/common/campaign-love-box.svg');
 
   /// File path: assets/common/dot-gray.svg
   SvgGenImage get dotGray => const SvgGenImage('assets/common/dot-gray.svg');
+
+  /// File path: assets/common/heart-circle.svg
+  SvgGenImage get heartCircle =>
+      const SvgGenImage('assets/common/heart-circle.svg');
 
   /// File path: assets/common/heart-on-hand.svg
   SvgGenImage get heartOnHand =>
@@ -64,8 +72,10 @@ class $AssetsCommonGen {
   List<SvgGenImage> get values => [
     alert,
     arrowLeft,
+    arrowDown,
     campaignLoveBox,
     dotGray,
+    heartCircle,
     heartOnHand,
     starFilled,
   ];
@@ -74,8 +84,14 @@ class $AssetsCommonGen {
 class $AssetsHomeGen {
   const $AssetsHomeGen();
 
+  /// File path: assets/home/Location.svg
+  SvgGenImage get location => const SvgGenImage('assets/home/Location.svg');
+
   /// File path: assets/home/OBJECTS.svg
   SvgGenImage get objects => const SvgGenImage('assets/home/OBJECTS.svg');
+
+  /// File path: assets/home/Remove.svg
+  SvgGenImage get remove => const SvgGenImage('assets/home/Remove.svg');
 
   /// File path: assets/home/Search.svg
   SvgGenImage get search => const SvgGenImage('assets/home/Search.svg');
@@ -133,7 +149,9 @@ class $AssetsHomeGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    location,
     objects,
+    remove,
     search,
     donateCauseBanner1,
     donateCauseBanner2,
