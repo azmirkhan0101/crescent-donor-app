@@ -6,7 +6,7 @@ import 'package:cresent_charge_user_app/features/favorites/pages/favorites_page.
 import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart';
 // Import home/main app pages
 import 'package:cresent_charge_user_app/features/home/pages/home_page.dart';
-import 'package:cresent_charge_user_app/features/home/pages/organization_details_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/search_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/verified_charities_page.dart';
 import 'package:cresent_charge_user_app/features/main-layout/pages/main_layout_page.dart';

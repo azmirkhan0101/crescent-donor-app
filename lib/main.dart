@@ -1,5 +1,5 @@
 import 'package:cresent_charge_user_app/core/routes/app_router.dart';
-import 'package:cresent_charge_user_app/core/theme/light_theme.dart';
+import 'package:cresent_charge_user_app/core/theme/theme.dart';
 import 'package:cresent_charge_user_app/dependency_injection/getx_injection.dart';
 import 'package:cresent_charge_user_app/global/language/controller/language_controller.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
@@ -29,6 +29,9 @@ void main() async {
   LanguageController languageController = Get.put(LanguageController());
   languageController.getLanguageType();
 
+  // Initialize theme controller
+  Get.put(ThemeController());
+
   runApp(const MyApp());
 }
 
@@ -46,7 +49,11 @@ class MyApp extends StatelessWidget {
         builder: (controller) {
           return GetMaterialApp.router(
             debugShowCheckedModeBanner: false,
-            theme: lightTheme,
+            title: 'Crescent Charge',
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: ThemeMode
+                .system, // Automatically switch based on system preference
             routeInformationParser: AppRouter.router.routeInformationParser,
             routerDelegate: AppRouter.router.routerDelegate,
             routeInformationProvider: AppRouter.router.routeInformationProvider,

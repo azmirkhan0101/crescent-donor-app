@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/core/theme/theme_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/search_controller.dart';
 import 'package:cresent_charge_user_app/features/notification/controllers/notification_controller.dart';
@@ -5,6 +6,9 @@ import 'package:cresent_charge_user_app/global/general_controller/general_contro
 import 'package:get/get.dart';
 
 void initGetx() {
+  // ================== Core Controllers ==================
+  Get.lazyPut(() => ThemeController(), fenix: true);
+
   // ================== Global Controller ==================
   Get.lazyPut(() => GeneralController(), fenix: true);
 

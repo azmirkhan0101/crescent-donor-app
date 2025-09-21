@@ -1,6 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/home/wigets/donation_cause_card.dart';
-import 'package:cresent_charge_user_app/features/home/wigets/verified_charity_card.dart';
+import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
+import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
