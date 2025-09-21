@@ -99,6 +99,12 @@ class $AssetsHomeGen {
   /// File path: assets/home/Search.svg
   SvgGenImage get search => const SvgGenImage('assets/home/Search.svg');
 
+  /// File path: assets/home/calendar.svg
+  SvgGenImage get calendar => const SvgGenImage('assets/home/calendar.svg');
+
+  /// File path: assets/home/coins.svg
+  SvgGenImage get coins => const SvgGenImage('assets/home/coins.svg');
+
   /// File path: assets/home/cresent-light.svg
   SvgGenImage get cresentLight =>
       const SvgGenImage('assets/home/cresent-light.svg');
@@ -118,6 +124,9 @@ class $AssetsHomeGen {
   /// File path: assets/home/donatie-cause-profile-1.png
   AssetGenImage get donatieCauseProfile1 =>
       const AssetGenImage('assets/home/donatie-cause-profile-1.png');
+
+  /// File path: assets/home/gift.svg
+  SvgGenImage get gift => const SvgGenImage('assets/home/gift.svg');
 
   /// File path: assets/home/notification.svg
   SvgGenImage get notification =>
@@ -167,11 +176,14 @@ class $AssetsHomeGen {
     objects,
     remove,
     search,
+    calendar,
+    coins,
     cresentLight,
     donateCauseBanner1,
     donateCauseBanner2,
     donateCauseProfile2,
     donatieCauseProfile1,
+    gift,
     notification,
     premiumCheckmark,
     profileImage,
