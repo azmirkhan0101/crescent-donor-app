@@ -43,6 +43,18 @@ class AppTextStyles {
     );
   }
 
+  /// f18 w600 styles
+  static TextStyle f18W600([String? fontFamily]) {
+    return TextStyle(
+      fontSize: 18.rfs,
+      fontWeight: FontWeight.w600,
+      color: const Color(0xFF000C0B),
+      height: 22.rh / 18.rfs,
+      letterSpacing: -1.rfs / 100 * 18,
+      fontFamily: fontFamily ?? AppStrings.familjenGrotesk,
+    );
+  }
+
   /// f20 w600 styles
   static TextStyle f20w600([String? fontFamily]) {
     return TextStyle(

@@ -2,8 +2,11 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/home/wigets/total_donations_card.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
+import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
+import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 
 class OrganizationDetailsPage extends StatefulWidget {
   final String? organizationId;
@@ -32,12 +35,20 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
             // _buildDonationStatsCard(),
             TotalDonationsCard(color: const Color(0xFFEAF7EB)),
             SizedBox(height: 16.rh),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Overview', style: AppTextStyles.f16W500())
+                  .fontFamily(AppStrings.familjenGrotesk)
+                  .fontWeight(FontWeight.w600),
+            ),
+            SizedBox(height: 12.rh),
             _buildOverviewSection(),
             SizedBox(height: 100.rh), // Space for bottom button
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomDonateButton(),
+      floatingActionButton: _buildBottomDonateButton().paddingXY(X: 56.rw),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -66,15 +77,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
           ),
         ),
       ),
-      title: Text(
-        'Organization Details',
-        style: TextStyle(
-          fontFamily: 'Familjen Grotesk',
-          fontSize: 20.rfs,
-          fontWeight: FontWeight.w600,
-          color: const Color(0xFF000C0B),
-        ),
-      ),
+      title: Text('Organization Details', style: AppTextStyles.f20w600()),
     );
   }
 
@@ -133,38 +136,15 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                 right: 8.rw,
                 child: Row(
                   children: [
-                    _buildBadge(Icons.account_balance, Colors.orange),
+                    _buildBadge(Assets.home.starBadg.path),
                     SizedBox(width: 8.rw),
-                    _buildBadge(Icons.mosque, const Color(0xFF9D68DE)),
+                    _buildBadge(Assets.home.zakat.path),
                     SizedBox(width: 8.rw),
-                    _buildBadge(Icons.book, const Color(0xFF7790E0)),
+                    _buildBadge(Assets.home.cresentLight.path),
                     SizedBox(width: 8.rw),
                     _buildEducationTag(),
                   ],
                 ),
-                // child: Container(
-                //   padding: const EdgeInsets.symmetric(
-                //     horizontal: 8,
-                //     vertical: 4,
-                //   ),
-                //   clipBehavior: Clip.antiAlias,
-                //   decoration: ShapeDecoration(
-                //     color: const Color(0xFFDAFFDB),
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(24),
-                //     ),
-                //   ),
-                //   child: Text(
-                //     "📚 Education",
-                //     style: TextStyle(
-                //       color: const Color(0xFF000C0B),
-                //       fontSize: 10,
-                //       fontFamily: 'Inter Display',
-                //       fontWeight: FontWeight.w400,
-                //       height: 1.20,
-                //     ),
-                //   ),
-                // ),
               ),
             ],
           ),
@@ -182,12 +162,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                     Expanded(
                       child: Text(
                         'Hope for Learning Foundation',
-                        style: TextStyle(
-                          fontFamily: 'Familjen Grotesk',
-                          fontSize: 18.rfs,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF000C0B),
-                        ),
+                        style: AppTextStyles.f18W600(),
                       ),
                     ),
                     Container(
@@ -198,7 +173,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                         borderRadius: BorderRadius.circular(10.rw),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             offset: const Offset(0, 1),
                             blurRadius: 0,
                           ),
@@ -263,16 +238,10 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
     );
   }
 
-  Widget _buildBadge(IconData icon, Color color) {
-    return Container(
-      width: 20.rw,
-      height: 20.rh,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.rw),
-      ),
-      child: Icon(icon, color: color, size: 12.rfs),
-    );
+  Widget _buildBadge(dynamic icon) {
+    return icon is String
+        ? SvgPicture.asset(icon, width: 12.rw, height: 12.rh)
+        : Icon(icon, size: 12.rfs);
   }
 
   Widget _buildEducationTag() {
@@ -311,15 +280,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
       ),
       child: Row(
         children: [
-          Container(
-            width: 20.rw,
-            height: 20.rh,
-            decoration: BoxDecoration(
-              color: const Color(0xFF0F7A15),
-              borderRadius: BorderRadius.circular(10.rw),
-            ),
-            child: Icon(Icons.lightbulb, color: Colors.white, size: 12.rfs),
-          ),
+          Assets.home.lightbulb.svg(width: 20.rw, height: 20.rw),
           SizedBox(width: 8.rw),
           Expanded(
             child: Text(
@@ -337,118 +298,16 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
     );
   }
 
-  Widget _buildDonationStatsCard() {
-    return Container(
-      padding: EdgeInsets.all(8.rw),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF7EB),
-        border: Border.all(color: const Color(0xFFEDEDED)),
-        borderRadius: BorderRadius.circular(8.rw),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Total Donations',
-                style: TextStyle(
-                  fontFamily: 'Inter Display',
-                  fontSize: 14.rfs,
-                  color: const Color(0xFF000C0B),
-                  height: 1.29,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.rh),
-          Row(
-            children: [
-              // User avatars
-              SizedBox(
-                width: 40.rw,
-                height: 16.rh,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 0,
-                      child: _buildUserAvatar(const Color(0xFFFFC2B8)),
-                    ),
-                    Positioned(
-                      left: 8.rw,
-                      child: _buildUserAvatar(const Color(0xFFF6D3BD)),
-                    ),
-                    Positioned(
-                      left: 16.rw,
-                      child: _buildUserAvatar(const Color(0xFFEDBBD6)),
-                    ),
-                    Positioned(
-                      left: 24.rw,
-                      child: _buildUserAvatar(const Color(0xFFF0F3F4)),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 4.rw),
-              Text(
-                '+983 People have already donated',
-                style: TextStyle(
-                  fontFamily: 'Inter Display',
-                  fontSize: 12.rfs,
-                  color: const Color(0xFF657271),
-                  height: 1.33,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.rh),
-          Text(
-            '\$8,328',
-            style: TextStyle(
-              fontFamily: 'Inter Display',
-              fontSize: 20.rfs,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF000C0B),
-              height: 1.2,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUserAvatar(Color color) {
-    return Container(
-      width: 16.rw,
-      height: 16.rh,
-      decoration: BoxDecoration(
-        color: color,
-        border: Border.all(color: const Color(0xFFE4E4E4)),
-        borderRadius: BorderRadius.circular(8.rw),
-      ),
-    );
-  }
-
   Widget _buildOverviewSection() {
     return Container(
       padding: EdgeInsets.all(12.rw),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: const Color(0xFFE4E4E4)),
         borderRadius: BorderRadius.circular(16.rw),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Overview',
-            style: TextStyle(
-              fontFamily: 'Familjen Grotesk',
-              fontSize: 16.rfs,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF000C0B),
-            ),
-          ),
           SizedBox(height: 12.rh),
           Text(
             'The Hope For Learning Foundation is committed to giving every child—no matter where they\'re from—a fair shot at success. By bridging education gaps, they empower underserved communities globally with access, tools, and opportunity.',
@@ -533,26 +392,20 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
 
   Widget _buildBottomDonateButton() {
     return Container(
-      padding: EdgeInsets.all(16.rw),
-      decoration: const BoxDecoration(color: Colors.white),
-      child: SafeArea(
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 16.rh),
-          decoration: BoxDecoration(
-            color: const Color(0xFF000C0B),
-            borderRadius: BorderRadius.circular(12.rw),
-          ),
-          child: Text(
-            'Donate Now',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Familjen Grotesk',
-              fontSize: 18.rfs,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
-          ),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 16.rh),
+      decoration: BoxDecoration(
+        color: const Color(0xFF000C0B),
+        borderRadius: BorderRadius.circular(12.rw),
+      ),
+      child: Text(
+        'Donate Now',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'Familjen Grotesk',
+          fontSize: 18.rfs,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
         ),
       ),
     );

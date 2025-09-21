@@ -84,6 +84,9 @@ class $AssetsCommonGen {
 class $AssetsHomeGen {
   const $AssetsHomeGen();
 
+  /// File path: assets/home/Lightbulb.svg
+  SvgGenImage get lightbulb => const SvgGenImage('assets/home/Lightbulb.svg');
+
   /// File path: assets/home/Location.svg
   SvgGenImage get location => const SvgGenImage('assets/home/Location.svg');
 
@@ -95,6 +98,10 @@ class $AssetsHomeGen {
 
   /// File path: assets/home/Search.svg
   SvgGenImage get search => const SvgGenImage('assets/home/Search.svg');
+
+  /// File path: assets/home/cresent-light.svg
+  SvgGenImage get cresentLight =>
+      const SvgGenImage('assets/home/cresent-light.svg');
 
   /// File path: assets/home/donate-cause-banner-1.png
   AssetGenImage get donateCauseBanner1 =>
@@ -127,6 +134,9 @@ class $AssetsHomeGen {
   /// File path: assets/home/red-dot.svg
   SvgGenImage get redDot => const SvgGenImage('assets/home/red-dot.svg');
 
+  /// File path: assets/home/star-badg.svg
+  SvgGenImage get starBadg => const SvgGenImage('assets/home/star-badg.svg');
+
   /// File path: assets/home/user-1.png
   AssetGenImage get user1 => const AssetGenImage('assets/home/user-1.png');
 
@@ -147,12 +157,17 @@ class $AssetsHomeGen {
   AssetGenImage get varifiedCharitiesBlog2 =>
       const AssetGenImage('assets/home/varified-charities-blog-2.png');
 
+  /// File path: assets/home/zakat.svg
+  SvgGenImage get zakat => const SvgGenImage('assets/home/zakat.svg');
+
   /// List of all assets
   List<dynamic> get values => [
+    lightbulb,
     location,
     objects,
     remove,
     search,
+    cresentLight,
     donateCauseBanner1,
     donateCauseBanner2,
     donateCauseProfile2,
@@ -161,12 +176,14 @@ class $AssetsHomeGen {
     premiumCheckmark,
     profileImage,
     redDot,
+    starBadg,
     user1,
     user2,
     user3,
     user4,
     varifiedCharitiesBlog1,
     varifiedCharitiesBlog2,
+    zakat,
   ];
 }
 
