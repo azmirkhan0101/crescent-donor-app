@@ -6,11 +6,13 @@ import 'package:cresent_charge_user_app/features/favorites/pages/favorites_page.
 import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart';
 // Import home/main app pages
 import 'package:cresent_charge_user_app/features/home/pages/home_page.dart';
-import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/search_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/verified_charities_page.dart';
 import 'package:cresent_charge_user_app/features/main-layout/pages/main_layout_page.dart';
 import 'package:cresent_charge_user_app/features/notification/pages/notification_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/add_new_card_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/payment_linked_account_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/profile_page.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:go_router/go_router.dart';
@@ -99,13 +101,25 @@ class HomeRoutes extends AppRouteConfig {
       redirect: AuthGuard.guestAllowed.redirect,
     ),
 
-    /// Search Page - User search functionality
-    /// AUTH REQUIRED: Search is user-specific and requires login
     GoRoute(
       name: RoutePath.organizationDetails,
       path: RoutePath.organizationDetails.addBasePath,
       builder: (context, state) => const OrganizationDetailsPage(),
       redirect: AuthGuard.guestAllowed.redirect,
+    ),
+
+    GoRoute(
+      name: RoutePath.linkedAccount,
+      path: RoutePath.linkedAccount.addBasePath,
+      builder: (context, state) => const PaymentLinkedAccountPage(),
+      redirect: AuthGuard.authRequired.redirect,
+    ),
+
+    GoRoute(
+      name: RoutePath.addCard,
+      path: RoutePath.addCard.addBasePath,
+      builder: (context, state) => const AddNewCardPage(),
+      redirect: AuthGuard.authRequired.redirect,
     ),
 
     /// Notification Page - User notifications and alerts

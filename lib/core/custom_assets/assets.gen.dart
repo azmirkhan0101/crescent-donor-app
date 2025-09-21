@@ -38,6 +38,9 @@ class $AssetsBottomNavGen {
 class $AssetsCommonGen {
   const $AssetsCommonGen();
 
+  /// File path: assets/common/add.svg
+  SvgGenImage get add => const SvgGenImage('assets/common/add.svg');
+
   /// File path: assets/common/alert.svg
   SvgGenImage get alert => const SvgGenImage('assets/common/alert.svg');
 
@@ -70,6 +73,7 @@ class $AssetsCommonGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
+    add,
     alert,
     arrowLeft,
     arrowDown,
@@ -99,8 +103,17 @@ class $AssetsHomeGen {
   /// File path: assets/home/Search.svg
   SvgGenImage get search => const SvgGenImage('assets/home/Search.svg');
 
+  /// File path: assets/home/apple-pay.svg
+  SvgGenImage get applePay => const SvgGenImage('assets/home/apple-pay.svg');
+
+  /// File path: assets/home/atm-card.svg
+  SvgGenImage get atmCard => const SvgGenImage('assets/home/atm-card.svg');
+
   /// File path: assets/home/calendar.svg
   SvgGenImage get calendar => const SvgGenImage('assets/home/calendar.svg');
+
+  /// File path: assets/home/chase-icon.svg
+  SvgGenImage get chaseIcon => const SvgGenImage('assets/home/chase-icon.svg');
 
   /// File path: assets/home/coins.svg
   SvgGenImage get coins => const SvgGenImage('assets/home/coins.svg');
@@ -127,6 +140,9 @@ class $AssetsHomeGen {
 
   /// File path: assets/home/gift.svg
   SvgGenImage get gift => const SvgGenImage('assets/home/gift.svg');
+
+  /// File path: assets/home/gpay.svg
+  SvgGenImage get gpay => const SvgGenImage('assets/home/gpay.svg');
 
   /// File path: assets/home/notification.svg
   SvgGenImage get notification =>
@@ -176,7 +192,10 @@ class $AssetsHomeGen {
     objects,
     remove,
     search,
+    applePay,
+    atmCard,
     calendar,
+    chaseIcon,
     coins,
     cresentLight,
     donateCauseBanner1,
@@ -184,6 +203,7 @@ class $AssetsHomeGen {
     donateCauseProfile2,
     donatieCauseProfile1,
     gift,
+    gpay,
     notification,
     premiumCheckmark,
     profileImage,

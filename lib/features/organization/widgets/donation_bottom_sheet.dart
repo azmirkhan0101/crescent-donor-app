@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/theme/theme.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
+import 'package:cresent_charge_user_app/features/organization/widgets/date_time_selection_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_type_card.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -92,7 +93,15 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
           // Continue Button
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              context.pop();
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const DateTimeSelectionBottomSheet(),
+              );
+            },
             style: ElevatedButton.styleFrom(
               fixedSize: Size(double.maxFinite, 56.rh),
               backgroundColor: const Color(0xFF000C0B),

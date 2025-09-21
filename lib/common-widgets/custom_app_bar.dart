@@ -4,13 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key, required this.title, this.backgroundColor});
+  const CustomAppBar({
+    super.key,
+    required this.title,
+    this.backgroundColor,
+    this.actions,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   final String title;
   final Color? backgroundColor;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
+      actions: actions,
     );
   }
 }

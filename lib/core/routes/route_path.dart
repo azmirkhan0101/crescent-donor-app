@@ -22,6 +22,8 @@ class RoutePath {
   static const String charities = 'charities';
   static const String verifiedCharities = 'verifiedCharities';
   static const String organizationDetails = 'organizationDetails';
+  static const String linkedAccount = 'linkedAccount';
+  static const String addNewCard = 'addNewCard';
   static const String search = 'search';
   static const String notifications = 'notifications';
   static const String favorites = 'favorites';
