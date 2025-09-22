@@ -5,7 +5,6 @@ import 'package:cresent_charge_user_app/core/routes/route_config.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/donation_page.dart';
-import 'package:cresent_charge_user_app/features/favorites/pages/favorites_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart';
 // Import home/main app pages
 import 'package:cresent_charge_user_app/features/home/pages/home_page.dart';
@@ -19,6 +18,7 @@ import 'package:cresent_charge_user_app/features/organization/pages/make_payment
 import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/payment_linked_account_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/profile_page.dart';
+import 'package:cresent_charge_user_app/features/rewards/pages/your_rewards_page.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:go_router/go_router.dart';
 
@@ -52,7 +52,7 @@ class HomeRoutes extends AppRouteConfig {
         GoRoute(
           name: RoutePath.favorites,
           path: RoutePath.favorites.addBasePath,
-          builder: (context, state) => const FavoritesPage(),
+          builder: (context, state) => const YourRewardsPage(),
           // Allow both authenticated users and guests
           redirect: AuthGuard.guestAllowed.redirect,
         ),

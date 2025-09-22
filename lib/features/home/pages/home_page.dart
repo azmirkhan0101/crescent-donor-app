@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.rw),
                 ),
                 child: Center(
-                  child: Assets.home.search.svg(width: 20.rw, height: 20.rh),
+                  child: Assets.common.search.svg(width: 20.rw, height: 20.rh),
                 ),
               ).onTap(() {
                 context.pushNamed(RoutePath.search);

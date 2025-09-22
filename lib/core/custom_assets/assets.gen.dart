@@ -38,6 +38,9 @@ class $AssetsBottomNavGen {
 class $AssetsCommonGen {
   const $AssetsCommonGen();
 
+  /// File path: assets/common/Search.svg
+  SvgGenImage get search => const SvgGenImage('assets/common/Search.svg');
+
   /// File path: assets/common/add.svg
   SvgGenImage get add => const SvgGenImage('assets/common/add.svg');
 
@@ -59,6 +62,10 @@ class $AssetsCommonGen {
   /// File path: assets/common/dot-gray.svg
   SvgGenImage get dotGray => const SvgGenImage('assets/common/dot-gray.svg');
 
+  /// File path: assets/common/download-arrow.svg
+  SvgGenImage get downloadArrow =>
+      const SvgGenImage('assets/common/download-arrow.svg');
+
   /// File path: assets/common/heart-circle.svg
   SvgGenImage get heartCircle =>
       const SvgGenImage('assets/common/heart-circle.svg');
@@ -71,17 +78,23 @@ class $AssetsCommonGen {
   SvgGenImage get starFilled =>
       const SvgGenImage('assets/common/star-filled.svg');
 
+  /// File path: assets/common/tick-mark.svg
+  SvgGenImage get tickMark => const SvgGenImage('assets/common/tick-mark.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
+    search,
     add,
     alert,
     arrowLeft,
     arrowDown,
     campaignLoveBox,
     dotGray,
+    downloadArrow,
     heartCircle,
     heartOnHand,
     starFilled,
+    tickMark,
   ];
 }
 
@@ -99,9 +112,6 @@ class $AssetsHomeGen {
 
   /// File path: assets/home/Remove.svg
   SvgGenImage get remove => const SvgGenImage('assets/home/Remove.svg');
-
-  /// File path: assets/home/Search.svg
-  SvgGenImage get search => const SvgGenImage('assets/home/Search.svg');
 
   /// File path: assets/home/apple-pay.svg
   SvgGenImage get applePay => const SvgGenImage('assets/home/apple-pay.svg');
@@ -162,6 +172,13 @@ class $AssetsHomeGen {
   /// File path: assets/home/star-badg.svg
   SvgGenImage get starBadg => const SvgGenImage('assets/home/star-badg.svg');
 
+  /// File path: assets/home/stars-tick-mark.svg
+  SvgGenImage get starsTickMark =>
+      const SvgGenImage('assets/home/stars-tick-mark.svg');
+
+  /// File path: assets/home/starts.svg
+  SvgGenImage get starts => const SvgGenImage('assets/home/starts.svg');
+
   /// File path: assets/home/user-1.png
   AssetGenImage get user1 => const AssetGenImage('assets/home/user-1.png');
 
@@ -191,7 +208,6 @@ class $AssetsHomeGen {
     location,
     objects,
     remove,
-    search,
     applePay,
     atmCard,
     calendar,
@@ -209,6 +225,8 @@ class $AssetsHomeGen {
     profileImage,
     redDot,
     starBadg,
+    starsTickMark,
+    starts,
     user1,
     user2,
     user3,
@@ -294,6 +312,66 @@ class $AssetsOnboardingGen {
   ];
 }
 
+class $AssetsRewardsGen {
+  const $AssetsRewardsGen();
+
+  /// File path: assets/rewards/HM Logo.svg
+  SvgGenImage get hMLogo => const SvgGenImage('assets/rewards/HM Logo.svg');
+
+  /// File path: assets/rewards/adidas.svg
+  SvgGenImage get adidas => const SvgGenImage('assets/rewards/adidas.svg');
+
+  /// File path: assets/rewards/amazon-a.svg
+  SvgGenImage get amazonA => const SvgGenImage('assets/rewards/amazon-a.svg');
+
+  /// File path: assets/rewards/amazon.svg
+  SvgGenImage get amazon => const SvgGenImage('assets/rewards/amazon.svg');
+
+  /// File path: assets/rewards/checkmark.svg
+  SvgGenImage get checkmark =>
+      const SvgGenImage('assets/rewards/checkmark.svg');
+
+  /// File path: assets/rewards/groceries.png
+  AssetGenImage get groceries =>
+      const AssetGenImage('assets/rewards/groceries.png');
+
+  /// File path: assets/rewards/progress-point-svg.svg
+  SvgGenImage get progressPointSvg =>
+      const SvgGenImage('assets/rewards/progress-point-svg.svg');
+
+  /// File path: assets/rewards/reward-coin.svg
+  SvgGenImage get rewardCoin =>
+      const SvgGenImage('assets/rewards/reward-coin.svg');
+
+  /// File path: assets/rewards/reward-progress-bordered-pointer.png
+  AssetGenImage get rewardProgressBorderedPointer => const AssetGenImage(
+    'assets/rewards/reward-progress-bordered-pointer.png',
+  );
+
+  /// File path: assets/rewards/reward-progress-point-image.png
+  AssetGenImage get rewardProgressPointImage =>
+      const AssetGenImage('assets/rewards/reward-progress-point-image.png');
+
+  /// File path: assets/rewards/reward-progress-pointer.png
+  AssetGenImage get rewardProgressPointer =>
+      const AssetGenImage('assets/rewards/reward-progress-pointer.png');
+
+  /// List of all assets
+  List<dynamic> get values => [
+    hMLogo,
+    adidas,
+    amazonA,
+    amazon,
+    checkmark,
+    groceries,
+    progressPointSvg,
+    rewardCoin,
+    rewardProgressBorderedPointer,
+    rewardProgressPointImage,
+    rewardProgressPointer,
+  ];
+}
+
 class Assets {
   const Assets._();
 
@@ -301,6 +379,7 @@ class Assets {
   static const $AssetsCommonGen common = $AssetsCommonGen();
   static const $AssetsHomeGen home = $AssetsHomeGen();
   static const $AssetsOnboardingGen onboarding = $AssetsOnboardingGen();
+  static const $AssetsRewardsGen rewards = $AssetsRewardsGen();
 }
 
 class AssetGenImage {
