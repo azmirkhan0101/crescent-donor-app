@@ -46,3 +46,6 @@ app.*.map.json
 
 # Git and GitHub related
 .github
+
+# Windsurf
+.windsurf

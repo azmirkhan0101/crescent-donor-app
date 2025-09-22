@@ -1,6 +1,9 @@
+import 'dart:core';
+
 import 'package:cresent_charge_user_app/core/routes/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/routes/route_config.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/donation_page.dart';
 import 'package:cresent_charge_user_app/features/favorites/pages/favorites_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart';
@@ -10,7 +13,9 @@ import 'package:cresent_charge_user_app/features/home/pages/search_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/verified_charities_page.dart';
 import 'package:cresent_charge_user_app/features/main-layout/pages/main_layout_page.dart';
 import 'package:cresent_charge_user_app/features/notification/pages/notification_page.dart';
-import 'package:cresent_charge_user_app/features/organization/pages/add_new_card_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/confirm_donation_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/donation_complete_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/make_payment_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/payment_linked_account_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/profile_page.dart';
@@ -116,9 +121,30 @@ class HomeRoutes extends AppRouteConfig {
     ),
 
     GoRoute(
-      name: RoutePath.addCard,
-      path: RoutePath.addCard.addBasePath,
-      builder: (context, state) => const AddNewCardPage(),
+      name: RoutePath.addNewCard,
+      path: RoutePath.addNewCard.addBasePath,
+      builder: (context, state) => AddCardPage(isAddNewCard: true),
+      redirect: AuthGuard.authRequired.redirect,
+    ),
+
+    GoRoute(
+      name: RoutePath.makePayment,
+      path: RoutePath.makePayment.addBasePath,
+      builder: (context, state) => const MakePaymentPage(),
+      redirect: AuthGuard.authRequired.redirect,
+    ),
+
+    GoRoute(
+      name: RoutePath.confirmDonation,
+      path: RoutePath.confirmDonation.addBasePath,
+      builder: (context, state) => const ConfirmDonationPage(),
+      redirect: AuthGuard.authRequired.redirect,
+    ),
+
+    GoRoute(
+      name: RoutePath.donationComplete,
+      path: RoutePath.donationComplete.addBasePath,
+      builder: (context, state) => const DonationCompletePage(),
       redirect: AuthGuard.authRequired.redirect,
     ),
 

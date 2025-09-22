@@ -1,4 +1,4 @@
-import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
+import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/add_card_form_fields.dart';
@@ -14,54 +14,84 @@ import 'package:get/utils.dart';
 import 'package:go_router/go_router.dart';
 
 class AddCardPage extends StatelessWidget {
-  const AddCardPage({super.key});
+  const AddCardPage({super.key, this.isAddNewCard = false});
+
+  final bool isAddNewCard;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          16.heightWidth,
-
-          AuthHeader(),
-          32.heightWidth,
-
-          AuthTitleSection(
-            title: AppStrings.startGivingEffortlessly,
-            subtitle: AppStrings.secureYourWallet,
-          ),
-          12.rh.heightWidth,
-
-          Assets.onboarding.cardInfo.svg(),
-          32.rh.heightWidth,
-
-          AddCardFormFields(),
-          24.rh.heightWidth,
-
-          Column(
+    return Scaffold(
+      appBar: isAddNewCard
+          ? CustomAppBar(
+              title: 'Add New Card',
+              actions: [
+                IconButton(onPressed: () {}, icon: Assets.common.add.svg()),
+              ],
+            )
+          : null,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
             children: [
-              // Continue button
-              CustomPrimaryButton(
-                title: AppStrings.continueText,
-                onTap: () {
-                  context.pushNamed(RoutePath.termsAgreement);
-                },
-              ),
-              16.heightWidth,
+              if (!isAddNewCard) 16.heightWidth,
 
-              // I'll do this later text
-              AppStrings.illDoThisLater.centerText(
-                AppTextStyles.baseStyle().copyWith(
-                  fontFamily: AppStrings.interDisplay,
-                  fontSize: 14.rfs,
-                  color: AppColors.grayColor,
+              if (!isAddNewCard) AuthHeader(),
+              if (!isAddNewCard) 32.heightWidth,
+
+              if (!isAddNewCard)
+                AuthTitleSection(
+                  title: AppStrings.startGivingEffortlessly,
+                  subtitle: AppStrings.secureYourWallet,
                 ),
-              ),
-              24.heightWidth,
+              if (!isAddNewCard) 12.rh.heightWidth,
+
+              Assets.onboarding.cardInfo.svg(),
+              32.rh.heightWidth,
+
+              AddCardFormFields(),
+              24.rh.heightWidth,
+              if (isAddNewCard) 90.rh.heightWidth,
+
+              Column(
+                children: [
+                  // Continue button
+                  ElevatedButton(
+                    onPressed: () {
+                      if (isAddNewCard) {
+                        context.pushNamed(RoutePath.makePayment);
+                      } else {
+                        context.pushNamed(RoutePath.termsAgreement);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: Size(double.maxFinite, 56.rh),
+                      backgroundColor: isAddNewCard ? AppColors.black : null,
+                      foregroundColor: isAddNewCard ? AppColors.white : null,
+                    ),
+                    child: Text(
+                      !isAddNewCard
+                          ? AppStrings.addCard
+                          : AppStrings.continueText,
+                    ),
+                  ),
+                  16.heightWidth,
+
+                  if (!isAddNewCard)
+                    // I'll do this later text
+                    AppStrings.illDoThisLater.centerText(
+                      AppTextStyles.baseStyle().copyWith(
+                        fontFamily: AppStrings.interDisplay,
+                        fontSize: 14.rfs,
+                        color: AppColors.grayColor,
+                      ),
+                    ),
+                  24.heightWidth,
+                ],
+              ).paddingXY(X: 40.rw),
             ],
-          ).paddingXY(X: 40.rw),
-        ],
-      ).paddingXY(X: 16.rw),
-    ).scaffoldSafeArea();
+          ).paddingXY(X: 16.rw),
+        ),
+      ),
+    );
   }
 }

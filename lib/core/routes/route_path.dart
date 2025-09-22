@@ -24,6 +24,9 @@ class RoutePath {
   static const String organizationDetails = 'organizationDetails';
   static const String linkedAccount = 'linkedAccount';
   static const String addNewCard = 'addNewCard';
+  static const String makePayment = 'makePayment';
+  static const String confirmDonation = 'confirmDonation';
+  static const String donationComplete = 'donationComplete';
   static const String search = 'search';
   static const String notifications = 'notifications';
   static const String favorites = 'favorites';

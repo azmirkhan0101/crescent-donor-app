@@ -34,7 +34,10 @@ class PaymentLinkedAccountPage extends StatelessWidget {
             // Add Account button
             ElevatedButton(
               onPressed: () {
-                context.pushNamed(RoutePath.addCard);
+                context.pushNamed(
+                  RoutePath.addNewCard,
+                  extra: {"isAddNewCard": true},
+                );
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: Size(double.maxFinite, 56.rh),

@@ -210,12 +210,16 @@ class _DateTimeSelectionBottomSheetState
   Widget _buildDateField() {
     return GestureDetector(
       onTap: () async {
+        final now = DateTime.now();
+        final initialDate = selectedDate.isBefore(now) ? now : selectedDate;
+        
         final date = await showDatePicker(
           context: context,
-          initialDate: selectedDate,
-          firstDate: DateTime.now(),
-          lastDate: DateTime.now().add(const Duration(days: 365)),
+          initialDate: initialDate,
+          firstDate: now,
+          lastDate: now.add(const Duration(days: 365)),
         );
+        
         if (date != null) {
           setState(() {
             selectedDate = date;
