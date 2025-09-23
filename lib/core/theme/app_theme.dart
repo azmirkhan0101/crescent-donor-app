@@ -588,10 +588,10 @@ class AppTheme {
     return TabBarThemeData(
       labelColor: colorScheme.onSurface,
       unselectedLabelColor: colorScheme.onSurfaceVariant,
-      indicator: BoxDecoration(
-        border: Border.all(color: colorScheme.secondary, width: 1),
-        borderRadius: BorderRadius.circular(12),
-      ),
+      // indicator: BoxDecoration(
+      //   border: Border.all(color: colorScheme.secondary, width: 1),
+      //   borderRadius: BorderRadius.circular(12),
+      // ),
       labelStyle: const TextStyle(
         fontFamily: 'InterDisplay',
         fontSize: 14,

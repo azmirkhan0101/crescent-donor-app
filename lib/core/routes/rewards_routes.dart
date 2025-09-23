@@ -1,0 +1,34 @@
+import 'package:cresent_charge_user_app/core/routes/auth_guard.dart';
+import 'package:cresent_charge_user_app/core/routes/route_config.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/features/rewards/pages/store_profile_page.dart';
+import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class RewardsRoutes extends AppRouteConfig {
+  @override
+  List<RouteBase> get routes => [
+    // shell route
+
+    // normal routes
+    GoRoute(
+      name: RoutePath.storeProfile,
+      path: RoutePath.storeProfile.addBasePath,
+      builder: (context, state) {
+        Map<String, dynamic>? data = state.extra as Map<String, dynamic>?;
+        final storeName = data?['storeName'] as String;
+        final storeDescription = data?['storeDescription'] as String;
+        final storeImage = data?['storeImage'] as String;
+        final storeLogo = data?['storeLogo'] as Widget;
+        return StoreProfilePage(
+          storeName: storeName,
+          storeDescription: storeDescription,
+          storeImage: storeImage,
+          storeLogo: storeLogo,
+        );
+      },
+      redirect: AuthGuard.authRequired.redirect,
+    ),
+  ];
+}

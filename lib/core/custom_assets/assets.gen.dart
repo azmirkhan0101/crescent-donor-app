@@ -38,6 +38,15 @@ class $AssetsBottomNavGen {
 class $AssetsCommonGen {
   const $AssetsCommonGen();
 
+  /// File path: assets/common/Call.svg
+  SvgGenImage get call => const SvgGenImage('assets/common/Call.svg');
+
+  /// File path: assets/common/Location.svg
+  SvgGenImage get location => const SvgGenImage('assets/common/Location.svg');
+
+  /// File path: assets/common/Mail.svg
+  SvgGenImage get mail => const SvgGenImage('assets/common/Mail.svg');
+
   /// File path: assets/common/Search.svg
   SvgGenImage get search => const SvgGenImage('assets/common/Search.svg');
 
@@ -83,6 +92,9 @@ class $AssetsCommonGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
+    call,
+    location,
+    mail,
     search,
     add,
     alert,
@@ -356,6 +368,10 @@ class $AssetsRewardsGen {
   AssetGenImage get rewardProgressPointer =>
       const AssetGenImage('assets/rewards/reward-progress-pointer.png');
 
+  /// File path: assets/rewards/store-profile-banner-image.png
+  AssetGenImage get storeProfileBannerImage =>
+      const AssetGenImage('assets/rewards/store-profile-banner-image.png');
+
   /// List of all assets
   List<dynamic> get values => [
     hMLogo,
@@ -369,6 +385,7 @@ class $AssetsRewardsGen {
     rewardProgressBorderedPointer,
     rewardProgressPointImage,
     rewardProgressPointer,
+    storeProfileBannerImage,
   ];
 }
 

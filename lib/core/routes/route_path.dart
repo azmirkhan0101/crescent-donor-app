@@ -32,4 +32,8 @@ class RoutePath {
   static const String favorites = 'favorites';
   static const String donation = 'donation';
   static const String profile = 'profile';
+
+  //=================== Rewards screens ===================
+  static const String rewards = 'rewards';
+  static const String storeProfile = 'storeProfile';
 }

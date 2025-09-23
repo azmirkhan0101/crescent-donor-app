@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/core/routes/auth_routes.dart';
 import 'package:cresent_charge_user_app/core/routes/home_routes.dart';
 // Import route modules
 import 'package:cresent_charge_user_app/core/routes/onboarding_routes.dart';
+import 'package:cresent_charge_user_app/core/routes/rewards_routes.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class AppRouter {
   static final _onboardingRoutes = OnboardingRoutes();
   static final _authRoutes = AuthRoutes();
   static final _homeRoutes = HomeRoutes();
+  static final _rewardsRoutes = RewardsRoutes();
 
   /// Main GoRouter configuration
   /// This is the router instance that will be used throughout the app
@@ -51,11 +53,8 @@ class AppRouter {
       // Home routes - main app features (requires authentication)
       ..._homeRoutes.routes,
 
-      // TODO: Add more route modules here as your app grows
-      // Examples:
-      // ..._profileRoutes.routes,
-      // ..._settingsRoutes.routes,
-      // ..._notificationRoutes.routes,
+      // Rewards routes - rewards features (requires authentication)
+      ..._rewardsRoutes.routes,
     ],
 
     /// Error handling for unknown routes
@@ -104,6 +103,7 @@ class AppRouter {
         ..._onboardingRoutes.routes,
         ..._authRoutes.routes,
         ..._homeRoutes.routes,
+        ..._rewardsRoutes.routes,
       ];
 
       return allRoutes.any((route) {
@@ -140,6 +140,9 @@ class AppRouter {
     // Add home routes
     routes['Home - Dashboard'] = RoutePath.home;
 
+    // Add rewards routes
+    routes['Rewards - Store Profile'] = RoutePath.storeProfile;
+
     return routes;
   }
 }
@@ -148,9 +151,9 @@ class AppRouter {
 /// This makes it convenient to access the router from anywhere in the app
 extension AppRouterExtension on AppRouter {
   /// Navigate to a specific route by name (requires BuildContext)
-  static void navigateToRoute(BuildContext context, String routeName) {
+  static void navigateToRoute(BuildContext context, String routeName, {extra}) {
     if (AppRouter.routeExists(routeName)) {
-      context.pushNamed(routeName);
+      context.pushNamed(routeName, extra: extra);
     } else {
       throw Exception('Route $routeName does not exist');
     }
