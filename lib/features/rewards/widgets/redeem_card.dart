@@ -1,16 +1,16 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/features/rewards/pages/redeem_success_page.dart';
 import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
-import 'package:cresent_charge_user_app/features/rewards/utils/show_tabbed_redemption_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/redemption_code_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/reward_details_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/tabbed_redemption_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
-import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
-import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
+import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 
 class RedeemCard extends StatelessWidget {
   const RedeemCard({super.key, required this.index});
@@ -138,68 +138,34 @@ class RedeemCard extends StatelessWidget {
               ),
             ),
             8.rh.heightWidth,
-            ElevatedButton(
-              onPressed: () {
-                // Show different bottom sheets based on card state
-                if (index % 3 == 2) {
-                  // Claimed rewards - show tabbed redemption
-                  showTabbedRedemptionBottomSheet(
-                    context,
-                    rewardTitle: '10% off on Groceries',
-                    rewardDescription: 'Enjoy 10% off on your next grocery run at amazon!',
-                    redemptionCode: 'AMAZON10FRESH',
-                    expiryDate: '28 May 2025',
-                    brandIcon: Assets.rewards.amazonA.svg(
-                      width: 14.rw,
-                      height: 14.rh,
-                    ),
-                    initialMethod: RedemptionMethod.qrCode,
-                  );
-                } else {
-                  // Unclaimed rewards - show simple redemption code
-                  showRewardsBottomSheet(
-                    context,
-                    RedemptionCodeBottomSheet(
-                      rewardTitle: '10% off on Groceries',
-                      rewardDescription: 'Enjoy 10% off on your next grocery run at amazon!',
-                      redemptionCode: 'AMAZON10FRESH',
-                      expiryDate: '28 May 2025',
-                      brandIcon: Assets.rewards.amazonA.svg(
-                        width: 14.rw,
-                        height: 14.rh,
-                      ),
-                    ),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                fixedSize: Size(double.maxFinite, 32.rh),
-                backgroundColor: index % 3 != 0
+            Container(
+              width: double.infinity,
+              height: 32.rh,
+              decoration: BoxDecoration(
+                color: index % 3 != 0
                     ? const Color(0xFFEBE9EC)
                     : AppColors.secondaryColor,
+                borderRadius: BorderRadius.circular(8.rw),
               ),
               child: index % 3 != 2
-                  ? Text(
-                      'Redeem',
-                      style: TextStyle(
-                        color: const Color(0xFF000C0B),
-                        fontSize: 12,
-                        fontFamily: 'Inter Display',
-                        fontWeight: FontWeight.w600,
-                        height: 1.33,
+                  ? Center(
+                      child: Text(
+                        'Redeem',
+                        style: TextStyle(
+                          color: const Color(0xFF000C0B),
+                          fontSize: 12,
+                          fontFamily: 'Inter Display',
+                          fontWeight: FontWeight.w600,
+                          height: 1.33,
+                        ),
                       ),
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       spacing: 4.rw,
                       children: [
-                        Assets.rewards.checkmark.svg(
-                          width: 14.rw,
-                          // colorFilter: ColorFilter.mode(
-                          //   Colors.black,
-                          //   BlendMode.srcIn,
-                          // ),
-                        ),
+                        Assets.rewards.checkmark.svg(width: 14.rw),
                         "Claimed".text(
                           TextStyle(
                             color: const Color(0xFF000C0B),
@@ -211,7 +177,43 @@ class RedeemCard extends StatelessWidget {
                         ),
                       ],
                     ),
-            ),
+            ).onTap(() {
+              // Show different bottom sheets based on card state
+              if (index % 3 == 2) {
+                // Claimed rewards - show tabbed redemption
+                showRewardsBottomSheet(
+                  context,
+                  TabbedRedemptionBottomSheet(
+                    rewardTitle: '10% off on Groceries',
+                    rewardDescription:
+                        'Enjoy 10% off on your next grocery run at amazon!',
+                    redemptionCode: '9842736590',
+                    expiryDate: '28 May 2025',
+                    brandIcon: Assets.rewards.amazonA.svg(
+                      width: 14.rw,
+                      height: 14.rh,
+                    ),
+                    initialMethod: RedemptionMethod.qrCode,
+                  ),
+                );
+              } else {
+                // Unclaimed rewards - show simple redemption code
+                showRewardsBottomSheet(
+                  context,
+                  RedemptionCodeBottomSheet(
+                    rewardTitle: '10% off on Groceries',
+                    rewardDescription:
+                        'Enjoy 10% off on your next grocery run at amazon!',
+                    redemptionCode: '9842736590',
+                    expiryDate: '28 May 2025',
+                    brandIcon: Assets.rewards.amazonA.svg(
+                      width: 14.rw,
+                      height: 14.rh,
+                    ),
+                  ),
+                );
+              }
+            }),
           ],
         ).paddingAll(6.rw),
       ),

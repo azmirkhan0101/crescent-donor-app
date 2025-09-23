@@ -1,4 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/features/rewards/pages/redeem_success_page.dart';
+import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -29,10 +31,12 @@ class TabbedRedemptionBottomSheet extends StatefulWidget {
   final RedemptionMethod initialMethod;
 
   @override
-  State<TabbedRedemptionBottomSheet> createState() => _TabbedRedemptionBottomSheetState();
+  State<TabbedRedemptionBottomSheet> createState() =>
+      _TabbedRedemptionBottomSheetState();
 }
 
-class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomSheet> {
+class _TabbedRedemptionBottomSheetState
+    extends State<TabbedRedemptionBottomSheet> {
   late RedemptionMethod selectedMethod;
 
   @override
@@ -69,7 +73,7 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
         ),
       ),
       child: DraggableScrollableSheet(
-        initialChildSize: 0.8,
+        initialChildSize: 0.7,
         minChildSize: 0.6,
         maxChildSize: 0.95,
         expand: false,
@@ -90,10 +94,10 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
                         borderRadius: BorderRadius.circular(100.rw),
                       ),
                     ),
-                    
+
                     16.rh.heightWidth,
-                    
-                    // Title and close button
+
+                    // /===> Title and close button <====\
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -119,17 +123,18 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
                         ),
                       ],
                     ),
-                    
+
                     20.rh.heightWidth,
-                    
-                    // Redemption method tabs
+
+                    // /===> Redemption method tabs <====\
                     Container(
                       padding: EdgeInsets.all(4.rw),
                       decoration: BoxDecoration(
+                        color: const Color(0xFFF9F7F9),
                         borderRadius: BorderRadius.circular(16.rw),
                         border: Border.all(
-                          color: const Color(0xFFE4E4E4).withValues(alpha: 0.3),
-                          width: 1,
+                          color: const Color(0xFFF3F1F3),
+                          width: 1.rw,
                         ),
                       ),
                       child: Row(
@@ -141,10 +146,7 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
                             ),
                           ),
                           Expanded(
-                            child: _buildTabButton(
-                              'NFC',
-                              RedemptionMethod.nfc,
-                            ),
+                            child: _buildTabButton('NFC', RedemptionMethod.nfc),
                           ),
                           Expanded(
                             child: _buildTabButton(
@@ -158,86 +160,24 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
                   ],
                 ),
               ),
-              
-              // Scrollable content
+
+              // /===> Scrollable content <====\
               Expanded(
                 child: SingleChildScrollView(
                   controller: scrollController,
                   padding: EdgeInsets.fromLTRB(24.rw, 20.rh, 24.rw, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Reward info card
-                      _buildRewardInfoCard(),
-                      
-                      20.rh.heightWidth,
-                      
-                      // Method-specific content
-                      _buildMethodContent(),
-                      
-                      // Add some bottom padding
-                      100.rh.heightWidth,
-                    ],
-                  ),
+                  child: _buildMethodContent(),
                 ),
               ),
-              
+
               // Fixed bottom section with action button
-              Container(
-                padding: EdgeInsets.fromLTRB(24.rw, 2.rh, 24.rw, 2.rh),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.white.withValues(alpha: 0),
-                      Colors.white.withValues(alpha: 0.7),
-                    ],
-                    stops: const [0.0, 1.0],
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    // Action button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48.rh,
-                      child: ElevatedButton(
-                        onPressed: _getActionButtonCallback(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFD1FF43),
-                          foregroundColor: const Color(0xFF000C0B),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.rw),
-                          ),
-                        ),
-                        child: Text(
-                          _getActionButtonText(),
-                          style: TextStyle(
-                            color: const Color(0xFF000C0B),
-                            fontSize: 16.rfs,
-                            fontFamily: 'Inter Display',
-                            fontWeight: FontWeight.w600,
-                            height: 1.25,
-                          ),
-                        ),
-                      ),
-                    ),
-                    
-                    // Home indicator
-                    Container(
-                      margin: EdgeInsets.only(top: 8.rh, bottom: 8.rh),
-                      width: 139.rw,
-                      height: 5.rh,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(100.rw),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              BottomSheetButtonWidget(
+                    text: _getActionButtonText(),
+                    backgroundColor: AppColors.secondaryColor,
+                  )
+                  .onLongPress(() => _copyCodeToClipboard())
+                  .paddingX(24.rw)
+                  .paddingB(24.rh),
             ],
           );
         },
@@ -247,7 +187,7 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
 
   Widget _buildTabButton(String title, RedemptionMethod method) {
     final isSelected = selectedMethod == method;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -255,113 +195,17 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 12.rh),
+        height: 44.rh,
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF000C0B) : Colors.transparent,
           borderRadius: BorderRadius.circular(12.rw),
         ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isSelected ? Colors.white : const Color(0xFF000C0B),
-            fontSize: 14.rfs,
-            fontFamily: 'Inter Display',
-            fontWeight: FontWeight.w600,
-            height: 1.43,
-          ),
+        child: Center(
+          child: title
+              .centerText(AppTextStyles.f14W400())
+              .color(isSelected ? Colors.white : const Color(0xFF000C0B))
+              .fontWeight(FontWeight.w600),
         ),
-      ),
-    );
-  }
-
-  Widget _buildRewardInfoCard() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16.rw),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.rw),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Brand logo
-          Container(
-            width: 28.rw,
-            height: 28.rh,
-            padding: EdgeInsets.all(7.rw),
-            decoration: BoxDecoration(
-              color: const Color(0xFF000C0B),
-              borderRadius: BorderRadius.circular(874.125.rw),
-            ),
-            child: widget.brandIcon ?? Assets.rewards.amazonA.svg(
-              width: 14.rw,
-              height: 14.rh,
-            ),
-          ),
-          
-          8.rw.heightWidth,
-          
-          // Reward details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.rewardTitle,
-                  style: AppTextStyles.f16W500().copyWith(
-                    color: const Color(0xFF000C0B),
-                    height: 1.25,
-                  ),
-                ),
-                
-                8.rh.heightWidth,
-                
-                Text(
-                  widget.rewardDescription,
-                  style: TextStyle(
-                    color: const Color(0xFF818F8D),
-                    fontSize: 12.rfs,
-                    fontFamily: 'Inter Display',
-                    fontWeight: FontWeight.w400,
-                    height: 1.33,
-                  ),
-                ),
-                
-                8.rh.heightWidth,
-                
-                RichText(
-                  text: TextSpan(
-                    text: 'Expires: ',
-                    style: TextStyle(
-                      color: const Color(0xFF818F8D),
-                      fontSize: 12.rfs,
-                      fontFamily: 'Inter Display',
-                      fontWeight: FontWeight.w500,
-                      height: 1.33,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: widget.expiryDate,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -381,53 +225,61 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          'Scan this QR code at the store to redeem your reward',
-          textAlign: TextAlign.center,
-          style: AppTextStyles.f16W500().copyWith(
-            color: const Color(0xFF000C0B),
-            fontSize: 14.rfs,
-            height: 1.43,
-          ),
-        ),
-        
+        "Scan QR code".centerText(AppTextStyles.f20w600()).fontSize(24.rfs),
+        8.rh.heightWidth,
+        "Please point the camera at the QR Code"
+            .centerText(AppTextStyles.f14W400())
+            .color(const Color(0xFF000C0B)),
         24.rh.heightWidth,
-        
+
         // QR Code
-        Container(
-          padding: EdgeInsets.all(24.rw),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.rw),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+        QrImageView(
+          data: widget.redemptionCode,
+          version: QrVersions.auto,
+          size: 180.rfs,
+          backgroundColor: Colors.white,
+          dataModuleStyle: QrDataModuleStyle(
+            color: const Color(0xFF000C0B),
+            dataModuleShape: QrDataModuleShape.square,
           ),
-          child: QrImageView(
-            data: widget.redemptionCode,
-            version: QrVersions.auto,
-            size: 200.rw,
-            backgroundColor: Colors.white,
-            foregroundColor: const Color(0xFF000C0B),
-          ),
-        ),
-        
+        ).paddingY(40.rh),
+
+        Row(
+          children: [
+            Expanded(
+              child: Divider(height: 1.rh, color: const Color(0xFF777777)),
+            ),
+            "QR Code"
+                .centerText(AppTextStyles.f14W400())
+                .fontSize(12.rfs)
+                .paddingX(12.rw),
+            Expanded(
+              child: Divider(height: 1.rh, color: const Color(0xFF777777)),
+            ),
+          ],
+        ).paddingX(40.rw),
+
         16.rh.heightWidth,
-        
-        Text(
-          'Code: ${widget.redemptionCode}',
-          style: TextStyle(
-            color: const Color(0xFF818F8D),
-            fontSize: 12.rfs,
-            fontFamily: 'Inter Display',
-            fontWeight: FontWeight.w500,
-            height: 1.33,
+
+        DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.rw),
+            border: Border.all(color: const Color(0xFFE4E4E4)),
           ),
-        ),
+          child: Padding(
+            padding: EdgeInsets.all(16.rw),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'SWB-QR- ${widget.redemptionCode}',
+                  style: AppTextStyles.f14W400(),
+                ).color(const Color(0xFF000000)),
+                Assets.common.copy.svg(width: 20.rw, height: 20.rh),
+              ],
+            ),
+          ),
+        ).paddingX(40.rw),
       ],
     );
   }
@@ -436,92 +288,37 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          'Hold your phone near the NFC reader at the store',
-          textAlign: TextAlign.center,
-          style: AppTextStyles.f16W500().copyWith(
-            color: const Color(0xFF000C0B),
-            fontSize: 14.rfs,
-            height: 1.43,
-          ),
-        ),
-        
-        32.rh.heightWidth,
-        
+        88.rh.heightWidth,
+
         // NFC Animation/Icon
-        Container(
-          width: 200.rw,
-          height: 200.rh,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F0FC),
-            borderRadius: BorderRadius.circular(16.rw),
-            border: Border.all(
-              color: const Color(0xFF9D68DE),
-              width: 2,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.nfc,
-                size: 80.rfs,
-                color: const Color(0xFF9D68DE),
-              ),
-              
-              16.rh.heightWidth,
-              
-              Text(
-                'NFC Ready',
-                style: TextStyle(
-                  color: const Color(0xFF9D68DE),
-                  fontSize: 16.rfs,
-                  fontFamily: 'Inter Display',
-                  fontWeight: FontWeight.w600,
-                  height: 1.25,
-                ),
-              ),
-            ],
+        Assets.rewards.mobileOnHand.svg(width: 48.rw, height: 48.rh),
+
+        Text(
+          'Tap to redeem',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: const Color(0xFF000C0B) /* Colors-Off-Black */,
+            fontSize: 24,
+            fontFamily: 'Familjen Grotesk',
+            fontWeight: FontWeight.w600,
+            height: 1.33,
           ),
         ),
-        
-        24.rh.heightWidth,
-        
-        Container(
-          padding: EdgeInsets.all(16.rw),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF9F7F9),
-            borderRadius: BorderRadius.circular(12.rw),
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: 16.rfs,
-                    color: const Color(0xFF818F8D),
-                  ),
-                  
-                  8.rw.heightWidth,
-                  
-                  Expanded(
-                    child: Text(
-                      'Make sure NFC is enabled on your device',
-                      style: TextStyle(
-                        color: const Color(0xFF818F8D),
-                        fontSize: 12.rfs,
-                        fontFamily: 'Inter Display',
-                        fontWeight: FontWeight.w400,
-                        height: 1.33,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+
+        12.rh.heightWidth,
+        Text(
+          'Hold your phone near the NFC tag',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: const Color(0xFF808E8D),
+            fontSize: 14,
+            fontFamily: 'Inter Display',
+            fontWeight: FontWeight.w400,
+            height: 1.14,
           ),
         ),
+
+        129.rh.heightWidth,
       ],
     );
   }
@@ -530,93 +327,74 @@ class _TabbedRedemptionBottomSheetState extends State<TabbedRedemptionBottomShee
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Show this code to the cashier at checkout',
-          style: AppTextStyles.f16W500().copyWith(
-            color: const Color(0xFF000C0B),
-            fontSize: 14.rfs,
-            height: 1.43,
-          ),
-        ),
-        
-        16.rh.heightWidth,
-        
-        // Static Code Display
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(24.rw),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F0FC),
-            borderRadius: BorderRadius.circular(16.rw),
-            border: Border.all(
-              color: const Color(0xFFA55EEA),
-              width: 2,
-              style: BorderStyle.solid,
-            ),
-          ),
-          child: Column(
-            children: [
-              Text(
-                widget.redemptionCode,
+        96.rh.heightWidth,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 12,
+          children: [
+            Center(
+              child: Text(
+                'Copy the code to redeem the reward',
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: const Color(0xFF9D68DE),
-                  fontSize: 32.rfs,
+                  color: const Color(0xFF000C0B) /* Colors-Off-Black */,
+                  fontSize: 14,
                   fontFamily: 'Inter Display',
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 4.0,
-                  height: 1.2,
+                  fontWeight: FontWeight.w500,
+                  height: 1.43,
                 ),
               ),
-              
-              16.rh.heightWidth,
-              
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              clipBehavior: Clip.antiAlias,
+              decoration: ShapeDecoration(
+                color: const Color(0xFFF5F0FC),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(width: 1, color: const Color(0xFFA55EEA)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                spacing: 20,
                 children: [
-                  GestureDetector(
-                    onTap: _copyCodeToClipboard,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.copy,
-                          size: 16.rfs,
-                          color: const Color(0xFF9D68DE),
-                        ),
-                        
-                        8.rw.heightWidth,
-                        
-                        Text(
-                          'Copy Code',
-                          style: TextStyle(
-                            color: const Color(0xFF9D68DE),
-                            fontSize: 14.rfs,
-                            fontFamily: 'Inter Display',
-                            fontWeight: FontWeight.w600,
-                            height: 1.43,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    'AMAZON10FRESH',
+                    style: TextStyle(
+                      color: const Color(
+                        0xFF9C68DD,
+                      ) /* Colors-Primary-Purple-Dark */,
+                      fontSize: 14,
+                      fontFamily: 'Inter Display',
+                      fontWeight: FontWeight.w600,
+                      height: 1.43,
+                      letterSpacing: 0.70,
                     ),
                   ),
+                  Assets.common.copy.svg(width: 20.rw, height: 20.rh),
                 ],
               ),
-            ],
-          ),
+            ),
+            Text(
+              'This code has been sent to registered email & phone address',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: const Color(0xFF808E8D),
+                fontSize: 12,
+                fontFamily: 'Inter Display',
+                fontWeight: FontWeight.w400,
+                height: 1.33,
+              ),
+            ),
+          ],
         ),
-        
-        16.rh.heightWidth,
-        
-        Text(
-          'This code has been sent to your registered email & phone address',
-          style: TextStyle(
-            color: const Color(0xFF818F8D),
-            fontSize: 12.rfs,
-            fontFamily: 'Inter Display',
-            fontWeight: FontWeight.w400,
-            height: 1.33,
-          ),
-        ),
+        137.rh.heightWidth,
       ],
     );
   }

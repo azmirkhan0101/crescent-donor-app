@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -72,9 +73,9 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(100.rw),
                       ),
                     ),
-                    
+
                     16.rh.heightWidth,
-                    
+
                     // Title and close button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,7 +105,7 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Scrollable content
               Expanded(
                 child: SingleChildScrollView(
@@ -122,22 +123,15 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                           height: 1.43,
                         ),
                       ),
-                      
+
                       12.rh.heightWidth,
-                      
+
                       // Coupon card with cutout design
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color(0xFFF9F7F9),
                           borderRadius: BorderRadius.circular(12.rw),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
                         ),
                         child: Stack(
                           children: [
@@ -149,7 +143,8 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                 children: [
                                   // Brand and reward info
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       // Brand logo
                                       Container(
@@ -158,31 +153,39 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                         padding: EdgeInsets.all(7.rw),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF000C0B),
-                                          borderRadius: BorderRadius.circular(874.125.rw),
+                                          borderRadius: BorderRadius.circular(
+                                            874.125.rw,
+                                          ),
                                         ),
-                                        child: brandIcon ?? Assets.rewards.amazonA.svg(
-                                          width: 14.rw,
-                                          height: 14.rh,
-                                        ),
+                                        child:
+                                            brandIcon ??
+                                            Assets.rewards.amazonA.svg(
+                                              width: 14.rw,
+                                              height: 14.rh,
+                                            ),
                                       ),
-                                      
+
                                       8.rw.heightWidth,
-                                      
+
                                       // Reward details
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               rewardTitle,
-                                              style: AppTextStyles.f16W500().copyWith(
-                                                color: const Color(0xFF000C0B),
-                                                height: 1.25,
-                                              ),
+                                              style: AppTextStyles.f16W500()
+                                                  .copyWith(
+                                                    color: const Color(
+                                                      0xFF000C0B,
+                                                    ),
+                                                    height: 1.25,
+                                                  ),
                                             ),
-                                            
+
                                             8.rh.heightWidth,
-                                            
+
                                             Text(
                                               rewardDescription,
                                               style: TextStyle(
@@ -193,14 +196,16 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                                 height: 1.33,
                                               ),
                                             ),
-                                            
+
                                             8.rh.heightWidth,
-                                            
+
                                             RichText(
                                               text: TextSpan(
                                                 text: 'Expires: ',
                                                 style: TextStyle(
-                                                  color: const Color(0xFF818F8D),
+                                                  color: const Color(
+                                                    0xFF818F8D,
+                                                  ),
                                                   fontSize: 12.rfs,
                                                   fontFamily: 'Inter Display',
                                                   fontWeight: FontWeight.w500,
@@ -210,7 +215,8 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                                   TextSpan(
                                                     text: expiryDate,
                                                     style: const TextStyle(
-                                                      fontWeight: FontWeight.w400,
+                                                      fontWeight:
+                                                          FontWeight.w400,
                                                     ),
                                                   ),
                                                 ],
@@ -221,18 +227,18 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  
+
                                   16.rh.heightWidth,
-                                  
+
                                   // Divider line
                                   Container(
                                     height: 1.rh,
                                     width: double.infinity,
                                     color: const Color(0xFFE0E0E0),
                                   ),
-                                  
+
                                   16.rh.heightWidth,
-                                  
+
                                   // Redemption code section
                                   Container(
                                     width: double.infinity,
@@ -250,7 +256,8 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                       ),
                                     ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
                                           child: Text(
@@ -279,7 +286,7 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            
+
                             // Left cutout circle
                             Positioned(
                               left: -11.rw,
@@ -288,12 +295,12 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                 width: 22.rw,
                                 height: 22.rh,
                                 decoration: const BoxDecoration(
-                                  color: Color(0xFFF7F7F7),
+                                  color: Colors.white,
                                   shape: BoxShape.circle,
                                 ),
                               ),
                             ),
-                            
+
                             // Right cutout circle
                             Positioned(
                               right: -11.rw,
@@ -302,7 +309,7 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                 width: 22.rw,
                                 height: 22.rh,
                                 decoration: const BoxDecoration(
-                                  color: Color(0xFFF7F7F7),
+                                  color: Colors.white,
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -310,9 +317,9 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                           ],
                         ),
                       ),
-                      
+
                       12.rh.heightWidth,
-                      
+
                       // Footer text
                       Text(
                         'This code has been sent to registered email & phone address',
@@ -324,14 +331,14 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                           height: 1.33,
                         ),
                       ),
-                      
+
                       // Add some bottom padding
                       100.rh.heightWidth,
                     ],
                   ),
                 ),
               ),
-              
+
               // Fixed bottom section with copy button
               Container(
                 padding: EdgeInsets.fromLTRB(24.rw, 2.rh, 24.rw, 2.rh),
@@ -346,48 +353,11 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                     stops: const [0.0, 1.0],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    // Copy Code button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48.rh,
-                      child: ElevatedButton(
-                        onPressed: _copyCodeToClipboard,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFD1FF43),
-                          foregroundColor: const Color(0xFF000C0B),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.rw),
-                          ),
-                        ),
-                        child: Text(
-                          'Copy Code',
-                          style: TextStyle(
-                            color: const Color(0xFF000C0B),
-                            fontSize: 16.rfs,
-                            fontFamily: 'Inter Display',
-                            fontWeight: FontWeight.w600,
-                            height: 1.25,
-                          ),
-                        ),
-                      ),
-                    ),
-                    
-                    // Home indicator
-                    Container(
-                      margin: EdgeInsets.only(top: 8.rh, bottom: 8.rh),
-                      width: 139.rw,
-                      height: 5.rh,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(100.rw),
-                      ),
-                    ),
-                  ],
+                child: BottomSheetButtonWidget(
+                  backgroundColor: const Color(0xFFD1FF43),
+                  text: 'Copy Code',
                 ),
-              ),
+              ).paddingB(24.rh),
             ],
           );
         },

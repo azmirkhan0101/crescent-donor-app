@@ -266,7 +266,7 @@ class RewardsExploreTabView extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 8.rw,
         mainAxisSpacing: 8.rh,
-        childAspectRatio: 50 / 94,
+        childAspectRatio: 51 / 90,
       ),
       itemCount: 4,
       itemBuilder: (context, index) {

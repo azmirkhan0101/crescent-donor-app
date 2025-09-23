@@ -1,6 +1,8 @@
 import 'package:cresent_charge_user_app/core/routes/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/routes/route_config.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/features/rewards/pages/redeem_error_page.dart';
+import 'package:cresent_charge_user_app/features/rewards/pages/redeem_success_page.dart';
 import 'package:cresent_charge_user_app/features/rewards/pages/store_profile_page.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,24 @@ class RewardsRoutes extends AppRouteConfig {
           storeImage: storeImage,
           storeLogo: storeLogo,
         );
+      },
+      redirect: AuthGuard.authRequired.redirect,
+    ),
+
+    GoRoute(
+      name: RoutePath.redeemSuccess,
+      path: RoutePath.redeemSuccess.addBasePath,
+      builder: (context, state) {
+        return const RedeemSuccessPage();
+      },
+      redirect: AuthGuard.authRequired.redirect,
+    ),
+
+    GoRoute(
+      name: RoutePath.redeemFailure,
+      path: RoutePath.redeemFailure.addBasePath,
+      builder: (context, state) {
+        return const RedeemErrorPage();
       },
       redirect: AuthGuard.authRequired.redirect,
     ),

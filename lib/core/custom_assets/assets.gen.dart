@@ -41,6 +41,12 @@ class $AssetsCommonGen {
   /// File path: assets/common/Call.svg
   SvgGenImage get call => const SvgGenImage('assets/common/Call.svg');
 
+  /// File path: assets/common/Copy.svg
+  SvgGenImage get copy => const SvgGenImage('assets/common/Copy.svg');
+
+  /// File path: assets/common/Globe.svg
+  SvgGenImage get globe => const SvgGenImage('assets/common/Globe.svg');
+
   /// File path: assets/common/Location.svg
   SvgGenImage get location => const SvgGenImage('assets/common/Location.svg');
 
@@ -68,6 +74,9 @@ class $AssetsCommonGen {
   SvgGenImage get campaignLoveBox =>
       const SvgGenImage('assets/common/campaign-love-box.svg');
 
+  /// File path: assets/common/cancel.svg
+  SvgGenImage get cancel => const SvgGenImage('assets/common/cancel.svg');
+
   /// File path: assets/common/dot-gray.svg
   SvgGenImage get dotGray => const SvgGenImage('assets/common/dot-gray.svg');
 
@@ -93,6 +102,8 @@ class $AssetsCommonGen {
   /// List of all assets
   List<SvgGenImage> get values => [
     call,
+    copy,
+    globe,
     location,
     mail,
     search,
@@ -101,6 +112,7 @@ class $AssetsCommonGen {
     arrowLeft,
     arrowDown,
     campaignLoveBox,
+    cancel,
     dotGray,
     downloadArrow,
     heartCircle,
@@ -327,6 +339,10 @@ class $AssetsOnboardingGen {
 class $AssetsRewardsGen {
   const $AssetsRewardsGen();
 
+  /// File path: assets/rewards/Error Circle.svg
+  SvgGenImage get errorCircle =>
+      const SvgGenImage('assets/rewards/Error Circle.svg');
+
   /// File path: assets/rewards/HM Logo.svg
   SvgGenImage get hMLogo => const SvgGenImage('assets/rewards/HM Logo.svg');
 
@@ -347,9 +363,17 @@ class $AssetsRewardsGen {
   AssetGenImage get groceries =>
       const AssetGenImage('assets/rewards/groceries.png');
 
+  /// File path: assets/rewards/mobile-on-hand.svg
+  SvgGenImage get mobileOnHand =>
+      const SvgGenImage('assets/rewards/mobile-on-hand.svg');
+
   /// File path: assets/rewards/progress-point-svg.svg
   SvgGenImage get progressPointSvg =>
       const SvgGenImage('assets/rewards/progress-point-svg.svg');
+
+  /// File path: assets/rewards/redeem-completed.png
+  AssetGenImage get redeemCompleted =>
+      const AssetGenImage('assets/rewards/redeem-completed.png');
 
   /// File path: assets/rewards/reward-coin.svg
   SvgGenImage get rewardCoin =>
@@ -368,23 +392,30 @@ class $AssetsRewardsGen {
   AssetGenImage get rewardProgressPointer =>
       const AssetGenImage('assets/rewards/reward-progress-pointer.png');
 
+  /// File path: assets/rewards/shop-icon.svg
+  SvgGenImage get shopIcon => const SvgGenImage('assets/rewards/shop-icon.svg');
+
   /// File path: assets/rewards/store-profile-banner-image.png
   AssetGenImage get storeProfileBannerImage =>
       const AssetGenImage('assets/rewards/store-profile-banner-image.png');
 
   /// List of all assets
   List<dynamic> get values => [
+    errorCircle,
     hMLogo,
     adidas,
     amazonA,
     amazon,
     checkmark,
     groceries,
+    mobileOnHand,
     progressPointSvg,
+    redeemCompleted,
     rewardCoin,
     rewardProgressBorderedPointer,
     rewardProgressPointImage,
     rewardProgressPointer,
+    shopIcon,
     storeProfileBannerImage,
   ];
 }

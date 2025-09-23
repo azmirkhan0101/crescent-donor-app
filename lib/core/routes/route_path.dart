@@ -36,4 +36,6 @@ class RoutePath {
   //=================== Rewards screens ===================
   static const String rewards = 'rewards';
   static const String storeProfile = 'storeProfile';
+  static const String redeemSuccess = 'redeemSuccess';
+  static const String redeemFailure = 'redeemFailure';
 }
