@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/core/routes/route_config.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/donation_page.dart';
+import 'package:cresent_charge_user_app/features/donation/pages/recurring_donations_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/round_up_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart';
 // Import home/main app pages
@@ -75,6 +76,16 @@ class HomeRoutes extends AppRouteConfig {
           path: RoutePath.roundUp.addBasePath,
           builder: (context, state) => const RoundUpPage(),
           // Only authenticated users - no guest access for round up details
+          redirect: AuthGuard.authRequired.redirect,
+        ),
+
+        /// Recurring Donations Page - Manage recurring donations
+        /// AUTH REQUIRED: Recurring donations require account access
+        GoRoute(
+          name: RoutePath.recurringDonations,
+          path: RoutePath.recurringDonations.addBasePath,
+          builder: (context, state) => const RecurringDonationsPage(),
+          // Only authenticated users - no guest access for recurring donations
           redirect: AuthGuard.authRequired.redirect,
         ),
 

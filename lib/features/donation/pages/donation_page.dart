@@ -1,8 +1,11 @@
+import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_components.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_sections.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 /// Donation Page
 ///
@@ -18,6 +21,7 @@ class DonationPage extends StatefulWidget {
 class _DonationPageState extends State<DonationPage> {
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<DonationController>();
     return Scaffold(
       backgroundColor: DonationConstants.backgroundColor,
       body: SafeArea(
@@ -28,11 +32,13 @@ class _DonationPageState extends State<DonationPage> {
               child: Column(
                 children: [
                   SizedBox(height: 8.rh),
-                  DonationHeader(
-                    pointsEarned: '16000',
-                    filterText: 'Last 30 Days',
-                    onFilterTap: _showFilterOptions,
-                  ),
+                  Obx(() {
+                    return DonationHeader(
+                      pointsEarned: controller.pointsEarned.value,
+                      filterText: controller.selectedFilter.value,
+                      onFilterTap: _showFilterOptions,
+                    );
+                  }),
                   SizedBox(height: DonationConstants.paddingVertical.rh),
                 ],
               ),
@@ -117,6 +123,9 @@ class _DonationPageState extends State<DonationPage> {
   void _showFilterOptions() {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      isDismissible: true,
       backgroundColor: DonationConstants.cardWhite,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.rw)),
@@ -137,10 +146,8 @@ class _DonationPageState extends State<DonationPage> {
               ),
             ),
             SizedBox(height: 20.rh),
-            _buildFilterOption('Last 7 Days'),
-            _buildFilterOption('Last 30 Days', isSelected: true),
-            _buildFilterOption('Last 3 Months'),
-            _buildFilterOption('Last Year'),
+            _buildFilterOption('Total'),
+            _buildFilterOption('Last 30 Days'),
             SizedBox(height: 20.rh),
           ],
         ),
@@ -148,16 +155,22 @@ class _DonationPageState extends State<DonationPage> {
     );
   }
 
-  Widget _buildFilterOption(String text, {bool isSelected = false}) {
+  Widget _buildFilterOption(String text) {
+    final controller = Get.find<DonationController>();
+    final isSelected = controller.selectedFilter.value == text;
+
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
-        Navigator.pop(context);
-        // Handle filter selection
+        // Update the filter value
+        controller.selectedFilter.value = text;
+        context.pop();
       },
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 16.rh),
         decoration: BoxDecoration(
+          color: isSelected ? Colors.grey[100] : null,
           border: Border(
             bottom: BorderSide(color: DonationConstants.lightGray, width: 1),
           ),

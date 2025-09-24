@@ -34,10 +34,21 @@ class RoundUpPage extends StatelessWidget {
                 // Progress Chart Section
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.rw),
-                  child: const RoundUpProgressChart(
-                    currentAmount: 30,
-                    targetAmount: 50,
-                    recentlyRoundedUp: 0.5,
+                  child: Obx(
+                    () => controller.showDetailedProgress.value
+                        ? DetailedProgressChart(
+                            totalAmount: 120.75,
+                            progressPercentage: 60,
+                            todaysRoundUp: 0.5,
+                            daysLeft: 6,
+                            controller: controller,
+                          )
+                        : RoundUpProgressChart(
+                            currentAmount: 30,
+                            targetAmount: 50,
+                            recentlyRoundedUp: 0.5,
+                            controller: controller,
+                          ),
                   ),
                 ),
 

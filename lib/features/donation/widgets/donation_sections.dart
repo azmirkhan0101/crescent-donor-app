@@ -123,6 +123,9 @@ class OverviewSection extends StatelessWidget {
                     borderColor: DonationConstants.recurringBorder,
                     amountColor: DonationConstants.recurringAmountColor,
                     icon: Assets.common.calendar.path,
+                    onTap: () {
+                      context.pushNamed(RoutePath.recurringDonations);
+                    },
                   ),
                   SizedBox(width: DonationConstants.cardSpacing.rw),
                   SmallDonationCard(

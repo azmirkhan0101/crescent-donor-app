@@ -189,6 +189,7 @@ class SmallDonationCard extends StatelessWidget {
   final Color borderColor;
   final Color amountColor;
   final String icon;
+  final VoidCallback? onTap;
 
   const SmallDonationCard({
     super.key,
@@ -198,82 +199,86 @@ class SmallDonationCard extends StatelessWidget {
     required this.borderColor,
     required this.amountColor,
     required this.icon,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: DonationConstants.smallCardWidth.rw,
-      height: DonationConstants.smallCardHeight.rh,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(
-          DonationConstants.cardBorderRadius.rw,
-        ),
-        border: Border.all(color: borderColor, width: 1),
-      ),
-      padding: EdgeInsets.all(16.rw),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Card header with icon and title
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10.rw),
-                decoration: BoxDecoration(
-                  color: DonationConstants.cardWhite,
-                  borderRadius: BorderRadius.circular(
-                    DonationConstants.buttonBorderRadius.rw,
-                  ),
-                ),
-                child: SvgPicture.asset(icon),
-              ),
-              SizedBox(width: 8.rw),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontFamily: DonationFonts.interDisplay,
-                    fontSize: DonationConstants.fontSize14.rfs,
-                    fontWeight: FontWeight.w600,
-                    color: DonationConstants.offBlack,
-                  ),
-                ),
-              ),
-            ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: DonationConstants.smallCardWidth.rw,
+        height: DonationConstants.smallCardHeight.rh,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(
+            DonationConstants.cardBorderRadius.rw,
           ),
-          const Spacer(),
-          // Amount display
-          RichText(
-            text: TextSpan(
+          border: Border.all(color: borderColor, width: 1),
+        ),
+        padding: EdgeInsets.all(16.rw),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Card header with icon and title
+            Row(
               children: [
-                TextSpan(
-                  text: '\$',
-                  style: TextStyle(
-                    fontFamily: DonationFonts.familjenGrotesk,
-                    fontSize: DonationConstants.fontSize40.rfs,
-                    fontWeight: FontWeight.w700,
-                    color: amountColor.withValues(
-                      alpha: DonationConstants.amountOpacity,
+                Container(
+                  padding: EdgeInsets.all(10.rw),
+                  decoration: BoxDecoration(
+                    color: DonationConstants.cardWhite,
+                    borderRadius: BorderRadius.circular(
+                      DonationConstants.buttonBorderRadius.rw,
                     ),
-                    letterSpacing: -0.7,
                   ),
+                  child: SvgPicture.asset(icon),
                 ),
-                TextSpan(
-                  text: amount,
-                  style: TextStyle(
-                    fontFamily: DonationFonts.familjenGrotesk,
-                    fontSize: DonationConstants.fontSize40.rfs,
-                    fontWeight: FontWeight.w700,
-                    color: amountColor,
-                    letterSpacing: -0.7,
+                SizedBox(width: 8.rw),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontFamily: DonationFonts.interDisplay,
+                      fontSize: DonationConstants.fontSize14.rfs,
+                      fontWeight: FontWeight.w600,
+                      color: DonationConstants.offBlack,
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            const Spacer(),
+            // Amount display
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '\$',
+                    style: TextStyle(
+                      fontFamily: DonationFonts.familjenGrotesk,
+                      fontSize: DonationConstants.fontSize40.rfs,
+                      fontWeight: FontWeight.w700,
+                      color: amountColor.withValues(
+                        alpha: DonationConstants.amountOpacity,
+                      ),
+                      letterSpacing: -0.7,
+                    ),
+                  ),
+                  TextSpan(
+                    text: amount,
+                    style: TextStyle(
+                      fontFamily: DonationFonts.familjenGrotesk,
+                      fontSize: DonationConstants.fontSize40.rfs,
+                      fontWeight: FontWeight.w700,
+                      color: amountColor,
+                      letterSpacing: -0.7,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

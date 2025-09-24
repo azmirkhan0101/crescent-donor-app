@@ -9,6 +9,9 @@ class RoundUpController extends GetxController {
   /// Activity expansion states - tracks which activities are expanded
   final RxMap<String, bool> activityExpansionStates = <String, bool>{}.obs;
 
+  /// Controls whether to show progress chart or detailed view
+  final RxBool showDetailedProgress = false.obs;
+
   /// List of organizations that have received donations
   final List<DonatedOrganization> donatedOrganizations = [
     DonatedOrganization(
@@ -114,6 +117,11 @@ class RoundUpController extends GetxController {
   /// Generate a unique key for an activity item
   String getActivityKey(RecentActivity activity, int index) {
     return '${activity.brandName}_${activity.purchaseAmount}_$index';
+  }
+
+  /// Toggle between progress chart and detailed view
+  void toggleProgressView() {
+    showDetailedProgress.value = !showDetailedProgress.value;
   }
 }
 

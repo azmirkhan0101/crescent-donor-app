@@ -32,6 +32,7 @@ class RoutePath {
   static const String favorites = 'favorites';
   static const String donation = 'donation';
   static const String roundUp = 'roundUp';
+  static const String recurringDonations = 'recurringDonations';
   static const String profile = 'profile';
 
   //=================== Rewards screens ===================
