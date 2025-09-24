@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: ThemeMode
-                .system, // Automatically switch based on system preference
+                .light, // Automatically switch based on system preference
             routeInformationParser: AppRouter.router.routeInformationParser,
             routerDelegate: AppRouter.router.routerDelegate,
             routeInformationProvider: AppRouter.router.routeInformationProvider,

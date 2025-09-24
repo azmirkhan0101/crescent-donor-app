@@ -41,6 +41,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   smart_stepper: ^0.0.7
   qr_flutter: ^4.1.0
+  fl_chart: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,8 @@ flutter:
     - assets/bottom-nav/
     - assets/home/
     - assets/rewards/
+    - assets/donation/
+    - assets/profile/
   
   # fonts:
   #   - family: Schyler

@@ -44,6 +44,9 @@ class $AssetsCommonGen {
   /// File path: assets/common/Copy.svg
   SvgGenImage get copy => const SvgGenImage('assets/common/Copy.svg');
 
+  /// File path: assets/common/Gift.svg
+  SvgGenImage get gift => const SvgGenImage('assets/common/Gift.svg');
+
   /// File path: assets/common/Globe.svg
   SvgGenImage get globe => const SvgGenImage('assets/common/Globe.svg');
 
@@ -56,19 +59,31 @@ class $AssetsCommonGen {
   /// File path: assets/common/Search.svg
   SvgGenImage get search => const SvgGenImage('assets/common/Search.svg');
 
+  /// File path: assets/common/Timer.svg
+  SvgGenImage get timer => const SvgGenImage('assets/common/Timer.svg');
+
   /// File path: assets/common/add.svg
   SvgGenImage get add => const SvgGenImage('assets/common/add.svg');
 
+  /// File path: assets/common/addidas.svg
+  SvgGenImage get adidas => const SvgGenImage('assets/common/addidas.svg');
+
   /// File path: assets/common/alert.svg
   SvgGenImage get alert => const SvgGenImage('assets/common/alert.svg');
+
+  /// File path: assets/common/arrow-down.svg
+  SvgGenImage get arrowDown =>
+      const SvgGenImage('assets/common/arrow-down.svg');
 
   /// File path: assets/common/arrow-left.svg
   SvgGenImage get arrowLeft =>
       const SvgGenImage('assets/common/arrow-left.svg');
 
-  /// File path: assets/common/arrow_down.svg
-  SvgGenImage get arrowDown =>
-      const SvgGenImage('assets/common/arrow_down.svg');
+  /// File path: assets/common/arrow-up.svg
+  SvgGenImage get arrowUp => const SvgGenImage('assets/common/arrow-up.svg');
+
+  /// File path: assets/common/calendar.svg
+  SvgGenImage get calendar => const SvgGenImage('assets/common/calendar.svg');
 
   /// File path: assets/common/campaign-love-box.svg
   SvgGenImage get campaignLoveBox =>
@@ -76,6 +91,9 @@ class $AssetsCommonGen {
 
   /// File path: assets/common/cancel.svg
   SvgGenImage get cancel => const SvgGenImage('assets/common/cancel.svg');
+
+  /// File path: assets/common/coins.svg
+  SvgGenImage get coins => const SvgGenImage('assets/common/coins.svg');
 
   /// File path: assets/common/dot-gray.svg
   SvgGenImage get dotGray => const SvgGenImage('assets/common/dot-gray.svg');
@@ -92,6 +110,10 @@ class $AssetsCommonGen {
   SvgGenImage get heartOnHand =>
       const SvgGenImage('assets/common/heart-on-hand.svg');
 
+  /// File path: assets/common/reward-coin.svg
+  SvgGenImage get rewardCoin =>
+      const SvgGenImage('assets/common/reward-coin.svg');
+
   /// File path: assets/common/star-filled.svg
   SvgGenImage get starFilled =>
       const SvgGenImage('assets/common/star-filled.svg');
@@ -103,22 +125,57 @@ class $AssetsCommonGen {
   List<SvgGenImage> get values => [
     call,
     copy,
+    gift,
     globe,
     location,
     mail,
     search,
+    timer,
     add,
+    adidas,
     alert,
-    arrowLeft,
     arrowDown,
+    arrowLeft,
+    arrowUp,
+    calendar,
     campaignLoveBox,
     cancel,
+    coins,
     dotGray,
     downloadArrow,
     heartCircle,
     heartOnHand,
+    rewardCoin,
     starFilled,
     tickMark,
+  ];
+}
+
+class $AssetsDonationGen {
+  const $AssetsDonationGen();
+
+  /// File path: assets/donation/badge-no-1.png
+  AssetGenImage get badgeNo1 =>
+      const AssetGenImage('assets/donation/badge-no-1.png');
+
+  /// File path: assets/donation/badge-no-10.png
+  AssetGenImage get badgeNo10 =>
+      const AssetGenImage('assets/donation/badge-no-10.png');
+
+  /// File path: assets/donation/badge-no-4.png
+  AssetGenImage get badgeNo4 =>
+      const AssetGenImage('assets/donation/badge-no-4.png');
+
+  /// File path: assets/donation/badge-round-up.png
+  AssetGenImage get badgeRoundUp =>
+      const AssetGenImage('assets/donation/badge-round-up.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    badgeNo1,
+    badgeNo10,
+    badgeNo4,
+    badgeRoundUp,
   ];
 }
 
@@ -130,9 +187,6 @@ class $AssetsHomeGen {
 
   /// File path: assets/home/Location.svg
   SvgGenImage get location => const SvgGenImage('assets/home/Location.svg');
-
-  /// File path: assets/home/OBJECTS.svg
-  SvgGenImage get objects => const SvgGenImage('assets/home/OBJECTS.svg');
 
   /// File path: assets/home/Remove.svg
   SvgGenImage get remove => const SvgGenImage('assets/home/Remove.svg');
@@ -230,7 +284,6 @@ class $AssetsHomeGen {
   List<dynamic> get values => [
     lightbulb,
     location,
-    objects,
     remove,
     applePay,
     atmCard,
@@ -336,6 +389,17 @@ class $AssetsOnboardingGen {
   ];
 }
 
+class $AssetsProfileGen {
+  const $AssetsProfileGen();
+
+  /// File path: assets/profile/profile-image.svg
+  SvgGenImage get profileImage =>
+      const SvgGenImage('assets/profile/profile-image.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [profileImage];
+}
+
 class $AssetsRewardsGen {
   const $AssetsRewardsGen();
 
@@ -425,8 +489,10 @@ class Assets {
 
   static const $AssetsBottomNavGen bottomNav = $AssetsBottomNavGen();
   static const $AssetsCommonGen common = $AssetsCommonGen();
+  static const $AssetsDonationGen donation = $AssetsDonationGen();
   static const $AssetsHomeGen home = $AssetsHomeGen();
   static const $AssetsOnboardingGen onboarding = $AssetsOnboardingGen();
+  static const $AssetsProfileGen profile = $AssetsProfileGen();
   static const $AssetsRewardsGen rewards = $AssetsRewardsGen();
 }
 
