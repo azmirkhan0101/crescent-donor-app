@@ -218,11 +218,7 @@ class RecurringOrganizationCard extends StatelessWidget {
                     height: 18 / 14,
                   ),
                 ),
-                Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey,
-                  size: 16.rw,
-                ),
+                Icon(Icons.chevron_right, color: Colors.grey, size: 16.rw),
               ],
             ),
           ],

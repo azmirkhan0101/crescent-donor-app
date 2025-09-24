@@ -85,17 +85,21 @@ class RecurringDonationsPage extends StatelessWidget {
               SizedBox(height: 12.rh),
 
               // Organizations List
-              Obx(() => Column(
-                    children: controller.recurringDonations
-                        .map((donation) => Padding(
-                              padding: EdgeInsets.only(bottom: 8.rh),
-                              child: RecurringOrganizationCard(
-                                donation: donation,
-                                onTap: () => controller.onDonationTapped(donation),
-                              ),
-                            ))
-                        .toList(),
-                  )),
+              Obx(
+                () => Column(
+                  children: controller.recurringDonations
+                      .map(
+                        (donation) => Padding(
+                          padding: EdgeInsets.only(bottom: 8.rh),
+                          child: RecurringOrganizationCard(
+                            donation: donation,
+                            onTap: () => controller.onDonationTapped(donation),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
 
               SizedBox(height: 100.rh), // Bottom padding for safe area
             ],

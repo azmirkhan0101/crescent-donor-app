@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class RecurringDonationsController extends GetxController {
   /// Total weekly amount for all recurring donations
   final RxDouble totalWeeklyAmount = 20.10.obs;
-  
+
   /// Weekly amount display
   final RxDouble weeklyAmount = 20.0.obs;
 
