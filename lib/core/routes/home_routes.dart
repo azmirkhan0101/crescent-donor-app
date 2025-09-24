@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/core/routes/route_config.dart';
 import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/donation_page.dart';
+import 'package:cresent_charge_user_app/features/donation/pages/organization_donations_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/recurring_donations_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/round_up_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart';
@@ -86,6 +87,19 @@ class HomeRoutes extends AppRouteConfig {
           path: RoutePath.recurringDonations.addBasePath,
           builder: (context, state) => const RecurringDonationsPage(),
           // Only authenticated users - no guest access for recurring donations
+          redirect: AuthGuard.authRequired.redirect,
+        ),
+
+        /// Organization Donations Page - Organization donation history
+        /// AUTH REQUIRED: Donation history requires account access
+        GoRoute(
+          name: RoutePath.organizationDonations,
+          path: RoutePath.organizationDonations.addBasePath,
+          builder: (context, state) {
+            final organizationId = state.pathParameters['organizationId'];
+            return OrganizationDonationsPage(organizationId: organizationId);
+          },
+          // Only authenticated users - no guest access for donation history
           redirect: AuthGuard.authRequired.redirect,
         ),
 

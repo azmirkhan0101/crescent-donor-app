@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/recurring_donations_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/recurring_donations_widgets.dart';
@@ -93,7 +94,16 @@ class RecurringDonationsPage extends StatelessWidget {
                           padding: EdgeInsets.only(bottom: 8.rh),
                           child: RecurringOrganizationCard(
                             donation: donation,
-                            onTap: () => controller.onDonationTapped(donation),
+                            onTap: () {
+                              context.pushNamed(
+                                RoutePath.organizationDonations,
+                                extra: {
+                                  'organizationId': donation.id,
+                                  'organizationName': donation.organizationName,
+                                },
+                              );
+                            },
+                            // onTap: () => controller.onDonationTapped(donation),
                           ),
                         ),
                       )

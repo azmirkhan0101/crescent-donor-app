@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,8 +36,14 @@ class RecurringDonationsController extends GetxController {
 
   /// Handle tap on donation item
   void onDonationTapped(RecurringDonation donation) {
-    // Navigate to donation details or edit page
-    debugPrint('Recurring donation tapped: ${donation.organizationName}');
+    // Navigate to organization donations page to see detailed history
+    Get.toNamed(
+      '/${RoutePath.organizationDonations}',
+      arguments: {
+        'organizationId': donation.id,
+        'organizationName': donation.organizationName,
+      },
+    );
   }
 
   /// Calculate total weekly amount

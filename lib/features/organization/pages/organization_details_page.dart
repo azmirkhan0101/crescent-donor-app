@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
+import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/total_donations_card.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
@@ -10,8 +11,8 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 class OrganizationDetailsPage extends StatelessWidget {
   final String? organizationId;
@@ -79,6 +80,11 @@ class OrganizationDetailsPage extends StatelessWidget {
                       mission: controller.getOrganizationMission(),
                       causes: controller.getOrganizationCauses(),
                     ),
+                    SizedBox(height: 16.rh),
+
+                    // View Donations History Button
+                    _buildViewHistoryButton(context),
+
                     SizedBox(height: 100.rh), // Space for bottom button
                   ],
                 ),
@@ -98,32 +104,32 @@ class OrganizationDetailsPage extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: const Color(0xFFF7F7F7),
-      elevation: 0,
-      centerTitle: true,
-      leading: Container(
-        margin: EdgeInsets.all(8.rw),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: const Color(0xFFEDEDED)),
-          borderRadius: BorderRadius.circular(24.rw),
+  /// Build view donations history button
+  Widget _buildViewHistoryButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () {
+          context.pushNamed(RoutePath.organizationDonations);
+        },
+        icon: Icon(Icons.history, size: 18.rw, color: const Color(0xFF000C0B)),
+        label: Text(
+          'View Donations History',
+          style: TextStyle(
+            fontFamily: 'Familjen Grotesk',
+            fontSize: 16.rfs,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF000C0B),
+          ),
         ),
-        child: IconButton(
-          onPressed: () => Get.back(),
-          icon: SvgPicture.asset(
-            'assets/common/arrow-left.svg',
-            width: 20.rw,
-            height: 20.rh,
-            colorFilter: const ColorFilter.mode(
-              Color(0xFF000C0B),
-              BlendMode.srcIn,
-            ),
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: 14.rh),
+          side: const BorderSide(color: Color(0xFF000C0B), width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.rw),
           ),
         ),
       ),
-      title: Text('Organization Details', style: AppTextStyles.f20w600()),
     );
   }
 
