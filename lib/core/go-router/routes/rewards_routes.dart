@@ -1,6 +1,6 @@
-import 'package:cresent_charge_user_app/core/routes/auth_guard.dart';
-import 'package:cresent_charge_user_app/core/routes/route_config.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
+import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/rewards/pages/redeem_error_page.dart';
 import 'package:cresent_charge_user_app/features/rewards/pages/redeem_success_page.dart';
 import 'package:cresent_charge_user_app/features/rewards/pages/store_profile_page.dart';
@@ -11,8 +11,6 @@ import 'package:go_router/go_router.dart';
 class RewardsRoutes extends AppRouteConfig {
   @override
   List<RouteBase> get routes => [
-    // shell route
-
     // normal routes
     GoRoute(
       name: RoutePath.storeProfile,

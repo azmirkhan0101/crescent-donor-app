@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/round_up_widgets.dart';
@@ -6,6 +7,7 @@ import 'package:cresent_charge_user_app/features/home/controllers/charities_cont
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 /// Round Up Page
 ///
@@ -24,6 +26,14 @@ class RoundUpPage extends StatelessWidget {
           appBar: CustomAppBar(
             backgroundColor: DonationConstants.backgroundColor,
             title: 'Round Up',
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  context.pushNamed(RoutePath.roundUpSettings);
+                },
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             child: Column(

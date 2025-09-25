@@ -8,10 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-/// Organization Donations Page
-///
-/// Displays detailed view of an organization with recent donation history
-/// including upcoming and previous donations with their status
 class OrganizationDonationsPage extends StatelessWidget {
   final String? organizationId;
 
@@ -91,102 +87,98 @@ class OrganizationDonationsPage extends StatelessWidget {
   Widget _buildRecentDonationsSection(
     OrganizationDonationsController controller,
   ) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 16.rw),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section title
-          Text(
-            'Recent Donations',
-            style: TextStyle(
-              fontFamily: DonationFonts.familjenGrotesk,
-              fontSize: 20.rfs,
-              fontWeight: FontWeight.w600,
-              color: DonationConstants.offBlack,
-              letterSpacing: -0.2,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section title
+        Text(
+          'Recent Donations',
+          style: TextStyle(
+            fontFamily: DonationFonts.familjenGrotesk,
+            fontSize: 20.rfs,
+            fontWeight: FontWeight.w600,
+            color: DonationConstants.offBlack,
+            letterSpacing: -0.2,
           ),
+        ),
 
-          SizedBox(height: 12.rh),
+        SizedBox(height: 12.rh),
 
-          // Donations content container
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16.rw),
-            decoration: BoxDecoration(
-              color: DonationConstants.cardWhite,
-              borderRadius: BorderRadius.circular(12.rw),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.02),
-                  offset: Offset(0, 2.rh),
-                  blurRadius: 5.rw,
-                ),
+        // Donations content container
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(16.rw),
+          decoration: BoxDecoration(
+            color: DonationConstants.cardWhite,
+            borderRadius: BorderRadius.circular(12.rw),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                offset: Offset(0, 2.rh),
+                blurRadius: 5.rw,
+              ),
+            ],
+          ),
+          child: Obx(
+            () => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Upcoming Donations
+                if (controller.upcomingDonations.isNotEmpty) ...[
+                  Text(
+                    'Upcoming Donations',
+                    style: TextStyle(
+                      fontFamily: DonationFonts.interDisplay,
+                      fontSize: 11.rfs,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.withValues(alpha: 0.6),
+                    ),
+                  ),
+
+                  SizedBox(height: 8.rh),
+
+                  ...controller.upcomingDonations.map(
+                    (donation) => Padding(
+                      padding: EdgeInsets.only(bottom: 8.rh),
+                      child: OrganizationDonationItem(
+                        donation: donation,
+                        isUpcoming: true,
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 12.rh),
+                ],
+
+                // Previous Donations
+                if (controller.previousDonations.isNotEmpty) ...[
+                  Text(
+                    'Previous Donations',
+                    style: TextStyle(
+                      fontFamily: DonationFonts.interDisplay,
+                      fontSize: 11.rfs,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.withValues(alpha: 0.6),
+                    ),
+                  ),
+
+                  SizedBox(height: 12.rh),
+
+                  ...controller.previousDonations.map(
+                    (donation) => Padding(
+                      padding: EdgeInsets.only(bottom: 12.rh),
+                      child: OrganizationDonationItem(
+                        donation: donation,
+                        isUpcoming: false,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
-            child: Obx(
-              () => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Upcoming Donations
-                  if (controller.upcomingDonations.isNotEmpty) ...[
-                    Text(
-                      'Upcoming Donations',
-                      style: TextStyle(
-                        fontFamily: DonationFonts.interDisplay,
-                        fontSize: 11.rfs,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.withValues(alpha: 0.6),
-                      ),
-                    ),
-
-                    SizedBox(height: 8.rh),
-
-                    ...controller.upcomingDonations.map(
-                      (donation) => Padding(
-                        padding: EdgeInsets.only(bottom: 8.rh),
-                        child: OrganizationDonationItem(
-                          donation: donation,
-                          isUpcoming: true,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 12.rh),
-                  ],
-
-                  // Previous Donations
-                  if (controller.previousDonations.isNotEmpty) ...[
-                    Text(
-                      'Previous Donations',
-                      style: TextStyle(
-                        fontFamily: DonationFonts.interDisplay,
-                        fontSize: 11.rfs,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.withValues(alpha: 0.6),
-                      ),
-                    ),
-
-                    SizedBox(height: 12.rh),
-
-                    ...controller.previousDonations.map(
-                      (donation) => Padding(
-                        padding: EdgeInsets.only(bottom: 12.rh),
-                        child: OrganizationDonationItem(
-                          donation: donation,
-                          isUpcoming: false,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

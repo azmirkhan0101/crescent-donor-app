@@ -16,7 +16,7 @@ import 'package:cresent_charge_user_app/helper/tost_message/show_snackbar.dart';
 import 'package:cresent_charge_user_app/utils/app_const/app_const.dart';
 import 'package:cresent_charge_user_app/utils/logger/logger.dart';
 
-import '../core/routes/route_path.dart';
+import '../core/go-router/paths/route_path.dart';
 
 final log = logger(ApiClient);
 

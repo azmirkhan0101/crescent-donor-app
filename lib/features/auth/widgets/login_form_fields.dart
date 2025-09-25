@@ -1,5 +1,5 @@
 import 'package:cresent_charge_user_app/common-widgets/form-fields/form_fields.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
@@ -79,11 +79,10 @@ class LoginFormFields extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Remember password checkbox
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () => controller.toggleRememberPassword(),
-              child: Container(
+        Obx(() {
+          return Row(
+            children: [
+              Container(
                 width: 20.rh,
                 height: 20.rh,
                 decoration: BoxDecoration(
@@ -102,19 +101,19 @@ class LoginFormFields extends StatelessWidget {
                     ? Icon(Icons.check, color: AppColors.white, size: 14.rw)
                     : null,
               ),
-            ),
-            8.heightWidth,
+              8.heightWidth,
 
-            Text(
-              "Remember Password",
-              style: AppTextStyles.f14W400().copyWith(
-                color: AppColors.black,
-                height: 20.rw / 14.rw,
-                fontFamily: AppStrings.interDisplay,
+              Text(
+                "Remember Password",
+                style: AppTextStyles.f14W400().copyWith(
+                  color: AppColors.black,
+                  height: 20.rw / 14.rw,
+                  fontFamily: AppStrings.interDisplay,
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ).onTap(() => controller.toggleRememberPassword());
+        }),
 
         // Forgot password link
         GestureDetector(

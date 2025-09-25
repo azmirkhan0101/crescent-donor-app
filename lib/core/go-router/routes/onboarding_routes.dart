@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:cresent_charge_user_app/core/routes/route_config.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 
 // Import onboarding pages

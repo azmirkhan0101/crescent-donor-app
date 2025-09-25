@@ -1,5 +1,5 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/total_donations_card.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';

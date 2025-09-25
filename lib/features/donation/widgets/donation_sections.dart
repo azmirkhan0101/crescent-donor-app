@@ -1,10 +1,13 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/badges_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/custom_calendar.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_cards.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 /// Section Header Widget
@@ -135,6 +138,9 @@ class OverviewSection extends StatelessWidget {
                     borderColor: DonationConstants.oneTimeBorder,
                     amountColor: DonationConstants.oneTimeAmountColor,
                     icon: Assets.common.gift.path,
+                    onTap: () {
+                      context.pushNamed(RoutePath.oneTime);
+                    },
                   ),
                 ],
               ),
@@ -310,51 +316,27 @@ class BadgesSection extends StatelessWidget {
           title: 'Badges',
           actionText: 'View all',
           onActionTap: () {
-            // Handle view all action
+            context.pushNamed(RoutePath.badges);
           },
         ),
         SizedBox(height: DonationConstants.sectionSpacing.rh),
         SizedBox(
           height: 230.rh, // Fixed height for horizontal scroll
-          child: ListView(
+          child: ListView.separated(
             padding: EdgeInsets.symmetric(
               horizontal: DonationConstants.paddingHorizontal.rw,
             ),
             scrollDirection: Axis.horizontal,
-            children: [
-              BadgeCard(
-                badgeName: 'Badge no. 01',
-                progressText: '3/5',
-                description: 'Donate 5 times in a month to unlock Silver.',
-                progress: 0.6, // 3/5
-                badgeImage: Assets.donation.badgeNo1.path,
-              ),
-              SizedBox(width: DonationConstants.cardSpacing.rw),
-              BadgeCard(
-                badgeName: 'Round-Up Rebel',
-                progressText: null,
-                description:
-                    'Earned for enabling round-up donations for 30 days.',
-                progress: 1.0, // Completed
-                badgeImage: Assets.donation.badgeRoundUp.path,
-              ),
-              SizedBox(width: DonationConstants.cardSpacing.rw),
-              BadgeCard(
-                badgeName: 'Badge no. 04',
-                progressText: '3/5',
-                description: 'Donate 5 times in a month to unlock Silver.',
-                progress: 0.6, // 3/5
-                badgeImage: Assets.donation.badgeNo4.path,
-              ),
-              SizedBox(width: DonationConstants.cardSpacing.rw),
-              BadgeCard(
-                badgeName: 'Badge no. 10',
-                progressText: '3/5',
-                description: 'Donate 5 times in a month to unlock Silver.',
-                progress: 0.6, // 3/5
-                badgeImage: Assets.donation.badgeNo10.path,
-              ),
-            ],
+            itemCount: Get.put(BadgesController()).badges.length,
+            separatorBuilder: (context, index) =>
+                SizedBox(width: DonationConstants.cardSpacing.rw),
+            itemBuilder: (context, index) {
+              final badge = Get.put(BadgesController()).badges[index];
+              return SizedBox(
+                width: 180.rw, // Fixed width for each badge card
+                child: BadgeCard(badge: badge),
+              );
+            },
           ),
         ),
       ],

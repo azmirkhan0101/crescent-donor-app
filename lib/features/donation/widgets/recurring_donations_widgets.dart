@@ -136,8 +136,8 @@ class RecurringOrganizationCard extends StatelessWidget {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(22.rw),
-                      child: Image.asset(
-                        donation.organizationImage,
+                      child: Image.network(
+                        "https://picsum.photos/200/300",
                         width: 44.rw,
                         height: 44.rh,
                         fit: BoxFit.cover,

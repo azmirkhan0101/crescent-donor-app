@@ -394,142 +394,142 @@ class CalendarDayWidget extends StatelessWidget {
 /// Badge Card Widget
 ///
 /// Displays achievement badges with progress indicators
-class BadgeCard extends StatelessWidget {
-  final String badgeName;
-  final String? progressText;
-  final String description;
-  final String? badgeImage;
-  final double progress; // 0.0 to 1.0
+// class BadgeCard extends StatelessWidget {
+//   final String badgeName;
+//   final String? progressText;
+//   final String description;
+//   final String? badgeImage;
+//   final double progress; // 0.0 to 1.0
 
-  const BadgeCard({
-    super.key,
-    required this.badgeName,
-    this.progressText,
-    required this.description,
-    this.badgeImage,
-    required this.progress,
-  });
+//   const BadgeCard({
+//     super.key,
+//     required this.badgeName,
+//     this.progressText,
+//     required this.description,
+//     this.badgeImage,
+//     required this.progress,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: DonationConstants.badgeCardWidth.rw,
-      height: 230.rh, // Fixed height to prevent overflow
-      decoration: BoxDecoration(
-        color: DonationConstants.cardWhite,
-        borderRadius: BorderRadius.circular(
-          DonationConstants.cardBorderRadius.rw,
-        ),
-        border: Border.all(color: DonationConstants.cardBorder, width: 1),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 6.rw, vertical: 6.rh),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Badge image container
-          Container(
-            height: 100.rh, // Reduced height
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: DonationConstants.offWhite,
-              borderRadius: BorderRadius.circular(
-                DonationConstants.smallCardBorderRadius.rw,
-              ),
-            ),
-            child: badgeImage != null
-                ? Center(
-                    child: Image.asset(
-                      badgeImage!,
-                      width: 72.rw, // Reduced size
-                      height: 72.rw,
-                      fit: BoxFit.contain,
-                    ),
-                  )
-                : Icon(
-                    Icons.emoji_events_outlined,
-                    size: 72.rfs, // Reduced size
-                    color: DonationConstants.mediumGrayText,
-                  ),
-          ),
-          SizedBox(height: 6.rh), // Reduced spacing
-          // Badge info
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.rw),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          badgeName,
-                          style: TextStyle(
-                            fontFamily: DonationFonts.interDisplay,
-                            fontSize: 12.rfs, // Reduced font size
-                            fontWeight: FontWeight.w500,
-                            color: DonationConstants.offBlack,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      if (progressText != null)
-                        Text(
-                          progressText!,
-                          style: TextStyle(
-                            fontFamily: DonationFonts.interDisplay,
-                            fontSize: 10.rfs, // Reduced font size
-                            fontWeight: FontWeight.w400,
-                            color: DonationConstants.mediumGrayText,
-                          ),
-                        ),
-                    ],
-                  ),
-                  SizedBox(height: 6.rh), // Reduced spacing
-                  // Progress bar
-                  Container(
-                    height: DonationConstants.progressBarHeight.rh,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: DonationConstants.lightGray,
-                      borderRadius: BorderRadius.circular(24.rw),
-                    ),
-                    child: FractionallySizedBox(
-                      alignment: Alignment.centerLeft,
-                      widthFactor: progress.clamp(0.0, 1.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: DonationConstants.offBlack,
-                          borderRadius: BorderRadius.circular(24.rw),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 6.rh), // Reduced spacing
-                  // Description
-                  Expanded(
-                    child: Text(
-                      description,
-                      style: TextStyle(
-                        fontFamily: DonationFonts.interDisplay,
-                        fontSize: 10.rfs, // Reduced font size
-                        fontWeight: FontWeight.w400,
-                        color: DonationConstants.mediumGrayText,
-                        height: 14 / 10,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: DonationConstants.badgeCardWidth.rw,
+//       height: 230.rh, // Fixed height to prevent overflow
+//       decoration: BoxDecoration(
+//         color: DonationConstants.cardWhite,
+//         borderRadius: BorderRadius.circular(
+//           DonationConstants.cardBorderRadius.rw,
+//         ),
+//         border: Border.all(color: DonationConstants.cardBorder, width: 1),
+//       ),
+//       padding: EdgeInsets.symmetric(horizontal: 6.rw, vertical: 6.rh),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           // Badge image container
+//           Container(
+//             height: 100.rh, // Reduced height
+//             width: double.infinity,
+//             decoration: BoxDecoration(
+//               color: DonationConstants.offWhite,
+//               borderRadius: BorderRadius.circular(
+//                 DonationConstants.smallCardBorderRadius.rw,
+//               ),
+//             ),
+//             child: badgeImage != null
+//                 ? Center(
+//                     child: Image.asset(
+//                       badgeImage!,
+//                       width: 72.rw, // Reduced size
+//                       height: 72.rw,
+//                       fit: BoxFit.contain,
+//                     ),
+//                   )
+//                 : Icon(
+//                     Icons.emoji_events_outlined,
+//                     size: 72.rfs, // Reduced size
+//                     color: DonationConstants.mediumGrayText,
+//                   ),
+//           ),
+//           SizedBox(height: 6.rh), // Reduced spacing
+//           // Badge info
+//           Expanded(
+//             child: Padding(
+//               padding: EdgeInsets.symmetric(horizontal: 4.rw),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       Expanded(
+//                         child: Text(
+//                           badgeName,
+//                           style: TextStyle(
+//                             fontFamily: DonationFonts.interDisplay,
+//                             fontSize: 12.rfs, // Reduced font size
+//                             fontWeight: FontWeight.w500,
+//                             color: DonationConstants.offBlack,
+//                           ),
+//                           maxLines: 1,
+//                           overflow: TextOverflow.ellipsis,
+//                         ),
+//                       ),
+//                       if (progressText != null)
+//                         Text(
+//                           progressText!,
+//                           style: TextStyle(
+//                             fontFamily: DonationFonts.interDisplay,
+//                             fontSize: 10.rfs, // Reduced font size
+//                             fontWeight: FontWeight.w400,
+//                             color: DonationConstants.mediumGrayText,
+//                           ),
+//                         ),
+//                     ],
+//                   ),
+//                   SizedBox(height: 6.rh), // Reduced spacing
+//                   // Progress bar
+//                   Container(
+//                     height: DonationConstants.progressBarHeight.rh,
+//                     width: double.infinity,
+//                     decoration: BoxDecoration(
+//                       color: DonationConstants.lightGray,
+//                       borderRadius: BorderRadius.circular(24.rw),
+//                     ),
+//                     child: FractionallySizedBox(
+//                       alignment: Alignment.centerLeft,
+//                       widthFactor: progress.clamp(0.0, 1.0),
+//                       child: Container(
+//                         decoration: BoxDecoration(
+//                           color: DonationConstants.offBlack,
+//                           borderRadius: BorderRadius.circular(24.rw),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                   SizedBox(height: 6.rh), // Reduced spacing
+//                   // Description
+//                   Expanded(
+//                     child: Text(
+//                       description,
+//                       style: TextStyle(
+//                         fontFamily: DonationFonts.interDisplay,
+//                         fontSize: 10.rfs, // Reduced font size
+//                         fontWeight: FontWeight.w400,
+//                         color: DonationConstants.mediumGrayText,
+//                         height: 14 / 10,
+//                       ),
+//                       maxLines: 3,
+//                       overflow: TextOverflow.ellipsis,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

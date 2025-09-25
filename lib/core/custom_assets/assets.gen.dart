@@ -66,7 +66,7 @@ class $AssetsCommonGen {
   SvgGenImage get add => const SvgGenImage('assets/common/add.svg');
 
   /// File path: assets/common/addidas.svg
-  SvgGenImage get adidas => const SvgGenImage('assets/common/addidas.svg');
+  SvgGenImage get addidas => const SvgGenImage('assets/common/addidas.svg');
 
   /// File path: assets/common/alert.svg
   SvgGenImage get alert => const SvgGenImage('assets/common/alert.svg');
@@ -110,6 +110,10 @@ class $AssetsCommonGen {
   SvgGenImage get heartOnHand =>
       const SvgGenImage('assets/common/heart-on-hand.svg');
 
+  /// File path: assets/common/hope-for-learning.png
+  AssetGenImage get hopeForLearning =>
+      const AssetGenImage('assets/common/hope-for-learning.png');
+
   /// File path: assets/common/reward-coin.svg
   SvgGenImage get rewardCoin =>
       const SvgGenImage('assets/common/reward-coin.svg');
@@ -121,8 +125,11 @@ class $AssetsCommonGen {
   /// File path: assets/common/tick-mark.svg
   SvgGenImage get tickMark => const SvgGenImage('assets/common/tick-mark.svg');
 
+  /// File path: assets/common/verified.svg
+  SvgGenImage get verified => const SvgGenImage('assets/common/verified.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [
+  List<dynamic> get values => [
     call,
     copy,
     gift,
@@ -132,7 +139,7 @@ class $AssetsCommonGen {
     search,
     timer,
     add,
-    adidas,
+    addidas,
     alert,
     arrowDown,
     arrowLeft,
@@ -145,9 +152,11 @@ class $AssetsCommonGen {
     downloadArrow,
     heartCircle,
     heartOnHand,
+    hopeForLearning,
     rewardCoin,
     starFilled,
     tickMark,
+    verified,
   ];
 }
 
@@ -162,6 +171,14 @@ class $AssetsDonationGen {
   AssetGenImage get badgeNo10 =>
       const AssetGenImage('assets/donation/badge-no-10.png');
 
+  /// File path: assets/donation/badge-no-2.png
+  AssetGenImage get badgeNo2 =>
+      const AssetGenImage('assets/donation/badge-no-2.png');
+
+  /// File path: assets/donation/badge-no-3.png
+  AssetGenImage get badgeNo3 =>
+      const AssetGenImage('assets/donation/badge-no-3.png');
+
   /// File path: assets/donation/badge-no-4.png
   AssetGenImage get badgeNo4 =>
       const AssetGenImage('assets/donation/badge-no-4.png');
@@ -174,6 +191,8 @@ class $AssetsDonationGen {
   List<AssetGenImage> get values => [
     badgeNo1,
     badgeNo10,
+    badgeNo2,
+    badgeNo3,
     badgeNo4,
     badgeRoundUp,
   ];

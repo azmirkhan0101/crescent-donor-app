@@ -1,4 +1,4 @@
-import 'package:cresent_charge_user_app/core/routes/app_router.dart';
+import 'package:cresent_charge_user_app/core/go-router/app_router.dart';
 import 'package:cresent_charge_user_app/core/theme/theme.dart';
 import 'package:cresent_charge_user_app/dependency_injection/getx_injection.dart';
 import 'package:cresent_charge_user_app/global/language/controller/language_controller.dart';

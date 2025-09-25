@@ -1,4 +1,4 @@
-import 'package:cresent_charge_user_app/core/routes/auth_guard.dart';
+import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -130,7 +130,7 @@ class LoginController extends GetxController {
       isLoading.value = true;
 
       // Simulate API call - replace with actual authentication
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 200));
 
       // TODO: Replace with actual API authentication
       if (emailController.text.isEmail && passwordController.text.isNotEmpty) {

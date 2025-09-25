@@ -29,16 +29,23 @@ class RoutePath {
   static const String donationComplete = 'donationComplete';
   static const String search = 'search';
   static const String notifications = 'notifications';
-  static const String favorites = 'favorites';
-  static const String donation = 'donation';
-  static const String roundUp = 'roundUp';
-  static const String recurringDonations = 'recurringDonations';
-  static const String organizationDonations = 'organizationDonations';
-  static const String profile = 'profile';
 
   //=================== Rewards screens ===================
+  static const String yourRewards = 'yourRewards';
   static const String rewards = 'rewards';
   static const String storeProfile = 'storeProfile';
   static const String redeemSuccess = 'redeemSuccess';
   static const String redeemFailure = 'redeemFailure';
+
+  //=================== Donation screens ===================
+  static const String donation = 'donation';
+  static const String roundUp = 'roundUp';
+  static const String roundUpSettings = 'roundUpSettings';
+  static const String recurringDonations = 'recurringDonations';
+  static const String organizationDonations = 'organizationDonations';
+  static const String oneTime = 'oneTime';
+  static const String badges = 'badges';
+
+  // Profile screens
+  static const String profile = 'profile';
 }

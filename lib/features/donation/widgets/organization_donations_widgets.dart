@@ -4,6 +4,7 @@ import 'package:cresent_charge_user_app/features/donation/utils/donation_constan
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
 
 /// Organization Detail Card Widget
 ///
@@ -16,206 +17,101 @@ class OrganizationDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 343.rw,
-      height: 260.rh,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.rw),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            offset: Offset(0, 2.rh),
-            blurRadius: 5.rw,
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Cover Image
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            SizedBox(height: 160.rh),
+            Container(
               height: 120.rh,
+              width: double.infinity,
               decoration: BoxDecoration(
-                color: const Color(0xFFF4E4C1), // Fallback color from Figma
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.rw),
-                  topRight: Radius.circular(16.rw),
+                borderRadius: BorderRadius.all(Radius.circular(16.rw)),
+                image: DecorationImage(
+                  image: NetworkImage("https://picsum.photos/343/120"),
+                  fit: BoxFit.cover,
                 ),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.rw),
-                  topRight: Radius.circular(16.rw),
-                ),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFF4E4C1), Color(0xFFE8D5A8)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.image,
-                      size: 40.rw,
-                      color: Colors.brown.withValues(alpha: 0.3),
-                    ),
+            ),
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: 80.rw,
+                height: 80.rh,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100.rw)),
+                  border: Border.all(color: Color(0xFFE9B7AD)),
+                  image: DecorationImage(
+                    alignment: Alignment.center,
+                    image: NetworkImage("https://picsum.photos/id/237/200/300"),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-          ),
+          ],
+        ),
 
-          // Content Container
-          Positioned(
-            top: 80.rh,
-            left: 32.rw,
-            right: 32.rw,
-            child: Container(
-              height: 180.rh,
-              decoration: BoxDecoration(
-                color: DonationConstants.cardWhite,
-                borderRadius: BorderRadius.circular(16.rw),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 16.rh),
-              child: Column(
-                children: [
-                  // Logo
-                  Container(
-                    width: 80.rw,
-                    height: 80.rh,
-                    decoration: BoxDecoration(
-                      color: const Color(
-                        0xFFE91E63,
-                      ), // Pink background for sample logo
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color(0xFFE4E4E4),
-                        width: 1,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'HOPE',
-                        style: TextStyle(
-                          fontFamily: DonationFonts.familjenGrotesk,
-                          fontSize: 12.rfs,
-                          fontWeight: FontWeight.bold,
-                          color: DonationConstants.cardWhite,
-                        ),
-                      ),
-                    ),
-                  ),
+        Gap(12.rh),
 
-                  SizedBox(height: 12.rh),
-
-                  // Organization Details
-                  Column(
-                    children: [
-                      // Name with verification badge
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              organization.name,
-                              style: TextStyle(
-                                fontFamily: DonationFonts.familjenGrotesk,
-                                fontSize: 18.rfs,
-                                fontWeight: FontWeight.bold,
-                                color: DonationConstants.offBlack,
-                                letterSpacing: -0.18,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          if (organization.isVerified) ...[
-                            SizedBox(width: 8.rw),
-                            Container(
-                              width: 20.rw,
-                              height: 20.rh,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF1AC461),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.check,
-                                size: 12.rw,
-                                color: DonationConstants.cardWhite,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-
-                      SizedBox(height: 8.rh),
-
-                      // Tags
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: organization.tags
-                            .map(
-                              (tag) => Padding(
-                                padding: EdgeInsets.only(right: 8.rw),
-                                child: _buildTag(tag),
-                              ),
-                            )
-                            .toList(),
-                      ),
-
-                      SizedBox(height: 8.rh),
-
-                      // Description
-                      Text(
-                        organization.description,
-                        style: TextStyle(
-                          fontFamily: DonationFonts.interDisplay,
-                          fontSize: 12.rfs,
-                          fontWeight: FontWeight.w400,
-                          color: DonationConstants.offBlack,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 8.rw,
+          children: [
+            Text(
+              'Hope for Learning Foundation',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: const Color(0xFF000C0B) /* Colors-Off-Black */,
+                fontSize: 18,
+                fontFamily: 'Familjen Grotesk',
+                fontWeight: FontWeight.w700,
+                height: 1.33,
+                letterSpacing: -0.18,
               ),
             ),
-          ),
-        ],
-      ),
+
+            SvgPicture.asset('assets/common/verified.svg'),
+          ],
+        ),
+
+        Gap(12.rh),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 8.rw,
+          children: [
+            _buildTag('📚 Education', const Color(0xFFC5F6C9)),
+            _buildTag('🌍 South Asia', const Color(0xFFFFFFFF)),
+          ],
+        ),
+      ],
     );
   }
 
-  /// Build tag widget
-  Widget _buildTag(OrganizationTag tag) {
+  Container _buildTag(String tag, Color color) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6.rw, vertical: 4.rh),
-      decoration: BoxDecoration(
-        color: tag.isHighlighted
-            ? const Color(0xFFC6F7C9)
-            : DonationConstants.cardWhite,
-        borderRadius: BorderRadius.circular(24.rw),
-        border: tag.isHighlighted
-            ? null
-            : Border.all(color: const Color(0xFFE4E4E4)),
+      clipBehavior: Clip.antiAlias,
+      decoration: ShapeDecoration(
+        color: color,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 4,
         children: [
-          Text(tag.emoji, style: TextStyle(fontSize: 10.rfs)),
-          SizedBox(width: 4.rw),
           Text(
-            tag.label,
+            tag,
             style: TextStyle(
-              fontFamily: DonationFonts.interDisplay,
-              fontSize: 10.rfs,
+              color: const Color(0xFF000C0B) /* Colors-Off-Black */,
+              fontSize: 10,
+              fontFamily: 'Inter Display',
               fontWeight: FontWeight.w400,
-              color: DonationConstants.offBlack,
+              height: 1.20,
             ),
           ),
         ],
@@ -305,6 +201,7 @@ class OrganizationDonationItem extends StatelessWidget {
 
     return Container(
       width: 56.rw,
+      height: 78.rh,
       padding: EdgeInsets.all(8.rw),
       decoration: BoxDecoration(
         color: bgColor,
@@ -312,63 +209,32 @@ class OrganizationDonationItem extends StatelessWidget {
         border: Border.all(color: borderColor),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Icon (only for upcoming donations)
-          if (isUpcoming) ...[
-            SvgPicture.asset(
-              Assets.common.calendar.path,
-              width: 24.rw,
-              height: 24.rh,
-              colorFilter: ColorFilter.mode(
-                DonationConstants.cardWhite,
-                BlendMode.srcIn,
-              ),
+          if (donation.status != DonationStatus.failed)
+            Assets.common.rewardCoin.svg(
+              colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
             ),
-          ] else ...[
-            Container(
-              width: 24.rw,
-              height: 24.rh,
-              decoration: BoxDecoration(
-                color: donation.status == DonationStatus.successful
-                    ? DonationConstants.calendarActiveBg
-                    : const Color(0xFFF0323C),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                donation.status == DonationStatus.successful
-                    ? Icons.check
-                    : Icons.close,
-                size: 16.rw,
-                color: DonationConstants.cardWhite,
-              ),
-            ),
-          ],
-
-          SizedBox(height: 2.rh),
-
-          // Day name
           Text(
-            donation.dayName,
+            'Wed',
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: DonationFonts.interDisplay,
-              fontSize: 12.rfs,
-              fontWeight: FontWeight.w400,
               color: textColor,
+              fontSize: 12,
+              fontFamily: 'Inter Display',
+              fontWeight: FontWeight.w400,
               letterSpacing: -0.24,
             ),
-            textAlign: TextAlign.center,
           ),
-
-          // Day number
           Text(
-            donation.dayNumber,
-            style: TextStyle(
-              fontFamily: DonationFonts.interDisplay,
-              fontSize: 16.rfs,
-              fontWeight: FontWeight.w500,
-              color: textColor,
-            ),
+            '17',
             textAlign: TextAlign.center,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 16,
+              fontFamily: 'Inter Display',
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

@@ -1,5 +1,5 @@
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
@@ -94,7 +94,12 @@ class _LoginPageState extends State<LoginPage> {
           CustomPrimaryButton(
             title: "Login",
             loadingText: controller.isLoading.value ? "Logging In..." : null,
-            onTap: () => _handleLogin(context, controller),
+            onTap: () async {
+              final success = await controller.login();
+              if (success) {
+                context.pushReplacementNamed(RoutePath.home);
+              }
+            },
           ),
 
           16.heightWidth,
@@ -128,32 +133,6 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ).paddingXY(X: 56.rw);
     });
-  }
-
-  /// Handle login button press
-  Future<void> _handleLogin(
-    BuildContext context,
-    LoginController controller,
-  ) async {
-    // Dismiss keyboard
-    FocusScope.of(context).unfocus();
-
-    final success = await controller.login();
-
-    if (success && context.mounted) {
-      // Show success message before navigation
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Welcome back!'),
-          backgroundColor: AppColors.primaryColor.withValues(alpha: 0.9),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-
-      // Navigate to home on successful login (replace current route)
-      context.goNamed(RoutePath.home);
-    }
   }
 
   /// Handle guest login button press

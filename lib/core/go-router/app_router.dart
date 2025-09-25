@@ -1,9 +1,12 @@
-import 'package:cresent_charge_user_app/core/routes/auth_routes.dart';
-import 'package:cresent_charge_user_app/core/routes/home_routes.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/routes/auth_routes.dart';
+import 'package:cresent_charge_user_app/core/go-router/routes/bottom_nav_routes.dart';
+import 'package:cresent_charge_user_app/core/go-router/routes/donation_routes.dart';
+import 'package:cresent_charge_user_app/core/go-router/routes/home_routes.dart';
 // Import route modules
-import 'package:cresent_charge_user_app/core/routes/onboarding_routes.dart';
-import 'package:cresent_charge_user_app/core/routes/rewards_routes.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/routes/onboarding_routes.dart';
+import 'package:cresent_charge_user_app/core/go-router/routes/profile_routes.dart';
+import 'package:cresent_charge_user_app/core/go-router/routes/rewards_routes.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -28,10 +31,13 @@ class AppRouter {
   static AppRouter get instance => _instance;
 
   /// Route modules - each handles a specific feature area
+  static final _bottomNavRoutes = BottomNavRoutes();
   static final _onboardingRoutes = OnboardingRoutes();
   static final _authRoutes = AuthRoutes();
   static final _homeRoutes = HomeRoutes();
   static final _rewardsRoutes = RewardsRoutes();
+  static final _donationRoutes = DonationRoutes();
+  static final _profileRoutes = ProfileRoutes();
 
   /// Main GoRouter configuration
   /// This is the router instance that will be used throughout the app
@@ -44,6 +50,9 @@ class AppRouter {
 
     // Combine all route modules into a single list
     routes: [
+      // Bottom Navigation routes - app introduction and getting started
+      ..._bottomNavRoutes.routes,
+
       // Onboarding routes - app introduction and getting started
       ..._onboardingRoutes.routes,
 
@@ -55,6 +64,12 @@ class AppRouter {
 
       // Rewards routes - rewards features (requires authentication)
       ..._rewardsRoutes.routes,
+
+      // Donation routes - donation features (requires authentication)
+      ..._donationRoutes.routes,
+
+      // Profile routes - profile features (requires authentication)
+      ..._profileRoutes.routes,
     ],
 
     /// Error handling for unknown routes
@@ -100,10 +115,13 @@ class AppRouter {
   static bool routeExists(String routeName) {
     try {
       final allRoutes = [
+        ..._bottomNavRoutes.routes,
         ..._onboardingRoutes.routes,
         ..._authRoutes.routes,
         ..._homeRoutes.routes,
         ..._rewardsRoutes.routes,
+        ..._donationRoutes.routes,
+        ..._profileRoutes.routes,
       ];
 
       return allRoutes.any((route) {
@@ -121,6 +139,12 @@ class AppRouter {
   /// Useful for debugging and development
   static Map<String, String> getAllRoutes() {
     final routes = <String, String>{};
+
+    // Add bottom navigation routes
+    routes['Bottom Navigation - Home'] = RoutePath.home;
+    routes['Bottom Navigation - Rewards'] = RoutePath.rewards;
+    routes['Bottom Navigation - Donations'] = RoutePath.donation;
+    routes['Bottom Navigation - Profile'] = RoutePath.profile;
 
     // Add onboarding routes
     routes['Onboarding - Get Started'] = RoutePath.getStartPage;
@@ -142,6 +166,16 @@ class AppRouter {
 
     // Add rewards routes
     routes['Rewards - Store Profile'] = RoutePath.storeProfile;
+
+    // Add donation routes
+    routes['Donation - Organization Donations'] =
+        RoutePath.organizationDonations;
+    routes['Donation - Round Up'] = RoutePath.roundUp;
+    routes['Donation - Round Up Settings'] = RoutePath.roundUpSettings;
+    routes['Donation - Recurring Donations'] = RoutePath.recurringDonations;
+
+    // Add profile routes
+    routes['Profile - Dashboard'] = RoutePath.profile;
 
     return routes;
   }

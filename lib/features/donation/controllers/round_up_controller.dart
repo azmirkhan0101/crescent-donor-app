@@ -15,21 +15,21 @@ class RoundUpController extends GetxController {
   /// List of organizations that have received donations
   final List<DonatedOrganization> donatedOrganizations = [
     DonatedOrganization(
-      imageUrl: 'assets/donation/hope-learning-foundation.png',
+      imageUrl: "https://picsum.photos/200/300",
       name: 'Hope for Learning Foundation',
       location: 'South Asia',
       category: '📚 Education',
       categoryColor: const Color(0xFFC6F7C9),
     ),
     DonatedOrganization(
-      imageUrl: 'assets/donation/healing-hands.png',
+      imageUrl: "https://picsum.photos/200/300",
       name: 'Healing Hands International',
       location: 'Sydney, Australia',
       category: '🏥 Health',
       categoryColor: const Color(0xFFC7ECFF),
     ),
     DonatedOrganization(
-      imageUrl: 'assets/donation/animal-care.png',
+      imageUrl: "https://picsum.photos/200/300",
       name: 'Paws and Claws Rescue',
       location: 'Melbourne, Australia',
       category: '🐈 Animal Care',
@@ -41,7 +41,7 @@ class RoundUpController extends GetxController {
   final List<RecentActivity> recentActivities = [
     RecentActivity(
       brandName: 'Adidas',
-      brandLogo: Assets.common.adidas.path,
+      brandLogo: Assets.rewards.adidas.path,
       purchaseAmount: 20.5,
       roundUpAmount: 0.5,
       timeAgo: '2 min ago',

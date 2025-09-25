@@ -1,4 +1,4 @@
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +17,7 @@ class RecurringDonationsController extends GetxController {
     RecurringDonation(
       id: '1',
       organizationName: 'Hope for Learning Foundation',
-      organizationImage: 'assets/donation/hope-learning-foundation.png',
+      organizationImage: "https://picsum.photos/200/300",
       amount: 30.0,
       frequency: 'month',
       schedule: 'Every month of 6th, 4:00 PM',
@@ -26,7 +26,7 @@ class RecurringDonationsController extends GetxController {
     RecurringDonation(
       id: '2',
       organizationName: 'Healing Hands International',
-      organizationImage: 'assets/donation/healing-hands.png',
+      organizationImage: "https://picsum.photos/200/300",
       amount: 50.0,
       frequency: 'quarter',
       schedule: 'Every month of 6th, 4:00 PM',

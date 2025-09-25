@@ -1,5 +1,5 @@
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:get/get.dart';
-import 'package:cresent_charge_user_app/core/routes/route_path.dart';
 
 /// Main Layout Controller
 ///
@@ -13,7 +13,7 @@ class MainLayoutController extends GetxController {
   /// Available navigation tabs with their corresponding routes
   final List<String> navigationRoutes = [
     RoutePath.home,
-    RoutePath.favorites,
+    RoutePath.yourRewards,
     RoutePath.donation,
     RoutePath.profile,
   ];
