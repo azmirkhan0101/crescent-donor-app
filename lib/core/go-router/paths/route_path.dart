@@ -48,4 +48,9 @@ class RoutePath {
 
   // Profile screens
   static const String profile = 'profile';
+  static const String editProfile = 'editProfile';
+  static const String notificationSettings = 'notificationSettings';
+  static const String transactionHistory = 'transactionHistory';
+  static const String changePassword = 'changePassword';
+  static const String subscription = 'subscription';
 }
