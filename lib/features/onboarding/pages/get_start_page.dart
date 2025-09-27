@@ -45,7 +45,7 @@ class GetStartPage extends StatelessWidget {
             Spacer(),
 
             // Get Started button
-            CustomPrimaryButton(
+            CustomFilledButton(
               title: "Get Started",
               onTap: () {
                 context.pushNamed(RoutePath.howToWorkPage);

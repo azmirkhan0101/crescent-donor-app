@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
     return Obx(() {
       return Column(
         children: [
-          CustomPrimaryButton(
+          CustomFilledButton(
             title: "Login",
             loadingText: controller.isLoading.value ? "Logging In..." : null,
             onTap: () async {
@@ -119,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
           16.rh.heightWidth,
 
           // Login as guest button
-          CustomPrimaryButton(
+          CustomFilledButton(
             title: controller.isLoading.value
                 ? "Please wait..."
                 : "Login as a Guest",

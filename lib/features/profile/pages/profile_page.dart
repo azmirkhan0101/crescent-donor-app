@@ -191,12 +191,16 @@ class ProfilePage extends StatelessWidget {
       MenuItemData(
         icon: Assets.common.gift.path, // Using gift for change password
         title: 'Change Password',
-        onTap: () {},
+        onTap: () {
+          context.pushNamed(RoutePath.changePassword);
+        },
       ),
       MenuItemData(
         icon: Assets.common.calendar.path,
         title: 'Subscriptions',
-        onTap: () {},
+        onTap: () {
+          context.pushNamed(RoutePath.subscription);
+        },
       ),
       MenuItemData(
         icon: Assets.common.globe.path, // Using globe for terms & conditions

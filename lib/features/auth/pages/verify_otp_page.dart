@@ -1,6 +1,5 @@
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
-
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
@@ -61,7 +60,7 @@ class VerifyOtpPage extends StatelessWidget {
         // 100.rh.heightWidth,
         Column(
           children: [
-            CustomPrimaryButton(
+            CustomFilledButton(
               title: AppStrings.continueText,
               onTap: () {
                 context.pushNamed(RoutePath.resetPassword);

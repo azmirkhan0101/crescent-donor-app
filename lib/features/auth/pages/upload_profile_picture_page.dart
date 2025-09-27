@@ -32,7 +32,7 @@ class UploadProfilePicturePage extends StatelessWidget {
         ),
       ),
       Spacer(),
-      CustomPrimaryButton(
+      CustomFilledButton(
         title: AppStrings.continueText,
         onTap: () {
           context.pushNamed(RoutePath.addCard);

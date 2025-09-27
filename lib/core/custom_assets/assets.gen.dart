@@ -411,12 +411,24 @@ class $AssetsOnboardingGen {
 class $AssetsProfileGen {
   const $AssetsProfileGen();
 
+  /// File path: assets/profile/background-image.png
+  AssetGenImage get backgroundImage =>
+      const AssetGenImage('assets/profile/background-image.png');
+
+  /// File path: assets/profile/exclusive-brand-reward.svg
+  SvgGenImage get exclusiveBrandReward =>
+      const SvgGenImage('assets/profile/exclusive-brand-reward.svg');
+
   /// File path: assets/profile/profile-image.svg
   SvgGenImage get profileImage =>
       const SvgGenImage('assets/profile/profile-image.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [profileImage];
+  List<dynamic> get values => [
+    backgroundImage,
+    exclusiveBrandReward,
+    profileImage,
+  ];
 }
 
 class $AssetsRewardsGen {

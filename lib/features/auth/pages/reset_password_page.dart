@@ -122,7 +122,7 @@ class ResetPasswordPage extends StatelessWidget {
         Column(
           children: [
             Obx(
-              () => CustomPrimaryButton(
+              () => CustomFilledButton(
                 title: AppStrings.continueText,
                 onTap: controller.canSubmit
                     ? () {

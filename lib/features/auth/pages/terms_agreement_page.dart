@@ -107,7 +107,7 @@ class TermsAgreementPage extends StatelessWidget {
           Column(
             children: [
               // Continue button
-              CustomPrimaryButton(
+              CustomFilledButton(
                 title: "Agree & Continue",
                 onTap: () {
                   context.pushNamed(RoutePath.login);

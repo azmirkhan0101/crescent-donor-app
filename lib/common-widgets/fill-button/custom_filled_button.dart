@@ -4,8 +4,8 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CustomPrimaryButton extends StatelessWidget {
-  const CustomPrimaryButton({
+class CustomFilledButton extends StatelessWidget {
+  const CustomFilledButton({
     super.key,
     this.title,
     this.onTap,
