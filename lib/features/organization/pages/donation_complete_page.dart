@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donation_complete_controller.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
@@ -6,6 +7,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 // Define colors from Figma design
 const Color _offBlack = Color(0xFF000C0B);
@@ -22,7 +24,7 @@ class DonationCompletePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.lightPageBackground,
-      appBar: _buildAppBar(controller),
+      appBar: _buildAppBar(controller, context),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.rw),
         child: Column(
@@ -59,14 +61,17 @@ class DonationCompletePage extends StatelessWidget {
             60.rh.heightWidth,
 
             // Done Button
-            _buildDoneButton(controller),
+            _buildDoneButton(context),
           ],
         ),
       ),
     );
   }
 
-  AppBar _buildAppBar(DonationCompleteController controller) {
+  AppBar _buildAppBar(
+    DonationCompleteController controller,
+    BuildContext context,
+  ) {
     return AppBar(
       backgroundColor: AppColors.lightPageBackground,
       elevation: 0,
@@ -82,7 +87,7 @@ class DonationCompletePage extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () => controller.onClosePressed(),
+          onPressed: () => context.goNamed(RoutePath.home),
           icon: Container(
             width: 24.rw,
             height: 24.rh,
@@ -216,9 +221,9 @@ class DonationCompletePage extends StatelessWidget {
     );
   }
 
-  Widget _buildDoneButton(DonationCompleteController controller) {
+  Widget _buildDoneButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => controller.onDonePressed(),
+      onPressed: () => context.goNamed(RoutePath.home),
       style: ElevatedButton.styleFrom(
         backgroundColor: _offBlack,
         fixedSize: Size(double.maxFinite, 56.rh),

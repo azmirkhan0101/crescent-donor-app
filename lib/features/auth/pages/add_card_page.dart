@@ -78,13 +78,17 @@ class AddCardPage extends StatelessWidget {
 
                   if (!isAddNewCard)
                     // I'll do this later text
-                    AppStrings.illDoThisLater.centerText(
-                      AppTextStyles.baseStyle().copyWith(
-                        fontFamily: AppStrings.interDisplay,
-                        fontSize: 14.rfs,
-                        color: AppColors.grayColor,
-                      ),
-                    ),
+                    AppStrings.illDoThisLater
+                        .centerText(
+                          AppTextStyles.baseStyle().copyWith(
+                            fontFamily: AppStrings.interDisplay,
+                            fontSize: 14.rfs,
+                            color: AppColors.grayColor,
+                          ),
+                        )
+                        .onTap(() {
+                          context.pushNamed(RoutePath.termsAgreement);
+                        }),
                   24.heightWidth,
                 ],
               ).paddingXY(X: 40.rw),

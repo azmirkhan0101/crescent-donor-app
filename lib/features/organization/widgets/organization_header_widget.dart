@@ -95,7 +95,7 @@ class OrganizationHeaderWidget extends StatelessWidget {
                         style: AppTextStyles.f18W600(),
                       ),
                     ),
-                    if (organization.verified) _buildVerificationBadge(),
+                    if (organization.verified) Assets.common.verified.svg(),
                   ],
                 ),
 
@@ -179,22 +179,22 @@ class OrganizationHeaderWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildVerificationBadge() {
-    return Container(
-      width: 20.rw,
-      height: 20.rh,
-      decoration: BoxDecoration(
-        color: const Color(0xFFC08FFF),
-        borderRadius: BorderRadius.circular(10.rw),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            offset: const Offset(0, 1),
-            blurRadius: 0,
-          ),
-        ],
-      ),
-      child: Icon(Icons.check, color: Colors.white, size: 12.rfs),
-    );
-  }
+  // Widget _buildVerificationBadge() {
+  //   return Container(
+  //     width: 20.rw,
+  //     height: 20.rh,
+  //     decoration: BoxDecoration(
+  //       color: const Color(0xFFC08FFF),
+  //       borderRadius: BorderRadius.circular(10.rw),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.black.withValues(alpha: 0.1),
+  //           offset: const Offset(0, 1),
+  //           blurRadius: 0,
+  //         ),
+  //       ],
+  //     ),
+  //     child: Icon(Icons.check, color: Colors.white, size: 12.rfs),
+  //   );
+  // }
 }

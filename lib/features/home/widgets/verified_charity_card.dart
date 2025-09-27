@@ -50,7 +50,7 @@ class VerifiedCharityCard extends StatelessWidget {
                 ),
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: Assets.home.premiumCheckmark.svg(
+                  child: Assets.common.verified.svg(
                     width: 20.rw,
                     height: 20.rh,
                   ),
