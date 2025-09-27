@@ -1,7 +1,6 @@
 import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/change_password_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/edit_profile_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/notification_settings_page.dart';
@@ -33,8 +32,7 @@ class ProfileRoutes extends AppRouteConfig {
     GoRoute(
       name: RoutePath.transactionHistory,
       path: RoutePath.transactionHistory.addBasePath,
-      builder: (context, state) =>
-          TransactionHistoryPage(controller: RoundUpController()),
+      builder: (context, state) => TransactionHistoryPage(),
       redirect: AuthGuard.guestAllowed.redirect,
     ),
 

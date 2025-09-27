@@ -49,20 +49,13 @@ class GetStartPage extends StatelessWidget {
               title: "Get Started",
               onTap: () {
                 context.pushNamed(RoutePath.howToWorkPage);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) {
-                //       return const LoaderExamplesPage();
-                //     },
-                //   ),
-                // );
               },
             ),
             15.rh.heightWidth,
 
             // Already have an account? Sign In
             HaveAccountWidget(haveAccount: true),
+            24.rh.heightWidth,
           ],
         ).paddingXY(X: 40.rw),
       ),

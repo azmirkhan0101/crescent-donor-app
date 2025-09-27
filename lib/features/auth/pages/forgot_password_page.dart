@@ -17,50 +17,56 @@ class ForgotPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AuthHeader(),
-        32.heightWidth,
-        AuthTitleSection(
-          title: "Forgot Password?",
-          subtitle: "Enter your email to reset password",
-        ),
-
-        32.rh.heightWidth,
-
-        // Email field
-        Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppStrings.email
-                .text(AppTextStyles.baseStyle())
-                .color("#000C0B".hexColor),
-
-            8.rh.heightWidth,
-            CustomInputField(
-              hintText: AppStrings.enterEmailAddress,
-              textInputAction: TextInputAction.go,
-              keyboardType: TextInputType.emailAddress,
+            AuthHeader(),
+            32.heightWidth,
+            AuthTitleSection(
+              title: "Forgot Password?",
+              subtitle: "Enter your email to reset password",
             ),
-          ],
-        ),
 
-        const Spacer(),
-        // 100.rh.heightWidth,
-        Column(
-          children: [
-            CustomFilledButton(
-              title: AppStrings.continueText,
-              onTap: () {
-                context.pushNamed(RoutePath.verifyOtp);
-              },
+            32.rh.heightWidth,
+
+            // Email field
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppStrings.email
+                    .text(AppTextStyles.baseStyle())
+                    .color("#000C0B".hexColor),
+
+                8.rh.heightWidth,
+                CustomInputField(
+                  hintText: AppStrings.enterEmailAddress,
+                  textInputAction: TextInputAction.go,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ],
             ),
-            16.heightWidth,
-            HaveAccountWidget(),
+
+            const Spacer(),
+            // 100.rh.heightWidth,
+            Column(
+              children: [
+                CustomFilledButton(
+                  title: AppStrings.continueText,
+                  onTap: () {
+                    context.pushNamed(RoutePath.verifyOtp);
+                  },
+                ),
+                16.heightWidth,
+                HaveAccountWidget(),
+              ],
+            ).paddingXY(X: 40.rw),
           ],
-        ).paddingXY(X: 40.rw),
-      ],
-    ).paddingAll(16.rw).scaffoldSafeArea();
+        ).paddingAll(16.rw),
+      ),
+    );
   }
 }

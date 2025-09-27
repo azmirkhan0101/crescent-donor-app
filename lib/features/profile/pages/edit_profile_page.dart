@@ -283,16 +283,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                     SizedBox(width: 4.rw),
 
-                    Transform.rotate(
-                      angle: 1.5708, // 90 degrees to make arrow point down
-                      child: SvgPicture.asset(
-                        Assets.common.arrowLeft.path,
-                        width: 16.rw,
-                        height: 16.rh,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF000C0B),
-                          BlendMode.srcIn,
-                        ),
+                    SvgPicture.asset(
+                      Assets.common.arrowDown.path,
+                      width: 16.rw,
+                      height: 16.rh,
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF000C0B),
+                        BlendMode.srcIn,
                       ),
                     ),
                   ],
@@ -308,6 +305,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
                   ),
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
@@ -367,16 +366,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ),
 
-                    Transform.rotate(
-                      angle: 1.5708, // 90 degrees to make arrow point down
-                      child: SvgPicture.asset(
-                        Assets.common.arrowLeft.path,
-                        width: 16.rw,
-                        height: 16.rh,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF000C0B),
-                          BlendMode.srcIn,
-                        ),
+                    SvgPicture.asset(
+                      Assets.common.arrowDown.path,
+                      width: 16.rw,
+                      height: 16.rh,
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF000C0B),
+                        BlendMode.srcIn,
                       ),
                     ),
                   ],

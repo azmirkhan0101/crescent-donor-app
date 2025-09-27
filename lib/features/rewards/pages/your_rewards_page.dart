@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 
 // Define colors from Figma design
 const Color _offBlack = Color(0xFF000C0B);
-const Color _white = Color(0xFFFFFFFF);
 const Color _lightGray = Color(0xFFEBE9EC);
 const Color _backgroundGray = Color(0xFFF7F7F7);
 const Color _textGray = Color(0xFF515A59);
@@ -48,6 +47,8 @@ class YourRewardsPage extends StatelessWidget {
 
                     // Content
                     _buildContent(controller),
+
+                    48.heightWidth,
                   ],
                 ),
               ),

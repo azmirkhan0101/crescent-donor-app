@@ -1,6 +1,7 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
+import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -50,7 +51,7 @@ class ProfilePage extends StatelessWidget {
             ),
 
             // Logout Button
-            _buildLogoutButton(),
+            _buildLogoutButton(context),
 
             SizedBox(height: 80.rh),
           ],
@@ -281,9 +282,10 @@ class ProfilePage extends StatelessWidget {
   }
 
   /// Build logout button
-  Widget _buildLogoutButton() {
+  Widget _buildLogoutButton(BuildContext context) {
     return Container(
-      width: 263.rw,
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 56.rw),
       padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 16.rh),
       decoration: BoxDecoration(
         color: const Color(0xFFF0323C).withValues(alpha: 0.08),
@@ -302,6 +304,8 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ).onTap(() {
+      context.goNamed(RoutePath.login);
+    });
   }
 }

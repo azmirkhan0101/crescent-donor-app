@@ -1,13 +1,17 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/features/common/mixins/activity_expansion_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 /// Round Up Controller
 ///
 /// Manages the state and business logic for the Round Up page
-class RoundUpController extends GetxController {
+class RoundUpController extends GetxController with ActivityExpansionMixin {
   /// Activity expansion states - tracks which activities are expanded
-  final RxMap<String, bool> activityExpansionStates = <String, bool>{}.obs;
+  final RxMap<String, bool> _activityExpansionStates = <String, bool>{}.obs;
+
+  @override
+  Map<String, bool> get activityExpansionStates => _activityExpansionStates;
 
   /// Controls whether to show progress chart or detailed view
   final RxBool showDetailedProgress = false.obs;
@@ -103,20 +107,11 @@ class RoundUpController extends GetxController {
     debugPrint('Organization tapped: ${organization.name}');
   }
 
-  /// Check if an activity item is expanded
-  bool isActivityExpanded(String activityKey) {
-    return activityExpansionStates[activityKey] ?? false;
-  }
-
   /// Toggle expansion state for an activity item
+  @override
   void toggleActivityExpansion(String activityKey) {
-    activityExpansionStates[activityKey] = !isActivityExpanded(activityKey);
+    _activityExpansionStates[activityKey] = !isActivityExpanded(activityKey);
     update(); // Trigger UI update for GetBuilder widgets
-  }
-
-  /// Generate a unique key for an activity item
-  String getActivityKey(RecentActivity activity, int index) {
-    return '${activity.brandName}_${activity.purchaseAmount}_$index';
   }
 
   /// Toggle between progress chart and detailed view

@@ -154,19 +154,21 @@ class SearchPage extends StatelessWidget {
                       fontFamily: 'Inter',
                     ),
                     border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
+                    suffixIcon: Assets.common.search.svg(
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF9CA3AF),
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    suffixIconConstraints: BoxConstraints(
+                      minWidth: 20.rw,
+                      minHeight: 20.rh,
+                    ),
                   ),
                   onSubmitted: controller.onSearchSubmitted,
-                ),
-              ),
-              // Search Icon
-              SvgPicture.asset(
-                'assets/home/Search.svg',
-                width: 20.rw,
-                height: 20.rh,
-                colorFilter: const ColorFilter.mode(
-                  Color(0xFF9CA3AF),
-                  BlendMode.srcIn,
                 ),
               ),
             ],

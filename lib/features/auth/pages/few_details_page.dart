@@ -16,35 +16,44 @@ class FewDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return [
-      16.heightWidth,
-      AuthHeader(),
-      32.heightWidth,
-      AuthTitleSection(
-        title: AppStrings.fewDetails,
-        subtitle: AppStrings.helpUsGetToKnowYouBetter,
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              16.heightWidth,
+              AuthHeader(),
+              32.heightWidth,
+              AuthTitleSection(
+                title: AppStrings.fewDetails,
+                subtitle: AppStrings.helpUsGetToKnowYouBetter,
+              ),
+
+              32.rh.heightWidth,
+
+              FewDetailFormFields(),
+
+              // const Spacer(),
+              150.rh.heightWidth,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomFilledButton(
+                    title: AppStrings.continueText,
+                    onTap: () {
+                      context.pushNamed(RoutePath.uploadProfilePicture);
+                    },
+                  ),
+                  16.heightWidth,
+                  HaveAccountWidget(haveAccount: true),
+
+                  24.heightWidth,
+                ],
+              ).paddingXY(X: 40.rw),
+            ],
+          ).paddingAll(16.rw),
+        ),
       ),
-
-      32.rh.heightWidth,
-
-      FewDetailFormFields(),
-
-      const Spacer(),
-      // 100.rh.heightWidth,
-      Column(
-        children: [
-          CustomFilledButton(
-            title: AppStrings.continueText,
-            onTap: () {
-              context.pushNamed(RoutePath.uploadProfilePicture);
-            },
-          ),
-          16.heightWidth,
-          HaveAccountWidget(haveAccount: true),
-
-          24.heightWidth,
-        ],
-      ).paddingXY(X: 40.rw),
-    ].scaffoldSafeAreaColumn(horizontalPadding: 16.rw);
+    );
   }
 }

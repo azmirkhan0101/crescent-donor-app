@@ -7,7 +7,6 @@ import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
-import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,138 +19,147 @@ class ResetPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ResetPasswordController());
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AuthHeader(),
-        32.heightWidth,
-        AuthTitleSection(
-          title: "Reset Your Password",
-          subtitle: "The password must be different than before",
-        ),
-
-        32.rh.heightWidth,
-
-        // Enter new password field
-        Obx(
-          () => _buildPasswordField(
-            controller: controller.newPasswordController,
-            hintText: "Enter New Password",
-            isVisible: controller.isNewPasswordVisible.value,
-            onToggleVisibility: controller.toggleNewPasswordVisibility,
-            textInputAction: TextInputAction.next,
-          ),
-        ),
-        16.heightWidth,
-
-        // Confirm new password field
-        Obx(
-          () => _buildPasswordField(
-            controller: controller.confirmPasswordController,
-            hintText: "Confirm New Password",
-            isVisible: controller.isConfirmPasswordVisible.value,
-            onToggleVisibility: controller.toggleConfirmPasswordVisibility,
-            textInputAction: TextInputAction.done,
-          ),
-        ),
-        24.heightWidth,
-
-        // Strong password requirements section
-        "A strong password must have:".text(AppTextStyles.f14W400()),
-        16.heightWidth,
-
-        // Password requirements list
-        Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // At least 8 characters
-            Obx(
-              () => _buildPasswordRequirement(
-                "At least 8 characters",
-                controller.hasMinLength.value,
-              ),
-            ),
-            8.heightWidth,
-
-            // At least one uppercase and one lowercase letter
-            Obx(
-              () => _buildPasswordRequirement(
-                "At least one uppercase and one lowercase letter",
-                controller.hasUppercase.value && controller.hasLowercase.value,
-              ),
-            ),
-            8.heightWidth,
-
-            // At least one numeral
-            Obx(
-              () => _buildPasswordRequirement(
-                "At least one numeral",
-                controller.hasNumber.value,
-              ),
-            ),
-            8.heightWidth,
-
-            // At least one special character
-            Obx(
-              () => _buildPasswordRequirement(
-                "At least one special character",
-                controller.hasSpecialChar.value,
-              ),
+            AuthHeader(),
+            32.heightWidth,
+            AuthTitleSection(
+              title: "Reset Your Password",
+              subtitle: "The password must be different than before",
             ),
 
-            // Passwords match validation (only show if confirm password has content)
-            Obx(() {
-              if (controller.confirmPassword.value.isNotEmpty) {
-                return Column(
-                  children: [
-                    8.heightWidth,
-                    _buildPasswordRequirement(
-                      "Passwords match",
-                      controller.passwordsMatch.value,
-                    ),
-                  ],
-                );
-              }
-              return const SizedBox.shrink();
-            }),
-          ],
-        ),
+            32.rh.heightWidth,
 
-        const Spacer(),
-
-        // Continue button and login link
-        Column(
-          children: [
+            // Enter new password field
             Obx(
-              () => CustomFilledButton(
-                title: AppStrings.continueText,
-                onTap: controller.canSubmit
-                    ? () {
-                        controller.resetPassword();
-                        context.pushNamed(RoutePath.login);
-                      }
-                    : null,
+              () => _buildPasswordField(
+                controller: controller.newPasswordController,
+                hintText: "Enter New Password",
+                isVisible: controller.isNewPasswordVisible.value,
+                onToggleVisibility: controller.toggleNewPasswordVisibility,
+                textInputAction: TextInputAction.next,
               ),
             ),
             16.heightWidth,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+
+            // Confirm new password field
+            Obx(
+              () => _buildPasswordField(
+                controller: controller.confirmPasswordController,
+                hintText: "Confirm New Password",
+                isVisible: controller.isConfirmPasswordVisible.value,
+                onToggleVisibility: controller.toggleConfirmPasswordVisibility,
+                textInputAction: TextInputAction.done,
+              ),
+            ),
+            24.heightWidth,
+
+            // Strong password requirements section
+            "A strong password must have:".text(AppTextStyles.f14W400()),
+            16.heightWidth,
+
+            // Password requirements list
+            Column(
               children: [
-                ("Changed your mind?").centerText(AppTextStyles.f14W400()),
-                4.rw.width,
-                ("Login")
-                    .centerText(AppTextStyles.f14W400())
-                    .fontWeight(FontWeight.w600)
-                    .color(AppColors.black)
-                    .fontSize(14.rfs)
-                    .onTap(() {
-                      context.pushNamed(RoutePath.login);
-                    }),
+                // At least 8 characters
+                Obx(
+                  () => _buildPasswordRequirement(
+                    "At least 8 characters",
+                    controller.hasMinLength.value,
+                  ),
+                ),
+                8.heightWidth,
+
+                // At least one uppercase and one lowercase letter
+                Obx(
+                  () => _buildPasswordRequirement(
+                    "At least one uppercase and one lowercase letter",
+                    controller.hasUppercase.value &&
+                        controller.hasLowercase.value,
+                  ),
+                ),
+                8.heightWidth,
+
+                // At least one numeral
+                Obx(
+                  () => _buildPasswordRequirement(
+                    "At least one numeral",
+                    controller.hasNumber.value,
+                  ),
+                ),
+                8.heightWidth,
+
+                // At least one special character
+                Obx(
+                  () => _buildPasswordRequirement(
+                    "At least one special character",
+                    controller.hasSpecialChar.value,
+                  ),
+                ),
+
+                // Passwords match validation (only show if confirm password has content)
+                Obx(() {
+                  if (controller.confirmPassword.value.isNotEmpty) {
+                    return Column(
+                      children: [
+                        8.heightWidth,
+                        _buildPasswordRequirement(
+                          "Passwords match",
+                          controller.passwordsMatch.value,
+                        ),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }),
               ],
             ),
+
+            const Spacer(),
+
+            // Continue button and login link
+            Column(
+              children: [
+                CustomFilledButton(
+                  title: "Continue",
+                  onTap: () {
+                    context.pushReplacementNamed(RoutePath.login);
+                  },
+                  // onTap: controller.canSubmit
+                  //     ? () {
+                  //         controller.resetPassword();
+                  //         context.pushReplacementNamed(RoutePath.login);
+                  //       }
+                  //     : null,
+                ),
+
+                16.heightWidth,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ("Changed your mind?").centerText(AppTextStyles.f14W400()),
+                    4.rw.width,
+                    ("Login")
+                        .centerText(AppTextStyles.f14W400())
+                        .fontWeight(FontWeight.w600)
+                        .color(AppColors.black)
+                        .fontSize(14.rfs)
+                        .onTap(() {
+                          context.pushNamed(RoutePath.login);
+                        }),
+                  ],
+                ),
+              ],
+            ).paddingXY(X: 40.rw),
           ],
-        ).paddingXY(X: 40.rw),
-      ],
-    ).paddingAll(16.rw).scaffoldSafeArea();
+        ).paddingAll(16.rw),
+      ),
+    );
   }
 
   Widget _buildPasswordField({

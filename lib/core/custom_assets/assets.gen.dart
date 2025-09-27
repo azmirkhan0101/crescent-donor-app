@@ -44,6 +44,10 @@ class $AssetsCommonGen {
   /// File path: assets/common/Copy.svg
   SvgGenImage get copy => const SvgGenImage('assets/common/Copy.svg');
 
+  /// File path: assets/common/Donation-outline-icon.svg
+  SvgGenImage get donationOutlineIcon =>
+      const SvgGenImage('assets/common/Donation-outline-icon.svg');
+
   /// File path: assets/common/Gift.svg
   SvgGenImage get gift => const SvgGenImage('assets/common/Gift.svg');
 
@@ -114,6 +118,10 @@ class $AssetsCommonGen {
   AssetGenImage get hopeForLearning =>
       const AssetGenImage('assets/common/hope-for-learning.png');
 
+  /// File path: assets/common/notification-bell.svg
+  SvgGenImage get notificationBell =>
+      const SvgGenImage('assets/common/notification-bell.svg');
+
   /// File path: assets/common/reward-coin.svg
   SvgGenImage get rewardCoin =>
       const SvgGenImage('assets/common/reward-coin.svg');
@@ -121,6 +129,10 @@ class $AssetsCommonGen {
   /// File path: assets/common/star-filled.svg
   SvgGenImage get starFilled =>
       const SvgGenImage('assets/common/star-filled.svg');
+
+  /// File path: assets/common/star-outline.svg
+  SvgGenImage get starOutline =>
+      const SvgGenImage('assets/common/star-outline.svg');
 
   /// File path: assets/common/tick-mark.svg
   SvgGenImage get tickMark => const SvgGenImage('assets/common/tick-mark.svg');
@@ -132,6 +144,7 @@ class $AssetsCommonGen {
   List<dynamic> get values => [
     call,
     copy,
+    donationOutlineIcon,
     gift,
     globe,
     location,
@@ -153,8 +166,10 @@ class $AssetsCommonGen {
     heartCircle,
     heartOnHand,
     hopeForLearning,
+    notificationBell,
     rewardCoin,
     starFilled,
+    starOutline,
     tickMark,
     verified,
   ];

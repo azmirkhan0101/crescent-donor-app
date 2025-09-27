@@ -503,7 +503,8 @@ class RecentActivityList extends StatelessWidget {
 class ActivityItem extends StatelessWidget {
   final RecentActivity activity;
   final int index;
-  final RoundUpController controller;
+  final dynamic
+  controller; // Can be any controller that implements ActivityExpansionMixin
 
   const ActivityItem({
     super.key,
@@ -516,7 +517,8 @@ class ActivityItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final String activityKey = controller.getActivityKey(activity, index);
 
-    return GetBuilder<RoundUpController>(
+    return GetBuilder(
+      init: controller,
       builder: (_) {
         final bool isExpanded = controller.isActivityExpanded(activityKey);
 

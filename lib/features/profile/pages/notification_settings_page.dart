@@ -36,7 +36,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
             // Push Notifications Setting
             _buildNotificationSetting(
-              icon: Assets.common.alert.path, // Using alert as bell icon
+              icon: Assets
+                  .common
+                  .notificationBell
+                  .path, // Using alert as bell icon
               title: 'Push Notifications',
               description:
                   'Manage what updates you want to hear about from Crescent Change.',
@@ -52,7 +55,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
             // Donation Updates Setting
             _buildNotificationSetting(
-              icon: Assets.common.gift.path, // Using gift as donation icon
+              icon: Assets
+                  .common
+                  .donationOutlineIcon
+                  .path, // Using gift as donation icon
               title: 'Donation Updates',
               description:
                   'Get notified when your donation is sent or when a recurring one is coming up.',
@@ -68,7 +74,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
             // Rewards & Perks Setting
             _buildNotificationSetting(
-              icon: Assets.common.starFilled.path, // Using star for rewards
+              icon: Assets.common.starOutline.path, // Using star for rewards
               title: 'Rewards & Perks',
               description:
                   'We\'ll ping you when you earn rewards, perks, or kindness streaks!',

@@ -48,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.rw),
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               16.heightWidth,
 
-              // Back button and theme toggle
+            // Back button and theme toggle
               AuthHeader(
                 onTap: () {
                   context.pushReplacementNamed(RoutePath.getStartPage);
@@ -75,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
               // Login form fields widget
               LoginFormFields(controller: loginController),
 
-              const Spacer(),
+              // 130.rh.heightWidth,
+              Spacer(),
 
               // Login buttons and actions
               _buildLoginActions(context, loginController),

@@ -34,41 +34,44 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.rw),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              16.heightWidth,
-              AuthHeader(),
-              32.heightWidth,
-              AuthTitleSection(
-                title: AppStrings.letsGetYouStarted,
-                subtitle: AppStrings.itOnlyTakesAFewSeconds,
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                16.heightWidth,
+                AuthHeader(),
+                32.heightWidth,
+                AuthTitleSection(
+                  title: AppStrings.letsGetYouStarted,
+                  subtitle: AppStrings.itOnlyTakesAFewSeconds,
+                ),
 
-              32.rh.heightWidth,
+                32.rh.heightWidth,
 
-              SignupFormFields(),
+                SignupFormFields(),
 
-              const Spacer(),
-              // 100.rh.heightWidth,
-              Column(
-                children: [
-                  CustomFilledButton(
-                    title: "Sign Up",
-                    onTap: () {
-                      context.pushNamed(RoutePath.fewDetails);
-                    },
-                  ),
-                  16.heightWidth,
-                  HaveAccountWidget(haveAccount: true),
+                // const Spacer(),
+                100.rh.heightWidth,
+                Column(
+                  children: [
+                    CustomFilledButton(
+                      title: "Sign Up",
+                      onTap: () {
+                        context.pushNamed(RoutePath.fewDetails);
+                      },
+                    ),
+                    16.heightWidth,
+                    HaveAccountWidget(haveAccount: true),
 
-                  24.heightWidth,
-                ],
-              ).paddingXY(X: 56.rw),
-            ],
+                    24.heightWidth,
+                  ],
+                ).paddingXY(X: 56.rw),
+              ],
+            ),
           ),
         ),
       ),
