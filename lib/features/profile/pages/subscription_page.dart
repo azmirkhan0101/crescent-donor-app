@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_utils/get_utils.dart';
+import 'package:go_router/go_router.dart';
 
 /// Subscription Page
 ///
@@ -34,13 +35,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             child: Column(
               children: [
                 // App Bar
-                _buildAppBar(),
+                _buildAppBar(context),
                 16.rh.heightWidth,
                 // Header Section
                 _buildHeaderSection(),
                 Spacer(),
 
-                _buildSubscriptionContent(),
+                _buildSubscriptionContent(context),
               ],
             ).paddingX(20.rw),
           ),
@@ -79,15 +80,14 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   /// Build app bar with back button and title
-  Widget _buildAppBar() {
-    return Container(
+  Widget _buildAppBar(BuildContext context) {
+    return SizedBox(
       height: 64.rh,
-      padding: EdgeInsets.symmetric(horizontal: 16.rw),
       child: Row(
         children: [
           // Back Button
           GestureDetector(
-            onTap: () => context.pop(),
+            onTap: () => GoRouter.of(context).pop(),
             child: Container(
               padding: EdgeInsets.all(12.rw),
               child: SvgPicture.asset(
@@ -158,7 +158,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   /// Build subscription content with features and plans
-  Widget _buildSubscriptionContent() {
+  Widget _buildSubscriptionContent(BuildContext context) {
     return Column(
       children: [
         // Features Section
@@ -172,7 +172,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         SizedBox(height: 20.rh),
 
         // Subscribe Button
-        _buildSubscribeButton(),
+        _buildSubscribeButton(context),
       ],
     );
   }
@@ -434,12 +434,12 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   }
 
   /// Build subscribe button
-  Widget _buildSubscribeButton() {
+  Widget _buildSubscribeButton(BuildContext context) {
     return SizedBox(
       width: 263.rw,
       height: 52.rh,
       child: ElevatedButton(
-        onPressed: _handleSubscribe,
+        onPressed: () => _handleSubscribe(context),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFD1FF43),
           elevation: 0,
@@ -461,34 +461,11 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     );
   }
 
-  /// Build home indicator
-  Widget _buildHomeIndicator() {
-    return SizedBox(
-      height: 21.rh,
-      child: Center(
-        child: Container(
-          width: 139.rw,
-          height: 5.rh,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(100.rw),
-          ),
-        ),
-      ),
-    );
-  }
-
   /// Handle subscribe button press
-  void _handleSubscribe() {
+  void _handleSubscribe(BuildContext context) {
     // TODO: Implement subscription logic based on selected plan
     final planName = _selectedPlan == 0 ? 'Free Plan' : '6 Months Plan';
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Selected $planName'),
-        backgroundColor: const Color(0xFFD1FF43),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    GoRouter.of(context).pop();
   }
 }

@@ -41,6 +41,9 @@ class $AssetsCommonGen {
   /// File path: assets/common/Call.svg
   SvgGenImage get call => const SvgGenImage('assets/common/Call.svg');
 
+  /// File path: assets/common/Checkmark.svg
+  SvgGenImage get checkmark => const SvgGenImage('assets/common/Checkmark.svg');
+
   /// File path: assets/common/Copy.svg
   SvgGenImage get copy => const SvgGenImage('assets/common/Copy.svg');
 
@@ -56,6 +59,9 @@ class $AssetsCommonGen {
 
   /// File path: assets/common/Location.svg
   SvgGenImage get location => const SvgGenImage('assets/common/Location.svg');
+
+  /// File path: assets/common/Lock.svg
+  SvgGenImage get lock => const SvgGenImage('assets/common/Lock.svg');
 
   /// File path: assets/common/Mail.svg
   SvgGenImage get mail => const SvgGenImage('assets/common/Mail.svg');
@@ -143,11 +149,13 @@ class $AssetsCommonGen {
   /// List of all assets
   List<dynamic> get values => [
     call,
+    checkmark,
     copy,
     donationOutlineIcon,
     gift,
     globe,
     location,
+    lock,
     mail,
     search,
     timer,
@@ -178,6 +186,10 @@ class $AssetsCommonGen {
 class $AssetsDonationGen {
   const $AssetsDonationGen();
 
+  /// File path: assets/donation/badge-00.png
+  AssetGenImage get badge00 =>
+      const AssetGenImage('assets/donation/badge-00.png');
+
   /// File path: assets/donation/badge-no-1.png
   AssetGenImage get badgeNo1 =>
       const AssetGenImage('assets/donation/badge-no-1.png');
@@ -204,6 +216,7 @@ class $AssetsDonationGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
+    badge00,
     badgeNo1,
     badgeNo10,
     badgeNo2,

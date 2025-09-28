@@ -205,9 +205,19 @@ class ChangePasswordPage extends StatelessWidget {
             Spacer(),
             Column(
               children: [
-                CustomFilledButton(onTap: () {}, title: "Save"),
+                CustomFilledButton(
+                  onTap: () {
+                    GoRouter.of(context).pop();
+                  },
+                  title: "Save",
+                ),
                 // 16.heightWidth,
-                TextButton(onPressed: () {}, child: Text("Cancel")),
+                TextButton(
+                  onPressed: () {
+                    GoRouter.of(context).pop();
+                  },
+                  child: Text("Cancel"),
+                ),
               ],
             ).paddingX(40.rw),
           ],

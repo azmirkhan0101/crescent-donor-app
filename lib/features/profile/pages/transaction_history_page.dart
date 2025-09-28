@@ -36,60 +36,62 @@ class TransactionHistoryPage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Today section
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
-                    child: Text(
-                      'Today',
-                      style: TextStyle(
-                        fontFamily: DonationFonts.interDisplay,
-                        fontSize: 11.rfs,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.withValues(alpha: 0.6),
-                        height: 16 / 11,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Today section
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
+                      child: Text(
+                        'Today',
+                        style: TextStyle(
+                          fontFamily: DonationFonts.interDisplay,
+                          fontSize: 11.rfs,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey.withValues(alpha: 0.6),
+                          height: 16 / 11,
+                        ),
                       ),
                     ),
-                  ),
 
-                  // Activities list
-                  ...controller.todaysActivities.asMap().entries.map(
-                    (entry) => ActivityItem(
-                      activity: entry.value,
-                      index: entry.key,
-                      controller: controller,
-                    ),
-                  ),
-
-                  SizedBox(height: 16.rh),
-
-                  // Earlier section
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
-                    child: Text(
-                      '28 July',
-                      style: TextStyle(
-                        fontFamily: DonationFonts.interDisplay,
-                        fontSize: 11.rfs,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.withValues(alpha: 0.6),
-                        height: 16 / 11,
+                    // Activities list
+                    ...controller.todaysActivities.asMap().entries.map(
+                      (entry) => ActivityItem(
+                        activity: entry.value,
+                        index: entry.key,
+                        controller: controller,
                       ),
                     ),
-                  ),
 
-                  // Earlier activities from controller
-                  ...controller.earlierActivities.asMap().entries.map(
-                    (entry) => ActivityItem(
-                      activity: entry.value,
-                      index: controller.todaysActivities.length + entry.key,
-                      controller: controller,
+                    SizedBox(height: 16.rh),
+
+                    // Earlier section
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
+                      child: Text(
+                        '28 July',
+                        style: TextStyle(
+                          fontFamily: DonationFonts.interDisplay,
+                          fontSize: 11.rfs,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey.withValues(alpha: 0.6),
+                          height: 16 / 11,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+
+                    // Earlier activities from controller
+                    ...controller.earlierActivities.asMap().entries.map(
+                      (entry) => ActivityItem(
+                        activity: entry.value,
+                        index: controller.todaysActivities.length + entry.key,
+                        controller: controller,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

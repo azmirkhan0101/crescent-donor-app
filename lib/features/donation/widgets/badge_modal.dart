@@ -6,6 +6,7 @@ import 'package:cresent_charge_user_app/features/rewards/controllers/your_reward
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart' hide Badge;
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 const Color _lightGray = Color(0xFFEBE9EC);
@@ -158,11 +159,26 @@ class BadgeModal extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildProgressPoint(100, controller.currentProgress >= 100),
-                  _buildProgressPoint(1000, controller.currentProgress >= 1000),
-                  _buildProgressPoint(1500, controller.currentProgress >= 1500),
-                  _buildProgressPoint(2000, controller.currentProgress >= 2000),
-                  _buildProgressPoint(3000, controller.currentProgress >= 3000),
+                  _buildProgressPoint(
+                    100,
+                    controller.currentProgress >= 100,
+                    _buildImage(Assets.donation.badge00.path),
+                  ),
+                  _buildProgressPoint(
+                    1000,
+                    controller.currentProgress >= 1000,
+                    _buildImage(Assets.donation.badgeNo1.path),
+                  ),
+                  _buildProgressPoint(
+                    1500,
+                    controller.currentProgress >= 1500,
+                    _buildImage(Assets.common.lock.path),
+                  ),
+                  _buildProgressPoint(
+                    2000,
+                    controller.currentProgress >= 2000,
+                    _buildImage(Assets.common.lock.path),
+                  ),
                 ],
               ),
             ),
@@ -171,9 +187,27 @@ class BadgeModal extends StatelessWidget {
       ],
     );
   }
+
+  Widget _buildImage(String path) {
+    return Container(
+      width: 36.rw,
+      height: 36.rh,
+      padding: EdgeInsets.all(4.rw),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Color(0xFFA55EEA), width: 1.rw),
+      ),
+      child: Image.asset(
+        path,
+        errorBuilder: (context, error, stackTrace) {
+          return SvgPicture.asset(path);
+        },
+      ),
+    );
+  }
 }
 
-Widget _buildProgressPoint(int value, bool isActive) {
+Widget _buildProgressPoint(int value, bool isActive, [Widget? icon]) {
   return Container(
     width: 24.rw,
     height: 24.rh,
@@ -185,15 +219,17 @@ Widget _buildProgressPoint(int value, bool isActive) {
       ),
     ),
     child: Center(
-      child: isActive
-          ? Assets.rewards.rewardProgressBorderedPointer.image(
-              width: 24.rw,
-              height: 24.rh,
-            )
-          : Assets.rewards.rewardProgressPointer.image(
-              width: 24.rw,
-              height: 24.rh,
-            ),
+      child:
+          icon ??
+          (isActive
+              ? Assets.rewards.rewardProgressBorderedPointer.image(
+                  width: 24.rw,
+                  height: 24.rh,
+                )
+              : Assets.rewards.rewardProgressPointer.image(
+                  width: 24.rw,
+                  height: 24.rh,
+                )),
     ),
   );
 }

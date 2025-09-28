@@ -4,7 +4,7 @@ class YourRewardsController extends GetxController {
   // Points state
   final RxInt _totalPoints = 23382.obs;
   final RxInt _currentProgress = 1000.obs;
-  final RxInt _nextBadgeThreshold = 1500.obs;
+  final RxInt _nextBadgeThreshold = 2000.obs;
   final RxString _nextBadgeText = '2 more donations to unlock next badge'.obs;
   final RxDouble _progressPercentage = 65.0.obs;
 
