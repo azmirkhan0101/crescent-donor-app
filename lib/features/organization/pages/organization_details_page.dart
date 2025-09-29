@@ -1,5 +1,4 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
-import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/total_donations_card.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
@@ -12,7 +11,6 @@ import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 
 class OrganizationDetailsPage extends StatelessWidget {
   final String? organizationId;
@@ -80,11 +78,10 @@ class OrganizationDetailsPage extends StatelessWidget {
                       mission: controller.getOrganizationMission(),
                       causes: controller.getOrganizationCauses(),
                     ),
-                    SizedBox(height: 16.rh),
+                    // SizedBox(height: 16.rh),
 
                     // View Donations History Button
-                    _buildViewHistoryButton(context),
-
+                    // _buildViewHistoryButton(context),
                     SizedBox(height: 100.rh), // Space for bottom button
                   ],
                 ),
@@ -105,33 +102,33 @@ class OrganizationDetailsPage extends StatelessWidget {
   }
 
   /// Build view donations history button
-  Widget _buildViewHistoryButton(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: () {
-          context.pushNamed(RoutePath.organizationDonations);
-        },
-        icon: Icon(Icons.history, size: 18.rw, color: const Color(0xFF000C0B)),
-        label: Text(
-          'View Donations History',
-          style: TextStyle(
-            fontFamily: 'Familjen Grotesk',
-            fontSize: 16.rfs,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF000C0B),
-          ),
-        ),
-        style: OutlinedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: 14.rh),
-          side: const BorderSide(color: Color(0xFF000C0B), width: 1.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.rw),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildViewHistoryButton(BuildContext context) {
+  //   return Container(
+  //     width: double.infinity,
+  //     child: OutlinedButton.icon(
+  //       onPressed: () {
+  //         context.pushNamed(RoutePath.organizationDonations);
+  //       },
+  //       icon: Icon(Icons.history, size: 18.rw, color: const Color(0xFF000C0B)),
+  //       label: Text(
+  //         'View Donations History',
+  //         style: TextStyle(
+  //           fontFamily: 'Familjen Grotesk',
+  //           fontSize: 16.rfs,
+  //           fontWeight: FontWeight.w600,
+  //           color: const Color(0xFF000C0B),
+  //         ),
+  //       ),
+  //       style: OutlinedButton.styleFrom(
+  //         padding: EdgeInsets.symmetric(vertical: 14.rh),
+  //         side: const BorderSide(color: Color(0xFF000C0B), width: 1.5),
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(12.rw),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildBottomDonateButton(
     OrganizationDetailsController controller,

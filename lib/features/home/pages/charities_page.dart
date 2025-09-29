@@ -13,7 +13,7 @@ class CharitiesPage extends StatelessWidget {
     final charitiesController = Get.find<CharitiesController>();
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(title: "Charities"),
+      appBar: CustomAppBar(title: "Explore Causes"),
       body: SingleChildScrollView(
         child: Column(
           children: [

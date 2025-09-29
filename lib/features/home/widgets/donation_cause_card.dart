@@ -85,35 +85,35 @@ class DonationCauseCard extends StatelessWidget {
               ),
 
               /// Category Label
-              Positioned(
-                bottom: 4.rh,
-                right: 8.rw,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  decoration: ShapeDecoration(
-                    color: index == 0
-                        ? const Color(0xFFFFE8CB)
-                        : const Color(0xFFDAFFDB),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                  ),
-                  child: Text(
-                    category,
-                    style: TextStyle(
-                      color: const Color(0xFF000C0B),
-                      fontSize: 10,
-                      fontFamily: 'Inter Display',
-                      fontWeight: FontWeight.w400,
-                      height: 1.20,
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   bottom: 4.rh,
+              //   right: 8.rw,
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 8,
+              //       vertical: 4,
+              //     ),
+              //     clipBehavior: Clip.antiAlias,
+              //     decoration: ShapeDecoration(
+              //       color: index == 0
+              //           ? const Color(0xFFFFE8CB)
+              //           : const Color(0xFFDAFFDB),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(24),
+              //       ),
+              //     ),
+              //     child: Text(
+              //       category,
+              //       style: TextStyle(
+              //         color: const Color(0xFF000C0B),
+              //         fontSize: 10,
+              //         fontFamily: 'Inter Display',
+              //         fontWeight: FontWeight.w400,
+              //         height: 1.20,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
 

@@ -196,13 +196,13 @@ class ProfilePage extends StatelessWidget {
           context.pushNamed(RoutePath.changePassword);
         },
       ),
-      MenuItemData(
-        icon: Assets.common.calendar.path,
-        title: 'Subscriptions',
-        onTap: () {
-          context.pushNamed(RoutePath.subscription);
-        },
-      ),
+      // MenuItemData(
+      //   icon: Assets.common.calendar.path,
+      //   title: 'Subscriptions',
+      //   onTap: () {
+      //     context.pushNamed(RoutePath.subscription);
+      //   },
+      // ),
       MenuItemData(
         icon: Assets.common.globe.path, // Using globe for terms & conditions
         title: 'Terms & Conditions',

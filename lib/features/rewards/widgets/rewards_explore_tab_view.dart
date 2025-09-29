@@ -259,18 +259,30 @@ class RewardsExploreTabView extends StatelessWidget {
   }
 
   Widget _buildRewardCards(YourRewardsController controller) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 8.rw,
-        mainAxisSpacing: 8.rh,
-        childAspectRatio: 51 / 90,
-      ),
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        return RedeemCard(index: index);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate responsive card height based on screen dimensions
+        final screenHeight = MediaQuery.of(context).size.height;
+        final cardHeight = screenHeight < 700
+            ? 250
+                  .rh // Smaller devices
+            : screenHeight < 900
+            ? 270
+                  .rh // Medium devices
+            : 280.rh; // Large devices
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12.rw,
+            mainAxisSpacing: 12.rh,
+            mainAxisExtent: cardHeight, // Responsive height
+          ),
+          itemCount: 20,
+          itemBuilder: (context, index) => RedeemCard(index: index),
+        );
       },
     );
   }

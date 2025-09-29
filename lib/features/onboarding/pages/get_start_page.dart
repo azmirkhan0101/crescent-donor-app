@@ -15,6 +15,7 @@ class GetStartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -34,10 +35,11 @@ class GetStartPage extends StatelessWidget {
             38.rh.heightWidth,
 
             // Turn your small change into real change
-            AppStrings.turnYourSmallChangeIntoRealChange.centerText(
-              AppTextStyles.f28W700(),
+            Text(
+              AppStrings.turnYourSmallChangeIntoRealChange,
+              style: AppTextStyles.f28W700().copyWith(fontSize: 26.rw),
+              textAlign: TextAlign.center,
             ),
-
             12.rh.heightWidth,
 
             // Discover rewards and cash back offers

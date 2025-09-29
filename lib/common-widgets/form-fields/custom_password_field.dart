@@ -1,7 +1,5 @@
 import 'package:cresent_charge_user_app/common-widgets/form-fields/custom_text_field.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
-import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 class CustomPasswordField extends StatefulWidget {
@@ -81,11 +79,14 @@ class _CustomPasswordFieldState extends State<CustomPasswordField> {
       suffixIcon: widget.showVisibilityToggle
           ? GestureDetector(
               onTap: _toggleVisibility,
-              child: Icon(
-                _isObscured ? Icons.visibility_off : Icons.visibility,
-                color: AppColors.black.withValues(alpha: 0.6),
-                size: 20.rw,
-              ),
+              child: _isObscured
+                  ? Assets.common.showPassword.svg()
+                  : Assets.common.hidePassword.svg(),
+              // child: Icon(
+              //   _isObscured ? Icons.visibility_off : Icons.visibility,
+              //   color: AppColors.black.withValues(alpha: 0.6),
+              //   size: 20.rw,
+              // ),
             )
           : null,
     );

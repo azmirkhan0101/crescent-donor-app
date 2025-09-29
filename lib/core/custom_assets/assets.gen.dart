@@ -120,6 +120,10 @@ class $AssetsCommonGen {
   SvgGenImage get heartOnHand =>
       const SvgGenImage('assets/common/heart-on-hand.svg');
 
+  /// File path: assets/common/hide-password.svg
+  SvgGenImage get hidePassword =>
+      const SvgGenImage('assets/common/hide-password.svg');
+
   /// File path: assets/common/hope-for-learning.png
   AssetGenImage get hopeForLearning =>
       const AssetGenImage('assets/common/hope-for-learning.png');
@@ -131,6 +135,10 @@ class $AssetsCommonGen {
   /// File path: assets/common/reward-coin.svg
   SvgGenImage get rewardCoin =>
       const SvgGenImage('assets/common/reward-coin.svg');
+
+  /// File path: assets/common/show-password.svg
+  SvgGenImage get showPassword =>
+      const SvgGenImage('assets/common/show-password.svg');
 
   /// File path: assets/common/star-filled.svg
   SvgGenImage get starFilled =>
@@ -173,9 +181,11 @@ class $AssetsCommonGen {
     downloadArrow,
     heartCircle,
     heartOnHand,
+    hidePassword,
     hopeForLearning,
     notificationBell,
     rewardCoin,
+    showPassword,
     starFilled,
     starOutline,
     tickMark,

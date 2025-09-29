@@ -66,15 +66,15 @@ class VerifiedCharityCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      category,
-                      style: AppTextStyles.f14W400().copyWith(
-                        color: const Color(0xFF10B981),
-                        fontSize: 12.rfs,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    4.rh.heightWidth,
+                    // Text(
+                    //   category,
+                    //   style: AppTextStyles.f14W400().copyWith(
+                    //     color: const Color(0xFF10B981),
+                    //     fontSize: 12.rfs,
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
+                    // 4.rh.heightWidth,
                     Text(
                       title,
                       style: AppTextStyles.baseStyle().copyWith(

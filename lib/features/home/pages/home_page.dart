@@ -140,8 +140,60 @@ class HomePage extends StatelessWidget {
     final categories = [
       {"icon": "💧", "label": "Water", "color": const Color(0xFFCCEEFF)},
       {"icon": "📚", "label": "Education", "color": const Color(0xFFDAFFDB)},
-      {"icon": "🍯", "label": "Food", "color": const Color(0xFFFFE8CB)},
-      {"icon": "👫", "label": "Youth", "color": const Color(0xFFC6FEFC)},
+      {"icon": "🍽️", "label": "Food", "color": const Color(0xFFFFE8CB)},
+      {"icon": "🧑‍🤝‍🧑", "label": "Youth", "color": const Color(0xFFC6FEFC)},
+      {"icon": "🧸", "label": "Orphans", "color": const Color(0xFFF0D9FF)},
+      {
+        "icon": "📖",
+        "label": "Quran Education",
+        "color": const Color(0xFFD0E6A5),
+      },
+      {
+        "icon": "🏥",
+        "label": "Health/Medical",
+        "color": const Color(0xFFFFDAEC),
+      },
+      {
+        "icon": "🚨",
+        "label": "Emergency Relief",
+        "color": const Color(0xFFFFD8D8),
+      },
+      {
+        "icon": "🏠",
+        "label": "Shelter/Housing",
+        "color": const Color(0xFFFFE9CC),
+      },
+      {
+        "icon": "🕌",
+        "label": "Mosque Utilities",
+        "color": const Color(0xFFA5DEE5),
+      },
+      {"icon": "💰", "label": "Zakat", "color": const Color(0xFFB9FBC0)},
+      {"icon": "🤲", "label": "Sadaqah", "color": const Color(0xFFF6E2FF)},
+      {"icon": "🌙", "label": "Ramadan", "color": const Color(0xFFC3B1E1)},
+      {"icon": "🐑", "label": "Qurban", "color": const Color(0xFFF6EAC2)},
+      {"icon": "🥖", "label": "Fitrah", "color": const Color(0xFFFFF5BA)},
+      {
+        "icon": "🗂️",
+        "label": "Admin/Operational",
+        "color": const Color(0xFFD9D9D9),
+      },
+      {"icon": "🧳", "label": "Refugees", "color": const Color(0xFFC1E2EE)},
+      {
+        "icon": "💻",
+        "label": "Digital Dawah",
+        "color": const Color(0xFFB5EAD7),
+      },
+      {
+        "icon": "👩",
+        "label": "Women & Families",
+        "color": const Color(0xFFF7C5CC),
+      },
+      {
+        "icon": "🧠",
+        "label": "Mental Health",
+        "color": const Color(0xFFFBDAFB),
+      },
     ];
 
     return SingleChildScrollView(
@@ -203,7 +255,10 @@ class HomePage extends StatelessWidget {
         12.rh.heightWidth,
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(children: charitiesController.verifiedCharities),
+          child: Row(
+            spacing: 8.rw,
+            children: charitiesController.verifiedCharities,
+          ),
         ),
       ],
     );

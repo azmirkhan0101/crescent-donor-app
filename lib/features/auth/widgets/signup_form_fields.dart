@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/common-widgets/form-fields/custom_password_field.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/signup_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
@@ -43,24 +44,25 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
           ),
 
           // Password field
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              "Password"
-                  .text(AppTextStyles.baseStyle())
-                  .color("#000C0B".hexColor),
+          CustomPasswordField(controller: signupController.passwordController),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     "Password"
+          //         .text(AppTextStyles.baseStyle())
+          //         .color("#000C0B".hexColor),
 
-              8.rh.heightWidth,
+          //     8.rh.heightWidth,
 
-              CustomInputField(
-                controller: signupController.passwordController,
-                hintText: "***********",
-                prefixIcon: Assets.onboarding.lock.svg(),
-                obscureText: !signupController.isPasswordVisible.value,
-                textInputAction: TextInputAction.next,
-              ),
-            ],
-          ),
+          //     CustomInputField(
+          //       controller: signupController.passwordController,
+          //       hintText: "***********",
+          //       prefixIcon: Assets.onboarding.lock.svg(),
+          //       obscureText: !signupController.isPasswordVisible.value,
+          //       textInputAction: TextInputAction.next,
+          //     ),
+          //   ],
+          // ),
 
           // Strength indicator
           Obx(() {
@@ -83,24 +85,28 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
           }),
 
           // Confirm Password field
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              "Confirm Password"
-                  .text(AppTextStyles.baseStyle())
-                  .color("#000C0B".hexColor),
-
-              8.rh.heightWidth,
-
-              CustomInputField(
-                controller: signupController.confirmPasswordController,
-                hintText: "***********",
-                prefixIcon: Assets.onboarding.lock.svg(),
-                obscureText: !signupController.isConfirmPasswordVisible.value,
-                textInputAction: TextInputAction.done,
-              ),
-            ],
+          CustomPasswordField(
+            controller: signupController.confirmPasswordController,
+            label: "Confirm Password",
           ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     "Confirm Password"
+          //         .text(AppTextStyles.baseStyle())
+          //         .color("#000C0B".hexColor),
+
+          //     8.rh.heightWidth,
+
+          //     CustomInputField(
+          //       controller: signupController.confirmPasswordController,
+          //       hintText: "***********",
+          //       prefixIcon: Assets.onboarding.lock.svg(),
+          //       obscureText: !signupController.isConfirmPasswordVisible.value,
+          //       textInputAction: TextInputAction.done,
+          //     ),
+          //   ],
+          // ),
 
           // Password Strength notice
           Row(

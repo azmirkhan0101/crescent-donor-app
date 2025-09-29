@@ -61,21 +61,21 @@ class OrganizationHeaderWidget extends StatelessWidget {
               ),
 
               /// Category Badges
-              Positioned(
-                bottom: 4.rh,
-                right: 8.rw,
-                child: Row(
-                  children: [
-                    _buildBadge(Assets.home.starBadg.path),
-                    SizedBox(width: 8.rw),
-                    _buildBadge(Assets.home.zakat.path),
-                    SizedBox(width: 8.rw),
-                    _buildBadge(Assets.home.cresentLight.path),
-                    SizedBox(width: 8.rw),
-                    _buildEducationTag(),
-                  ],
-                ),
-              ),
+              // Positioned(
+              //   bottom: 4.rh,
+              //   right: 8.rw,
+              //   child: Row(
+              //     children: [
+              //       _buildBadge(Assets.home.starBadg.path),
+              //       SizedBox(width: 8.rw),
+              //       _buildBadge(Assets.home.zakat.path),
+              //       SizedBox(width: 8.rw),
+              //       _buildBadge(Assets.home.cresentLight.path),
+              //       SizedBox(width: 8.rw),
+              //       _buildEducationTag(),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
 
