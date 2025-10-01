@@ -86,6 +86,7 @@ class RoundUpPage extends StatelessWidget {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
+                          spacing: 8.rw,
                           children:
                               Get.find<CharitiesController>().verifiedCharities,
                         ),

@@ -97,10 +97,10 @@ class OverviewSection extends StatelessWidget {
       children: [
         SectionHeader(
           title: 'Overview',
-          actionText: 'View all',
-          onActionTap: () {
-            // Handle view all action
-          },
+          // actionText: 'View all',
+          // onActionTap: () {
+          //   // Handle view all action
+          // },
         ),
         SizedBox(height: DonationConstants.sectionSpacing.rh),
         SectionContainer(

@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/features/donation/widgets/recent_donatio
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
 import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
+import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -35,10 +36,31 @@ class BadgeModal extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Assets.common.cancel.svg(),
-          ).paddingAll(16.rw).onTap(() => context.pop()),
+          /// Top handler
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Container(
+              width: 32,
+              height: 4,
+              decoration: ShapeDecoration(
+                color: const Color(0xFF000C0B) /* Colors-Off-Black */,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+            ),
+          ),
+
+          /// Close button
+          Padding(
+            padding: EdgeInsets.only(right: 24.rw),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Assets.common.cancel.svg(),
+            ).onTap(() => context.pop()),
+          ),
+          SizedBox(height: 8.rh),
+
           // Content
           Expanded(
             child: SingleChildScrollView(
@@ -56,7 +78,11 @@ class BadgeModal extends StatelessWidget {
                   // Progress Bar with Tiers
                   _buildProgressSection(controller),
 
-                  SizedBox(height: 32.rh),
+                  SizedBox(height: 24.rh),
+
+                  /// Title
+                  Text('Recent Donations', style: AppTextStyles.f16W500()),
+                  SizedBox(height: 12.rh),
 
                   RecentDonation(),
                 ],
@@ -123,7 +149,7 @@ class BadgeModal extends StatelessWidget {
 
   Widget _buildProgressSection(YourRewardsController controller) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Progress Bar
         Stack(
@@ -183,6 +209,35 @@ class BadgeModal extends StatelessWidget {
               ),
             ),
           ],
+        ),
+
+        SizedBox(height: 16.rh),
+
+        /// Current Tier
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: 'Current Tier:',
+                style: AppTextStyles.f14W400().copyWith(
+                  color: const Color(0xFF000C0B),
+                ),
+              ),
+              TextSpan(text: ' Silver', style: AppTextStyles.f14W400()),
+            ],
+          ),
+        ),
+
+        SizedBox(height: 8.rh),
+
+        /// Remaining Donations Text
+        SizedBox(
+          width: 311,
+          child: Text(
+            'Only 3 more round-up donations to reach Gold!',
+            textAlign: TextAlign.center,
+            style: AppTextStyles.f14W400(),
+          ),
         ),
       ],
     );
