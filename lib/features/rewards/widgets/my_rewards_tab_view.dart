@@ -30,45 +30,58 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
           // Filter chips
           SizedBox(
             height: 40.rh,
-            child: ListView.builder(
+            child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: filters.length,
               itemBuilder: (context, index) {
                 final isSelected = selectedFilterIndex == index;
-                return Container(
-                  margin: EdgeInsets.only(right: 8.rw),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedFilterIndex = index;
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.rw,
-                        vertical: 8.rh,
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedFilterIndex = index;
+                    });
+                  },
+                  child: Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: ShapeDecoration(
+                      color: isSelected
+                          ? const Color(0xFF000C0B)
+                          : const Color(0xFFEAE9EB),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
                       ),
-                      decoration: BoxDecoration(
-                        color: isSelected ? _offBlack : _white,
-                        borderRadius: BorderRadius.circular(20.rw),
-                        border: Border.all(
-                          color: isSelected ? _offBlack : _borderGray,
-                          width: 1,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      spacing: 4,
+                      children: [
+                        Text(
+                          filters[index],
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                            fontSize: 14,
+                            fontFamily: 'Inter Display',
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.w400,
+                            height: 1.29,
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        filters[index],
-                        style: TextStyle(
-                          color: isSelected ? _white : _textGray,
-                          fontSize: 12.rfs,
-                          fontFamily: 'Inter Display',
-                          fontWeight: FontWeight.w500,
-                          height: 1.33,
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                 );
+              },
+
+              separatorBuilder: (context, index) {
+                return SizedBox(width: 8.rw);
               },
             ),
           ),
