@@ -49,3 +49,6 @@ app.*.map.json
 
 # Windsurf
 .windsurf
+
+# FVM Version Cache
+.fvm/

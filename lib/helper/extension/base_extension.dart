@@ -50,6 +50,62 @@ extension WidgetOnWidgetExt on Widget {
   Widget scaffoldSafeArea() {
     return Scaffold(body: SafeArea(child: this));
   }
+
+  // paddingXY
+  Widget paddingXY({double? X, double? Y}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: X ?? 0, vertical: Y ?? 0),
+      child: this,
+    );
+  }
+
+  // paddingX
+  Widget paddingX(double X) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: X),
+      child: this,
+    );
+  }
+
+  // paddingY
+  Widget paddingY(double Y) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: Y),
+      child: this,
+    );
+  }
+
+  // paddingT
+  Widget paddingT(double T) {
+    return Padding(
+      padding: EdgeInsets.only(top: T),
+      child: this,
+    );
+  }
+
+  // paddingB
+  Widget paddingB(double B) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: B),
+      child: this,
+    );
+  }
+
+  // paddingL
+  Widget paddingL(double L) {
+    return Padding(
+      padding: EdgeInsets.only(left: L),
+      child: this,
+    );
+  }
+
+  // paddingR
+  Widget paddingR(double R) {
+    return Padding(
+      padding: EdgeInsets.only(right: R),
+      child: this,
+    );
+  }
 }
 
 // ====================== Scaffold ======================

@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mime/mime.dart';
-import 'package:cresent_charge_user_app/global/model/response_model.dart';
+import 'package:cresent_charge_user_app/global/model/error_response_model.dart';
 import 'package:cresent_charge_user_app/helper/local_db/local_db.dart';
 import 'package:cresent_charge_user_app/helper/tost_message/show_snackbar.dart';
 import 'package:cresent_charge_user_app/utils/app_const/app_const.dart';

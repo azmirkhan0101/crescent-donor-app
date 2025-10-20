@@ -1,5 +1,6 @@
 {
-    "cSpell.words": [
-        "cresent"
-    ]
+  "cSpell.words": [
+    "cresent"
+  ],
+  "dart.flutterSdkPath": ".fvm/versions/3.35.6"
 }

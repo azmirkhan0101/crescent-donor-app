@@ -10,7 +10,6 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:get/utils.dart';
 import 'package:go_router/go_router.dart';
 
 class AddCardPage extends StatelessWidget {
