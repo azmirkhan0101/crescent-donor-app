@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Git and GitHub related
+.github
+
+# Windsurf
+.windsurf
+
+# FVM Version Cache
+.fvm/
