@@ -7,9 +7,13 @@ import 'package:cresent_charge_user_app/features/notification/controllers/notifi
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
 import 'package:cresent_charge_user_app/global/general_controller/general_controller.dart';
+import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:get/get.dart';
 
 void initGetx() {
+  // ================== Services ==================
+  Get.put(NetworkHelper(), permanent: true);
+
   // ================== Core Controllers ==================
   Get.lazyPut(() => ThemeController(), fenix: true);
 
