@@ -1,5 +1,9 @@
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
+import 'package:cresent_charge_user_app/features/auth/models/signin_request_model.dart';
+import 'package:cresent_charge_user_app/features/auth/models/signin_response_model.dart';
+import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
+import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -129,38 +133,66 @@ class LoginController extends GetxController {
 
       isLoading.value = true;
 
-      // Simulate API call - replace with actual authentication
-      await Future.delayed(const Duration(milliseconds: 200));
+      // Create request model
+      final requestModel = SigninRequestModel(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
 
-      // TODO: Replace with actual API authentication
-      if (emailController.text.isEmail && passwordController.text.isNotEmpty) {
-        // Simulate successful login
-        String authToken = '1234567890';
+      // Call signin API
+      final networkHelper = Get.find<NetworkHelper>();
+      final result = await networkHelper.request<SigninResponseModel>(
+        'POST',
+        ApiUrl.login,
+        body: requestModel.toJson(),
+        parser: (data) => SigninResponseModel.fromJson(data),
+        withAuth: false,
+      );
 
-        // Save auth token
-        await AppStorageService.saveAuthToken(authToken);
+      return result.fold(
+        (error) {
+          // Handle error
+          errorMessage.value =
+              error.message ?? 'Login failed. Please try again.';
+          debugPrint('❌ Login error: ${error.message}');
+          return false;
+        },
+        (response) async {
+          // Handle success
+          if (response.success) {
+            // Save access token
+            await AppStorageService.saveAuthToken(response.data.accessToken);
 
-        // Save user data (replace with actual API response)
-        await AppStorageService.saveUserEmail(emailController.text);
-        await AppStorageService.saveUserId(
-          'user_${emailController.text.split('@')[0]}',
-        );
+            // Save refresh token
+            await AppStorageService.writeSecure(
+              'refresh_token',
+              response.data.refreshToken,
+            );
 
-        // Save credentials if remember password is enabled
-        await _saveCredentialsIfRemembered();
+            // Save user data
+            await AppStorageService.saveUserEmail(emailController.text);
+            await AppStorageService.saveUserId(
+              'user_${emailController.text.split('@')[0]}',
+            );
 
-        // Clear guest mode since user is now authenticated
-        await AuthGuard.setGuestMode(false);
+            // Save credentials if remember password is enabled
+            await _saveCredentialsIfRemembered();
 
-        // Save last login time
-        await AppStorageService.saveLastLogin(DateTime.now());
+            // Clear guest mode since user is now authenticated
+            await AuthGuard.setGuestMode(false);
 
-        debugPrint('✅ Login successful for: ${emailController.text}');
-        return true;
-      } else {
-        errorMessage.value = 'Invalid email or password';
-        return false;
-      }
+            // Save last login time
+            await AppStorageService.saveLastLogin(DateTime.now());
+
+            debugPrint('✅ Login successful for: ${emailController.text}');
+            return true;
+          } else {
+            errorMessage.value = response.message;
+            debugPrint('❌ Login failed: ${response.message}');
+            return false;
+          }
+        },
+      );
     } catch (e) {
       errorMessage.value = 'Login failed. Please try again.';
       debugPrint('❌ Login error: $e');
