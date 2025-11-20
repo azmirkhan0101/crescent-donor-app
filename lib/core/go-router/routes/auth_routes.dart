@@ -1,19 +1,18 @@
-import 'package:go_router/go_router.dart';
 import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
-import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
-
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/few_details_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/forgot_password_page.dart';
 // Import authentication pages
 import 'package:cresent_charge_user_app/features/auth/pages/login_page.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/signup_page.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/few_details_page.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/upload_profile_picture_page.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/terms_agreement_page.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/forgot_password_page.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/verify_otp_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/reset_password_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/signup_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/terms_agreement_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/upload_profile_picture_page.dart';
+import 'package:cresent_charge_user_app/features/auth/pages/verify_otp_page.dart';
+import 'package:go_router/go_router.dart';
 
 /// Authentication Routes Configuration
 ///
@@ -91,7 +90,21 @@ class AuthRoutes extends AppRouteConfig {
     GoRoute(
       name: RoutePath.verifyOtp,
       path: RoutePath.verifyOtp.addBasePath,
-      builder: (context, state) => const VerifyOtpPage(),
+      builder: (context, state) {
+        // if email not passed, throw error
+        if (state.extra == null) {
+          throw Exception('Email is required to verify OTP');
+        }
+
+        final email = (state.extra as Map<String, dynamic>)['email'] as String;
+        final isForSignup =
+            state.extra != null && state.extra is Map<String, dynamic>
+            ? (state.extra as Map<String, dynamic>)['isForSignup'] as bool? ??
+                  false
+            : false;
+
+        return VerifyOtpPage(email: email, isForSignup: isForSignup);
+      },
       // Part of password reset flow
     ),
 

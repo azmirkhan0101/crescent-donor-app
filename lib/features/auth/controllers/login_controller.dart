@@ -4,6 +4,7 @@ import 'package:cresent_charge_user_app/features/auth/models/signin_response_mod
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,8 +13,12 @@ class LoginController extends GetxController {
   final formKey = GlobalKey<FormState>();
 
   // TextEditingControllers
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(
+    text: kDebugMode ? 'mostafizurrahaman0401@gmail.com' : '',
+  );
+  final passwordController = TextEditingController(
+    text: kDebugMode ? 'test123@PASS' : '',
+  );
 
   // Observable variables
   RxBool isLoading = false.obs;
@@ -77,6 +82,11 @@ class LoginController extends GetxController {
 
   /// Load remembered credentials if available
   Future<void> _loadRememberedCredentials() async {
+    // Skip loading saved credentials in debug mode to use debug values
+    if (kDebugMode) {
+      return;
+    }
+
     try {
       final savedEmail = await AppStorageService.readSecure('remembered_email');
       final savedPassword = await AppStorageService.readSecure(

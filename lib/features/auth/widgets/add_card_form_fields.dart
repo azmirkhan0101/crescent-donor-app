@@ -1,16 +1,34 @@
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/auth/controllers/profile_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class AddCardFormFields extends StatelessWidget {
+class AddCardFormFields extends StatefulWidget {
   const AddCardFormFields({super.key});
+
+  @override
+  State<AddCardFormFields> createState() => _AddCardFormFieldsState();
+}
+
+class _AddCardFormFieldsState extends State<AddCardFormFields> {
+  late final ProfileController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.isRegistered<ProfileController>()
+        ? Get.find<ProfileController>()
+        : Get.put(ProfileController());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: controller.addCardFormKey,
       child: Column(
         spacing: 16.rh,
         children: [
@@ -24,10 +42,12 @@ class AddCardFormFields extends StatelessWidget {
 
               8.rh.heightWidth,
               CustomInputField(
+                controller: controller.nameInCardController,
                 hintText: AppStrings.enterName,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
                 isPrefixIcon: false,
+                validator: controller.validateName,
               ),
             ],
           ),
@@ -43,10 +63,12 @@ class AddCardFormFields extends StatelessWidget {
               8.rh.heightWidth,
 
               CustomInputField(
+                controller: controller.cardNumberController,
                 hintText: "**** **** **** ****",
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 isPrefixIcon: false,
+                validator: controller.validateCardNumber,
               ),
             ],
           ),
@@ -65,10 +87,12 @@ class AddCardFormFields extends StatelessWidget {
 
                     8.rh.heightWidth,
                     CustomInputField(
+                      controller: controller.cardExpiryDateController,
                       hintText: "MM/YY",
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.text,
                       isPrefixIcon: false,
+                      validator: controller.validateExpiryDate,
                     ),
                   ],
                 ),
@@ -87,10 +111,12 @@ class AddCardFormFields extends StatelessWidget {
 
                     8.rh.heightWidth,
                     CustomInputField(
+                      controller: controller.cardCVCController,
                       hintText: "***",
                       textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.number,
                       isPrefixIcon: false,
+                      validator: controller.validateCVC,
                     ),
                   ],
                 ),

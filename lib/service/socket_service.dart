@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'package:cresent_charge_user_app/helper/local_db/local_db.dart';
+import 'package:cresent_charge_user_app/core/helper/local_db/local_db.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/utils/app_const/app_const.dart';
 

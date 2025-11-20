@@ -7,7 +7,7 @@ import 'package:cresent_charge_user_app/core/go-router/routes/home_routes.dart';
 import 'package:cresent_charge_user_app/core/go-router/routes/onboarding_routes.dart';
 import 'package:cresent_charge_user_app/core/go-router/routes/profile_routes.dart';
 import 'package:cresent_charge_user_app/core/go-router/routes/rewards_routes.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

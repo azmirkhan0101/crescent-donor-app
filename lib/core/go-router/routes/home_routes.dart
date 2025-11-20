@@ -13,7 +13,7 @@ import 'package:cresent_charge_user_app/features/organization/pages/donation_com
 import 'package:cresent_charge_user_app/features/organization/pages/make_payment_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/payment_linked_account_page.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:go_router/go_router.dart';
 
 /// Home Routes Configuration

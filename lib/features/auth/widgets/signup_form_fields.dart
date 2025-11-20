@@ -1,8 +1,8 @@
 import 'package:cresent_charge_user_app/common-widgets/form-fields/custom_password_field.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/signup_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
@@ -24,6 +24,7 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: signupController.formKey,
       child: Column(
         spacing: 16.rh,
         children: [
@@ -39,12 +40,35 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
                 prefixIcon: Assets.onboarding.mail.svg(),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,
+                validator: signupController.validateEmail,
+                onChanged: (value) {
+                  signupController.emailError.value = '';
+                },
               ),
+              Obx(() {
+                if (signupController.emailError.value.isNotEmpty) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 4.rh),
+                    child: Text(
+                      signupController.emailError.value,
+                      style: TextStyle(color: Colors.red, fontSize: 12.sp),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
             ],
           ),
 
           // Password field
-          CustomPasswordField(controller: signupController.passwordController),
+          CustomPasswordField(
+            controller: signupController.passwordController,
+            validator: signupController.validatePassword,
+            onChanged: (value) {
+              signupController.passwordError.value = '';
+              signupController.calculatePasswordStrength(value);
+            },
+          ),
           // Column(
           //   crossAxisAlignment: CrossAxisAlignment.start,
           //   children: [
@@ -88,6 +112,10 @@ class _SignupFormFieldsState extends State<SignupFormFields> {
           CustomPasswordField(
             controller: signupController.confirmPasswordController,
             label: "Confirm Password",
+            validator: signupController.validateConfirmPassword,
+            onChanged: (value) {
+              signupController.confirmPasswordError.value = '';
+            },
           ),
           // Column(
           //   crossAxisAlignment: CrossAxisAlignment.start,

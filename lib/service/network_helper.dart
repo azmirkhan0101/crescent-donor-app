@@ -36,8 +36,9 @@ class NetworkHelper extends GetxService {
 
       final finalHeaders = {
         "Content-Type": "application/json",
-        if (withAuth && token != null) "Cookie": "token=$token",
-        ...?headers,
+        "Authorization": "Bearer $token",
+        // if (withAuth && token != null) "Cookie": "token=$token",
+        // ...?headers,
       };
 
       // Log request without sensitive data in production

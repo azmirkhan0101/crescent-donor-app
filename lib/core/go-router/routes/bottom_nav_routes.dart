@@ -6,7 +6,7 @@ import 'package:cresent_charge_user_app/features/home/pages/home_page.dart';
 import 'package:cresent_charge_user_app/features/main-layout/pages/main_layout_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/profile_page.dart';
 import 'package:cresent_charge_user_app/features/rewards/pages/your_rewards_page.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:go_router/go_router.dart';
 
 class BottomNavRoutes extends AppRouteConfig {

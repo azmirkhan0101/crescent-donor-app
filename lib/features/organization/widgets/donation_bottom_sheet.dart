@@ -4,7 +4,7 @@ import 'package:cresent_charge_user_app/features/organization/controllers/organi
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/date_time_selection_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_type_card.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
