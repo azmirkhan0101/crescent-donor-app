@@ -2,22 +2,17 @@ import 'package:cresent_charge_user_app/features/auth/models/forgot_password_req
 import 'package:cresent_charge_user_app/features/auth/models/forgot_password_response_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ForgotPasswordController extends GetxController {
-  // GlobalKey for the form
-  final formKey = GlobalKey<FormState>();
-
-  // TextEditingController
   final emailController = TextEditingController(
-    text: kDebugMode ? 'user@example.com' : '',
+    // text: kDebugMode ? 'user@example.com' : '',
   );
 
-  // Observable variables
   RxBool isLoading = false.obs;
   RxString errorMessage = ''.obs;
+  RxString emailError = ''.obs;
   RxString resetToken = ''.obs;
 
   @override
@@ -29,28 +24,29 @@ class ForgotPasswordController extends GetxController {
   /// Clear all error messages
   void clearErrors() {
     errorMessage.value = '';
+    emailError.value = '';
   }
 
-  /// Validate email field
-  String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email is required';
-    }
-    if (!GetUtils.isEmail(value)) {
-      return 'Please enter a valid email';
-    }
+  String? _validateEmailInternal(String value) {
+    if (value.isEmpty) return 'Email is required';
+    if (!GetUtils.isEmail(value)) return 'Please enter a valid email';
     return null;
   }
 
-  /// Send forgot password request
+  void updateEmail(String value) {
+    emailError.value = _validateEmailInternal(value.trim()) ?? '';
+  }
+
+  bool validateAll() {
+    updateEmail(emailController.text.trim());
+    return emailError.value.isEmpty;
+  }
+
+  /// Send forgot password request (manual validation)
   Future<bool> sendForgotPasswordRequest() async {
     try {
       clearErrors();
-
-      // Validate form
-      if (!formKey.currentState!.validate()) {
-        return false;
-      }
+      if (!validateAll()) return false;
 
       isLoading.value = true;
 
@@ -69,7 +65,7 @@ class ForgotPasswordController extends GetxController {
         withAuth: false,
       );
 
-      return result.fold(
+      final success = result.fold(
         (error) {
           // Handle error
           errorMessage.value =
@@ -77,9 +73,14 @@ class ForgotPasswordController extends GetxController {
           debugPrint('❌ Forgot password error: ${error.message}');
           return false;
         },
-        (response) async {
+        (response) {
           // Handle success
           if (response.success) {
+            if (response.token == null || response.token!.isEmpty) {
+              errorMessage.value = 'Reset token missing in response.';
+              debugPrint('❌ Forgot password failed: Reset token missing');
+              return false;
+            }
             // Store reset token if provided
             if (response.token != null && response.token!.isNotEmpty) {
               resetToken.value = response.token!;
@@ -96,6 +97,7 @@ class ForgotPasswordController extends GetxController {
           }
         },
       );
+      return success;
     } catch (e) {
       errorMessage.value = 'Request failed. Please try again.';
       debugPrint('❌ Forgot password error: $e');

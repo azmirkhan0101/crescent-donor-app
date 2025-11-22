@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/features/auth/models/verify_otp_request_model.dart';
 import 'package:cresent_charge_user_app/features/auth/models/verify_otp_response_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
@@ -61,18 +60,14 @@ class OtpController extends GetxController {
 
       isLoading.value = true;
 
-      // Create request model
-      final requestModel = VerifySignupOtpRequestModel(
-        email: email.value,
-        otp: otpValue.value,
-      );
+      final requestModel = {'email': email.value, 'otp': otpValue.value};
 
       // Call verify signup OTP API
       final networkHelper = Get.find<NetworkHelper>();
       final result = await networkHelper.request<VerifyOtpResponseModel>(
         'POST',
         ApiUrl.verifySignupOtp,
-        body: requestModel.toJson(),
+        body: requestModel,
         parser: (data) => VerifyOtpResponseModel.fromJson(data),
         withAuth: false,
       );
@@ -126,17 +121,14 @@ class OtpController extends GetxController {
       isLoading.value = true;
 
       // Create request model
-      final requestModel = VerifyForgotPasswordOtpRequestModel(
-        token: token.value,
-        otp: otpValue.value,
-      );
+      final requestModel = {'token': token.value, 'otp': otpValue.value};
 
       // Call verify forgot password OTP API
       final networkHelper = Get.find<NetworkHelper>();
       final result = await networkHelper.request<VerifyOtpResponseModel>(
         'POST',
         ApiUrl.verifyForgotPasswordOtp,
-        body: requestModel.toJson(),
+        body: requestModel,
         parser: (data) => VerifyOtpResponseModel.fromJson(data),
         withAuth: false,
       );

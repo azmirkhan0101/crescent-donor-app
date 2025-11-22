@@ -15,69 +15,35 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-class SignupPage extends StatefulWidget {
+class SignupPage extends StatelessWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
-}
-
-class _SignupPageState extends State<SignupPage> {
-  late final SignupController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.isRegistered<SignupController>()
+  Widget build(BuildContext context) {
+    final controller = Get.isRegistered<SignupController>()
         ? Get.find<SignupController>()
         : Get.put(SignupController());
-  }
 
-  @override
-  void dispose() {
-    if (Get.isRegistered<SignupController>()) {
-      Get.delete<SignupController>();
+    Future<void> handleSignup() async {
+      if (controller.isLoading.value) return;
+      controller.clearErrors();
+      // Manual validation before API call
+      if (!controller.validateAll()) return;
+      final success = await controller.signup();
+      if (success) {
+        SnackbarMsg.success(context, 'OTP sent to your email successfully!');
+        context.pushNamed(
+          RoutePath.verifyOtp,
+          extra: {
+            'email': controller.emailController.text.trim(),
+            'isForSignup': true,
+          },
+        );
+      } else if (controller.errorMessage.value.isNotEmpty) {
+        SnackbarMsg.error(context, controller.errorMessage.value);
+      }
     }
-    super.dispose();
-  }
 
-  Future<void> _handleSignup() async {
-    if (controller.isLoading.value) return;
-
-    // Validate form
-    if (!controller.formKey.currentState!.validate()) {
-      return;
-    }
-
-    // Clear errors before submission
-    controller.clearErrors();
-
-    // Perform signup
-    final success = await controller.signup();
-
-    if (success && mounted) {
-      // Show success toast
-      SnackbarMsg.success(context, 'OTP sent to your email successfully!');
-
-      // navigate to OTP verification or next page
-      context.pushNamed(
-        RoutePath.verifyOtp,
-        extra: {
-          'email': controller.emailController.text.trim(),
-          'isForSignup': true,
-        },
-      );
-
-      // Navigate to OTP verification or next page
-      // context.pushNamed(RoutePath.fewDetails);
-    } else if (mounted && controller.errorMessage.value.isNotEmpty) {
-      // Show error toast
-      SnackbarMsg.error(context, controller.errorMessage.value);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       resizeToAvoidBottomInset: true,
@@ -104,15 +70,14 @@ class _SignupPageState extends State<SignupPage> {
                 100.rh.heightWidth,
                 Column(
                   children: [
-                    Obx(() {
-                      if (controller.isLoading.value) {
-                        return const CustomLoader();
-                      }
-                      return CustomFilledButton(
-                        title: "Sign Up",
-                        onTap: _handleSignup,
-                      );
-                    }),
+                    Obx(
+                      () => controller.isLoading.value
+                          ? const CustomLoader()
+                          : CustomFilledButton(
+                              title: "Sign Up",
+                              onTap: handleSignup,
+                            ),
+                    ),
                     16.heightWidth,
                     HaveAccountWidget(haveAccount: true),
 

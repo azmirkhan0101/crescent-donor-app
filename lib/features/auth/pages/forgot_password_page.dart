@@ -15,70 +15,46 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
+class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
-}
-
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  late final ForgotPasswordController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.isRegistered<ForgotPasswordController>()
+  Widget build(BuildContext context) {
+    final controller = Get.isRegistered<ForgotPasswordController>()
         ? Get.find<ForgotPasswordController>()
         : Get.put(ForgotPasswordController());
-  }
 
-  @override
-  void dispose() {
-    if (Get.isRegistered<ForgotPasswordController>()) {
-      Get.delete<ForgotPasswordController>();
+    Future<void> handleForgotPassword() async {
+      controller.clearErrors();
+      if (!controller.validateAll()) return; // field error shown via Obx
+      final success = await controller.sendForgotPasswordRequest();
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('OTP sent to your email successfully!'),
+            backgroundColor: AppColors.primaryColor,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        context.pushNamed(
+          RoutePath.verifyOtp,
+          extra: {
+            'email': controller.emailController.text.trim(),
+            'isForSignup': false,
+            'token': controller.resetToken.value,
+          },
+        );
+      } else if (controller.errorMessage.value.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(controller.errorMessage.value),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
-    super.dispose();
-  }
 
-  Future<void> _handleForgotPassword() async {
-    controller.clearErrors();
-
-    final success = await controller.sendForgotPasswordRequest();
-
-    if (success && mounted) {
-      Get.snackbar(
-        'Success',
-        'OTP sent to your email successfully!',
-        backgroundColor: AppColors.primaryColor,
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.TOP,
-        duration: const Duration(seconds: 2),
-      );
-
-      // Navigate to OTP verification
-      context.pushNamed(
-        RoutePath.verifyOtp,
-        extra: {
-          'email': controller.emailController.text.trim(),
-          'isForSignup': false,
-          'token': controller.resetToken.value,
-        },
-      );
-    } else if (mounted && controller.errorMessage.value.isNotEmpty) {
-      Get.snackbar(
-        'Error',
-        controller.errorMessage.value,
-        backgroundColor: Colors.red,
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.TOP,
-        duration: const Duration(seconds: 3),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
@@ -95,56 +71,64 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
             32.rh.heightWidth,
 
-            // Email field
-            Form(
-              key: controller.formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppStrings.email
-                      .text(AppTextStyles.baseStyle())
-                      .color("#000C0B".hexColor),
-
-                  8.rh.heightWidth,
-                  CustomInputField(
-                    controller: controller.emailController,
-                    hintText: AppStrings.enterEmailAddress,
-                    textInputAction: TextInputAction.go,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: controller.validateEmail,
-                    onChanged: (value) {
-                      controller.clearErrors();
-                    },
-                  ),
-                  Obx(() {
-                    if (controller.errorMessage.value.isNotEmpty) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: 8.rh),
-                        child: Text(
-                          controller.errorMessage.value,
-                          style: TextStyle(color: Colors.red, fontSize: 12.rfs),
-                        ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  }),
-                ],
-              ),
+            // Email field manual validation
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppStrings.email
+                    .text(AppTextStyles.baseStyle())
+                    .color("#000C0B".hexColor),
+                8.rh.heightWidth,
+                CustomInputField(
+                  controller: controller.emailController,
+                  hintText: AppStrings.enterEmailAddress,
+                  textInputAction: TextInputAction.go,
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: controller.updateEmail,
+                ),
+                Obx(
+                  () => controller.emailError.value.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 8.rh),
+                          child: Text(
+                            controller.emailError.value,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12.rfs,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+                Obx(
+                  () => controller.errorMessage.value.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 8.rh),
+                          child: Text(
+                            controller.errorMessage.value,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12.rfs,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
             ),
 
             const Spacer(),
             // 100.rh.heightWidth,
             Column(
               children: [
-                Obx(() {
-                  if (controller.isLoading.value) {
-                    return const CustomLoader();
-                  }
-                  return CustomFilledButton(
-                    title: AppStrings.continueText,
-                    onTap: _handleForgotPassword,
-                  );
-                }),
+                Obx(
+                  () => controller.isLoading.value
+                      ? const CustomLoader()
+                      : CustomFilledButton(
+                          title: AppStrings.continueText,
+                          onTap: handleForgotPassword,
+                        ),
+                ),
                 16.heightWidth,
                 HaveAccountWidget(),
               ],

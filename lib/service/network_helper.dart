@@ -297,6 +297,7 @@ class NetworkHelper extends GetxService {
     required String method,
     Map<String, String>? fields,
     required List<MultipartBody> files,
+    String? myToken,
     bool withAuth = true,
     T Function(dynamic data)? parser,
     Duration? timeout,
@@ -310,8 +311,8 @@ class NetworkHelper extends GetxService {
 
       if (fields != null) request.fields.addAll(fields);
 
-      if (withAuth && token != null) {
-        request.headers["Cookie"] = "token=$token";
+      if (withAuth && (myToken ?? token) != null) {
+        request.headers['Authorization'] = 'Bearer ${myToken ?? token}';
       }
 
       for (var file in files) {

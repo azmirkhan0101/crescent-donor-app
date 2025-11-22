@@ -27,105 +27,102 @@ class _FewDetailFormFieldsState extends State<FewDetailFormFields> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: controller.fewDetailsFormKey,
-      child: Column(
-        spacing: 16.rh,
-        children: [
-          // Full Name field
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppStrings.fullName
-                  .text(AppTextStyles.baseStyle())
-                  .color("#000C0B".hexColor),
+    return Column(
+      // spacing: 16.rh, // If needed, add SizedBox for spacing between children
+      children: [
+        // Full Name field
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppStrings.fullName
+                .text(AppTextStyles.baseStyle())
+                .color("#000C0B".hexColor),
 
-              8.rh.heightWidth,
-              CustomInputField(
-                controller: controller.nameController,
-                hintText: AppStrings.enterName,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.text,
-                isPrefixIcon: false,
-                validator: controller.validateName,
+            8.rh.heightWidth,
+            CustomInputField(
+              controller: controller.nameController,
+              hintText: AppStrings.enterName,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.text,
+              isPrefixIcon: false,
+              validator: controller.validateName,
+            ),
+          ],
+        ),
+
+        // Address field
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppStrings.address
+                .text(AppTextStyles.baseStyle())
+                .color("#000C0B".hexColor),
+
+            8.rh.heightWidth,
+
+            CustomInputField(
+              controller: controller.addressController,
+              hintText: AppStrings.enterAddress,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.text,
+              isPrefixIcon: false,
+              minLines: 2,
+              validator: controller.validateAddress,
+            ),
+          ],
+        ),
+
+        // State and Postal code fields
+        Row(
+          children: [
+            // State field
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppStrings.state
+                      .text(AppTextStyles.baseStyle())
+                      .color("#000C0B".hexColor),
+
+                  8.rh.heightWidth,
+                  CustomInputField(
+                    controller: controller.stateController,
+                    hintText: AppStrings.state,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.text,
+                    isPrefixIcon: false,
+                    validator: controller.validateState,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
 
-          // Address field
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppStrings.address
-                  .text(AppTextStyles.baseStyle())
-                  .color("#000C0B".hexColor),
+            16.rw.heightWidth,
 
-              8.rh.heightWidth,
+            // Postal Code field
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppStrings.postalCode
+                      .text(AppTextStyles.baseStyle())
+                      .color("#000C0B".hexColor),
 
-              CustomInputField(
-                controller: controller.addressController,
-                hintText: AppStrings.enterAddress,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.text,
-                isPrefixIcon: false,
-                minLines: 2,
-                validator: controller.validateAddress,
+                  8.rh.heightWidth,
+                  CustomInputField(
+                    controller: controller.postalCodeController,
+                    hintText: AppStrings.postalCode,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.number,
+                    isPrefixIcon: false,
+                    validator: controller.validatePostalCode,
+                  ),
+                ],
               ),
-            ],
-          ),
-
-          // State and Postal code fields
-          Row(
-            children: [
-              // State field
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppStrings.state
-                        .text(AppTextStyles.baseStyle())
-                        .color("#000C0B".hexColor),
-
-                    8.rh.heightWidth,
-                    CustomInputField(
-                      controller: controller.stateController,
-                      hintText: AppStrings.state,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.text,
-                      isPrefixIcon: false,
-                      validator: controller.validateState,
-                    ),
-                  ],
-                ),
-              ),
-
-              16.rw.heightWidth,
-
-              // Postal Code field
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppStrings.postalCode
-                        .text(AppTextStyles.baseStyle())
-                        .color("#000C0B".hexColor),
-
-                    8.rh.heightWidth,
-                    CustomInputField(
-                      controller: controller.postalCodeController,
-                      hintText: AppStrings.postalCode,
-                      textInputAction: TextInputAction.done,
-                      keyboardType: TextInputType.number,
-                      isPrefixIcon: false,
-                      validator: controller.validatePostalCode,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

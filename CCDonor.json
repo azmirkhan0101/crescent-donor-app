@@ -1,0 +1,5196 @@
+{
+	"info": {
+		"_postman_id": "a9aa62e0-1787-4ae3-9da6-3e4944101073",
+		"name": "Crescent Change APIs",
+		"description": "Complete API collection for Crescent Change donation platform with Authentication, Donations, Payment Methods, Causes, and Stripe integration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49543914",
+		"_collection_link": "https://mehedihasanalif-2599456.postman.co/workspace/Cleaning-Service-App~7bb90a06-4d33-41de-93f2-fbf277c8e970/collection/49543914-a9aa62e0-1787-4ae3-9da6-3e4944101073?action=share&source=collection_link&creator=49543914"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "1. Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"cctest1@yopmail.com\",\n    \"password\": \"Abc@1234\"\n}\n// {\n//     \"email\": \"dev.mostafiz04@gmail.com\",\n//     \"password\": \"test123@PASS\"\n// }\n"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/signup",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						},
+						"description": "Register a new user account. Password must be 8-20 characters with uppercase, lowercase, number, and special character (@$!%*?&#)."
+					},
+					"response": [
+						{
+							"name": "1. Sign Up-success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"cctest1@yopmail.com\",\n    \"password\": \"Abc@1234\"\n}\n// {\n//     \"email\": \"dev.mostafiz04@gmail.com\",\n//     \"password\": \"test123@PASS\"\n// }\n"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/signup",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "124"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"7c-v6DcW3RkpiY5IhUXQ8ZlqiQBgGc\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:02:35 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"OTP sent successfully, verify your account in 5 minutes!\",\n    \"data\": {\n        \"email\": \"cctest1@yopmail.com\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "2. Resend Signup OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"cctest2@yopmail.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/send-signup-otp-again",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"send-signup-otp-again"
+							]
+						},
+						"description": "Resend OTP code to email for signup verification. Use this if the initial OTP expires or wasn't received."
+					},
+					"response": [
+						{
+							"name": "2. Error 400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"cctest2@yopmail.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/send-signup-otp-again",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"send-signup-otp-again"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "705"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"2c1-DxmptSrcJ2UEdHIiUQzYKCm8sb0\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:06:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"statusCode\": 400,\n    \"message\": \"An OTP was already sent. Please wait until it expires before requesting a new one.\",\n    \"errorMessages\": [\n        {\n            \"path\": \"\",\n            \"message\": \"An OTP was already sent. Please wait until it expires before requesting a new one.\"\n        }\n    ],\n    \"stack\": \"Error: An OTP was already sent. Please wait until it expires before requesting a new one.\\n    at C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:131:11\\n    at Generator.next (<anonymous>)\\n    at fulfilled (C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:5:58)\\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\"\n}"
+						},
+						{
+							"name": "2. Resend Signup OTP-success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"cctest2@yopmail.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/send-signup-otp-again",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"send-signup-otp-again"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "117"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"75-CYQfXVhzKcEtFLvdx0WQOtLKNr0\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:13:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"OTP sent again successfully, verify in 5 minutes!\",\n    \"data\": {\n        \"email\": \"cctest2@yopmail.com\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "3. Verify Signup OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"cctest2@yopmail.com\",\n  \"otp\": \"233533\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/verify-signup-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"verify-signup-otp"
+							]
+						},
+						"description": "Verify the 6-digit OTP sent during signup. After verification, user can sign in."
+					},
+					"response": [
+						{
+							"name": "3. Verify Signup OTP",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"cctest1@yopmail.com\",\n  \"otp\": \"849173\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/verify-signup-otp",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"verify-signup-otp"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "652"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"28c-/ysLMbsZqewb+fUUM+1zPa+oYVA\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:04:40 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"OTP verified successfully!\",\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjE0M2ViNWZlMmQxMTZhZWZmN2Q1YiIsIm5hbWUiOiJVc2VyIiwiaW1hZ2UiOiJodHRwczovL2V4YW1wbGUuY29tL2RlZmF1bHQtYXZhdGFyLnBuZyIsImVtYWlsIjoiY2N0ZXN0MUB5b3BtYWlsLmNvbSIsInJvbGUiOiJDTElFTlQiLCJpc1Byb2ZpbGUiOmZhbHNlLCJpc0FjdGl2ZSI6dHJ1ZSwic3RhdHVzIjoiYWN0aXZlIiwiaWF0IjoxNzYzNzg3ODgwLCJleHAiOjE3NjQzOTI2ODB9.qsXX6AVCMgpaAg5TiBqQSA6FHHhd1_tUrbRFCJ-ns-o\",\n        \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNjdGVzdDFAeW9wbWFpbC5jb20iLCJpYXQiOjE3NjM3ODc4ODAsImV4cCI6MTc2Mzc4Nzg4MH0.6PWYQTTfs8MC362w4-umTWVDd1GyM36jBzONcvDCAGg\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "4. Sign In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.accessToken) {",
+									"        pm.collectionVariables.set('accessToken', jsonData.data.accessToken);",
+									"        console.log('✅ Access Token saved');",
+									"    }",
+									"    if (jsonData.data && jsonData.data.refreshToken) {",
+									"        pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
+									"        console.log('✅ Refresh Token saved');",
+									"    }",
+									"    if (jsonData.data && jsonData.data.user && jsonData.data.user._id) {",
+									"        pm.collectionVariables.set('userId', jsonData.data.user._id);",
+									"        console.log('✅ User ID saved: ' + jsonData.data.user._id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// ORG LOGIN: \n// {\n//   \"email\": \"narole2449@fantastu.com\",\n//   \"password\": \"test123@PASS\"\n// }\n// Client login: \n// {\n//     \"email\": \"mostafizurrahaman0401@gmail.com\",\n//     \"password\": \"test123@PASS\"\n// }\n//  {\n//        \"email\": \"admin@gmail.com\",\n//        \"password\": \"Password123@\"\n// }\n{\n    \"email\": \"cctest2@yopmail.com\",\n    \"password\": \"Abc@1234\"\n}\n// SUPER ADMIN/ADMIN: \n// {\n//     \"email\": \"admin@gmail.com\", \"password\": \"Password123@\"\n// }\n// http://10.10.20.42:5000/api/v1"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/signin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						},
+						"description": "Sign in with email and password. Returns access token (JWT) and refresh token. Automatically saves tokens to collection variables."
+					},
+					"response": [
+						{
+							"name": "Error, not verified",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "// ORG LOGIN: \n// {\n//   \"email\": \"narole2449@fantastu.com\",\n//   \"password\": \"test123@PASS\"\n// }\n// Client login: \n// {\n//     \"email\": \"mostafizurrahaman0401@gmail.com\",\n//     \"password\": \"test123@PASS\"\n// }\n//  {\n//        \"email\": \"admin@gmail.com\",\n//        \"password\": \"Password123@\"\n// }\n{\n    \"email\": \"cctest2@yopmail.com\",\n    \"password\": \"Abc@1234\"\n}\n// SUPER ADMIN/ADMIN: \n// {\n//     \"email\": \"admin@gmail.com\", \"password\": \"Password123@\"\n// }\n// http://10.10.20.42:5000/api/v1"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/signin",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"signin"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "715"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"2cb-aSXVQy7pZHK9RkQ2bc20JddBPhc\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:11:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"statusCode\": 400,\n    \"message\": \"This account is not verified yet!\",\n    \"errorMessages\": [\n        {\n            \"path\": \"\",\n            \"message\": \"This account is not verified yet!\"\n        }\n    ],\n    \"stack\": \"Error: This account is not verified yet!\\n    at model.authSchema.methods.ensureActiveStatus (C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.model.ts:158:11)\\n    at C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:216:8\\n    at Generator.next (<anonymous>)\\n    at fulfilled (C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:5:58)\\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\"\n}"
+						},
+						{
+							"name": "4. Sign In-success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "// ORG LOGIN: \n// {\n//   \"email\": \"narole2449@fantastu.com\",\n//   \"password\": \"test123@PASS\"\n// }\n// Client login: \n// {\n//     \"email\": \"mostafizurrahaman0401@gmail.com\",\n//     \"password\": \"test123@PASS\"\n// }\n//  {\n//        \"email\": \"admin@gmail.com\",\n//        \"password\": \"Password123@\"\n// }\n{\n    \"email\": \"cctest1@yopmail.com\",\n    \"password\": \"Abc@1234\"\n}\n// SUPER ADMIN/ADMIN: \n// {\n//     \"email\": \"admin@gmail.com\", \"password\": \"Password123@\"\n// }\n// http://10.10.20.42:5000/api/v1"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/signin",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"signin"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "644"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"284-Z8VMJKpvL3hJsvoeJcHzJbZLN3w\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:12:24 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Signin successful!\",\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjE0M2ViNWZlMmQxMTZhZWZmN2Q1YiIsIm5hbWUiOiJVc2VyIiwiaW1hZ2UiOiJodHRwczovL2V4YW1wbGUuY29tL2RlZmF1bHQtYXZhdGFyLnBuZyIsImVtYWlsIjoiY2N0ZXN0MUB5b3BtYWlsLmNvbSIsInJvbGUiOiJDTElFTlQiLCJpc1Byb2ZpbGUiOmZhbHNlLCJpc0FjdGl2ZSI6dHJ1ZSwic3RhdHVzIjoiYWN0aXZlIiwiaWF0IjoxNzYzNzg4MzQ0LCJleHAiOjE3NjQzOTMxNDR9.VVASEumgs_-EMx5_fF-ky91r2ZGOOHUgsnX4d_mnIAY\",\n        \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNjdGVzdDFAeW9wbWFpbC5jb20iLCJpYXQiOjE3NjM3ODgzNDQsImV4cCI6MTc2Mzc4ODM0NH0.OdVND1Mw7vqsC3YIqXRAVmm1Al4AO8qB0ZVUYhSRYPc\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "5. Create Profile (Client)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "clientImage",
+									"description": "Profile image (optional)",
+									"type": "file",
+									"src": "/C:/Users/devmo/Downloads/download.jpg"
+								},
+								{
+									"key": "data",
+									"value": "{\n  \"role\": \"CLIENT\",\n  \"name\": \"CC Test 1\",\n\n  \"address\": \"123 Main Street\",\n  \"state\": \"California\",\n  \"postalCode\": \"90001\",\n\n  \"nameInCard\": \"CC Test 1\",\n  \"cardNumber\": \"4242424242424242\",\n  \"cardExpiryDate\": \"05/26\",\n  \"cardCVC\": \"123\"\n}\n",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/create-Profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"create-Profile"
+							]
+						},
+						"description": "Create user profile for CLIENT role. All fields marked as required must be provided. Upload profile image as multipart/form-data."
+					},
+					"response": [
+						{
+							"name": "5. success - Create Profile (Client)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "clientImage",
+											"description": "Profile image (optional)",
+											"type": "file",
+											"src": "/C:/Users/devmo/Downloads/download.jpg"
+										},
+										{
+											"key": "data",
+											"value": "{\n  \"role\": \"CLIENT\",\n  \"name\": \"CC Test 1\",\n\n  \"address\": \"123 Main Street\",\n  \"state\": \"California\",\n  \"postalCode\": \"90001\",\n\n  \"nameInCard\": \"CC Test 1\",\n  \"cardNumber\": \"4242424242424242\",\n  \"cardExpiryDate\": \"05/26\",\n  \"cardCVC\": \"123\"\n}\n",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/create-Profile",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"create-Profile"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "427"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1ab-9NmP732ZRKqVB0dUOlIdmC4nYqo\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:22:14 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Profile created successfully!\",\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjE0M2ViNWZlMmQxMTZhZWZmN2Q1YiIsIm5hbWUiOiJDQyBUZXN0IDEiLCJpbWFnZSI6bnVsbCwiZW1haWwiOiJjY3Rlc3QxQHlvcG1haWwuY29tIiwicm9sZSI6IkNMSUVOVCIsImlzUHJvZmlsZSI6dHJ1ZSwiaXNBY3RpdmUiOnRydWUsInN0YXR1cyI6ImFjdGl2ZSIsImlhdCI6MTc2Mzc4ODkzNCwiZXhwIjoxNzY0MzkzNzM0fQ.MAs36APLnXTOquvc2mS3-8KcjRkDVkJQGPLOrlRlUe4\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "5. Create Profile (Business)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "role",
+									"value": "BUSINESS",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "ABC Corporation",
+									"description": "Business name (required)",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "Retail",
+									"description": "Business category (required)",
+									"type": "text"
+								},
+								{
+									"key": "tagLine",
+									"value": "Quality Products for Everyone",
+									"description": "Business tagline (required)",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Leading retail business providing quality products",
+									"description": "Business description (required)",
+									"type": "text"
+								},
+								{
+									"key": "businessPhoneNumber",
+									"value": "+61234567890",
+									"description": "Business phone (required)",
+									"type": "text"
+								},
+								{
+									"key": "businessEmail",
+									"value": "contact@abccorp.com",
+									"description": "Business email (required)",
+									"type": "text"
+								},
+								{
+									"key": "businessWebsite",
+									"value": "https://abccorp.com",
+									"description": "Business website URL (required)",
+									"type": "text"
+								},
+								{
+									"key": "locations",
+									"value": "[\"Sydney\", \"Melbourne\", \"Brisbane\"]",
+									"description": "JSON array of locations (required)",
+									"type": "text"
+								},
+								{
+									"key": "businessImage",
+									"value": "",
+									"description": "Business logo (optional)",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/create-Profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"create-Profile"
+							]
+						},
+						"description": "Create user profile for BUSINESS role with business details and logo."
+					},
+					"response": []
+				},
+				{
+					"name": "6. Update Photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profileImage",
+									"description": "Profile photo. Accepts: file, image, photo, profileImage, avatar",
+									"type": "file",
+									"src": "/Users/mukarrom/Downloads/cbdc76580c32e7f726905f5a07893bd457477501.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/update-photo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"update-photo"
+							]
+						},
+						"description": "Update user profile photo. Accepts various field names: file, image, photo, profileImage, or avatar."
+					},
+					"response": [
+						{
+							"name": "6. Success - Update Photo",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "profileImage",
+											"description": "Profile photo. Accepts: file, image, photo, profileImage, avatar",
+											"type": "file",
+											"src": "/Users/mukarrom/Downloads/cbdc76580c32e7f726905f5a07893bd457477501.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/update-photo",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"update-photo"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "494"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1ee-Mdl5AkhaTYZymKqwGEbOHo43UCY\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:29:40 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Photo updated successfully!\",\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjE0M2ViNWZlMmQxMTZhZWZmN2Q1YiIsIm5hbWUiOiJDQyBUZXN0IDEiLCJpbWFnZSI6InB1YmxpYy9pbWFnZXMvY2JkYzc2NTgwYzMyZTdmNzI2OTA1ZjVhMDc4OTNiZDQ1NzQ3NzUwMS0xNzYzNzg5MzgwMjE4LnBuZyIsImVtYWlsIjoiY2N0ZXN0MUB5b3BtYWlsLmNvbSIsInJvbGUiOiJDTElFTlQiLCJpc1Byb2ZpbGUiOnRydWUsImlzQWN0aXZlIjp0cnVlLCJpYXQiOjE3NjM3ODkzODAsImV4cCI6MTc2NDM5NDE4MH0.KzuU4s1ZI27MFk2JevmVvjAK8dU1PoufDaKT23HY5EY\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "7. Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"oldPassword\": \"Abc@1234\",\n  \"newPassword\": \"Abc@12345\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/change-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"change-password"
+							]
+						},
+						"description": "Change user password. Requires current password for verification. New password must meet security requirements."
+					},
+					"response": [
+						{
+							"name": "7. success - Change Password",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"oldPassword\": \"Abc@1234\",\n  \"newPassword\": \"Abc@12345\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/change-password",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "707"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"2c3-hCkBpnIjSToW1301XoObsUhiPVI\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:31:30 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Password changed successfully!\",\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjE0M2ViNWZlMmQxMTZhZWZmN2Q1YiIsIm5hbWUiOiJDQyBUZXN0IDEiLCJpbWFnZSI6InB1YmxpYy9pbWFnZXMvY2JkYzc2NTgwYzMyZTdmNzI2OTA1ZjVhMDc4OTNiZDQ1NzQ3NzUwMS0xNzYzNzg5MzgwMjE4LnBuZyIsImVtYWlsIjoiY2N0ZXN0MUB5b3BtYWlsLmNvbSIsInJvbGUiOiJDTElFTlQiLCJpc1Byb2ZpbGUiOnRydWUsImlzQWN0aXZlIjp0cnVlLCJzdGF0dXMiOiJhY3RpdmUiLCJpYXQiOjE3NjM3ODk0OTAsImV4cCI6MTc2NDM5NDI5MH0.PGYP-aAdd4QuHuuKB8WNoZwLvZDdb2uCMX041bzaXRQ\",\n        \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNjdGVzdDFAeW9wbWFpbC5jb20iLCJpYXQiOjE3NjM3ODk0OTAsImV4cCI6MTc2Mzc4OTQ5MH0.zFNgmEzjOShfAKq5cpUmDCjjN6VSm-F41ks7kCMW5nc\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "8. Forgot Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// save forgotPasswordToken",
+									"pm.test(\"forgotPasswordToken\", function () {",
+									"    pm.collectionVariables.set(\"forgotPasswordToken\", pm.response.json().data.token);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"cctest1@yopmail.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/forgot-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						},
+						"description": "Request password reset. Sends OTP to email and returns a token for the reset flow."
+					},
+					"response": [
+						{
+							"name": "8. success - Forgot Password",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"cctest1@yopmail.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/forgot-password",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"forgot-password"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "283"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"11b-QBKY2w9dXrOSnVm8y6VOW9qBe7c\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:32:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"OTP sent to your email. Please check your spam or junk folder too!\",\n    \"data\": {\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNjdGVzdDFAeW9wbWFpbC5jb20iLCJpYXQiOjE3NjM3ODk1NjgsImV4cCI6MTc2Mzc4OTU2OH0.1svP1ivQ7TBgWIMx5QHzQldjlyPxNg1NB0hwHFPCssE\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "9. Resend Forgot Password OTP",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"{{forgotPasswordToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/send-forgot-password-otp-again",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"send-forgot-password-otp-again"
+							]
+						},
+						"description": "Resend OTP for password reset using the token from forgot-password endpoint."
+					},
+					"response": [
+						{
+							"name": "9. success - Resend Forgot Password OTP",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"token\": \"{{forgotPasswordToken}}\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/send-forgot-password-otp-again",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"send-forgot-password-otp-again"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "99"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"63-GNUpVnT/X1Y8e5w52+MAesEfraw\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:39:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"OTP sent again. Please check your spam or junk folder too!\",\n    \"data\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "10. Verify Forgot Password OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"{{forgotPasswordToken}}\",\n  \"otp\": \"177872\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/verify-forgot-password-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"verify-forgot-password-otp"
+							]
+						},
+						"description": "Verify the 6-digit OTP for password reset. OTP must be numeric and exactly 6 digits."
+					},
+					"response": [
+						{
+							"name": "10. OTP expired",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"token\": \"{{forgotPasswordToken}}\",\n  \"otp\": \"570186\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/verify-forgot-password-otp",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"verify-forgot-password-otp"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "588"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"24c-oX792mg73x66RsGIiHgkhi7mJkM\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:41:11 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"statusCode\": 400,\n    \"message\": \"OTP expired. A new OTP has been sent again!\",\n    \"errorMessages\": [\n        {\n            \"path\": \"\",\n            \"message\": \"OTP expired. A new OTP has been sent again!\"\n        }\n    ],\n    \"stack\": \"Error: OTP expired. A new OTP has been sent again!\\n    at C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:898:11\\n    at Generator.next (<anonymous>)\\n    at fulfilled (C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:5:58)\\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\"\n}"
+						},
+						{
+							"name": "10. OTP verified success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"token\": \"{{forgotPasswordToken}}\",\n  \"otp\": \"277545\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/verify-forgot-password-otp",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"verify-forgot-password-otp"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "287"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"11f-I76qYetLX/iFOQfvzQ8gyn+UzcI\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:43:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"OTP verified successfully!\",\n    \"data\": {\n        \"resetPasswordToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNjdGVzdDFAeW9wbWFpbC5jb20iLCJpc1Jlc2V0UGFzc3dvcmQiOnRydWUsImlhdCI6MTc2Mzc5MDE4MCwiZXhwIjoxNzYzNzkwMTgwfQ.gSi_pr3Q9sFqwzrS_AGzE5z3o_HhcAXva47ALRB40Ho\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "11. Reset Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{forgotPasswordToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{forgotPasswordToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"newPassword\": \"Abc@1234\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/reset-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						},
+						"description": "Set new password after OTP verification. Password must be 8-20 characters with uppercase, lowercase, number, and special character."
+					},
+					"response": []
+				},
+				{
+					"name": "12. Get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						},
+						"description": "Fetch authenticated user's complete profile information including role-specific data."
+					},
+					"response": [
+						{
+							"name": "12. success - Get Profile",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/auth/profile",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"profile"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "462"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1ce-LPxI5LsXq6p7vTA3/2nFKcS2ATA\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:49:03 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Profile data retrieved successfully!\",\n    \"data\": {\n        \"_id\": \"692148851592829c1823c4dd\",\n        \"auth\": {\n            \"_id\": \"692143eb5fe2d116aeff7d5b\",\n            \"email\": \"cctest1@yopmail.com\",\n            \"isProfile\": true,\n            \"role\": \"CLIENT\"\n        },\n        \"name\": \"CC Test 1\",\n        \"address\": \"123 Main Street\",\n        \"state\": \"California\",\n        \"postalCode\": \"90001\",\n        \"image\": \"public/images/cbdc76580c32e7f726905f5a07893bd457477501-1763789380218.png\",\n        \"createdAt\": \"2025-11-22T05:22:13.931Z\",\n        \"updatedAt\": \"2025-11-22T05:29:40.282Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "13. Deactivate Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"cctest1@yopmail.com\",\n  \"password\": \"Abc@12345\",\n  \"deactivationReason\": \"No longer using the service\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/deactive-account",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"deactive-account"
+							]
+						},
+						"description": "Temporarily deactivate user account. Requires email, password, and reason (minimum 3 characters). Account can be reactivated later."
+					},
+					"response": [
+						{
+							"name": "13. success - Deactivate Account",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"cctest1@yopmail.com\",\n  \"password\": \"Abc@12345\",\n  \"deactivationReason\": \"No longer using the service\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/deactive-account",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"deactive-account"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "244"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"f4-H3hmU8/ZcEXfa+c1qlNAEVJeces\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 05:50:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Account Deactivate successfully!\",\n    \"data\": {\n        \"_id\": \"692143eb5fe2d116aeff7d5b\",\n        \"email\": \"cctest1@yopmail.com\",\n        \"isActive\": false,\n        \"deactivatedAt\": \"2025-11-22T05:50:46.382Z\",\n        \"deactivationReason\": \"No longer using the service\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "14. Delete Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/delete-account",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"delete-account"
+							]
+						},
+						"description": "Permanently delete user account from database. This action cannot be undone."
+					},
+					"response": [
+						{
+							"name": "14. success Delete",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/auth/delete-account",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"delete-account"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "143"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"8f-f1dAMEzHXyx5XSp5ZGtJrycqH3U\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 06:03:18 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Account Deleted successfully!\",\n    \"data\": {\n        \"email\": \"cctest2@yopmail.com\",\n        \"id\": \"6921449995646d219d499dc0\",\n        \"name\": \"User\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "15. Refresh Access Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "refreshToken={{refreshToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/access-token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"access-token"
+							]
+						},
+						"description": "Get new access token using refresh token from cookies. Use when access token expires."
+					},
+					"response": [
+						{
+							"name": "15. Unauthorized access",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "refreshToken={{refreshToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/auth/access-token",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"access-token"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1121"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"461-3IX7JaJ0zQQeRH+4oOncAh24MsI\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 06:01:12 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"statusCode\": 401,\n    \"message\": \"Unauthorized access!\",\n    \"errorMessages\": [\n        {\n            \"path\": \"\",\n            \"message\": \"Unauthorized access!\"\n        }\n    ],\n    \"stack\": \"Error: Unauthorized access!\\n    at verifyToken (C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\lib\\\\token.ts:66:11)\\n    at C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:1138:30\\n    at Generator.next (<anonymous>)\\n    at C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:8:71\\n    at new Promise (<anonymous>)\\n    at __awaiter (C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:4:12)\\n    at Object.getNewAccessTokenFromServer (C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.service.ts:1136:68)\\n    at C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.controller.ts:198:36\\n    at Generator.next (<anonymous>)\\n    at C:\\\\Users\\\\devmo\\\\OneDrive\\\\Desktop\\\\crecent-change-apis\\\\src\\\\app\\\\modules\\\\Auth\\\\auth.controller.ts:8:71\"\n}"
+						}
+					]
+				},
+				{
+					"name": "16. Update Auth Data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"C C Test 2\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/update-auth-data",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"update-auth-data"
+							]
+						},
+						"description": "Update user authentication data such as display name."
+					},
+					"response": [
+						{
+							"name": "16. success",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"C C Test 2\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/update-auth-data",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"update-auth-data"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "466"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1d2-4TjCk0IBiSs5t3qGbA59S0Kx9j0\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 06:02:47 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Data updated successfully!\",\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjE0NDk5OTU2NDZkMjE5ZDQ5OWRjMCIsIm5hbWUiOiJVc2VyIiwiaW1hZ2UiOiJodHRwczovL2V4YW1wbGUuY29tL2RlZmF1bHQtYXZhdGFyLnBuZyIsImVtYWlsIjoiY2N0ZXN0MkB5b3BtYWlsLmNvbSIsInJvbGUiOiJDTElFTlQiLCJpc1Byb2ZpbGUiOmZhbHNlLCJpc0FjdGl2ZSI6dHJ1ZSwic3RhdHVzIjoiYWN0aXZlIiwiaWF0IjoxNzYzNzkxMzY3LCJleHAiOjE3NjQzOTYxNjd9.3nfH8RnLPNYA_gXe2mjdDNg3VZZjI0wHrOHcM2JbCD4\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "User authentication, registration, profile management, and password operations"
+		},
+		{
+			"name": "Payment Methods",
+			"item": [
+				{
+					"name": "ORG PAYOUT ACCOUNT SETUP",
+					"item": [
+						{
+							"name": "ORG STRIPE CONNECT",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/organization/stripe-connect/onboard",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization",
+										"stripe-connect",
+										"onboard"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check ORG STRIPE ACCOUNT STATUS",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/organization/stripe-connect/status",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization",
+										"stripe-connect",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ORG STRIPE CONNECT (REFRESH)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/organization/stripe-connect/refresh",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization",
+										"stripe-connect",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "1. Create Setup Intent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payment-method/setup-intent",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payment-method",
+								"setup-intent"
+							]
+						},
+						"description": "Create a Stripe SetupIntent for collecting card payment method. Returns client_secret for frontend card collection using Stripe.js."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/payment-method/setup-intent",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"payment-method",
+										"setup-intent"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Setup intent created successfully for card payment!\",\n  \"data\": {\n    \"client_secret\": \"seti_1234567890_secret_abcdefgh\",\n    \"setup_intent_id\": \"seti_1234567890\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "2. Add Payment Method",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.stripePaymentMethodId) {",
+									"        pm.collectionVariables.set('paymentMethodId', jsonData.data.stripePaymentMethodId);",
+									"        console.log('✅ Payment Method ID saved: ' + jsonData.data.stripePaymentMethodId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stripePaymentMethodId\": \"seti_1SSAzUGWHt6mKfvJLoqvywzv_secret_TOyxTNeHsEb1uZT6rYS4kKbfQXDM3z5\",\n  \"cardHolderName\": \"Jone Doe\",\n  \"isDefault\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payment-method",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payment-method"
+							]
+						},
+						"description": "Save a payment method after Stripe SetupIntent is confirmed on frontend. stripePaymentMethodId must start with 'pm_'. Automatically saves to collection variables."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"stripePaymentMethodId\": \"pm_1234567890abcdef\",\n  \"cardHolderName\": \"John Doe\",\n  \"isDefault\": true\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/payment-method",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"payment-method"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Payment method added successfully!\",\n  \"data\": {\n    \"_id\": \"64xyz123abc\",\n    \"user\": \"64abc123def\",\n    \"stripePaymentMethodId\": \"pm_1234567890abcdef\",\n    \"stripeCustomerId\": \"cus_9876543210\",\n    \"type\": \"card\",\n    \"cardBrand\": \"visa\",\n    \"cardLast4\": \"4242\",\n    \"cardExpMonth\": 12,\n    \"cardExpYear\": 2027,\n    \"cardHolderName\": \"John Doe\",\n    \"isDefault\": true,\n    \"isActive\": true,\n    \"createdAt\": \"2025-11-11T12:00:00.000Z\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "3. Get User Payment Methods",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment-method?includeInactive=false",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payment-method"
+							],
+							"query": [
+								{
+									"key": "includeInactive",
+									"value": "false",
+									"description": "Include inactive/deleted payment methods (default: false)"
+								}
+							]
+						},
+						"description": "Get all payment methods for authenticated user. Returns active cards only by default, sorted by default status and creation date."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/payment-method",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"payment-method"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Payment methods retrieved successfully!\",\n  \"data\": [\n    {\n      \"_id\": \"64xyz123\",\n      \"type\": \"card\",\n      \"cardBrand\": \"visa\",\n      \"cardLast4\": \"4242\",\n      \"cardExpMonth\": 12,\n      \"cardExpYear\": 2027,\n      \"cardHolderName\": \"John Doe\",\n      \"isDefault\": true,\n      \"isActive\": true\n    },\n    {\n      \"_id\": \"64xyz456\",\n      \"type\": \"card\",\n      \"cardBrand\": \"mastercard\",\n      \"cardLast4\": \"5454\",\n      \"cardExpMonth\": 6,\n      \"cardExpYear\": 2026,\n      \"cardHolderName\": \"John Doe\",\n      \"isDefault\": false,\n      \"isActive\": true\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "4. Get Default Payment Method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment-method/default",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payment-method",
+								"default"
+							]
+						},
+						"description": "Get user's default payment method for quick donations."
+					},
+					"response": []
+				},
+				{
+					"name": "5. Get Payment Method by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment-method/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payment-method",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{paymentMethodId}}",
+									"description": "Payment method ID"
+								}
+							]
+						},
+						"description": "Get specific payment method details by ID. User must own the payment method."
+					},
+					"response": []
+				},
+				{
+					"name": "6. Set Default Payment Method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment-method/:id/default",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payment-method",
+								":id",
+								"default"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{paymentMethodId}}",
+									"description": "Payment method ID to set as default"
+								}
+							]
+						},
+						"description": "Set a payment method as default. Automatically unsets previous default. Only active payment methods can be set as default."
+					},
+					"response": []
+				},
+				{
+					"name": "7. Delete Payment Method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment-method/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payment-method",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{paymentMethodId}}",
+									"description": "Payment method ID to delete"
+								}
+							]
+						},
+						"description": "Delete (soft delete - marks as inactive) a payment method. Detaches from Stripe and marks as inactive in database."
+					},
+					"response": []
+				}
+			],
+			"description": "Manage saved payment methods (cards) for donations with Stripe"
+		},
+		{
+			"name": "Donations",
+			"item": [
+				{
+					"name": "1. Create One-Time Donation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.donation && jsonData.data.donation._id) {",
+									"        pm.collectionVariables.set('donationId', jsonData.data.donation._id);",
+									"        console.log('✅ Donation ID saved: ' + jsonData.data.donation._id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 3,\n  \"currency\": \"usd\",\n  \"organizationId\": \"{{organizationId}}\",\n  \"causeId\": \"{{causeId}}\",\n  \"paymentMethodId\": \"{{paymentMethodId}}\",\n  \"specialMessage\": \"Keep up the great work!\"\n  \n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/donation/one-time/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								"one-time",
+								"create"
+							]
+						},
+						"description": "Create one-time donation with direct payment using saved payment method. Amount must be $1-$10,000. Returns donation record and payment intent details. Payment is processed immediately using Stripe Payment Intents API."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"amount\": 100,\n  \"currency\": \"usd\",\n  \"organizationId\": \"64org123\",\n  \"causeId\": \"64cause456\",\n  \"paymentMethodId\": \"pm_1234567890abcdef\",\n  \"specialMessage\": \"Keep up the great work!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/donation/one-time/create",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"donation",
+										"one-time",
+										"create"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Donation created and payment initiated successfully\",\n  \"data\": {\n    \"donation\": {\n      \"_id\": \"64don789abc\",\n      \"donor\": \"64user123\",\n      \"organization\": \"64org123\",\n      \"cause\": \"64cause456\",\n      \"amount\": 100,\n      \"currency\": \"USD\",\n      \"status\": \"processing\",\n      \"pointsEarned\": 10000,\n      \"donationType\": \"one-time\",\n      \"specialMessage\": \"Keep up the great work!\",\n      \"stripePaymentIntentId\": \"pi_1234567890\",\n      \"stripeCustomerId\": \"cus_9876543210\",\n      \"createdAt\": \"2025-11-11T12:00:00.000Z\"\n    },\n    \"payment\": {\n      \"clientSecret\": \"pi_1234567890_secret_xyz\",\n      \"paymentIntentId\": \"pi_1234567890\",\n      \"status\": \"processing\"\n    }\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "3. Retry Failed Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/donation/:donationId/retry",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								":donationId",
+								"retry"
+							],
+							"variable": [
+								{
+									"key": "donationId",
+									"value": "{{donationId}}",
+									"description": "Failed donation ID to retry"
+								}
+							]
+						},
+						"description": "Retry payment for a failed donation. Maximum 3 payment attempts allowed. Creates new payment session."
+					},
+					"response": []
+				},
+				{
+					"name": "4. Get Donation Full Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/donation/:id/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								":id",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{donationId}}",
+									"description": "Donation ID"
+								}
+							]
+						},
+						"description": "Get donation with full payment status including payment attempt count, retry availability, and payment intent details."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/donation/:id/status",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"donation",
+										":id",
+										"status"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "64don789abc"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"data\": {\n    \"donation\": {\n      \"_id\": \"64don789abc\",\n      \"amount\": 100,\n      \"status\": \"completed\",\n      \"donationType\": \"one-time\",\n      \"pointsEarned\": 10000\n    },\n    \"paymentStatus\": {\n      \"status\": \"completed\",\n      \"lastPaymentAttempt\": \"2025-11-11T12:05:00.000Z\",\n      \"paymentAttempts\": 1,\n      \"canRetry\": false,\n      \"sessionId\": \"cs_test_123\",\n      \"paymentIntentId\": \"pi_1234567890\"\n    }\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "5. Get User Donations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/donation/user?page=1&limit=10&status=all&donationType=all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (min: 1, default: 1)"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Items per page (1-100, default: 10)"
+								},
+								{
+									"key": "status",
+									"value": "all",
+									"description": "Filter: all, pending, completed, failed, refunded (default: all)"
+								},
+								{
+									"key": "donationType",
+									"value": "all",
+									"description": "Filter: all, one-time, recurring, round-up (default: all)"
+								},
+								{
+									"key": "searchTerm",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get paginated list of authenticated user's donations with optional filters by status and donation type."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/donation/user?page=1&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"donation",
+										"user"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Donations retrieved successfully\",\n  \"data\": {\n    \"donations\": [\n      {\n        \"_id\": \"64don789\",\n        \"amount\": 100,\n        \"status\": \"completed\",\n        \"organization\": {\n          \"_id\": \"64org123\",\n          \"name\": \"Hope Foundation\"\n        },\n        \"cause\": {\n          \"_id\": \"64cause456\",\n          \"name\": \"Education for All\"\n        },\n        \"createdAt\": \"2025-11-11T12:00:00.000Z\"\n      }\n    ],\n    \"total\": 25,\n    \"page\": 1,\n    \"totalPages\": 3\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "6. Get Donation by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/donation/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{donationId}}",
+									"description": "Donation ID"
+								}
+							]
+						},
+						"description": "Get specific donation details by ID. User must own the donation or be admin/organization."
+					},
+					"response": []
+				},
+				{
+					"name": "8. Cancel Donation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/donation/:id/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								":id",
+								"cancel"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{donationId}}",
+									"description": "Donation ID"
+								}
+							]
+						},
+						"description": "Get specific donation details by ID. User must own the donation or be admin/organization."
+					},
+					"response": []
+				},
+				{
+					"name": "7. Get Organization Donations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/donation/organization/:organizationId?page=1&limit=10&status=completed&donationType=all&searchTerm&sort",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								"organization",
+								":organizationId"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Items per page (1-100, default: 10)"
+								},
+								{
+									"key": "status",
+									"value": "completed",
+									"description": "Filter by status (default: all)"
+								},
+								{
+									"key": "donationType",
+									"value": "all",
+									"description": "Filter by donation type (default: all)"
+								},
+								{
+									"key": "searchTerm",
+									"value": null
+								},
+								{
+									"key": "sort",
+									"value": null
+								}
+							],
+							"variable": [
+								{
+									"key": "organizationId",
+									"value": "{{organizationId}}",
+									"description": "Organization ID"
+								}
+							]
+						},
+						"description": "Get all donations received by a specific organization. Requires ORGANIZATION or ADMIN role. Includes donor information."
+					},
+					"response": []
+				},
+				{
+					"name": "9. Refund Donation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reason\": \"Test refund!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/donation/:id/refund",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								":id",
+								"refund"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{donationId}}",
+									"description": "Donation ID"
+								}
+							]
+						},
+						"description": "Get specific donation details by ID. User must own the donation or be admin/organization."
+					},
+					"response": []
+				},
+				{
+					"name": "User Donation Stats",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/donation/stats/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"donation",
+								"stats",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Create and manage donations with direct payment processing"
+		},
+		{
+			"name": "Causes",
+			"item": [
+				{
+					"name": "1. Get Cause Categories (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cause/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cause",
+								"categories"
+							]
+						},
+						"description": "Get list of all cause names for dropdowns/selectors. Public endpoint, no authentication required."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Create Cause",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data._id) {",
+									"        pm.collectionVariables.set('causeId', jsonData.data._id);",
+									"        console.log('✅ Cause ID saved: ' + jsonData.data._id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{orgToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"category\":  \"zakat\",\n  \"name\": \"backpacks and books\",\n  \"description\": \"Providing quality education to underprivileged children around the world\",\n  \"organizationId\": \"{{organizationId}}\"\n \n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cause",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cause"
+							]
+						},
+						"description": "Create a new cause for an organization. Requires ORGANIZATION or ADMIN role. Automatically saves cause ID to collection variables."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Get All Causes (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cause?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cause"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Items per page (default: 10)"
+								},
+								{
+									"key": "category",
+									"value": "zakat",
+									"description": "Filter by category (optional)",
+									"disabled": true
+								},
+								{
+									"key": "searchTerm",
+									"value": "books",
+									"description": "Search by name or description (optional)",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "pending",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get paginated list of all active causes. Public endpoint with optional category filter and search."
+					},
+					"response": []
+				},
+				{
+					"name": "5. Get Cause by ID (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cause/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cause",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{causeId}}",
+									"description": "Cause ID"
+								}
+							]
+						},
+						"description": "Get detailed information about a specific cause. Public endpoint for cause detail pages."
+					},
+					"response": []
+				},
+				{
+					"name": "6. Update Cause",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{orgToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": \"education\",\n    \"name\":\"Free Education\",\n    \"description\":\"Give free education to road side people\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cause/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cause",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{causeId}}",
+									"description": "Cause ID to update"
+								}
+							]
+						},
+						"description": "Update cause details. Requires ORGANIZATION or ADMIN role. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "7. Delete Cause",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{orgToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cause/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cause",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{causeId}}",
+									"description": "Cause ID to delete"
+								}
+							]
+						},
+						"description": "Delete a cause. Requires ORGANIZATION or ADMIN role. May fail if donations are linked to this cause."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"verified\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cause/:id/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cause",
+								":id",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{causeId}}",
+									"description": "Cause ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Get Causes by Organization (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cause/organization/:organizationId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cause",
+								"organization",
+								":organizationId"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "pending",
+									"disabled": true
+								},
+								{
+									"key": "searchTerm",
+									"value": "books",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "organizationId",
+									"value": "{{organizationId}}",
+									"description": "Organization ID"
+								}
+							]
+						},
+						"description": "Get all causes for a specific organization. Public endpoint, useful for organization profile pages."
+					},
+					"response": []
+				}
+			],
+			"description": "Manage donation causes for organizations (public and protected endpoints)"
+		},
+		{
+			"name": "Stripe",
+			"item": [
+				{
+					"name": "1. Create Checkout Session",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 100,\n  \"causeId\": \"{{causeId}}\",\n  \"organizationId\": \"{{organizationId}}\",\n  \"userId\": \"{{userId}}\",\n  \"connectedAccountId\": \"acct_optional\",\n  \"specialMessage\": \"Thank you for your amazing work!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/stripe/checkout-session",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stripe",
+								"checkout-session"
+							]
+						},
+						"description": "Create Stripe Checkout Session for payment redirect flow. Returns session ID and redirect URL. Use this for donations without saved payment methods."
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"amount\": 100,\n  \"causeId\": \"64cause456\",\n  \"organizationId\": \"64org123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/stripe/checkout-session",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"stripe",
+										"checkout-session"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Checkout session created successfully!\",\n  \"data\": {\n    \"sessionId\": \"cs_test_1234567890abcdefghijklmnop\",\n    \"url\": \"https://checkout.stripe.com/pay/cs_test_1234567890abcdefghijklmnop\"\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "2. Retrieve Checkout Session",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stripe/checkout-session/:sessionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stripe",
+								"checkout-session",
+								":sessionId"
+							],
+							"variable": [
+								{
+									"key": "sessionId",
+									"value": "cs_test_1234567890",
+									"description": "Stripe Checkout Session ID"
+								}
+							]
+						},
+						"description": "Retrieve Stripe Checkout Session details by session ID. Use to verify payment completion after redirect."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Create Refund",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paymentIntentId\": \"pi_1234567890\",\n  \"amount\": 50,\n  \"reason\": \"requested_by_customer\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/stripe/refund",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stripe",
+								"refund"
+							]
+						},
+						"description": "Create full or partial refund for a payment. Amount is optional - omit for full refund. Requires authentication and proper permissions."
+					},
+					"response": []
+				}
+			],
+			"description": "Stripe payment integration endpoints for checkout and refunds"
+		},
+		{
+			"name": "Cron Jobs",
+			"item": [
+				{
+					"name": "1. Trigger Scheduled Donations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cron-jobs/trigger/scheduled-donations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cron-jobs",
+								"trigger",
+								"scheduled-donations"
+							]
+						},
+						"description": "Manually trigger the scheduled donations cron job. Requires ADMIN role."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Get Cron Job Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cron-jobs/status?jobName=scheduled-donations&hours=24",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cron-jobs",
+								"status"
+							],
+							"query": [
+								{
+									"key": "jobName",
+									"value": "scheduled-donations",
+									"description": "Optional: Filter by job name"
+								},
+								{
+									"key": "hours",
+									"value": "24",
+									"description": "Optional: Time range in hours"
+								}
+							]
+						},
+						"description": "Get comprehensive status of cron jobs."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Get Execution History",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cron-jobs/scheduled-donations/history?limit=50&hours=24",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cron-jobs",
+								"scheduled-donations",
+								"history"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50",
+									"description": "Optional: Maximum records"
+								},
+								{
+									"key": "hours",
+									"value": "24",
+									"description": "Optional: Time range in hours"
+								}
+							]
+						},
+						"description": "Get execution history for a specific cron job."
+					},
+					"response": []
+				},
+				{
+					"name": "4. Get Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cron-jobs/dashboard",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cron-jobs",
+								"dashboard"
+							]
+						},
+						"description": "Get overview dashboard of all cron jobs."
+					},
+					"response": []
+				},
+				{
+					"name": "5. Get Health Check",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cron-jobs/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cron-jobs",
+								"health"
+							]
+						},
+						"description": "Get health check status for all cron jobs."
+					},
+					"response": []
+				}
+			],
+			"description": "Cron Jobs monitoring and management endpoints (5 routes). Requires ADMIN role."
+		},
+		{
+			"name": "Recurring Donations",
+			"item": [
+				{
+					"name": "1. Create Scheduled Donation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data._id) {",
+									"        pm.collectionVariables.set(\"scheduledDonationId\", jsonData.data._id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{clientToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"organizationId\": \"{{organizationId}}\",\n  \"causeId\": \"{{causeId}}\",\n  \"amount\": 2.00,\n  \"frequency\": \"daily\", \n  \"specialMessage\": \"Weekly support for this amazing cause!\",\n  \"paymentMethodId\": \"{{paymentMethodId}}\"\n}\n\n/**\n * Helper function to calculate the next donation date based on the user's selected frequency.\n *\n * Used for recurring donations to determine when the next automatic charge should occur.\n *\n * @param {Date} currentDate - The date of the most recent donation.\n * @param {string} frequency - The recurrence interval for the donation.\n *        Supported values: \"daily\", \"weekly\", \"monthly\", \"quarterly\", \"yearly\", \"custom\".\n * @param {{ value: number; unit: 'days' | 'weeks' | 'months' }} [customInterval] - \n *        Required only when frequency is set to \"custom\". Defines how many units to add.\n *\n * @returns {Date} - The calculated next donation date.\n *\n * @throws {AppError} - Throws an error if an invalid frequency is provided or \n *                      if \"custom\" frequency is selected without a valid interval.\n *\n * @example\n * // Monthly recurring donation\n * calculateNextDonationDate(new Date('2025-11-12'), 'monthly');\n * // → Returns Dec 12, 2025\n *\n * @example\n * // Custom recurring donation (every 10 days)\n * calculateNextDonationDate(new Date('2025-11-12'), 'custom', { value: 10, unit: 'days' });\n * // → Returns Nov 22, 2025\n */"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/scheduled-donation/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"scheduled-donation",
+								"create"
+							]
+						},
+						"description": "Create a new scheduled donation (recurring donation). Requires CLIENT role."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Get User's Scheduled Donations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{clientToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/scheduled-donation/user?page=1&limit=10&isActive=all&frequency=all&searchTerm=amazing&sort=-createdAt",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"scheduled-donation",
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number (default: 1)"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Items per page (1-100)"
+								},
+								{
+									"key": "isActive",
+									"value": "all",
+									"description": "Filter: true, false, all"
+								},
+								{
+									"key": "frequency",
+									"value": "all",
+									"description": "Filter: daily, weekly, monthly, quarterly, yearly, custom, all"
+								},
+								{
+									"key": "searchTerm",
+									"value": "amazing",
+									"description": "Search term"
+								},
+								{
+									"key": "sort",
+									"value": "-createdAt",
+									"description": "Sort field"
+								}
+							]
+						},
+						"description": "Get user's scheduled donations with pagination and filters. Requires CLIENT role."
+					},
+					"response": []
+				},
+				{
+					"name": "4. Update Scheduled Donation",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{clientToken}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 75.00,\n  \"frequency\": \"weekly\",\n  \"specialMessage\": \"Updated donation details\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/scheduled-donation/{{scheduledDonationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"scheduled-donation",
+								"{{scheduledDonationId}}"
+							]
+						},
+						"description": "Update scheduled donation details (amount, frequency, message). Requires CLIENT role."
+					},
+					"response": []
+				},
+				{
+					"name": "5. Pause Scheduled Donation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{clientToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/scheduled-donation/{{scheduledDonationId}}/pause",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"scheduled-donation",
+								"{{scheduledDonationId}}",
+								"pause"
+							]
+						},
+						"description": "Pause a scheduled donation. Requires CLIENT role."
+					},
+					"response": []
+				},
+				{
+					"name": "6. Resume Scheduled Donation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{clientToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/scheduled-donation/{{scheduledDonationId}}/resume",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"scheduled-donation",
+								"{{scheduledDonationId}}",
+								"resume"
+							]
+						},
+						"description": "Resume a paused scheduled donation. Requires CLIENT role."
+					},
+					"response": []
+				},
+				{
+					"name": "7. Cancel Scheduled Donation",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{clientToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/scheduled-donation/{{scheduledDonationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"scheduled-donation",
+								"{{scheduledDonationId}}"
+							]
+						},
+						"description": "Cancel (delete) a scheduled donation permanently. Requires CLIENT role."
+					},
+					"response": []
+				}
+			],
+			"description": "Scheduled Donations management endpoints (7 routes). Requires CLIENT role."
+		},
+		{
+			"name": "Bank Connection",
+			"item": [
+				{
+					"name": "Generate Plaid Link Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//   \"user\": {\n//     \"client_user_id\": \"user_123\",\n//     \"first_name\": \"John\",\n//     \"last_name\": \"Doe\",\n//     \"email\": \"john.doe@example.com\"\n//   },\n//   \"account_filters\": {\n//     \"depository\": {\n//       \"account_subtypes\": [\"checking\", \"savings\"]\n//     }\n//   }\n// }\n{}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bank-connection/link-token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bank-connection",
+								"link-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bank Connection",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"public_token\": \"public-sandbox-xxxxx\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bank-connection",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bank-connection"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Bank Connection",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bank-connection/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bank-connection",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Transactions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bank_connection_id\": \"bc_123456\",\n  \"cursor\": \"cursor_string\",\n  \"count\": 100\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bank-connection/:bankConnectionId/sync",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bank-connection",
+								":bankConnectionId",
+								"sync"
+							],
+							"variable": [
+								{
+									"key": "bankConnectionId",
+									"value": "{{bankConnectionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transactions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bank-connection/:bankConnectionId/transactions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bank-connection",
+								":bankConnectionId",
+								"transactions"
+							],
+							"variable": [
+								{
+									"key": "bankConnectionId",
+									"value": "{{bankConnectionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Bank Connection",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"isActive\": true,\n  \"consentExpiry\": \"2025-12-31T23:59:59.000Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bank-connection/:bankConnectionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bank-connection",
+								":bankConnectionId"
+							],
+							"variable": [
+								{
+									"key": "bankConnectionId",
+									"value": "bc_123456"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Revoke Consent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bank-connection/:bankConnectionId/revoke",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bank-connection",
+								":bankConnectionId",
+								"revoke"
+							],
+							"variable": [
+								{
+									"key": "bankConnectionId",
+									"value": "bc_123456"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Dummy Transaction (Plaid)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bank-connection/:bankConnectionId/add-dummy-transactions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bank-connection",
+								":bankConnectionId",
+								"add-dummy-transactions"
+							],
+							"variable": [
+								{
+									"key": "bankConnectionId",
+									"value": "{{bankConnectionId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RoundUp Management",
+			"item": [
+				{
+					"name": "Create RoundUp Configuration (Save Consent)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bankConnectionId\": \"{{bankConnectionId}}\",\n  \"organizationId\": \"{{organizationId}}\",\n  \"causeId\": \"{{causeId}}\",\n  \"monthlyThreshold\": 4.41,\n   \"paymentMethodId\": \"{{paymentMethodId}}\",\n  \"specialMessage\": \"My automatic round-up donation!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/secure-roundup/consent/save",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"secure-roundup",
+								"consent",
+								"save"
+							]
+						},
+						"description": "Sets up a new round-up configuration for a user after they've connected a bank account."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/secure-roundup/dashboard",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"secure-roundup",
+								"dashboard"
+							]
+						},
+						"description": "Retrieves the dashboard information for the authenticated user, including their round-up settings and stats."
+					},
+					"response": []
+				},
+				{
+					"name": "Manually Process Monthly Donation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"roundUpId\": \"635fec4f7c5e5e3c7c5e5e3f\",\n  \"specialMessage\": \"Manual donation for this month.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/secure-roundup/process-monthly-donation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"secure-roundup",
+								"process-monthly-donation"
+							]
+						},
+						"description": "Manually triggers a donation for the current month's accumulated round-ups."
+					},
+					"response": []
+				},
+				{
+					"name": "Resume Paused RoundUp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roundUpId\": \"635fec4f7c5e5e3c7c5e5e3f\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/secure-roundup/resume",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"secure-roundup",
+								"resume"
+							]
+						},
+						"description": "Resumes a round-up configuration that was previously paused."
+					},
+					"response": []
+				},
+				{
+					"name": "Switch Charity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roundUpId\": \"635fec4f7c5e5e3c7c5e5e3f\",\n    \"newOrganizationId\": \"635fec4f7c5e5e3c7c5e5e40\",\n    \"newCauseId\": \"635fec4f7c5e5e3c7c5e5e41\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/secure-roundup/charity/switch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"secure-roundup",
+								"charity",
+								"switch"
+							]
+						},
+						"description": "Switches the target charity for a round-up configuration. Subject to a 30-day rule."
+					},
+					"response": []
+				},
+				{
+					"name": "Revoke Consent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/secure-roundup/consent/revoke/:bankConnectionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"secure-roundup",
+								"consent",
+								"revoke",
+								":bankConnectionId"
+							],
+							"variable": [
+								{
+									"key": "bankConnectionId",
+									"value": "635fec4f7c5e5e3c7c5e5e3c"
+								}
+							]
+						},
+						"description": "Revokes consent, disconnects the bank account via Plaid, and deactivates the round-up."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RoundUp Transactions",
+			"item": [
+				{
+					"name": "Get User Transactions (Filtered & Paginated)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/roundup-transactions?status=processed&page=1&limit=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"roundup-transactions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "processed",
+									"description": "(Optional) Filter by status: pending, processed, processing, donated, failed"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "month",
+									"value": "11",
+									"disabled": true
+								},
+								{
+									"key": "year",
+									"value": "2025",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Retrieves a list of the user's round-up transactions with filtering and pagination."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/roundup-transactions/summary",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"roundup-transactions",
+								"summary"
+							]
+						},
+						"description": "Gets a summary of the user's round-up transactions, including counts by status and monthly totals."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/roundup-transactions/:transactionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"roundup-transactions",
+								":transactionId"
+							],
+							"variable": [
+								{
+									"key": "transactionId",
+									"value": "txn_12345"
+								}
+							]
+						},
+						"description": "Retrieves the details of a single round-up transaction."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Test RoundUp Processing Cron (Manual Trigger)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminAccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"6912dc9fded449bd7a163fe9\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/secure-roundup/test-cron-processing",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"secure-roundup",
+								"test-cron-processing"
+							]
+						},
+						"description": "**ADMIN ONLY**\n\nManually triggers the round-up processing cron job. \n\n- Provide a `userId` to process for a single user.\n- Send an empty body `{}` to process for all active users."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Admin Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/secure-roundup/admin/dashboard",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"secure-roundup",
+								"admin",
+								"dashboard"
+							]
+						},
+						"description": "**ADMIN ONLY**\n\nRetrieves system-wide statistics for the admin dashboard."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ORGANIZATION",
+			"item": [
+				{
+					"name": "Dashboard",
+					"item": [
+						{
+							"name": "get-donation-stats",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/donation/analytics/stats?filter=this_week&donationType=one-time",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"donation",
+										"analytics",
+										"stats"
+									],
+									"query": [
+										{
+											"key": "filter",
+											"value": "this_week"
+										},
+										{
+											"key": "donationType",
+											"value": "one-time"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Org Donation Yearly Treads",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/donation/analytics/yearly-trends?year=2025",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"donation",
+										"analytics",
+										"yearly-trends"
+									],
+									"query": [
+										{
+											"key": "year",
+											"value": "2025"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Donation_Causes Stats",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/donation/organization/:organizationId/cause-stats?year=2025&causeId={{causeId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"donation",
+										"organization",
+										":organizationId",
+										"cause-stats"
+									],
+									"query": [
+										{
+											"key": "year",
+											"value": "2025"
+										},
+										{
+											"key": "causeId",
+											"value": "{{causeId}}"
+										}
+									],
+									"variable": [
+										{
+											"key": "organizationId",
+											"value": "{{organizationId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AUTH",
+					"item": [
+						{
+							"name": "4. Sign In (ORG)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    var jsonData = pm.response.json();",
+											"    if (jsonData.data && jsonData.data.accessToken) {",
+											"        pm.collectionVariables.set('orgToken', jsonData.data.accessToken);",
+											"        console.log('✅ Access Token saved');",
+											"    }",
+											"    if (jsonData.data && jsonData.data.refreshToken) {",
+											"        pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
+											"        console.log('✅ Refresh Token saved');",
+											"    }",
+											"    if (jsonData.data && jsonData.data.user && jsonData.data.user._id) {",
+											"        pm.collectionVariables.set('userId', jsonData.data.user._id);",
+											"        console.log('✅ User ID saved: ' + jsonData.data.user._id);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "\n{\n  \"email\": \"dev.mostafiz04@gmail.com\",\n  \"password\": \"test123@PASS\"\n}\n"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/signin",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"signin"
+									]
+								},
+								"description": "Sign in with email and password. Returns access token (JWT) and refresh token. Automatically saves tokens to collection variables."
+							},
+							"response": [
+								{
+									"name": "Success Response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/auth/signin",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"auth",
+												"signin"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [],
+									"cookie": [],
+									"body": "{\n  \"success\": true,\n  \"message\": \"User signed in successfully!\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGFiYzEyMyIsInJvbGUiOiJDTElFTlQiLCJpYXQiOjE2MzY1NTIyMjIsImV4cCI6MTYzNjU1NTgyMn0.signature\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGFiYzEyMyIsImlhdCI6MTYzNjU1MjIyMiwiZXhwIjoxNjM3MTU3MDIyfQ.signature\",\n    \"user\": {\n      \"_id\": \"64abc123def456\",\n      \"email\": \"user@example.com\",\n      \"role\": \"CLIENT\",\n      \"isProfile\": true,\n      \"isActive\": true\n    }\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "5. Create Profile (Organization)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "organizationImage",
+											"description": "Organization logo (optional)",
+											"type": "file",
+											"src": "/C:/Users/devmo/Downloads/download.jpg"
+										},
+										{
+											"key": "data",
+											"value": "{\n  \"role\": \"ORGANIZATION\",\n  \"name\": \"Fahim ORG\",\n  \"serviceType\": \"Community Service\",\n  \"address\": \"12 Main Road\",\n  \"state\": \"VIC\",\n  \"postalCode\": \"3000\",\n  \"website\": \"https://greencare.org\",\n  \"phoneNumber\": \"+61 430 888 111\",\n  \"boardMemberName\": \"John Doe\",\n  \"boardMemberEmail\": \"john.doe@greencare.org\",\n  \"boardMemberPhoneNumber\": \"+61 490 777 222\",\n  \"tfnOrAbnNumber\": \"12345678901\",\n  \"zakatLicenseHolderNumber\": \"ZAKAT-445566\"\n}\n",
+											"type": "text"
+										},
+										{
+											"key": "drivingLincenseURL",
+											"type": "file",
+											"src": "/C:/Users/devmo/Downloads/dummy-pdf_2.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/create-Profile",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"create-Profile"
+									]
+								},
+								"description": "Create user profile for ORGANIZATION role with complete organization details."
+							},
+							"response": []
+						},
+						{
+							"name": "6. Update Cover Image(ORG)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "profileImage",
+											"type": "file",
+											"src": "/C:/Users/mosta/Downloads/Glass door logo-1.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/update-photo",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"update-photo"
+									]
+								},
+								"description": "Update user profile photo. Accepts various field names: file, image, photo, profileImage, or avatar."
+							},
+							"response": []
+						},
+						{
+							"name": "6. Update Logo Image(ORG)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "logoImage",
+											"type": "file",
+											"src": "/C:/Users/mosta/Downloads/Glass door logo-1.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/organization/logo-image",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization",
+										"logo-image"
+									]
+								},
+								"description": "Update user profile photo. Accepts various field names: file, image, photo, profileImage, or avatar."
+							},
+							"response": []
+						},
+						{
+							"name": "12. Get Profile (ORG)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/auth/profile",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"profile"
+									]
+								},
+								"description": "Fetch authenticated user's complete profile information including role-specific data."
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Org Profile Details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Mostafizur Rahaman ORG\",\r\n  \"aboutUs\": \"We are a trusted and innovative company committed to delivering high-quality services and exceptional customer experience.\",\r\n  \"country\": \"Bangladesh\",\r\n  \"website\": \"https://www.examplecompany.com\",\r\n  \"phoneNumber\": \"+8801700000000\",\r\n  \"state\": \"Dhaka\",\r\n  \"postalCode\": \"1207\",\r\n  \"isProfileVisible\": true,\r\n  \"dateOfEstablishment\": \"2018-05-14\",\r\n  \"address\": \"Moynamati, Joyanalganj -3701\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/organization/profile-details",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization",
+										"profile-details"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Org Access / TFN INFO",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"registeredCharityName\": \"Helping Hands Foundation\",\r\n    \"tfnOrAbnNumber\": \"12345678901\",\r\n    \"zakatLicenseHolderNumber\": \"ZKT-552310\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/organization/tax-details",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization",
+										"tax-details"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CAUSES",
+					"item": [
+						{
+							"name": "get organization rasied causes",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{orgToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/cause/organization/:organizationId/raised-causes?startMonth=2025-01&endMonth=2025-12&page=1&limit=5&sortBy=totalDonationAmount&sortOrder=asc",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cause",
+										"organization",
+										":organizationId",
+										"raised-causes"
+									],
+									"query": [
+										{
+											"key": "startMonth",
+											"value": "2025-01"
+										},
+										{
+											"key": "endMonth",
+											"value": "2025-12"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "5"
+										},
+										{
+											"key": "sortBy",
+											"value": "totalDonationAmount"
+										},
+										{
+											"key": "sortOrder",
+											"value": "asc"
+										}
+									],
+									"variable": [
+										{
+											"key": "organizationId",
+											"value": "{{organizationId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "USER_APP",
+			"item": [
+				{
+					"name": "Get all Org",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/organization/get-all?isProfileVisible=true&dateFrom=2025-01-01&dateTo=2025-12-31&page=1&populateCauses=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"organization",
+								"get-all"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "Dhaka",
+									"disabled": true
+								},
+								{
+									"key": "country",
+									"value": "Australia",
+									"disabled": true
+								},
+								{
+									"key": "state",
+									"value": "Victoria",
+									"disabled": true
+								},
+								{
+									"key": "serviceType",
+									"value": "education",
+									"disabled": true
+								},
+								{
+									"key": "isProfileVisible",
+									"value": "true"
+								},
+								{
+									"key": "dateFrom",
+									"value": "2025-01-01"
+								},
+								{
+									"key": "dateTo",
+									"value": "2025-12-31"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-createdAt,name",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "name,address,website,phoneNumber,serviceType,logoImage",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "suspended",
+									"disabled": true
+								},
+								{
+									"key": "populateCauses",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get all Org",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/organization/get-all?isProfileVisible=true&dateFrom=2025-01-01&dateTo=2025-12-31&page=1&populateCauses=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization",
+										"get-all"
+									],
+									"query": [
+										{
+											"key": "searchTerm",
+											"value": "Dhaka",
+											"disabled": true
+										},
+										{
+											"key": "country",
+											"value": "Australia",
+											"disabled": true
+										},
+										{
+											"key": "state",
+											"value": "Victoria",
+											"disabled": true
+										},
+										{
+											"key": "serviceType",
+											"value": "education",
+											"disabled": true
+										},
+										{
+											"key": "isProfileVisible",
+											"value": "true"
+										},
+										{
+											"key": "dateFrom",
+											"value": "2025-01-01"
+										},
+										{
+											"key": "dateTo",
+											"value": "2025-12-31"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-createdAt,name",
+											"disabled": true
+										},
+										{
+											"key": "fields",
+											"value": "name,address,website,phoneNumber,serviceType,logoImage",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "suspended",
+											"disabled": true
+										},
+										{
+											"key": "populateCauses",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2884"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"b44-PvoNxNGyiTjTYZ51viXqqcQT6pI\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 22 Nov 2025 04:55:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"All organizations retrieved successfully!\",\n    \"meta\": {\n        \"page\": 1,\n        \"limit\": 10,\n        \"total\": 2,\n        \"totalPage\": 1\n    },\n    \"data\": [\n        {\n            \"_id\": \"6920518d1ccf4652ca34317a\",\n            \"auth\": {\n                \"_id\": \"69204dc98ac233b596779a37\",\n                \"email\": \"dev.mostafiz04@gmail.com\",\n                \"role\": \"ORGANIZATION\",\n                \"isActive\": true,\n                \"status\": \"active\"\n            },\n            \"name\": \"Mostafizur Rahaman ORG\",\n            \"serviceType\": \"Community Service\",\n            \"address\": \"Moynamati, Joyanalganj -3701\",\n            \"state\": \"Dhaka\",\n            \"postalCode\": \"1207\",\n            \"website\": \"https://www.examplecompany.com\",\n            \"phoneNumber\": \"+8801700000000\",\n            \"coverImage\": null,\n            \"tfnOrAbnNumber\": \"12345678901\",\n            \"zakatLicenseHolderNumber\": \"ZKT-552310\",\n            \"boardMemberName\": \"John Doe\",\n            \"boardMemberEmail\": \"john.doe@greencare.org\",\n            \"boardMemberPhoneNumber\": \"+61 490 777 222\",\n            \"drivingLicenseURL\": null,\n            \"country\": \"Bangladesh\",\n            \"aboutUs\": \"We are a trusted and innovative company committed to delivering high-quality services and exceptional customer experience.\",\n            \"dateOfEstablishment\": \"2018-05-14T00:00:00.000Z\",\n            \"registeredCharityName\": \"Helping Hands Foundation\",\n            \"isProfileVisible\": true,\n            \"createdAt\": \"2025-11-21T11:48:29.769Z\",\n            \"updatedAt\": \"2025-11-21T12:03:02.753Z\",\n            \"causes\": []\n        },\n        {\n            \"_id\": \"69130150657488a9ad8460e8\",\n            \"auth\": {\n                \"_id\": \"6912fc90ded449bd7a1640b5\",\n                \"email\": \"narole2449@fantastu.com\",\n                \"role\": \"ORGANIZATION\",\n                \"isActive\": true\n            },\n            \"name\": \"Mostafizur Rahaman ORG\",\n            \"serviceType\": \"Community Service\",\n            \"address\": \"Moynamati, Joyanalganj -3701\",\n            \"state\": \"Dhaka\",\n            \"postalCode\": \"1207\",\n            \"website\": \"https://www.examplecompany.com\",\n            \"phoneNumber\": \"+8801700000000\",\n            \"coverImage\": \"public/images/glass-door-logo-1-1763739264952.png\",\n            \"tfnOrAbnNumber\": \"12345678901\",\n            \"zakatLicenseHolderNumber\": \"ZKT-552310\",\n            \"boardMemberName\": \"John Doe\",\n            \"boardMemberEmail\": \"john.doe@greencare.org\",\n            \"boardMemberPhoneNumber\": \"+61 490 777 222\",\n            \"drivingLicenseURL\": \"public/documents/dummy-pdf_2-1762853200905.pdf\",\n            \"createdAt\": \"2025-11-11T09:26:40.958Z\",\n            \"updatedAt\": \"2025-11-21T15:41:33.358Z\",\n            \"stripeConnectAccountId\": \"acct_1SRmd8GWHts5wdPl\",\n            \"registeredCharityName\": \"Helping Hands Foundation\",\n            \"aboutUs\": \"We are a trusted and innovative company committed to delivering high-quality services and exceptional customer experience.\",\n            \"country\": \"Bangladesh\",\n            \"dateOfEstablishment\": \"2018-05-14T00:00:00.000Z\",\n            \"isProfileVisible\": true,\n            \"logoImage\": \"public/images/glass-door-logo-1-1763739693271.png\",\n            \"causes\": [\n                {\n                    \"_id\": \"691fa5a60dba103068187fdb\",\n                    \"name\": \"backpacks and books\",\n                    \"description\": \"Providing quality education to underprivileged children around the world\",\n                    \"category\": \"education\",\n                    \"status\": \"verified\",\n                    \"organization\": \"69130150657488a9ad8460e8\",\n                    \"createdAt\": \"2025-11-20T23:35:02.241Z\",\n                    \"updatedAt\": \"2025-11-20T23:35:02.241Z\"\n                },\n                {\n                    \"_id\": \"691fafc80a2c30ccc3298318\",\n                    \"name\": \"Free Education\",\n                    \"description\": \"Give free education to road side people\",\n                    \"category\": \"education\",\n                    \"status\": \"verified\",\n                    \"organization\": \"69130150657488a9ad8460e8\",\n                    \"createdAt\": \"2025-11-21T00:18:16.003Z\",\n                    \"updatedAt\": \"2025-11-21T00:19:09.593Z\"\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5001/api/v1"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "organizationId",
+			"value": ""
+		},
+		{
+			"key": "causeId",
+			"value": ""
+		},
+		{
+			"key": "donationId",
+			"value": ""
+		},
+		{
+			"key": "paymentMethodId",
+			"value": ""
+		},
+		{
+			"key": "scheduledDonationId",
+			"value": ""
+		},
+		{
+			"key": "adminAccessToken",
+			"value": ""
+		},
+		{
+			"key": "bankConnectionId",
+			"value": ""
+		},
+		{
+			"key": "orgToken",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "forgotPasswordToken",
+			"value": ""
+		}
+	]
+}

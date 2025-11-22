@@ -13,4 +13,10 @@ class ApiUrl {
   static const verifyForgotPasswordOtp =
       '$baseUrl/auth/verify-forgot-password-otp';
   static const forgotPassword = '$baseUrl/auth/forgot-password';
+  static const resendSignupOtp = '$baseUrl/auth/send-signup-otp-again';
+  static const resendForgotPasswordOtp =
+      '$baseUrl/auth/send-forgot-password-otp-again';
+  static const resetPassword = '$baseUrl/auth/reset-password';
+  // Assuming get profile endpoint (client) – adjust if backend differs
+  static const getProfile = '$baseUrl/auth/get-profile';
 }

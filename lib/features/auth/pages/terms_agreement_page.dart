@@ -38,45 +38,48 @@ class _TermsAgreementPageState extends State<TermsAgreementPage> {
 
   Future<void> _handleAgreeAndContinue() async {
     if (!signupController.agreeToTerms.value) {
-      Get.snackbar(
-        'Error',
-        'Please agree to the terms and conditions',
-        backgroundColor: Colors.red,
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please agree to the terms and conditions'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       return;
     }
 
     // Create profile
     final success = await profileController.createProfile();
 
-    if (success && mounted) {
-      Get.snackbar(
-        'Success',
-        'Profile created successfully!',
-        backgroundColor: AppColors.primaryColor,
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.TOP,
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Profile created successfully!'),
+          backgroundColor: AppColors.primaryColor,
+        ),
       );
 
-      // Clean up controllers
-      if (Get.isRegistered<SignupController>()) {
-        Get.delete<SignupController>();
-      }
-      if (Get.isRegistered<ProfileController>()) {
-        Get.delete<ProfileController>();
-      }
+      // Navigate to login first
+      context.pushReplacementNamed(RoutePath.login);
 
-      // Navigate to login
-      context.pushNamed(RoutePath.login);
-    } else if (mounted && profileController.errorMessage.value.isNotEmpty) {
-      Get.snackbar(
-        'Error',
-        profileController.errorMessage.value,
-        backgroundColor: Colors.red,
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.TOP,
+      // Clean up controllers after navigation completes
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (Get.isRegistered<SignupController>()) {
+          Get.delete<SignupController>();
+        }
+        if (Get.isRegistered<ProfileController>()) {
+          Get.delete<ProfileController>();
+        }
+      });
+    } else if (profileController.errorMessage.value.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(profileController.errorMessage.value),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }

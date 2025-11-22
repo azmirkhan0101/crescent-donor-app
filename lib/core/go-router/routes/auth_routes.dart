@@ -95,15 +95,16 @@ class AuthRoutes extends AppRouteConfig {
         if (state.extra == null) {
           throw Exception('Email is required to verify OTP');
         }
+        final extras = state.extra as Map<String, dynamic>;
+        final email = extras['email'] as String;
+        final isForSignup = (extras['isForSignup'] as bool?) ?? false;
+        final token = extras['token'] as String?; // may be null for signup flow
 
-        final email = (state.extra as Map<String, dynamic>)['email'] as String;
-        final isForSignup =
-            state.extra != null && state.extra is Map<String, dynamic>
-            ? (state.extra as Map<String, dynamic>)['isForSignup'] as bool? ??
-                  false
-            : false;
-
-        return VerifyOtpPage(email: email, isForSignup: isForSignup);
+        return VerifyOtpPage(
+          email: email,
+          isForSignup: isForSignup,
+          token: token,
+        );
       },
       // Part of password reset flow
     ),
@@ -113,7 +114,15 @@ class AuthRoutes extends AppRouteConfig {
     GoRoute(
       name: RoutePath.resetPassword,
       path: RoutePath.resetPassword.addBasePath,
-      builder: (context, state) => const ResetPasswordPage(),
+      builder: (context, state) {
+        if (state.extra == null) {
+          throw Exception('Reset password token is required');
+        }
+        final extras = state.extra as Map<String, dynamic>;
+        final resetPasswordToken = extras['resetPasswordToken'] as String;
+
+        return ResetPasswordPage(resetPasswordToken: resetPasswordToken);
+      },
       // Part of password reset flow
     ),
   ];

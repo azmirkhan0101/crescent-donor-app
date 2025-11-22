@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_loader.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 /// Example showing how to integrate CustomLoader with LoginController
 class LoginPageWithCustomLoader extends StatelessWidget {
@@ -80,7 +80,7 @@ class LoginPageWithCustomLoader extends StatelessWidget {
       () => LoadingButton(
         onPressed: loginController.isLoading.value
             ? null
-            : () => _handleLogin(),
+            : () async => await loginController.login(),
         isLoading: loginController.isLoading.value,
         loaderColor: AppColors.white,
         backgroundColor: AppColors.primaryColor,
@@ -95,12 +95,6 @@ class LoginPageWithCustomLoader extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _handleLogin() async {
-    if (loginController.formKey.currentState?.validate() ?? false) {
-      await loginController.login();
-    }
   }
 }
 
@@ -154,42 +148,39 @@ class LoginPageWithMultipleLoaders extends StatelessWidget {
   }
 
   Widget _buildLoginForm() {
-    return Form(
-      key: loginController.formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            controller: loginController.emailController,
-            validator: loginController.validateEmail,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              prefixIcon: Icon(Icons.email_outlined),
-            ),
+    return Column(
+      children: [
+        TextFormField(
+          controller: loginController.emailController,
+          validator: loginController.validateEmail,
+          decoration: const InputDecoration(
+            labelText: 'Email',
+            prefixIcon: Icon(Icons.email_outlined),
           ),
+        ),
 
-          SizedBox(height: 16.rh),
+        SizedBox(height: 16.rh),
 
-          Obx(
-            () => TextFormField(
-              controller: loginController.passwordController,
-              validator: loginController.validatePassword,
-              obscureText: !loginController.isPasswordVisible.value,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                prefixIcon: const Icon(Icons.lock_outline),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    loginController.isPasswordVisible.value
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                  ),
-                  onPressed: loginController.togglePasswordVisibility,
+        Obx(
+          () => TextFormField(
+            controller: loginController.passwordController,
+            validator: loginController.validatePassword,
+            obscureText: !loginController.isPasswordVisible.value,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              prefixIcon: const Icon(Icons.lock_outline),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  loginController.isPasswordVisible.value
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
                 ),
+                onPressed: loginController.togglePasswordVisibility,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -225,7 +216,7 @@ class LoginPageWithMultipleLoaders extends StatelessWidget {
       return SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: _handleLogin,
+          onPressed: () async => await loginController.login(),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primaryColor,
             padding: EdgeInsets.symmetric(vertical: 16.rh),
@@ -269,11 +260,11 @@ class LoginPageWithMultipleLoaders extends StatelessWidget {
     });
   }
 
-  void _handleLogin() async {
-    if (loginController.formKey.currentState?.validate() ?? false) {
-      await loginController.login();
-    }
-  }
+  // void _handleLogin() async {
+  //   if (loginController.formKey.currentState?.validate() ?? false) {
+  //     await loginController.login();
+  //   }
+  // }
 }
 
 /// Utility class for different loading scenarios

@@ -1,6 +1,7 @@
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/features/auth/models/signin_request_model.dart';
 import 'package:cresent_charge_user_app/features/auth/models/signin_response_model.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
@@ -9,15 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  // GlobalKey for the form
-  final formKey = GlobalKey<FormState>();
-
   // TextEditingControllers
   final emailController = TextEditingController(
-    text: kDebugMode ? 'mostafizurrahaman0401@gmail.com' : '',
+    // text: kDebugMode ? 'mostafizurrahaman0401@gmail.com' : '',
   );
   final passwordController = TextEditingController(
-    text: kDebugMode ? 'test123@PASS' : '',
+    // text: kDebugMode ? 'test123@PASS' : '',
   );
 
   // Observable variables
@@ -136,11 +134,6 @@ class LoginController extends GetxController {
     try {
       clearErrors();
 
-      // Validate form
-      if (!formKey.currentState!.validate()) {
-        return false;
-      }
-
       isLoading.value = true;
 
       // Create request model
@@ -195,6 +188,12 @@ class LoginController extends GetxController {
             await AppStorageService.saveLastLogin(DateTime.now());
 
             debugPrint('✅ Login successful for: ${emailController.text}');
+
+            // Fetch profile after successful login
+            final profileCtrl = Get.isRegistered<GetProfileController>()
+                ? Get.find<GetProfileController>()
+                : Get.put(GetProfileController());
+            profileCtrl.fetchProfile();
             return true;
           } else {
             errorMessage.value = response.message;

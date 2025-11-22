@@ -2,23 +2,19 @@ import 'package:cresent_charge_user_app/features/auth/models/signup_request_mode
 import 'package:cresent_charge_user_app/features/auth/models/signup_response_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignupController extends GetxController {
-  // GlobalKey for the form
-  final formKey = GlobalKey<FormState>();
-
   // TextEditingControllers
   final emailController = TextEditingController(
-    text: kDebugMode ? 'crescent@yopmail.com' : '',
+    // text: kDebugMode ? 'crescent@yopmail.com' : '',
   );
   final passwordController = TextEditingController(
-    text: kDebugMode ? 'Test123@Pass' : '',
+    // text: kDebugMode ? 'Abc@1234' : '',
   );
   final confirmPasswordController = TextEditingController(
-    text: kDebugMode ? 'Test123@Pass' : '',
+    // text: kDebugMode ? 'Abc@1234' : '',
   );
 
   // Observable variables
@@ -61,25 +57,16 @@ class SignupController extends GetxController {
     confirmPasswordError.value = '';
   }
 
-  /// Validate email field
-  String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email is required';
-    }
-    if (!GetUtils.isEmail(value)) {
-      return 'Please enter a valid email';
-    }
+  /// Email validation
+  String? _validateEmailInternal(String value) {
+    if (value.isEmpty) return 'Email is required';
+    if (!GetUtils.isEmail(value)) return 'Please enter a valid email';
     return null;
   }
 
-  /// Validate password field
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Password is required';
-    }
-    if (value.length < 8) {
-      return 'Password must be at least 8 characters';
-    }
+  /// Password validation
+  String? _validatePasswordInternal(String value) {
+    if (value.isEmpty) return 'Password is required';
     if (!value.contains(RegExp(r'[A-Z]'))) {
       return 'Password must contain at least one uppercase letter';
     }
@@ -92,18 +79,39 @@ class SignupController extends GetxController {
     if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
       return 'Password must contain at least one special character';
     }
+    if (value.length < 8) return 'Password must be at least 8 characters';
     return null;
   }
 
-  /// Validate confirm password field
-  String? validateConfirmPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
-    }
-    if (value != passwordController.text) {
-      return 'Passwords do not match';
-    }
+  /// Confirm password validation
+  String? _validateConfirmPasswordInternal(String value) {
+    if (value.isEmpty) return 'Please confirm your password';
+    if (value != passwordController.text) return 'Passwords do not match';
     return null;
+  }
+
+  /// Public real-time validation setters
+  void updateEmail(String value) {
+    emailError.value = _validateEmailInternal(value) ?? '';
+  }
+
+  void updatePassword(String value) {
+    passwordError.value = _validatePasswordInternal(value) ?? '';
+    calculatePasswordStrength(value);
+  }
+
+  void updateConfirmPassword(String value) {
+    confirmPasswordError.value = _validateConfirmPasswordInternal(value) ?? '';
+  }
+
+  /// Run all validations before submit
+  bool validateAll() {
+    updateEmail(emailController.text.trim());
+    updatePassword(passwordController.text);
+    updateConfirmPassword(confirmPasswordController.text);
+    return emailError.value.isEmpty &&
+        passwordError.value.isEmpty &&
+        confirmPasswordError.value.isEmpty;
   }
 
   /// Calculate password strength
@@ -118,21 +126,11 @@ class SignupController extends GetxController {
     passwordStrength.value = strength;
   }
 
-  /// Perform signup with validation
+  /// Perform signup with validation (manual, no Form())
   Future<bool> signup() async {
     try {
       clearErrors();
-
-      // Validate form
-      if (!formKey.currentState!.validate()) {
-        return false;
-      }
-
-      // Check if passwords match
-      if (passwordController.text != confirmPasswordController.text) {
-        confirmPasswordError.value = 'Passwords do not match';
-        return false;
-      }
+      if (!validateAll()) return false;
 
       isLoading.value = true;
 
@@ -185,13 +183,6 @@ class SignupController extends GetxController {
     }
   }
 
-  /// Check if form is valid for enabling signup button
-  bool get isFormValid {
-    return emailController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty &&
-        confirmPasswordController.text.isNotEmpty &&
-        GetUtils.isEmail(emailController.text) &&
-        passwordController.text.length >= 6 &&
-        passwordController.text == confirmPasswordController.text;
-  }
+  /// Simple validity check for enabling signup button (optional)
+  bool get isFormValid => validateAll();
 }

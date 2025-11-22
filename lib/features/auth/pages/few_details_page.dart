@@ -57,10 +57,10 @@ class _FewDetailsPageState extends State<FewDetailsPage> {
                   CustomFilledButton(
                     title: AppStrings.continueText,
                     onTap: () {
-                      if (controller.fewDetailsFormKey.currentState!
-                          .validate()) {
-                        context.pushNamed(RoutePath.uploadProfilePicture);
-                      }
+                      // if (controller.fewDetailsFormKey.currentState!
+                      // .validate()) {
+                      context.pushNamed(RoutePath.uploadProfilePicture);
+                      // }
                     },
                   ),
                   16.heightWidth,

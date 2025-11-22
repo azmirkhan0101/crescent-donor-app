@@ -27,104 +27,101 @@ class _AddCardFormFieldsState extends State<AddCardFormFields> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: controller.addCardFormKey,
-      child: Column(
-        spacing: 16.rh,
-        children: [
-          // Full Name field
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppStrings.fullName
-                  .text(AppTextStyles.baseStyle())
-                  .color("#000C0B".hexColor),
+    return Column(
+      // spacing: 16.rh, // If needed, add SizedBox for spacing between children
+      children: [
+        // Full Name field
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppStrings.fullName
+                .text(AppTextStyles.baseStyle())
+                .color("#000C0B".hexColor),
 
-              8.rh.heightWidth,
-              CustomInputField(
-                controller: controller.nameInCardController,
-                hintText: AppStrings.enterName,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.text,
-                isPrefixIcon: false,
-                validator: controller.validateName,
+            8.rh.heightWidth,
+            CustomInputField(
+              controller: controller.nameInCardController,
+              hintText: AppStrings.enterName,
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.text,
+              isPrefixIcon: false,
+              validator: controller.validateName,
+            ),
+          ],
+        ),
+
+        // Card number field
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppStrings.cardNumber
+                .text(AppTextStyles.baseStyle())
+                .color("#000C0B".hexColor),
+
+            8.rh.heightWidth,
+
+            CustomInputField(
+              controller: controller.cardNumberController,
+              hintText: "**** **** **** ****",
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              isPrefixIcon: false,
+              validator: controller.validateCardNumber,
+            ),
+          ],
+        ),
+
+        // Expiry date and CVC fields
+        Row(
+          children: [
+            // Expiry date field
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppStrings.expiryDate
+                      .text(AppTextStyles.baseStyle())
+                      .color("#000C0B".hexColor),
+
+                  8.rh.heightWidth,
+                  CustomInputField(
+                    controller: controller.cardExpiryDateController,
+                    hintText: "MM/YY",
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.text,
+                    isPrefixIcon: false,
+                    validator: controller.validateExpiryDate,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
 
-          // Card number field
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppStrings.cardNumber
-                  .text(AppTextStyles.baseStyle())
-                  .color("#000C0B".hexColor),
+            16.rw.heightWidth,
 
-              8.rh.heightWidth,
+            // CVC field
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppStrings.cvc
+                      .text(AppTextStyles.baseStyle())
+                      .color("#000C0B".hexColor),
 
-              CustomInputField(
-                controller: controller.cardNumberController,
-                hintText: "**** **** **** ****",
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                isPrefixIcon: false,
-                validator: controller.validateCardNumber,
+                  8.rh.heightWidth,
+                  CustomInputField(
+                    controller: controller.cardCVCController,
+                    hintText: "***",
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.number,
+                    isPrefixIcon: false,
+                    validator: controller.validateCVC,
+                  ),
+                ],
               ),
-            ],
-          ),
-
-          // Expiry date and CVC fields
-          Row(
-            children: [
-              // Expiry date field
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppStrings.expiryDate
-                        .text(AppTextStyles.baseStyle())
-                        .color("#000C0B".hexColor),
-
-                    8.rh.heightWidth,
-                    CustomInputField(
-                      controller: controller.cardExpiryDateController,
-                      hintText: "MM/YY",
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.text,
-                      isPrefixIcon: false,
-                      validator: controller.validateExpiryDate,
-                    ),
-                  ],
-                ),
-              ),
-
-              16.rw.heightWidth,
-
-              // CVC field
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppStrings.cvc
-                        .text(AppTextStyles.baseStyle())
-                        .color("#000C0B".hexColor),
-
-                    8.rh.heightWidth,
-                    CustomInputField(
-                      controller: controller.cardCVCController,
-                      hintText: "***",
-                      textInputAction: TextInputAction.done,
-                      keyboardType: TextInputType.number,
-                      isPrefixIcon: false,
-                      validator: controller.validateCVC,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
