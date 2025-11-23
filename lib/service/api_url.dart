@@ -1,24 +1,30 @@
 class ApiUrl {
-  static const baseUrl = "http://10.10.20.42:5000/api/v1"; // LOCAL
-  // static const baseUrl = "http://localhost:5000/api/v1"; // LOCAL
+  static const String baseUrl = "http://10.10.20.42:5000/api/v1"; // LOCAL
+  // static const String baseUrl = "http://localhost:5000/api/v1"; // LOCAL
 
-  static const imageBaseUrl = 'http://10.10.20.42:5000/';
+  static const String imageBaseUrl = 'http://10.10.20.42:5000/';
 
   static socketUrl({String userID = ""}) => '$baseUrl?id=$userID';
 
   /// ======= Auth =======
-  static const login = '$baseUrl/auth/signin';
-  static const signup = '$baseUrl/auth/signup';
-  static const createProfile = '$baseUrl/auth/create-Profile';
-  static const verifySignupOtp = '$baseUrl/auth/verify-signup-otp';
-  static const verifyForgotPasswordOtp =
+  static const String login = '$baseUrl/auth/signin';
+  static const String signup = '$baseUrl/auth/signup';
+  static const String createProfile = '$baseUrl/auth/create-Profile';
+  static const String verifySignupOtp = '$baseUrl/auth/verify-signup-otp';
+  static const String verifyForgotPasswordOtp =
       '$baseUrl/auth/verify-forgot-password-otp';
-  static const forgotPassword = '$baseUrl/auth/forgot-password';
-  static const resendSignupOtp = '$baseUrl/auth/send-signup-otp-again';
-  static const resendForgotPasswordOtp =
+  static const String forgotPassword = '$baseUrl/auth/forgot-password';
+  static const String resendSignupOtp = '$baseUrl/auth/send-signup-otp-again';
+  static const String resendForgotPasswordOtp =
       '$baseUrl/auth/send-forgot-password-otp-again';
-  static const resetPassword = '$baseUrl/auth/reset-password';
+  static const String resetPassword = '$baseUrl/auth/reset-password';
   // Assuming get profile endpoint (client) – adjust if backend differs
-  static const getProfile = '$baseUrl/auth/profile';
-  static const changePassword = '$baseUrl/auth/change-password';
+  static const String getProfile = '$baseUrl/auth/profile';
+  static const String changePassword = '$baseUrl/auth/change-password';
+
+  /// ======= charities =======
+  static const String getAllCauses = '$baseUrl/cause';
+  static const String getAllOrganizations = '$baseUrl/organization/get-all';
+  static String getOrganizationDetails(String organizationId) =>
+      '$baseUrl/organization/$organizationId';
 }

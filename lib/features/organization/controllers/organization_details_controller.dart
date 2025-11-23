@@ -1,12 +1,17 @@
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/features/organization/models/organization_details_model.dart';
 import 'package:cresent_charge_user_app/features/organization/models/organization_model.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
+import 'package:cresent_charge_user_app/service/api_url.dart';
+import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:get/get.dart';
 
 class OrganizationDetailsController extends GetxController {
   final RxBool isLoading = false.obs;
-  final Rx<OrganizationModel?> organization = Rx<OrganizationModel?>(null);
+  final Rx<OrganizationDetailsModel?> organizationDetails =
+      Rx<OrganizationDetailsModel?>(null);
   final RxString error = ''.obs;
+  final NetworkHelper _networkHelper = Get.find<NetworkHelper>();
+  String? _organizationId;
 
   final causes = ['Youth', 'Utilities', 'Emam'];
   final donationAmounts = [
@@ -24,7 +29,58 @@ class OrganizationDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadOrganizationData();
+  }
+
+  /// Set organization ID and fetch data
+  void setOrganizationId(String organizationId) {
+    _organizationId = organizationId;
+    fetchOrganizationDetails();
+  }
+
+  /// Fetch organization details from API
+  Future<void> fetchOrganizationDetails() async {
+    if (_organizationId == null || _organizationId!.isEmpty) {
+      error.value = 'Organization ID is required';
+      return;
+    }
+
+    isLoading.value = true;
+    error.value = '';
+
+    try {
+      final result = await _networkHelper.request(
+        'GET',
+        ApiUrl.getOrganizationDetails(_organizationId!),
+        parser: (data) => data,
+      );
+
+      result.fold(
+        (failure) {
+          error.value =
+              failure.message ?? 'Failed to load organization details';
+        },
+        (response) {
+          if (response is Map<String, dynamic> &&
+              response['success'] == true &&
+              response['data'] != null) {
+            organizationDetails.value = OrganizationDetailsModel.fromJson(
+              response['data'],
+            );
+            Get.log(
+              'Organization details loaded: id=${organizationDetails.value?.id} name=${organizationDetails.value?.name}',
+            );
+            // Force a rebuild for any GetBuilder listeners
+            update();
+          } else {
+            error.value = 'Invalid response from server';
+          }
+        },
+      );
+    } catch (e) {
+      error.value = 'Failed to load organization details: $e';
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   /// change selected donation type
@@ -37,54 +93,42 @@ class OrganizationDetailsController extends GetxController {
     selectedCause.value = cause;
   }
 
-  /// Load organization data - this could be from API in the future
-  void loadOrganizationData([String? organizationId]) {
-    isLoading.value = true;
-    error.value = '';
-
-    try {
-      // For now, using mock data. In real app, this would fetch from API
-      organization.value = _getMockOrganizationData();
-    } catch (e) {
-      error.value = 'Failed to load organization data';
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
   /// Get organization name safely
   String getOrganizationName() {
-    return organization.value?.name ?? 'Organization';
+    return organizationDetails.value?.name ?? 'Organization';
   }
 
   /// Check if organization is verified
   bool isOrganizationVerified() {
-    return organization.value?.verified ?? false;
+    return true; // All organizations are verified by default
   }
 
   /// Get organization location
   String getOrganizationLocation() {
-    return organization.value?.location ?? '';
+    final org = organizationDetails.value;
+    if (org == null) return '';
+    return '${org.address}, ${org.state} ${org.postalCode}';
   }
 
   /// Get organization description
   String getOrganizationDescription() {
-    return organization.value?.description ?? '';
+    return organizationDetails.value?.aboutUs ?? '';
   }
 
   /// Get organization mission/overview
   String getOrganizationMission() {
-    return organization.value?.mission ?? '';
+    return organizationDetails.value?.aboutUs ?? '';
   }
 
   /// Get organization impact statement
   String getOrganizationImpact() {
-    return organization.value?.impact ?? '';
+    return organizationDetails.value?.aboutUs ?? '';
   }
 
   /// Get organization causes
   List<CauseModel> getOrganizationCauses() {
-    return organization.value?.causes ?? [];
+    // Return empty list for now, can be populated if needed
+    return [];
   }
 
   /// Handle donation button tap
@@ -96,52 +140,6 @@ class OrganizationDetailsController extends GetxController {
 
   /// Refresh organization data
   Future<void> refreshData() async {
-    loadOrganizationData();
-  }
-
-  /// Mock data for development - replace with API call in production
-  OrganizationModel _getMockOrganizationData() {
-    return OrganizationModel(
-      id: '1',
-      name: 'Hope for Learning Foundation',
-      description: 'Turning hope into opportunity through education.',
-      location: 'South Asia',
-      category: 'Education',
-      logoUrl: Assets.home.donateCauseProfile2.path,
-      bannerUrl: Assets.home.donateCauseBanner1.path,
-      verified: true,
-      rating: 4.8,
-      totalDonations: '325,000',
-      activeCampaigns: 5,
-      beneficiaries: '3,25,000 students',
-      establishedYear: 2021,
-      website: 'https://hopeforlearning.org',
-      email: 'contact@hopeforlearning.org',
-      phone: '+1234567890',
-      mission:
-          'The Hope For Learning Foundation is committed to giving every child—no matter where they\'re from—a fair shot at success. By bridging education gaps, they empower underserved communities globally with access, tools, and opportunity.',
-      impact: 'Supported over 3,25,000 students since 2021',
-      causes: [
-        CauseModel(
-          emoji: '📘',
-          title: 'Education Support',
-          description:
-              'Tutoring, mentorship, and youth development programs to help students thrive academically and emotionally.',
-        ),
-        CauseModel(
-          emoji: '🏫',
-          title: 'School Infrastructure',
-          description:
-              'Building and upgrading safe, inclusive learning environments equipped for modern education.',
-        ),
-        CauseModel(
-          emoji: '💡',
-          title: 'Essential Utilities',
-          description:
-              'Keeping schools running with electricity, water, and basic necessities—so learning never stops.',
-        ),
-      ],
-      recentUpdates: [],
-    );
+    await fetchOrganizationDetails();
   }
 }
