@@ -2,9 +2,9 @@ import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/change_password_controller.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -20,6 +20,7 @@ class ChangePasswordPage extends StatelessWidget {
     final controller = Get.put(ChangePasswordController());
     return Scaffold(
       backgroundColor: AppColors.lightPageBackground,
+      resizeToAvoidBottomInset: true,
       appBar: CustomAppBar(
         title: "Change Password",
         backgroundColor: AppColors.lightPageBackground,
@@ -27,8 +28,11 @@ class ChangePasswordPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Form(
+            // Scrollable form content
+            Expanded(
               child: SingleChildScrollView(
+                // <-- This makes the content scrollable
+                padding: EdgeInsets.symmetric(horizontal: 16.rw),
                 child: Column(
                   spacing: 16.rh,
                   children: [
@@ -72,24 +76,37 @@ class ChangePasswordPage extends StatelessWidget {
                     ),
 
                     // Password field
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        "New Password"
-                            .text(AppTextStyles.f14W400())
-                            .fontWeight(FontWeight.w500)
-                            .color("#000C0B".hexColor),
+                    Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          "New Password"
+                              .text(AppTextStyles.f14W400())
+                              .fontWeight(FontWeight.w500)
+                              .color("#000C0B".hexColor),
 
-                        8.rh.heightWidth,
+                          8.rh.heightWidth,
 
-                        CustomInputField(
-                          controller: controller.newPasswordController,
-                          hintText: "***********",
-                          prefixIcon: Assets.onboarding.lock.svg(),
-                          obscureText: !controller.isNewPasswordVisible.value,
-                          textInputAction: TextInputAction.next,
-                        ),
-                      ],
+                          CustomInputField(
+                            controller: controller.newPasswordController,
+                            hintText: "***********",
+                            prefixIcon: Assets.onboarding.lock.svg(),
+                            obscureText: !controller.isNewPasswordVisible.value,
+                            textInputAction: TextInputAction.next,
+                          ),
+                          if (controller.newPasswordError.value.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.only(top: 6.rh),
+                              child: Text(
+                                controller.newPasswordError.value,
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12.rfs,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
 
                     // Strength indicator
@@ -113,25 +130,38 @@ class ChangePasswordPage extends StatelessWidget {
                     }),
 
                     // Confirm Password field
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        "Confirm Password"
-                            .text(AppTextStyles.f14W400())
-                            .fontWeight(FontWeight.w500)
-                            .color("#000C0B".hexColor),
+                    Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          "Confirm Password"
+                              .text(AppTextStyles.f14W400())
+                              .fontWeight(FontWeight.w500)
+                              .color("#000C0B".hexColor),
 
-                        8.rh.heightWidth,
+                          8.rh.heightWidth,
 
-                        CustomInputField(
-                          // controller: signupController.confirmPasswordController,
-                          hintText: "***********",
-                          prefixIcon: Assets.onboarding.lock.svg(),
-                          // obscureText:
-                          // !signupController.isConfirmPasswordVisible.value,
-                          textInputAction: TextInputAction.done,
-                        ),
-                      ],
+                          CustomInputField(
+                            controller: controller.confirmPasswordController,
+                            hintText: "***********",
+                            prefixIcon: Assets.onboarding.lock.svg(),
+                            obscureText:
+                                !controller.isConfirmPasswordVisible.value,
+                            textInputAction: TextInputAction.done,
+                          ),
+                          if (controller.confirmPasswordError.value.isNotEmpty)
+                            Padding(
+                              padding: EdgeInsets.only(top: 6.rh),
+                              child: Text(
+                                controller.confirmPasswordError.value,
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12.rfs,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
 
                     // Password requirements list
@@ -202,26 +232,74 @@ class ChangePasswordPage extends StatelessWidget {
               ),
             ),
 
-            Spacer(),
+            // Button at the bottom - will be pushed up by keyboard
             Column(
-              children: [
-                CustomFilledButton(
-                  onTap: () {
-                    GoRouter.of(context).pop();
-                  },
-                  title: "Save",
-                ),
-                // 16.heightWidth,
-                TextButton(
-                  onPressed: () {
-                    GoRouter.of(context).pop();
-                  },
-                  child: Text("Cancel"),
-                ),
-              ],
-            ).paddingX(40.rw),
+                  children: [
+                    Obx(
+                      () => CustomFilledButton(
+                        onTap: controller.isLoading.value
+                            ? null
+                            : () async {
+                                final messenger = ScaffoldMessenger.of(context);
+
+                                final ok = await controller.changePassword();
+                                if (ok) {
+                                  messenger.showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'Password changed successfully',
+                                      ),
+                                      backgroundColor: AppColors.primaryColor,
+                                    ),
+                                  );
+                                  if (!context.mounted) return;
+                                  GoRouter.of(context).pop();
+                                } else if (controller
+                                    .errorMessage
+                                    .value
+                                    .isNotEmpty) {
+                                  messenger.showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        controller.errorMessage.value,
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
+                        title: controller.isLoading.value
+                            ? 'Please wait...'
+                            : "Save",
+                      ),
+                    ),
+                    Obx(
+                      () => controller.errorMessage.value.isNotEmpty
+                          ? Padding(
+                              padding: EdgeInsets.only(top: 12.rh),
+                              child: Text(
+                                controller.errorMessage.value,
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12.rfs,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                    // 16.heightWidth,
+                    TextButton(
+                      onPressed: () {
+                        GoRouter.of(context).pop();
+                      },
+                      child: Text("Cancel"),
+                    ),
+                  ],
+                )
+                .paddingX(40.rw)
+                .paddingB(16.rh), // Add bottom padding for better spacing
           ],
-        ).paddingX(16.rw),
+        ),
       ),
     );
   }

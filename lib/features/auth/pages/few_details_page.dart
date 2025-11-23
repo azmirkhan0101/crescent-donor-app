@@ -5,7 +5,6 @@ import 'package:cresent_charge_user_app/features/auth/controllers/profile_contro
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/few_details_form_fields.dart';
-import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
@@ -63,10 +62,10 @@ class _FewDetailsPageState extends State<FewDetailsPage> {
                       // }
                     },
                   ),
-                  16.heightWidth,
-                  HaveAccountWidget(haveAccount: true),
 
-                  24.heightWidth,
+                  // 16.heightWidth,
+                  // HaveAccountWidget(haveAccount: true),
+                  // 24.heightWidth,
                 ],
               ).paddingXY(X: 40.rw),
             ],

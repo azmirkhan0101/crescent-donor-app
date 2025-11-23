@@ -2,12 +2,12 @@ import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_load
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/forgot_password_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/custom_input_field.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
-import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -29,13 +29,7 @@ class ForgotPasswordPage extends StatelessWidget {
       if (!controller.validateAll()) return; // field error shown via Obx
       final success = await controller.sendForgotPasswordRequest();
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('OTP sent to your email successfully!'),
-            backgroundColor: AppColors.primaryColor,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        ToastMsg.success('OTP sent to your email successfully!');
         context.pushNamed(
           RoutePath.verifyOtp,
           extra: {
@@ -45,13 +39,20 @@ class ForgotPasswordPage extends StatelessWidget {
           },
         );
       } else if (controller.errorMessage.value.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(controller.errorMessage.value),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        /// Special handling for "Last OTP is valid" case
+        if (controller.errorMessage.value.contains('Last OTP is valid')) {
+          ToastMsg.success(controller.errorMessage.value);
+          context.pushNamed(
+            RoutePath.verifyOtp,
+            extra: {
+              'email': controller.emailController.text.trim(),
+              'isForSignup': false,
+              'token': controller.resetToken.value,
+            },
+          );
+          return;
+        }
+        ToastMsg.error(controller.errorMessage.value);
       }
     }
 

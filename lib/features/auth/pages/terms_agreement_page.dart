@@ -2,10 +2,12 @@ import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_load
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/profile_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/signup_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
@@ -38,14 +40,15 @@ class _TermsAgreementPageState extends State<TermsAgreementPage> {
 
   Future<void> _handleAgreeAndContinue() async {
     if (!signupController.agreeToTerms.value) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please agree to the terms and conditions'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ToastMsg.error('Please agree to the terms and conditions');
+      // if (mounted) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Please agree to the terms and conditions'),
+      //       backgroundColor: Colors.red,
+      //     ),
+      //   );
+      // }
       return;
     }
 
@@ -55,15 +58,13 @@ class _TermsAgreementPageState extends State<TermsAgreementPage> {
     if (!mounted) return;
 
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Profile created successfully!'),
-          backgroundColor: AppColors.primaryColor,
-        ),
-      );
+      final getProfileController = Get.put(GetProfileController());
+      await getProfileController.fetchProfile();
+      ToastMsg.success('Profile created successfully!');
 
+      if (!mounted) return;
       // Navigate to login first
-      context.pushReplacementNamed(RoutePath.login);
+      context.pushReplacementNamed(RoutePath.home);
 
       // Clean up controllers after navigation completes
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -75,12 +76,7 @@ class _TermsAgreementPageState extends State<TermsAgreementPage> {
         }
       });
     } else if (profileController.errorMessage.value.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(profileController.errorMessage.value),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ToastMsg.error(profileController.errorMessage.value);
     }
   }
 

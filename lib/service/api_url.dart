@@ -2,7 +2,8 @@ class ApiUrl {
   static const baseUrl = "http://10.10.20.42:5000/api/v1"; // LOCAL
   // static const baseUrl = "http://localhost:5000/api/v1"; // LOCAL
 
-  static const imageBaseUrl = '$baseUrl/';
+  static const imageBaseUrl = 'http://10.10.20.42:5000/';
+
   static socketUrl({String userID = ""}) => '$baseUrl?id=$userID';
 
   /// ======= Auth =======
@@ -18,5 +19,6 @@ class ApiUrl {
       '$baseUrl/auth/send-forgot-password-otp-again';
   static const resetPassword = '$baseUrl/auth/reset-password';
   // Assuming get profile endpoint (client) – adjust if backend differs
-  static const getProfile = '$baseUrl/auth/get-profile';
+  static const getProfile = '$baseUrl/auth/profile';
+  static const changePassword = '$baseUrl/auth/change-password';
 }

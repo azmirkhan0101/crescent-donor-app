@@ -1,7 +1,11 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
+import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +17,9 @@ import 'package:go_router/go_router.dart';
 /// The main dashboard of the app displaying welcome message, impact tracking,
 /// cause categories, verified charities, and donation opportunities.
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  final getProfileController = Get.find<GetProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,39 +27,48 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            8.rh.heightWidth, // Top spacing
-            _buildHeader(context).paddingR(16.rw),
-            20.rh.heightWidth,
-            _buildImpactSection().paddingR(16.rw),
-            20.rh.heightWidth,
-            _buildCauseCategories(),
-            20.rh.heightWidth,
-            _buildVerifiedCharities(context, charitiesController),
-            20.rh.heightWidth,
-            _buildDonateForCause(context, charitiesController).paddingR(16.rw),
-            100.rh.heightWidth, // Bottom spacing for navigation
-          ],
-        ).paddingL(16.rw),
+        child: Obx(() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              8.rh.heightWidth, // Top spacing
+              _buildHeader(context).paddingR(16.rw),
+              20.rh.heightWidth,
+              _buildImpactSection().paddingR(16.rw),
+              20.rh.heightWidth,
+              _buildCauseCategories(),
+              20.rh.heightWidth,
+              _buildVerifiedCharities(context, charitiesController),
+              20.rh.heightWidth,
+              _buildDonateForCause(
+                context,
+                charitiesController,
+              ).paddingR(16.rw),
+              100.rh.heightWidth, // Bottom spacing for navigation
+            ],
+          ).paddingL(16.rw);
+        }),
       ),
     );
   }
 
   /// Build the header with welcome message, profile, and notification
   Widget _buildHeader(BuildContext context) {
+    final profile = getProfileController.profile;
     return SizedBox(
       // height: 44.rh,
       child: Row(
         children: [
           // Profile image
-          Container(
-            width: 46.rw,
-            height: 46.rh,
-            decoration: const BoxDecoration(shape: BoxShape.circle),
+          GestureDetector(
+            onTap: () => _goToProfilePage(context),
             child: Center(
-              child: Assets.home.profileImage.svg(fit: BoxFit.cover),
+              child: CustomNetworkImage(
+                imageUrl: parseImageUrl(profile.value?.image ?? ''),
+                height: 44.rh,
+                width: 44.rw,
+                borderRadius: BorderRadius.circular(22.rw),
+              ),
             ),
           ),
 
@@ -61,12 +76,18 @@ class HomePage extends StatelessWidget {
 
           // Welcome text
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Welcome back!", style: AppTextStyles.f14W400()),
-                Text("Talha S.", style: AppTextStyles.f20w600()),
-              ],
+            child: GestureDetector(
+              onTap: () => _goToProfilePage(context),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Welcome back!", style: AppTextStyles.f14W400()),
+                  Text(
+                    profile.value?.name ?? 'N/A',
+                    style: AppTextStyles.f20w600(),
+                  ),
+                ],
+              ),
             ),
           ),
           // Search and notification icons
@@ -304,5 +325,12 @@ class HomePage extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _goToProfilePage(BuildContext context) {
+    // Get the route for this tab index
+    String routePath = Get.find<MainLayoutController>().getRouteForIndex(3);
+    // Navigate to the route
+    context.goNamed(routePath);
   }
 }
