@@ -1,6 +1,6 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/get_all_causes_controller.dart';
+import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class CharitiesPage extends StatelessWidget {
       appBar: CustomAppBar(title: "Explore Causes"),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: GetBuilder<GetAllCausesController>(
+        child: GetBuilder<CausesController>(
           builder: (controller) {
             return ListView.separated(
               itemBuilder: (context, index) {

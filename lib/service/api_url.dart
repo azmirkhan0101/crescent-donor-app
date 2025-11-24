@@ -1,8 +1,11 @@
 class ApiUrl {
-  static const String baseUrl = "http://10.10.20.42:5000/api/v1"; // LOCAL
-  // static const String baseUrl = "http://localhost:5000/api/v1"; // LOCAL
+  static const String hostUrl = "http://localhost:5001";
+  static const String baseUrl = "$hostUrl/api/v1"; // LOCAL
 
-  static const String imageBaseUrl = 'http://10.10.20.42:5000/';
+  // static const String hostUrl = "http://10.10.20.42:5000";
+  // static const String baseUrl = "$hostUrl/api/v1"; // LOCAL
+
+  static const String imageBaseUrl = '$hostUrl/';
 
   static socketUrl({String userID = ""}) => '$baseUrl?id=$userID';
 
@@ -22,9 +25,20 @@ class ApiUrl {
   static const String getProfile = '$baseUrl/auth/profile';
   static const String changePassword = '$baseUrl/auth/change-password';
 
-  /// ======= charities =======
+  /// ======= causes =======
   static const String getAllCauses = '$baseUrl/cause';
+  static String getAllCausesByOrgId(String orgId) =>
+      '$baseUrl/cause/organization/$orgId';
+
+  /// ======= charities =======
   static const String getAllOrganizations = '$baseUrl/organization/get-all';
   static String getOrganizationDetails(String organizationId) =>
       '$baseUrl/organization/$organizationId';
+
+  /// ======= Donations =======
+  static const String oneTimeDonationCreate =
+      '$baseUrl/donation/one-time/create';
+
+  /// ======= Payment Methods =======
+  static const String getPaymentMethods = '$baseUrl/payment-method';
 }

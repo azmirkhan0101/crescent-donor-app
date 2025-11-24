@@ -3,8 +3,8 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/get_all_causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/get_orgs_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
     final getProfileController = Get.find<GetProfileController>();
     // ignore: unused_local_variable
     final getOrgsController = Get.put(GetOrgsController());
-    final getAllCausesController = Get.put(GetAllCausesController());
+    final causesController = Get.put(CausesController());
     // ignore: unused_local_variable
     final charitiesController = Get.put(CharitiesController());
     return Scaffold(
@@ -47,10 +47,7 @@ class HomePage extends StatelessWidget {
               20.rh.heightWidth,
               _buildVerifiedCharities(context),
               20.rh.heightWidth,
-              _buildDonateForCause(
-                context,
-                getAllCausesController,
-              ).paddingR(16.rw),
+              _buildDonateForCause(context, causesController).paddingR(16.rw),
               100.rh.heightWidth, // Bottom spacing for navigation
             ],
           ).paddingL(16.rw);
@@ -331,7 +328,7 @@ class HomePage extends StatelessWidget {
   /// Build the donate for cause section
   Widget _buildDonateForCause(
     BuildContext context,
-    GetAllCausesController getAllCausesController,
+    CausesController getAllCausesController,
   ) {
     return Column(
       children: [

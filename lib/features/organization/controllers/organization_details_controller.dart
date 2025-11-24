@@ -13,23 +13,27 @@ class OrganizationDetailsController extends GetxController {
   final NetworkHelper _networkHelper = Get.find<NetworkHelper>();
   String? _organizationId;
 
-  final causes = ['Youth', 'Utilities', 'Emam'];
-  final donationAmounts = [
-    '\$10',
-    '\$25',
-    '\$30',
-    '\$40',
-    '\$50',
-    'Custom',
-    'None',
-  ];
-  Rx<DonationType> selectedDonationType = DonationType.recurring.obs;
-  RxString selectedCause = 'Youth'.obs;
+  // RxString selectedCauseId = ''.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  // final causes = ['Youth', 'Utilities', 'Emam'];
+  // final donationAmounts = [
+  //   '\$10',
+  //   '\$25',
+  //   '\$30',
+  //   '\$40',
+  //   '\$50',
+  //   'Custom',
+  //   'None',
+  // ];
+
+  // Rx<DonationType> selectedDonationType = DonationType.recurring.obs;
+  // RxString selectedCause = ''.obs;
+  // RxInt selectedAmountIndex = (-1).obs;
+
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  // }
 
   /// Set organization ID and fetch data
   void setOrganizationId(String organizationId) {
@@ -84,14 +88,14 @@ class OrganizationDetailsController extends GetxController {
   }
 
   /// change selected donation type
-  void changeDonationType(DonationType type) {
-    selectedDonationType.value = type;
-  }
+  // void changeDonationType(DonationType type) {
+  //   selectedDonationType.value = type;
+  // }
 
-  // change selected cause
-  void changeSelectedCause(String cause) {
-    selectedCause.value = cause;
-  }
+  // // change selected cause
+  // void changeSelectedCause(String cause) {
+  //   selectedCause.value = cause;
+  // }
 
   /// Get organization name safely
   String getOrganizationName() {

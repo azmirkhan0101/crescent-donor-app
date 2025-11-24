@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/payment_method_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,10 +11,11 @@ import 'package:go_router/go_router.dart';
 class PaymentLinkedAccountPage extends StatelessWidget {
   const PaymentLinkedAccountPage({super.key});
 
-  final bool hasLinkedAccounts = true;
+  final bool hasLinkedAccounts = false;
 
   @override
   Widget build(BuildContext context) {
+    final paymentMethodController = Get.put(PaymentMethodController());
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: CustomAppBar(
@@ -22,32 +24,34 @@ class PaymentLinkedAccountPage extends StatelessWidget {
         actions: [IconButton(onPressed: () {}, icon: Assets.common.add.svg())],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Content based on account state
-            Expanded(
-              child: hasLinkedAccounts
-                  ? _buildLinkedAccountsContent()
-                  : _buildNoAccountsContent(),
-            ),
-
-            // Add Account button
-            ElevatedButton(
-              onPressed: () {
-                context.pushNamed(
-                  RoutePath.addNewCard,
-                  extra: {"isAddNewCard": true},
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                fixedSize: Size(double.maxFinite, 56.rh),
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
+        child: Obx(() {
+          return Column(
+            children: [
+              // Content based on account state
+              Expanded(
+                child: paymentMethodController.paymentMethods.isNotEmpty
+                    ? _buildLinkedAccountsContent()
+                    : _buildNoAccountsContent(),
               ),
-              child: Text('Add Account'),
-            ).paddingXY(X: 56.rw),
-          ],
-        ),
+
+              // Add Account button
+              ElevatedButton(
+                onPressed: () {
+                  context.pushNamed(
+                    RoutePath.addNewCard,
+                    extra: {"isAddNewCard": true},
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  fixedSize: Size(double.maxFinite, 56.rh),
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Add Account'),
+              ).paddingXY(X: 56.rw),
+            ],
+          );
+        }),
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +23,10 @@ class DonationTypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<OrganizationDetailsController>();
+    // final controller = Get.find<OrganizationDetailsController>();
+    final donateNowController = Get.find<DonateNowController>();
     return GestureDetector(
-      onTap: () => controller.changeDonationType(type),
+      onTap: () => donateNowController.selectedDonationType.value = type,
       child: Stack(
         children: [
           AnimatedContainer(
