@@ -1,9 +1,13 @@
 class ApiUrl {
-  static const String hostUrl = "http://localhost:5001";
-  static const String baseUrl = "$hostUrl/api/v1"; // LOCAL
+  // For Android Emulator, use 10.0.2.2 to access host machine's localhost
+  // For iOS Simulator, use localhost
+  // For physical device, use your machine's IP address (e.g., 192.168.x.x)
+  static const String hostUrl = "http://10.0.2.2:5001"; // Android Emulator
+  static const String baseUrl = "$hostUrl/api/v1";
 
-  // static const String hostUrl = "http://10.10.20.42:5000";
-  // static const String baseUrl = "$hostUrl/api/v1"; // LOCAL
+  // Alternative URLs (uncomment as needed):
+  // static const String hostUrl = "http://localhost:5001"; // iOS Simulator / Web
+  // static const String hostUrl = "http://10.10.20.42:5000"; // Physical device (use your machine's IP)
 
   static const String imageBaseUrl = '$hostUrl/';
 
@@ -41,4 +45,7 @@ class ApiUrl {
 
   /// ======= Payment Methods =======
   static const String getPaymentMethods = '$baseUrl/payment-method';
+  static const String createSetupIntent =
+      '$baseUrl/payment-method/setup-intent';
+  static const String addPaymentMethod = '$baseUrl/payment-method';
 }

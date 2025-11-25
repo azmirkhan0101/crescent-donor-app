@@ -2,7 +2,6 @@ import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart'
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/few_details_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/forgot_password_page.dart';
 // Import authentication pages
@@ -12,6 +11,7 @@ import 'package:cresent_charge_user_app/features/auth/pages/signup_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/terms_agreement_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/upload_profile_picture_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/verify_otp_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/add_card_page.dart';
 import 'package:go_router/go_router.dart';
 
 /// Authentication Routes Configuration

@@ -3,17 +3,17 @@ import 'dart:core';
 import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
-import 'package:cresent_charge_user_app/features/auth/pages/add_card_page.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/search_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/verified_charities_page.dart';
 import 'package:cresent_charge_user_app/features/notification/pages/notification_page.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/add_card_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/confirm_donation_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/donation_complete_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/make_payment_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/payment_linked_account_page.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:go_router/go_router.dart';
 
 /// Home Routes Configuration
@@ -70,7 +70,7 @@ class HomeRoutes extends AppRouteConfig {
     GoRoute(
       name: RoutePath.addNewCard,
       path: RoutePath.addNewCard.addBasePath,
-      builder: (context, state) => AddCardPage(isAddNewCard: true),
+      builder: (context, state) => const AddCardPage(),
       redirect: AuthGuard.authRequired.redirect,
     ),
 

@@ -1,21 +1,35 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/payment_method_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/pages/add_card_page.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 
-class PaymentLinkedAccountPage extends StatelessWidget {
+class PaymentLinkedAccountPage extends StatefulWidget {
   const PaymentLinkedAccountPage({super.key});
 
-  final bool hasLinkedAccounts = false;
+  @override
+  State<PaymentLinkedAccountPage> createState() =>
+      _PaymentLinkedAccountPageState();
+}
+
+class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
+  late final PaymentMethodController paymentMethodController;
+
+  @override
+  void initState() {
+    super.initState();
+    paymentMethodController = Get.isRegistered<PaymentMethodController>()
+        ? Get.find<PaymentMethodController>()
+        : Get.put(PaymentMethodController());
+  }
+
+  // final bool hasLinkedAccounts = true;
 
   @override
   Widget build(BuildContext context) {
-    final paymentMethodController = Get.put(PaymentMethodController());
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: CustomAppBar(
@@ -37,9 +51,11 @@ class PaymentLinkedAccountPage extends StatelessWidget {
               // Add Account button
               ElevatedButton(
                 onPressed: () {
-                  context.pushNamed(
-                    RoutePath.addNewCard,
-                    extra: {"isAddNewCard": true},
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddCardPage(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -121,34 +137,26 @@ class PaymentLinkedAccountPage extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Payment accounts list
+          // Payment cards list from API
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.rw),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Apple Pay
-                _buildAccountItem(
-                  icon: Assets.home.applePay.svg(),
-                  title: 'Apple Pay',
-                  subtitle: 'Talha Shafqat',
-                ),
-                SizedBox(height: 8.rh),
-
-                // Google Pay
-                _buildAccountItem(
-                  icon: Assets.home.gpay.svg(),
-                  title: 'Google Pay',
-                  subtitle: 'Talha Shafqat',
-                ),
-                SizedBox(height: 8.rh),
-
-                // Chase Bank
-                _buildAccountItem(
-                  icon: Assets.home.chaseIcon.svg(),
-                  title: 'Chase',
-                  subtitle: 'CHASUS33 XXXXXXXXX 1234',
-                ),
+                // Display actual payment methods from API
+                ...paymentMethodController.paymentMethods.map((paymentMethod) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 8.rh),
+                    child: _buildCardItem(
+                      cardBrand: paymentMethod.cardBrand,
+                      cardHolderName: paymentMethod.cardHolderName,
+                      cardLast4: paymentMethod.cardLast4,
+                      cardExpMonth: paymentMethod.cardExpMonth,
+                      cardExpYear: paymentMethod.cardExpYear,
+                      isDefault: paymentMethod.isDefault,
+                    ),
+                  );
+                }),
               ],
             ),
           ),
@@ -166,15 +174,164 @@ class PaymentLinkedAccountPage extends StatelessWidget {
           // Add another account
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.rw),
-            child: _buildAccountItem(
-              icon: Assets.common.add.svg(),
-              title: 'Add another account',
-              subtitle: null,
-              showChevron: true,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddCardPage()),
+                );
+              },
+              child: _buildAccountItem(
+                icon: Assets.common.add.svg(),
+                title: 'Add another account',
+                subtitle: null,
+                showChevron: true,
+              ),
             ),
           ),
 
           SizedBox(height: 16.rh),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCardItem({
+    required String cardBrand,
+    required String cardHolderName,
+    required String cardLast4,
+    required int cardExpMonth,
+    required int cardExpYear,
+    required bool isDefault,
+  }) {
+    // Get card brand icon
+    Widget cardIcon;
+    String cardTitle;
+
+    switch (cardBrand.toLowerCase()) {
+      case 'visa':
+        cardIcon = Icon(
+          Icons.credit_card,
+          size: 24.rw,
+          color: const Color(0xFF1A1F71),
+        );
+        cardTitle = 'Visa';
+        break;
+      case 'mastercard':
+        cardIcon = Icon(
+          Icons.credit_card,
+          size: 24.rw,
+          color: const Color(0xFFEB001B),
+        );
+        cardTitle = 'Mastercard';
+        break;
+      case 'amex':
+      case 'american_express':
+        cardIcon = Icon(
+          Icons.credit_card,
+          size: 24.rw,
+          color: const Color(0xFF006FCF),
+        );
+        cardTitle = 'American Express';
+        break;
+      default:
+        cardIcon = Icon(
+          Icons.credit_card,
+          size: 24.rw,
+          color: const Color(0xFF5F6368),
+        );
+        cardTitle = cardBrand.toUpperCase();
+    }
+
+    return Container(
+      padding: EdgeInsets.all(8.rw),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.rw),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xFF000C0B).withValues(alpha: 0.05),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40.rw,
+            height: 40.rh,
+            padding: EdgeInsets.symmetric(horizontal: 6.rw),
+            decoration: BoxDecoration(
+              color: Color(0xFFF9F7F9),
+              borderRadius: BorderRadius.circular(40.rw),
+            ),
+            child: Center(child: cardIcon),
+          ),
+          SizedBox(width: 8.rw),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      cardTitle,
+                      style: TextStyle(
+                        fontSize: 12.rfs,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF0D0D15),
+                      ),
+                    ),
+                    if (isDefault) ...[
+                      SizedBox(width: 8.rw),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.rw,
+                          vertical: 2.rh,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF4CAF50),
+                          borderRadius: BorderRadius.circular(4.rw),
+                        ),
+                        child: Text(
+                          'Default',
+                          style: TextStyle(
+                            fontSize: 8.rfs,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                SizedBox(height: 6.rh),
+                Text(
+                  cardHolderName,
+                  style: TextStyle(
+                    fontSize: 10.rfs,
+                    color: const Color(0xFF0D0D15),
+                    letterSpacing: 0.2,
+                  ),
+                ),
+                SizedBox(height: 2.rh),
+                Text(
+                  '•••• •••• •••• $cardLast4 | Exp: ${cardExpMonth.toString().padLeft(2, '0')}/${cardExpYear.toString().substring(2)}',
+                  style: TextStyle(
+                    fontSize: 10.rfs,
+                    color: const Color(0xFF5F6368),
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 20.rw,
+            color: const Color(0xFF5F6368),
+          ),
         ],
       ),
     );
