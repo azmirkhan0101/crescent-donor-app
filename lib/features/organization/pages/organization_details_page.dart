@@ -11,10 +11,10 @@ import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart' as go_router;
 
 class OrganizationDetailsPage extends StatefulWidget {
-  const OrganizationDetailsPage({super.key});
+  const OrganizationDetailsPage({super.key, required this.organizationId});
+  final String organizationId;
 
   @override
   State<OrganizationDetailsPage> createState() =>
@@ -22,37 +22,19 @@ class OrganizationDetailsPage extends StatefulWidget {
 }
 
 class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
-  late final OrganizationDetailsController controller;
+  final OrganizationDetailsController orgDetailsCtrl = Get.put(
+    OrganizationDetailsController(),
+  );
 
   @override
   void initState() {
     super.initState();
-    controller = Get.isRegistered<OrganizationDetailsController>()
-        ? Get.find<OrganizationDetailsController>()
-        : Get.put(OrganizationDetailsController());
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Get organization ID from route extras
-    final routeState = go_router.GoRouterState.of(context);
-    final String? organizationId = routeState.extra as String?;
-    if (organizationId != null && organizationId.isNotEmpty) {
-      controller.setOrganizationId(organizationId);
-    }
-  }
-
-  @override
-  void dispose() {
-    if (Get.isRegistered<OrganizationDetailsController>()) {
-      Get.delete<OrganizationDetailsController>();
-    }
-    super.dispose();
+    orgDetailsCtrl.fetchOrganizationDetails(widget.organizationId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final orgDetails = orgDetailsCtrl.organizationDetails.value;
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: CustomAppBar(
@@ -60,18 +42,20 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
         backgroundColor: const Color(0xFFF7F7F7),
       ),
       body: Obx(() {
-        if (controller.isLoading.value) {
+        if (orgDetailsCtrl.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (controller.error.value.isNotEmpty) {
+        if (orgDetailsCtrl.error.value.isNotEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(controller.error.value),
+                Text(orgDetailsCtrl.error.value),
                 ElevatedButton(
-                  onPressed: controller.refreshData,
+                  onPressed: () => orgDetailsCtrl.fetchOrganizationDetails(
+                    widget.organizationId,
+                  ),
                   child: const Text('Retry'),
                 ),
               ],
@@ -79,13 +63,14 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
           );
         }
 
-        final organizationDetails = controller.organizationDetails.value;
+        final organizationDetails = orgDetailsCtrl.organizationDetails.value;
         if (organizationDetails == null) {
           return const Center(child: Text('Organization not found'));
         }
 
         return RefreshIndicator(
-          onRefresh: controller.refreshData,
+          onRefresh: () =>
+              orgDetailsCtrl.fetchOrganizationDetails(widget.organizationId),
           child: SingleChildScrollView(
             padding: EdgeInsets.all(16.rw),
             child: Column(
@@ -93,13 +78,13 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                 OrganizationHeaderWidget(organization: organizationDetails),
                 SizedBox(height: 16.rh),
                 ImpactCardWidget(
-                  impactText: controller.getOrganizationImpact(),
+                  impactText: 'Supported over 3,25,000 students since 2021',
                 ),
                 SizedBox(height: 16.rh),
                 TotalDonationsCard2(
                   color: const Color(0xFFEAF7EB),
                   totalAmount: 8328,
-                  totalDonors: 983,
+                  totalDonors: 150,
                 ),
                 SizedBox(height: 16.rh),
                 Align(
@@ -110,8 +95,8 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                 ),
                 SizedBox(height: 12.rh),
                 OverviewSectionWidget(
-                  mission: controller.getOrganizationMission(),
-                  causes: controller.getOrganizationCauses(),
+                  mission: orgDetails?.aboutUs ?? '',
+                  causes: [],
                 ),
                 SizedBox(height: 100.rh), // Space for bottom button
               ],
@@ -120,8 +105,10 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
         );
       }),
       floatingActionButton: Builder(
-        builder: (context) =>
-            _buildBottomDonateButton(controller, context).paddingXY(X: 56.rw),
+        builder: (context) => _buildBottomDonateButton(
+          orgDetailsCtrl,
+          context,
+        ).paddingXY(X: 56.rw),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -162,7 +149,6 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
   ) {
     return GestureDetector(
       onTap: () {
-        controller.onDonateNowTapped();
         _showDonationBottomSheet(controller, context);
       },
       child: Container(
@@ -199,7 +185,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
         minChildSize: 0.5,
         maxChildSize: 0.95,
         builder: (context, scrollController) => DonationBottomSheet(
-          organizationName: controller.getOrganizationName(),
+          organizationName: controller.organizationDetails.value?.name ?? 'N/A',
         ),
       ),
     );

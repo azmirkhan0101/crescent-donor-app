@@ -49,12 +49,12 @@ class ConfirmDonationPage extends StatelessWidget {
       controller.initializeWithPaymentMethod(paymentMethodId);
     }
 
-    final selectedCause = causeCtrl.causesByOrgId.firstWhere(
-      (cause) => cause.id == donateNowCtrl.selectedCauseId.value,
-      orElse: () => causeCtrl.causesByOrgId.isNotEmpty
-          ? causeCtrl.causesByOrgId[0]
-          : throw Exception('No causes available'),
-    );
+    // final selectedCause = causeCtrl.causesByOrgId.firstWhere(
+    //   (cause) => cause.id == donateNowCtrl.selectedCauseId.value,
+    //   orElse: () => causeCtrl.causesByOrgId.isNotEmpty
+    //       ? causeCtrl.causesByOrgId[0]
+    //       : throw Exception('No causes available'),
+    // );
 
     // print(
     //   '-----------> ${orgDetailsCtrl.organizationDetails.value?.logoImage}',
@@ -101,7 +101,7 @@ class ConfirmDonationPage extends StatelessWidget {
               amount: donateNowCtrl.amount.value,
               organizationId:
                   orgDetailsCtrl.organizationDetails.value?.id ?? '',
-              causeId: selectedCause.id,
+              causeId: donateNowCtrl.selectedCause.value?.id ?? '',
               specialMessage: donateNowCtrl.specialMsgController.text,
             ),
           ],
@@ -194,14 +194,14 @@ class ConfirmDonationPage extends StatelessWidget {
     DonateNowController donateNowCtrl,
   ) {
     // selected cause name
-    final selectedCauseName = causeCtrl.causesByOrgId
-        .firstWhere(
-          (cause) => cause.id == donateNowCtrl.selectedCauseId.value,
-          orElse: () => causeCtrl.causesByOrgId.isNotEmpty
-              ? causeCtrl.causesByOrgId[0]
-              : throw Exception('No causes available'),
-        )
-        .name;
+    // final selectedCauseName = causeCtrl.causesByOrgId
+    //     .firstWhere(
+    //       (cause) => cause.id == donateNowCtrl.selectedCause.value?.id,
+    //       orElse: () => causeCtrl.causesByOrgId.isNotEmpty
+    //           ? causeCtrl.causesByOrgId[0]
+    //           : throw Exception('No causes available'),
+    //     )
+    //     .name;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -245,7 +245,10 @@ class ConfirmDonationPage extends StatelessWidget {
             'Donation type:',
             donateNowCtrl.selectedDonationType.value.name,
           ),
-          _buildDetailItem('Donation cause:', selectedCauseName),
+          _buildDetailItem(
+            'Donation cause:',
+            donateNowCtrl.selectedCause.value?.name ?? '',
+          ),
           _buildDetailItem(
             'Threshold amount (per month):',
             "\$${donateNowCtrl.amount.value.toString()}",

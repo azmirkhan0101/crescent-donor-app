@@ -37,7 +37,11 @@ class _FewDetailsPageState extends State<FewDetailsPage> {
           child: Column(
             children: [
               16.heightWidth,
-              AuthHeader(),
+              AuthHeader(
+                onTap: () {
+                  context.pushNamed(RoutePath.login);
+                },
+              ),
               32.heightWidth,
               AuthTitleSection(
                 title: AppStrings.fewDetails,

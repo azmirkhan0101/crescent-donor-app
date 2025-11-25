@@ -4,11 +4,11 @@ import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:get/get.dart';
 
 class CausesController extends GetxController {
-  @override
-  void onInit() {
-    super.onInit();
-    fetchAllCauses();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   fetchAllCauses();
+  // }
 
   /// ------------------------------------
   /// Fetch all Causes

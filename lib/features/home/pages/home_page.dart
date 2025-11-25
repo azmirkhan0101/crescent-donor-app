@@ -28,7 +28,9 @@ class HomePage extends StatelessWidget {
     final getProfileController = Get.find<GetProfileController>();
     // ignore: unused_local_variable
     final getOrgsController = Get.put(GetOrgsController());
+    getOrgsController.fetchAllOrganizations();
     final causesController = Get.put(CausesController());
+    causesController.fetchAllCauses();
     // ignore: unused_local_variable
     final charitiesController = Get.put(CharitiesController());
     return Scaffold(

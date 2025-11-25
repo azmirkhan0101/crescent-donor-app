@@ -103,7 +103,10 @@ class VerifiedCharityCard extends StatelessWidget {
         ),
       ),
     ).onTap(() {
-      context.pushNamed(RoutePath.organizationDetails, extra: id);
+      context.pushNamed(
+        RoutePath.organizationDetails,
+        extra: {"organizationId": id},
+      );
     });
   }
 }

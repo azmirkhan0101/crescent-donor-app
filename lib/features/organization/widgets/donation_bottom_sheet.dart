@@ -24,23 +24,19 @@ class DonationBottomSheet extends StatefulWidget {
 }
 
 class _DonationBottomSheetState extends State<DonationBottomSheet> {
-  final orgDetailsController = Get.find<OrganizationDetailsController>();
   final donateNowController = Get.put(DonateNowController());
+
+  final orgDetailsController = Get.find<OrganizationDetailsController>();
   final causesController = Get.find<CausesController>();
 
   @override
   void initState() {
     super.initState();
     causesController.fetchCausesByOrgId(
-      orgDetailsController.organizationDetails.value!.id,
+      donateNowController.organizationId.value,
+      // orgDetailsController.organizationDetails.value!.id,
     );
   }
-
-  // @override
-  // void dispose() {
-  //   specialMsgController.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -273,12 +269,12 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
           return Wrap(
             spacing: 8.rw,
             children: causesController.causesByOrgId.map((cause) {
-              final isSelected = controller.selectedCauseId.value == cause.id;
+              final isSelected = controller.selectedCause.value?.id == cause.id;
               return CapsuleButton(
                 title: cause.category,
                 isSelected: isSelected,
                 onTap: () {
-                  controller.selectedCauseId.value = cause.id;
+                  controller.selectedCause.value = cause;
                 },
               ).paddingB(8.rh);
             }).toList(),
@@ -298,7 +294,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
     );
   }
 
-  Widget _selectAmountSection(DonateNowController controller) {
+  Widget _selectAmountSection(DonateNowController donateNowController) {
     return Obx(() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,17 +313,61 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
           Wrap(
             spacing: 8.rw,
-            children: controller.donationAmounts.map((e) {
-              final isSelected = controller.amount.value == e['amount'];
+            children: donateNowController.donationAmountsList.map((e) {
+              final isSelected =
+                  donateNowController.selectedAmountIndex.value ==
+                  donateNowController.donationAmountsList.indexOf(e);
               return CapsuleButton(
                 title: e['label'] as String,
                 isSelected: isSelected,
                 onTap: () {
-                  controller.amount.value = e['amount'] as int;
+                  donateNowController.selectedAmountIndex.value =
+                      donateNowController.donationAmountsList.indexOf(e);
+                  if (donateNowController.selectedAmountIndex.value !=
+                      donateNowController.donationAmountsList.length - 1) {
+                    donateNowController.amount.value = e['amount'] as int;
+                  }
                 },
               ).paddingB(8.rh);
             }).toList(),
           ),
+
+          // Custom Amount Input
+          SizedBox(height: 12.rh),
+          if (donateNowController.selectedAmountIndex.value ==
+              donateNowController.donationAmountsList.length - 1)
+            GestureDetector(
+              onTap: () {
+                donateNowController.amount.value = 0;
+              },
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  prefixText: '\$',
+                  prefixStyle: TextStyle(
+                    fontFamily: 'Inter Display',
+                    fontSize: 14.rfs,
+                    color: const Color(0xFF000C0B),
+                  ),
+                  border: InputBorder.none,
+                  hintText: 'Custom Amount',
+                  hintStyle: TextStyle(
+                    fontFamily: 'Inter Display',
+                    fontSize: 14.rfs,
+                    color: const Color(0xFF9E9E9E),
+                  ),
+                ),
+                style: TextStyle(
+                  fontFamily: 'Inter Display',
+                  fontSize: 14.rfs,
+                  color: const Color(0xFF000C0B),
+                ),
+                onChanged: (value) {
+                  final parsedValue = int.tryParse(value) ?? 0;
+                  donateNowController.amount.value = parsedValue;
+                },
+              ),
+            ),
         ],
       );
     });
