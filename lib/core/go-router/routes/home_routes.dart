@@ -8,12 +8,12 @@ import 'package:cresent_charge_user_app/features/home/pages/charities_page.dart'
 import 'package:cresent_charge_user_app/features/home/pages/search_page.dart';
 import 'package:cresent_charge_user_app/features/home/pages/verified_charities_page.dart';
 import 'package:cresent_charge_user_app/features/notification/pages/notification_page.dart';
-import 'package:cresent_charge_user_app/features/organization/pages/add_card_page.dart';
+import 'package:cresent_charge_user_app/features/payment/screens/add_card_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/confirm_donation_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/donation_complete_page.dart';
-import 'package:cresent_charge_user_app/features/organization/pages/make_payment_page.dart';
+import 'package:cresent_charge_user_app/features/payment/screens/make_payment_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
-import 'package:cresent_charge_user_app/features/organization/pages/payment_linked_account_page.dart';
+import 'package:cresent_charge_user_app/features/payment/screens/payment_linked_account_page.dart';
 import 'package:go_router/go_router.dart';
 
 /// Home Routes Configuration
@@ -86,7 +86,10 @@ class HomeRoutes extends AppRouteConfig {
     GoRoute(
       name: RoutePath.confirmDonation,
       path: RoutePath.confirmDonation.addBasePath,
-      builder: (context, state) => const ConfirmDonationPage(),
+      builder: (context, state) {
+        final paymentMethodId = state.uri.queryParameters['paymentMethodId'];
+        return ConfirmDonationPage(paymentMethodId: paymentMethodId);
+      },
       redirect: AuthGuard.authRequired.redirect,
     ),
 

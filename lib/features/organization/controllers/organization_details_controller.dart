@@ -1,6 +1,5 @@
 import 'package:cresent_charge_user_app/features/organization/models/organization_details_model.dart';
 import 'package:cresent_charge_user_app/features/organization/models/organization_model.dart';
-import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:get/get.dart';

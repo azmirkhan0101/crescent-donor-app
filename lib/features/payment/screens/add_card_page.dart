@@ -1,7 +1,7 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/payment_method_controller.dart';
+import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

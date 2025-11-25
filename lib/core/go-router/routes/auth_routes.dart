@@ -11,7 +11,7 @@ import 'package:cresent_charge_user_app/features/auth/pages/signup_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/terms_agreement_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/upload_profile_picture_page.dart';
 import 'package:cresent_charge_user_app/features/auth/pages/verify_otp_page.dart';
-import 'package:cresent_charge_user_app/features/organization/pages/add_card_page.dart';
+import 'package:cresent_charge_user_app/features/payment/screens/add_card_page.dart';
 import 'package:go_router/go_router.dart';
 
 /// Authentication Routes Configuration

@@ -1,11 +1,13 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/payment_method_controller.dart';
-import 'package:cresent_charge_user_app/features/organization/pages/add_card_page.dart';
+import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
+import 'package:cresent_charge_user_app/features/payment/screens/add_card_page.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 class PaymentLinkedAccountPage extends StatefulWidget {
   const PaymentLinkedAccountPage({super.key});
@@ -39,6 +41,9 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
       ),
       body: SafeArea(
         child: Obx(() {
+          if (paymentMethodController.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
           return Column(
             children: [
               // Content based on account state
@@ -147,13 +152,23 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
                 ...paymentMethodController.paymentMethods.map((paymentMethod) {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 8.rh),
-                    child: _buildCardItem(
-                      cardBrand: paymentMethod.cardBrand,
-                      cardHolderName: paymentMethod.cardHolderName,
-                      cardLast4: paymentMethod.cardLast4,
-                      cardExpMonth: paymentMethod.cardExpMonth,
-                      cardExpYear: paymentMethod.cardExpYear,
-                      isDefault: paymentMethod.isDefault,
+                    child: InkWell(
+                      onTap: () {
+                        context.pushNamed(
+                          RoutePath.confirmDonation,
+                          queryParameters: {
+                            'paymentMethodId': paymentMethod.id,
+                          },
+                        );
+                      },
+                      child: _buildCardItem(
+                        cardBrand: paymentMethod.cardBrand,
+                        cardHolderName: paymentMethod.cardHolderName,
+                        cardLast4: paymentMethod.cardLast4,
+                        cardExpMonth: paymentMethod.cardExpMonth,
+                        cardExpYear: paymentMethod.cardExpYear,
+                        isDefault: paymentMethod.isDefault,
+                      ),
                     ),
                   );
                 }),
