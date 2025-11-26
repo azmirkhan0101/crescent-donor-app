@@ -27,70 +27,57 @@ class PaymentMethodController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
-    try {
-      final result = await _networkHelper.request(
-        'GET',
-        ApiUrl.getPaymentMethods,
-        parser: (data) {
-          return data["data"]
-              .map<PaymentMethodModel>(
-                (item) => PaymentMethodModel.fromJson(item),
-              )
-              .toList();
-        },
-      );
+    final result = await _networkHelper.request(
+      'GET',
+      ApiUrl.getPaymentMethods,
+      parser: (data) {
+        return data["data"]
+            .map<PaymentMethodModel>(
+              (item) => PaymentMethodModel.fromJson(item),
+            )
+            .toList();
+      },
+    );
 
-      result.fold(
-        (failure) {
-          errorMessage.value =
-              failure.message ?? 'Failed to load payment methods';
-        },
-        (response) {
-          paymentMethods.value = response;
-        },
-      );
-    } catch (e) {
-      errorMessage.value = 'An unexpected error occurred';
-    } finally {
-      isLoading.value = false;
-    }
+    isLoading.value = false;
+
+    result.fold(
+      (failure) {
+        errorMessage.value =
+            failure.message ?? 'Failed to load payment methods';
+      },
+      (response) {
+        paymentMethods.value = response;
+      },
+    );
   }
 
   /// Create setup intent for card payment
   Future<SetupIntentData?> createSetupIntent() async {
-    try {
-      final result = await _networkHelper.request(
-        'POST',
-        ApiUrl.createSetupIntent,
-        body: {}, // empty body as per API spec
-        parser: (data) {
-          return SetupIntentResponse.fromJson(data);
-        },
-      );
+    final result = await _networkHelper.request(
+      'POST',
+      ApiUrl.createSetupIntent,
+      body: {}, // empty body as per API spec
+      parser: (data) {
+        return SetupIntentResponse.fromJson(data);
+      },
+    );
 
-      return result.fold(
-        (failure) {
-          errorMessage.value =
-              failure.message ?? 'Failed to create setup intent';
-          if (kDebugMode) {
-            print('Setup intent error: ${failure.message}');
-          }
-          return null;
-        },
-        (response) {
-          if (kDebugMode) {
-            print('Setup intent created: ${response.data.clientSecret}');
-          }
-          return response.data;
-        },
-      );
-    } catch (e) {
-      errorMessage.value = 'An unexpected error occurred';
-      if (kDebugMode) {
-        print('Setup intent exception: $e');
-      }
-      return null;
-    }
+    return result.fold(
+      (failure) {
+        errorMessage.value = failure.message ?? 'Failed to create setup intent';
+        if (kDebugMode) {
+          print('Setup intent error: ${failure.message}');
+        }
+        return null;
+      },
+      (response) {
+        if (kDebugMode) {
+          print('Setup intent created: ${response.data.clientSecret}');
+        }
+        return response.data;
+      },
+    );
   }
 
   /// Add payment method to backend
@@ -102,47 +89,36 @@ class PaymentMethodController extends GetxController {
     isAddingCard.value = true;
     errorMessage.value = '';
 
-    try {
-      final request = AddPaymentMethodRequest(
-        stripePaymentMethodId: stripePaymentMethodId,
-        cardHolderName: cardHolderName,
-        isDefault: isDefault,
-      );
+    final request = AddPaymentMethodRequest(
+      stripePaymentMethodId: stripePaymentMethodId,
+      cardHolderName: cardHolderName,
+      isDefault: isDefault,
+    );
 
-      final result = await _networkHelper.request(
-        'POST',
-        ApiUrl.addPaymentMethod,
-        body: request.toJson(),
-        parser: (data) => data,
-      );
+    final result = await _networkHelper.request(
+      'POST',
+      ApiUrl.addPaymentMethod,
+      body: request.toJson(),
+      parser: (data) => data,
+    );
 
-      return result.fold(
-        (failure) {
-          errorMessage.value =
-              failure.message ?? 'Failed to add payment method';
-          if (kDebugMode) {
-            print('Add payment method error: ${failure.message}');
-          }
-          return false;
-        },
-        (response) {
-          if (kDebugMode) {
-            print('Payment method added successfully');
-          }
-          // Refresh the payment methods list
-          fetchPaymentMethods();
-          return true;
-        },
-      );
-    } catch (e) {
-      errorMessage.value = 'An unexpected error occurred';
-      if (kDebugMode) {
-        print('Add payment method exception: $e');
-      }
-      return false;
-    } finally {
-      isAddingCard.value = false;
-    }
+    return result.fold(
+      (failure) {
+        errorMessage.value = failure.message ?? 'Failed to add payment method';
+        if (kDebugMode) {
+          print('Add payment method error: ${failure.message}');
+        }
+        return false;
+      },
+      (response) {
+        if (kDebugMode) {
+          print('Payment method added successfully');
+        }
+        // Refresh the payment methods list
+        fetchPaymentMethods();
+        return true;
+      },
+    );
   }
 
   /// Complete card setup process

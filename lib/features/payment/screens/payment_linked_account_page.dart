@@ -3,7 +3,6 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
-import 'package:cresent_charge_user_app/features/payment/screens/add_card_page.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,14 +17,11 @@ class PaymentLinkedAccountPage extends StatefulWidget {
 }
 
 class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
-  late final PaymentMethodController paymentMethodController;
+  final paymentMethodController = Get.put(PaymentMethodController());
 
   @override
   void initState() {
     super.initState();
-    paymentMethodController = Get.isRegistered<PaymentMethodController>()
-        ? Get.find<PaymentMethodController>()
-        : Get.put(PaymentMethodController());
   }
 
   // final bool hasLinkedAccounts = true;
@@ -44,33 +40,38 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
           if (paymentMethodController.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
-          return Column(
-            children: [
-              // Content based on account state
-              Expanded(
-                child: paymentMethodController.paymentMethods.isNotEmpty
-                    ? _buildLinkedAccountsContent()
-                    : _buildNoAccountsContent(),
-              ),
+          return RefreshIndicator(
+            onRefresh: paymentMethodController.fetchPaymentMethods,
+            child: CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
+                    children: [
+                      // Content based on account state
+                      Expanded(
+                        child: paymentMethodController.paymentMethods.isNotEmpty
+                            ? _buildLinkedAccountsContent()
+                            : _buildNoAccountsContent(),
+                      ),
 
-              // Add Account button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddCardPage(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: Size(double.maxFinite, 56.rh),
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
+                      // Add Account button
+                      ElevatedButton(
+                        onPressed: () {
+                          context.pushNamed(RoutePath.addCard);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: Size(double.maxFinite, 56.rh),
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: Text('Add Account'),
+                      ).paddingXY(X: 56.rw),
+                    ],
+                  ),
                 ),
-                child: Text('Add Account'),
-              ).paddingXY(X: 56.rw),
-            ],
+              ],
+            ),
           );
         }),
       ),
@@ -191,10 +192,11 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
             padding: EdgeInsets.symmetric(horizontal: 16.rw),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AddCardPage()),
-                );
+                context.pushNamed(RoutePath.addCard);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const AddCardPage()),
+                // );
               },
               child: _buildAccountItem(
                 icon: Assets.common.add.svg(),

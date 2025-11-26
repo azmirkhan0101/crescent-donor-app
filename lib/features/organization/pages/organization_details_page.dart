@@ -1,7 +1,7 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/total_donations_card.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/impact_card_widget.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/organization_header_widget.dart';
@@ -22,19 +22,17 @@ class OrganizationDetailsPage extends StatefulWidget {
 }
 
 class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
-  final OrganizationDetailsController orgDetailsCtrl = Get.put(
-    OrganizationDetailsController(),
-  );
+  final orgController = Get.find<OrganizationController>();
 
   @override
   void initState() {
     super.initState();
-    orgDetailsCtrl.fetchOrganizationDetails(widget.organizationId);
+    orgController.fetchOrganizationDetails(widget.organizationId);
   }
 
   @override
   Widget build(BuildContext context) {
-    final orgDetails = orgDetailsCtrl.organizationDetails.value;
+    final orgDetails = orgController.organizationDetails.value;
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: CustomAppBar(
@@ -42,18 +40,18 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
         backgroundColor: const Color(0xFFF7F7F7),
       ),
       body: Obx(() {
-        if (orgDetailsCtrl.isLoading.value) {
+        if (orgController.isOrgDetailsFetching.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (orgDetailsCtrl.error.value.isNotEmpty) {
+        if (orgController.error.value.isNotEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(orgDetailsCtrl.error.value),
+                Text(orgController.error.value),
                 ElevatedButton(
-                  onPressed: () => orgDetailsCtrl.fetchOrganizationDetails(
+                  onPressed: () => orgController.fetchOrganizationDetails(
                     widget.organizationId,
                   ),
                   child: const Text('Retry'),
@@ -63,14 +61,14 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
           );
         }
 
-        final organizationDetails = orgDetailsCtrl.organizationDetails.value;
+        final organizationDetails = orgController.organizationDetails.value;
         if (organizationDetails == null) {
           return const Center(child: Text('Organization not found'));
         }
 
         return RefreshIndicator(
           onRefresh: () =>
-              orgDetailsCtrl.fetchOrganizationDetails(widget.organizationId),
+              orgController.fetchOrganizationDetails(widget.organizationId),
           child: SingleChildScrollView(
             padding: EdgeInsets.all(16.rw),
             child: Column(
@@ -106,7 +104,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
       }),
       floatingActionButton: Builder(
         builder: (context) => _buildBottomDonateButton(
-          orgDetailsCtrl,
+          orgController,
           context,
         ).paddingXY(X: 56.rw),
       ),
@@ -144,7 +142,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
   // }
 
   Widget _buildBottomDonateButton(
-    OrganizationDetailsController controller,
+    OrganizationController controller,
     BuildContext context,
   ) {
     return GestureDetector(
@@ -173,7 +171,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
   }
 
   void _showDonationBottomSheet(
-    OrganizationDetailsController controller,
+    OrganizationController controller,
     BuildContext context,
   ) {
     showModalBottomSheet(

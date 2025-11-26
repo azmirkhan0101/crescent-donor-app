@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -9,6 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.backgroundColor,
     this.actions,
+    this.onBackButtonPressed,
   });
 
   @override
@@ -17,6 +19,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Color? backgroundColor;
   final List<Widget>? actions;
+  final void Function()? onBackButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       leading: IconButton(
-        onPressed: () => Navigator.pop(context),
+        onPressed: onBackButtonPressed ?? () => GoRouter.of(context).pop(),
         icon: SvgPicture.asset(
           Assets.common.arrowLeft.path,
           width: 24.rw,

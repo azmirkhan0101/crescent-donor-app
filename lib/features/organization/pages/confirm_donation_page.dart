@@ -2,17 +2,15 @@ import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/confirm_donation_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 
 // Define colors from Figma design
 const Color _offBlack = Color(0xFF000C0B);
@@ -21,44 +19,25 @@ const Color _grayText = Color(0xFF6E6E6E);
 const Color _borderColor = Color(0xFFEDEDED);
 
 class ConfirmDonationPage extends StatelessWidget {
-  final String? paymentMethodId;
-
   const ConfirmDonationPage({super.key, this.paymentMethodId});
+  final String? paymentMethodId;
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.isRegistered<ConfirmDonationController>()
-        ? Get.find<ConfirmDonationController>()
-        : Get.put(ConfirmDonationController());
+    final confirmDonationController = Get.put(ConfirmDonationController());
 
     // Organization details controller
-    final orgDetailsCtrl = Get.find<OrganizationDetailsController>();
+    final orgController = Get.find<OrganizationController>();
     // donate now controller
     final donateNowCtrl = Get.find<DonateNowController>();
     // cause controller
-    final causeCtrl = Get.find<CausesController>();
     // payment method controller
     final paymentMethodCtrl = Get.find<PaymentMethodController>();
 
-    // Get payment method ID from GoRouter query parameters
-    final state = GoRouterState.of(context);
-    final paymentMethodId = state.uri.queryParameters['paymentMethodId'];
-
     // Initialize controller with payment method
     if (paymentMethodId != null) {
-      controller.initializeWithPaymentMethod(paymentMethodId);
+      confirmDonationController.initializeWithPaymentMethod(paymentMethodId);
     }
-
-    // final selectedCause = causeCtrl.causesByOrgId.firstWhere(
-    //   (cause) => cause.id == donateNowCtrl.selectedCauseId.value,
-    //   orElse: () => causeCtrl.causesByOrgId.isNotEmpty
-    //       ? causeCtrl.causesByOrgId[0]
-    //       : throw Exception('No causes available'),
-    // );
-
-    // print(
-    //   '-----------> ${orgDetailsCtrl.organizationDetails.value?.logoImage}',
-    // );
 
     return Scaffold(
       backgroundColor: AppColors.lightPageBackground,
@@ -73,36 +52,33 @@ class ConfirmDonationPage extends StatelessWidget {
             // Organization Card
             _buildOrganizationCard(
               orgLogoUrl:
-                  orgDetailsCtrl.organizationDetails.value?.logoImage ?? '',
-              causeDetails: causeCtrl.causesByOrgId[0].description,
-              orgName: orgDetailsCtrl.organizationDetails.value?.name ?? '',
+                  orgController.organizationDetails.value?.logoImage ?? '',
+              causeDetails:
+                  donateNowCtrl.selectedCause.value?.description ?? '',
+              orgName: orgController.organizationDetails.value?.name ?? '',
             ),
 
             16.rh.heightWidth,
 
             // Details Card
-            _buildDetailsCard(causeCtrl, donateNowCtrl),
+            _buildDetailsCard(donateNowCtrl),
 
             16.rh.heightWidth,
 
             // Transaction Details Card
             _buildTransactionDetailsCard(
-              controller,
+              confirmDonationController,
               paymentMethodCtrl,
-              orgDetailsCtrl: orgDetailsCtrl,
+              orgDetailsCtrl: orgController,
             ),
 
             24.rh.heightWidth,
 
             // Confirm & Donate Button
             _buildConfirmButton(
-              controller,
+              donateNowCtrl,
               context,
-              amount: donateNowCtrl.amount.value,
-              organizationId:
-                  orgDetailsCtrl.organizationDetails.value?.id ?? '',
-              causeId: donateNowCtrl.selectedCause.value?.id ?? '',
-              specialMessage: donateNowCtrl.specialMsgController.text,
+              paymentMethodId: paymentMethodId,
             ),
           ],
         ),
@@ -115,7 +91,6 @@ class ConfirmDonationPage extends StatelessWidget {
     required String orgName,
     required String orgLogoUrl,
   }) {
-    // final OrganizationDetailsModel? org = controller.organizationDetails.value;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -189,19 +164,7 @@ class ConfirmDonationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailsCard(
-    CausesController causeCtrl,
-    DonateNowController donateNowCtrl,
-  ) {
-    // selected cause name
-    // final selectedCauseName = causeCtrl.causesByOrgId
-    //     .firstWhere(
-    //       (cause) => cause.id == donateNowCtrl.selectedCause.value?.id,
-    //       orElse: () => causeCtrl.causesByOrgId.isNotEmpty
-    //           ? causeCtrl.causesByOrgId[0]
-    //           : throw Exception('No causes available'),
-    //     )
-    //     .name;
+  Widget _buildDetailsCard(DonateNowController donateNowCtrl) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -250,7 +213,7 @@ class ConfirmDonationPage extends StatelessWidget {
             donateNowCtrl.selectedCause.value?.name ?? '',
           ),
           _buildDetailItem(
-            'Threshold amount (per month):',
+            'Threshold amount:',
             "\$${donateNowCtrl.amount.value.toString()}",
           ),
 
@@ -313,7 +276,7 @@ class ConfirmDonationPage extends StatelessWidget {
   Widget _buildTransactionDetailsCard(
     ConfirmDonationController controller,
     PaymentMethodController paymentMethodCtrl, {
-    required OrganizationDetailsController orgDetailsCtrl,
+    required OrganizationController orgDetailsCtrl,
   }) {
     final paymentMethod = paymentMethodCtrl.paymentMethods.firstWhere(
       (method) => method.id == paymentMethodId,
@@ -439,26 +402,20 @@ class ConfirmDonationPage extends StatelessWidget {
   }
 
   Widget _buildConfirmButton(
-    ConfirmDonationController controller,
+    DonateNowController donateNowController,
     BuildContext context, {
-    required int amount,
-    required String organizationId,
-    required String causeId,
-    String? specialMessage,
+    required paymentMethodId,
   }) {
     // Get required data from controllers
 
     return Obx(
       () => ElevatedButton(
-        onPressed: controller.isProcessing.value
+        onPressed: donateNowController.isPaymentProcessing.value
             ? null
             : () {
-                controller.onConfirmDonation(
+                donateNowController.onConfirmDonation(
                   context,
-                  amount: amount,
-                  organizationId: organizationId,
-                  causeId: causeId,
-                  specialMessage: specialMessage,
+                  paymentMethodId: paymentMethodId,
                 );
               },
         style: ElevatedButton.styleFrom(
@@ -469,7 +426,7 @@ class ConfirmDonationPage extends StatelessWidget {
           ),
           disabledBackgroundColor: _grayText,
         ),
-        child: controller.isProcessing.value
+        child: donateNowController.isPaymentProcessing.value
             ? const SizedBox(
                 width: 20,
                 height: 20,

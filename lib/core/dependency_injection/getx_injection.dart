@@ -4,7 +4,6 @@ import 'package:cresent_charge_user_app/features/donation/controllers/round_up_c
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/search_controller.dart';
 import 'package:cresent_charge_user_app/features/notification/controllers/notification_controller.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
 import 'package:cresent_charge_user_app/global/general_controller/general_controller.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
@@ -26,7 +25,7 @@ void initGetx() {
   Get.lazyPut(() => NotificationController(), fenix: true);
 
   // =================== Organization Controllers ==================
-  Get.lazyPut(() => OrganizationDetailsController(), fenix: true);
+  // Get.lazyPut(() => OrganizationController(), fenix: true);
 
   // =================== Rewards Controllers ==================
   Get.lazyPut(() => YourRewardsController(), fenix: true);

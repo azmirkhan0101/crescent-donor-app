@@ -5,10 +5,10 @@ import 'package:cresent_charge_user_app/core/helper/network_image/network_image.
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/get_orgs_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
 import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -27,10 +27,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final getProfileController = Get.find<GetProfileController>();
     // ignore: unused_local_variable
-    final getOrgsController = Get.put(GetOrgsController());
-    getOrgsController.fetchAllOrganizations();
+    final getOrgsController = Get.put(OrganizationController());
     final causesController = Get.put(CausesController());
-    causesController.fetchAllCauses();
     // ignore: unused_local_variable
     final charitiesController = Get.put(CharitiesController());
     return Scaffold(
@@ -302,12 +300,12 @@ class HomePage extends StatelessWidget {
         // ),
         SizedBox(
           height: 226.rh,
-          child: GetBuilder<GetOrgsController>(
+          child: GetBuilder<OrganizationController>(
             builder: (orgController) {
               return ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  final org = orgController.organizations[index];
+                  final org = orgController.organizationsList[index];
                   return VerifiedCharityCard(
                     id: org.id,
                     title: org.name,
@@ -318,7 +316,7 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (context, index) => 8.rw.heightWidth,
-                itemCount: orgController.organizations.length,
+                itemCount: orgController.organizationsList.length,
               );
             },
           ),

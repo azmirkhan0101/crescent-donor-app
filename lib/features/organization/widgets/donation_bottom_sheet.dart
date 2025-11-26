@@ -1,10 +1,11 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/core/theme/theme.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/date_time_selection_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_type_card.dart';
@@ -26,7 +27,7 @@ class DonationBottomSheet extends StatefulWidget {
 class _DonationBottomSheetState extends State<DonationBottomSheet> {
   final donateNowController = Get.put(DonateNowController());
 
-  final orgDetailsController = Get.find<OrganizationDetailsController>();
+  final orgDetailsController = Get.find<OrganizationController>();
   final causesController = Get.find<CausesController>();
 
   @override
@@ -87,27 +88,15 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   // Message Section
                   _buildMessageSection(),
 
-                  SizedBox(height: 24.rh),
+                  SizedBox(height: 200.rh),
                 ],
               ),
             ),
           ),
 
-          // Continue Button
+          /// Continue Button
           ElevatedButton(
-            onPressed: () {
-              GoRouter.of(context).pop();
-              if (donateNowController.selectedDonationType.value ==
-                  DonationType.oneTime) {
-                GoRouter.of(context).pushNamed(RoutePath.linkedAccount);
-              }
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => const DateTimeSelectionBottomSheet(),
-              );
-            },
+            onPressed: () => _onClickContinueButton(),
             style: ElevatedButton.styleFrom(
               fixedSize: Size(double.maxFinite, 56.rh),
               backgroundColor: const Color(0xFF000C0B),
@@ -115,7 +104,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
             ),
             child: Text('Continue'),
           ).paddingXY(X: 56.rw),
-          8.rh.heightWidth,
+          24.rh.heightWidth,
         ],
       ),
     );
@@ -325,7 +314,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                       donateNowController.donationAmountsList.indexOf(e);
                   if (donateNowController.selectedAmountIndex.value !=
                       donateNowController.donationAmountsList.length - 1) {
-                    donateNowController.amount.value = e['amount'] as int;
+                    donateNowController.amount.value = e['amount'] as num;
                   }
                 },
               ).paddingB(8.rh);
@@ -363,7 +352,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   color: const Color(0xFF000C0B),
                 ),
                 onChanged: (value) {
-                  final parsedValue = int.tryParse(value) ?? 0;
+                  final parsedValue = double.tryParse(value) ?? 0;
                   donateNowController.amount.value = parsedValue;
                 },
               ),
@@ -421,6 +410,34 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
           ),
         ),
       ],
+    );
+  }
+
+  void _onClickContinueButton() {
+    // If no cause selected, show Error
+    if (donateNowController.selectedCause.value == null) {
+      ToastMsg.error('Please select a cause to proceed.');
+      return;
+    }
+    // If no amount selected, show Error
+    if (donateNowController.amount.value <= 0) {
+      print('Selected Amount: ${donateNowController.amount.value}');
+      ToastMsg.error('Please select a valid donation amount to proceed.');
+      return;
+    }
+
+    // Close bottom sheet first
+    GoRouter.of(context).pop();
+    if (donateNowController.selectedDonationType.value ==
+        DonationType.oneTime) {
+      GoRouter.of(context).pushNamed(RoutePath.linkedAccount);
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const DateTimeSelectionBottomSheet(),
     );
   }
 }

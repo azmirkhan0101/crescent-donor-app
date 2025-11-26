@@ -1,5 +1,5 @@
 class OneTimeDonationRequest {
-  final int amount;
+  final num amount;
   final String currency;
   final String organizationId;
   final String causeId;
