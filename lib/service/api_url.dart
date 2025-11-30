@@ -48,4 +48,5 @@ class ApiUrl {
   static const String createSetupIntent =
       '$baseUrl/payment-method/setup-intent';
   static const String addPaymentMethod = '$baseUrl/payment-method';
+  static String deletePaymentMethod(String id) => '$baseUrl/payment-method/$id';
 }

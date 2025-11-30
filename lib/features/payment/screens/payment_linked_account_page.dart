@@ -149,26 +149,76 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Display actual payment methods from API
+                // Display actual payment methods from API with swipe-to-delete
                 ...paymentMethodController.paymentMethods.map((paymentMethod) {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 8.rh),
-                    child: InkWell(
-                      onTap: () {
-                        context.pushNamed(
-                          RoutePath.confirmDonation,
-                          queryParameters: {
-                            'paymentMethodId': paymentMethod.id,
-                          },
-                        );
+                    child: Dismissible(
+                      key: ValueKey('pm_${paymentMethod.id}'),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.symmetric(horizontal: 16.rw),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFE8E8),
+                          borderRadius: BorderRadius.circular(12.rw),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              Icons.delete,
+                              color: const Color(0xFFD32F2F),
+                              size: 20.rw,
+                            ),
+                            SizedBox(width: 8.rw),
+                            Text(
+                              'Delete',
+                              style: TextStyle(
+                                color: const Color(0xFFD32F2F),
+                                fontSize: 12.rfs,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      confirmDismiss: (direction) async {
+                        final ok = await paymentMethodController
+                            .deletePaymentMethod(paymentMethod.id);
+                        if (!ok && context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                paymentMethodController
+                                        .errorMessage
+                                        .value
+                                        .isNotEmpty
+                                    ? paymentMethodController.errorMessage.value
+                                    : 'Unable to delete payment method',
+                              ),
+                            ),
+                          );
+                        }
+                        return ok;
                       },
-                      child: _buildCardItem(
-                        cardBrand: paymentMethod.cardBrand,
-                        cardHolderName: paymentMethod.cardHolderName,
-                        cardLast4: paymentMethod.cardLast4,
-                        cardExpMonth: paymentMethod.cardExpMonth,
-                        cardExpYear: paymentMethod.cardExpYear,
-                        isDefault: paymentMethod.isDefault,
+                      child: InkWell(
+                        onTap: () {
+                          context.pushNamed(
+                            RoutePath.confirmDonation,
+                            queryParameters: {
+                              'paymentMethodId': paymentMethod.id,
+                            },
+                          );
+                        },
+                        child: _buildCardItem(
+                          cardBrand: paymentMethod.cardBrand,
+                          cardHolderName: paymentMethod.cardHolderName,
+                          cardLast4: paymentMethod.cardLast4,
+                          cardExpMonth: paymentMethod.cardExpMonth,
+                          cardExpYear: paymentMethod.cardExpYear,
+                          isDefault: paymentMethod.isDefault,
+                        ),
                       ),
                     ),
                   );

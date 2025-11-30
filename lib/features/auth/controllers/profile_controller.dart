@@ -24,19 +24,19 @@ class ProfileController extends GetxController {
     text: kDebugMode ? '90001' : '',
   );
 
-  // Card Details Controllers
-  final nameInCardController = TextEditingController(
-    // text: kDebugMode ? 'John Doe' : '',
-  );
-  final cardNumberController = TextEditingController(
-    text: kDebugMode ? '4242424242424242' : '',
-  );
-  final cardExpiryDateController = TextEditingController(
-    text: kDebugMode ? '05/26' : '',
-  );
-  final cardCVCController = TextEditingController(
-    text: kDebugMode ? '123' : '',
-  );
+  // // Card Details Controllers
+  // final nameInCardController = TextEditingController(
+  //   // text: kDebugMode ? 'John Doe' : '',
+  // );
+  // final cardNumberController = TextEditingController(
+  //   text: kDebugMode ? '4242424242424242' : '',
+  // );
+  // final cardExpiryDateController = TextEditingController(
+  //   text: kDebugMode ? '05/26' : '',
+  // );
+  // final cardCVCController = TextEditingController(
+  //   text: kDebugMode ? '123' : '',
+  // );
 
   // Observable variables
   RxBool isLoading = false.obs;
@@ -54,10 +54,10 @@ class ProfileController extends GetxController {
     addressController.dispose();
     stateController.dispose();
     postalCodeController.dispose();
-    nameInCardController.dispose();
-    cardNumberController.dispose();
-    cardExpiryDateController.dispose();
-    cardCVCController.dispose();
+    // nameInCardController.dispose();
+    // cardNumberController.dispose();
+    // cardExpiryDateController.dispose();
+    // cardCVCController.dispose();
     super.onClose();
   }
 
@@ -200,10 +200,10 @@ class ProfileController extends GetxController {
       "address": addressController.text.trim(),
       "state": stateController.text.trim(),
       "postalCode": postalCodeController.text.trim(),
-      "nameInCard": nameInCardController.text.trim(),
-      "cardNumber": cardNumberController.text.replaceAll(' ', ''),
-      "cardExpiryDate": cardExpiryDateController.text.trim(),
-      "cardCVC": cardCVCController.text.trim(),
+      // "nameInCard": nameInCardController.text.trim(),
+      // "cardNumber": cardNumberController.text.replaceAll(' ', ''),
+      // "cardExpiryDate": cardExpiryDateController.text.trim(),
+      // "cardCVC": cardCVCController.text.trim(),
     };
 
     // Prepare fields for multipart request
@@ -267,10 +267,10 @@ class ProfileController extends GetxController {
   }
 
   /// Check if card details form is valid
-  bool get isCardDetailsValid {
-    return nameInCardController.text.isNotEmpty &&
-        cardNumberController.text.isNotEmpty &&
-        cardExpiryDateController.text.isNotEmpty &&
-        cardCVCController.text.isNotEmpty;
-  }
+  // bool get isCardDetailsValid {
+  //   return nameInCardController.text.isNotEmpty &&
+  //       cardNumberController.text.isNotEmpty &&
+  //       cardExpiryDateController.text.isNotEmpty &&
+  //       cardCVCController.text.isNotEmpty;
+  // }
 }

@@ -31,6 +31,7 @@ class _UploadProfilePicturePageState extends State<UploadProfilePicturePage> {
         : Get.put(ProfileController());
   }
 
+  /// Show bottom sheet if click on change photo text
   void _showImageSourceDialog() {
     showModalBottomSheet(
       context: context,
@@ -119,7 +120,8 @@ class _UploadProfilePicturePageState extends State<UploadProfilePicturePage> {
       CustomFilledButton(
         title: AppStrings.continueText,
         onTap: () {
-          context.pushNamed(RoutePath.addCard);
+          // context.pushNamed(RoutePath.addCard, extra: {'fromSignup': true});
+          context.pushNamed(RoutePath.termsAgreement);
         },
       ).paddingXY(X: 40.rw),
       60.rh.heightWidth,

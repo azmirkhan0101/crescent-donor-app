@@ -41,14 +41,6 @@ class _TermsAgreementPageState extends State<TermsAgreementPage> {
   Future<void> _handleAgreeAndContinue() async {
     if (!signupController.agreeToTerms.value) {
       ToastMsg.error('Please agree to the terms and conditions');
-      // if (mounted) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(
-      //       content: Text('Please agree to the terms and conditions'),
-      //       backgroundColor: Colors.red,
-      //     ),
-      //   );
-      // }
       return;
     }
 

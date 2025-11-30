@@ -1,15 +1,19 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 class AddCardPage extends StatefulWidget {
-  const AddCardPage({super.key});
+  const AddCardPage({super.key, this.fromSignup = false});
+
+  final bool fromSignup;
 
   @override
   State<AddCardPage> createState() => _AddCardPageState();
@@ -17,9 +21,7 @@ class AddCardPage extends StatefulWidget {
 
 class _AddCardPageState extends State<AddCardPage> {
   late final PaymentMethodController controller;
-  final cardHolderNameController = TextEditingController(
-    text: kDebugMode ? 'John Doe' : '',
-  );
+  final cardHolderNameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool isCardComplete = false;
 
@@ -85,6 +87,7 @@ class _AddCardPageState extends State<AddCardPage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('is from signup:=========> ${widget.fromSignup}');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const CustomAppBar(
@@ -119,7 +122,7 @@ class _AddCardPageState extends State<AddCardPage> {
                       TextFormField(
                         controller: cardHolderNameController,
                         decoration: InputDecoration(
-                          hintText: 'John Doe',
+                          hintText: 'card holder name',
                           filled: true,
                           fillColor: Colors.white,
                           border: OutlineInputBorder(
@@ -160,34 +163,23 @@ class _AddCardPageState extends State<AddCardPage> {
                       ),
                       SizedBox(height: 8.rh),
 
-                      // Stripe Card Field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12.rw),
-                          border: Border.all(color: const Color(0xFFEDEDED)),
+                      /// Stripe Card Field
+                      stripe.CardField(
+                        onCardChanged: (card) {
+                          setState(() {
+                            isCardComplete = card?.complete ?? false;
+                          });
+                        },
+                        enablePostalCode: false,
+                        style: TextStyle(
+                          fontSize: 14.rfs,
+                          color: const Color(0xFF0D0D15),
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.rw,
-                          vertical: 8.rh,
-                        ),
-                        child: stripe.CardField(
-                          onCardChanged: (card) {
-                            setState(() {
-                              isCardComplete = card?.complete ?? false;
-                            });
-                          },
-                          enablePostalCode: true,
-                          style: TextStyle(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(
                             fontSize: 14.rfs,
-                            color: const Color(0xFF0D0D15),
-                          ),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                              fontSize: 14.rfs,
-                              color: const Color(0xFF9E9E9E),
-                            ),
+                            color: const Color(0xFF9E9E9E),
                           ),
                         ),
                       ),
@@ -255,7 +247,8 @@ class _AddCardPageState extends State<AddCardPage> {
                   ).paddingXY(X: 16.rw),
                 ),
 
-                24.rh.heightWidth,
+                // 24.rh.heightWidth,
+                SizedBox(height: MediaQuery.sizeOf(context).height - 650.rh),
 
                 // Add Card Button
                 Column(
@@ -283,6 +276,20 @@ class _AddCardPageState extends State<AddCardPage> {
                             )
                           : const Text('Add Card'),
                     ),
+
+                    if (widget.fromSignup) ...[
+                      // 16.rh.heightWidth,
+                      TextButton(
+                        onPressed: () {
+                          debugPrint('Skipped adding card');
+                          context.pushNamed(RoutePath.termsAgreement);
+                        },
+                        child: Text(
+                          'I’ll do this later!',
+                          style: AppTextStyles.f16W500(),
+                        ),
+                      ),
+                    ],
                     24.heightWidth,
                   ],
                 ).paddingXY(X: 40.rw),

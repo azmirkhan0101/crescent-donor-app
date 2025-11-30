@@ -63,7 +63,11 @@ class AuthRoutes extends AppRouteConfig {
     GoRoute(
       name: RoutePath.addCard,
       path: RoutePath.addCard.addBasePath,
-      builder: (context, state) => const AddCardPage(),
+      builder: (context, state) {
+        final extras = state.extra as Map<String, dynamic>?;
+        final fromSignup = extras?['fromSignup'] as bool? ?? false;
+        return AddCardPage(fromSignup: fromSignup);
+      },
       // Part of signup flow
     ),
 

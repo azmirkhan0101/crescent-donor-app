@@ -421,7 +421,6 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
     }
     // If no amount selected, show Error
     if (donateNowController.amount.value <= 0) {
-      print('Selected Amount: ${donateNowController.amount.value}');
       ToastMsg.error('Please select a valid donation amount to proceed.');
       return;
     }
@@ -431,14 +430,14 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
     if (donateNowController.selectedDonationType.value ==
         DonationType.oneTime) {
       GoRouter.of(context).pushNamed(RoutePath.linkedAccount);
+    } else {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const DateTimeSelectionBottomSheet(),
+      );
     }
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const DateTimeSelectionBottomSheet(),
-    );
   }
 }
 

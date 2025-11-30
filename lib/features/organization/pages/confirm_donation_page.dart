@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.
 import 'package:cresent_charge_user_app/features/organization/controllers/confirm_donation_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -61,7 +62,7 @@ class ConfirmDonationPage extends StatelessWidget {
             16.rh.heightWidth,
 
             // Details Card
-            _buildDetailsCard(donateNowCtrl),
+            _buildDetailsCard(donateNowCtrl, context),
 
             16.rh.heightWidth,
 
@@ -164,7 +165,10 @@ class ConfirmDonationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailsCard(DonateNowController donateNowCtrl) {
+  Widget _buildDetailsCard(
+    DonateNowController donateNowCtrl,
+    BuildContext context,
+  ) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -193,7 +197,7 @@ class ConfirmDonationPage extends StatelessWidget {
                   style: AppTextStyles.f16W500().copyWith(color: _offBlack),
                 ),
                 GestureDetector(
-                  // onTap: () => controller.onEditDetails(),
+                  onTap: () => _onEditTap(context),
                   child: Text(
                     'Edit',
                     style: AppTextStyles.f14W400().copyWith(color: _grayText),
@@ -324,7 +328,23 @@ class ConfirmDonationPage extends StatelessWidget {
             "**** **** **** ${paymentMethod.cardLast4}",
           ),
           // _buildTransactionItem('Taxes & Fees:', controller.taxesAndFees),
-          _buildTransactionItem('Taxes & Fees:', '\$0.5'),
+          _buildTransactionItem(
+            'Taxes & Fees:',
+            '\$${(Get.find<DonateNowController>().amount.value * 0.05).toStringAsFixed(2)}',
+          ),
+
+          // Divider
+          Container(
+            height: 1,
+            width: double.infinity,
+            color: _borderColor,
+            margin: EdgeInsets.symmetric(vertical: 8.rh),
+          ),
+
+          _buildTransactionItem(
+            "Total",
+            "\$${(Get.find<DonateNowController>().amount.value + (Get.find<DonateNowController>().amount.value * 0.05)).toStringAsFixed(2)}",
+          ),
 
           // Divider
           Container(
@@ -444,6 +464,27 @@ class ConfirmDonationPage extends StatelessWidget {
                 ),
               ),
       ).paddingXY(X: 56.rw),
+    );
+  }
+
+  void _onEditTap(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (context, scrollController) => DonationBottomSheet(
+          organizationName:
+              Get.find<OrganizationController>()
+                  .organizationDetails
+                  .value
+                  ?.name ??
+              'N/A',
+        ),
+      ),
     );
   }
 }

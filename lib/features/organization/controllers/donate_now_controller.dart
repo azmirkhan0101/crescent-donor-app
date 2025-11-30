@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class DonateNowController extends GetxController {
   final orgDetailsController = Get.find<OrganizationController>();
@@ -19,7 +20,7 @@ class DonateNowController extends GetxController {
   Rx<DonationType> selectedDonationType = DonationType.recurring.obs;
   RxString organizationId = ''.obs;
   Rx<CauseData?> selectedCause = Rx<CauseData?>(null);
-  RxInt selectedAmountIndex = 0.obs;
+  RxInt selectedAmountIndex = (-1).obs;
   var amount = Rx<num>(0);
 
   final donationAmountsList = [
@@ -37,6 +38,10 @@ class DonateNowController extends GetxController {
     // Initialize organizationId if needed
     organizationId.value =
         orgDetailsController.organizationDetails.value?.id ?? '';
+  }
+
+  String formatDate(DateTime dateTime) {
+    return DateFormat('MMMM dd, yyyy h:mm a').format(dateTime);
   }
 
   /// ============================================
@@ -58,13 +63,13 @@ class DonateNowController extends GetxController {
     }
 
     // Validate amount
-    if (amount <= 0) {
+    if (amount.value <= 0) {
       ToastMsg.error('Please enter a valid donation amount');
       return;
     }
 
     // Validate organization and cause
-    if (organizationId.isEmpty || selectedCause.value?.id == null) {
+    if (organizationId.value.isEmpty || selectedCause.value?.id == null) {
       // _showError(context, 'Missing organization or cause information');
       ToastMsg.error('Missing organization or cause information');
       return;
@@ -75,16 +80,19 @@ class DonateNowController extends GetxController {
 
     // Create donation request
     final request = {
-      "amount": amount,
+      "amount": amount.value + (amount.value * 0.05), // Including 5% tax/fees
       "currency": 'usd',
-      "organizationId": organizationId,
+      "organizationId": organizationId.value,
       "causeId": selectedCause.value?.id,
       "paymentMethodId": paymentMethodId,
       "specialMessage": specialMsgController.text,
     };
 
     if (kDebugMode) {
-      print('Creating donation: $request');
+      print(
+        'Creating donation: amount:${amount.value}, currency:usd, organizationId:${organizationId.value}, causeId:${selectedCause.value?.id}, paymentMethodId:$paymentMethodId, specialMessage:${specialMsgController.text}',
+      );
+      print('Raw request map: $request');
     }
 
     // Call API
@@ -107,12 +115,11 @@ class DonateNowController extends GetxController {
         ToastMsg.error(errorMessage.value);
       },
       (response) {
+        donationResponse.value = response;
         // Success
         if (kDebugMode) {
           print('Donation successful: $response');
         }
-
-      
 
         // Navigate to donation complete page
         if (context.mounted) {

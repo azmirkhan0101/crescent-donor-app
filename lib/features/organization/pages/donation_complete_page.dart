@@ -3,7 +3,6 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donation_complete_controller.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -140,7 +139,8 @@ class DonationCompletePage extends StatelessWidget {
           ),
           _buildSummaryItem(
             'Organization:',
-            Get.find<OrganizationController>()
+            donateNowCtrl
+                    .orgDetailsController
                     .organizationDetails
                     .value
                     ?.name ??
@@ -186,8 +186,17 @@ class DonationCompletePage extends StatelessWidget {
           ),
 
           // Timestamp and Transaction ID
-          _buildSummaryItem('Timestamp:', controller.timestamp),
-          _buildSummaryItem('Transaction ID:', controller.transactionId),
+          _buildSummaryItem(
+            'Timestamp:',
+            donateNowCtrl.formatDate(
+              donateNowCtrl.donationResponse.value?.donation?.donationDate ??
+                  DateTime.now(),
+            ),
+          ),
+          _buildSummaryItem(
+            'Transaction ID:',
+            donateNowCtrl.donationResponse.value?.donation?.id ?? '',
+          ),
         ],
       ),
     );

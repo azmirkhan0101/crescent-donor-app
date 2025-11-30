@@ -11,6 +11,7 @@ import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class OrganizationDetailsPage extends StatefulWidget {
   const OrganizationDetailsPage({super.key, required this.organizationId});
@@ -32,7 +33,6 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final orgDetails = orgController.organizationDetails.value;
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: CustomAppBar(
@@ -40,9 +40,10 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
         backgroundColor: const Color(0xFFF7F7F7),
       ),
       body: Obx(() {
-        if (orgController.isOrgDetailsFetching.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        final organizationDetails = orgController.organizationDetails.value;
+        // if (orgController.isOrgDetailsFetching.value) {
+        //   return const Center(child: CircularProgressIndicator());
+        // }
 
         if (orgController.error.value.isNotEmpty) {
           return Center(
@@ -61,7 +62,6 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
           );
         }
 
-        final organizationDetails = orgController.organizationDetails.value;
         if (organizationDetails == null) {
           return const Center(child: Text('Organization not found'));
         }
@@ -71,33 +71,39 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
               orgController.fetchOrganizationDetails(widget.organizationId),
           child: SingleChildScrollView(
             padding: EdgeInsets.all(16.rw),
-            child: Column(
-              children: [
-                OrganizationHeaderWidget(organization: organizationDetails),
-                SizedBox(height: 16.rh),
-                ImpactCardWidget(
-                  impactText: 'Supported over 3,25,000 students since 2021',
-                ),
-                SizedBox(height: 16.rh),
-                TotalDonationsCard2(
-                  color: const Color(0xFFEAF7EB),
-                  totalAmount: 8328,
-                  totalDonors: 150,
-                ),
-                SizedBox(height: 16.rh),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Overview', style: AppTextStyles.f16W500())
-                      .fontFamily(AppStrings.familjenGrotesk)
-                      .fontWeight(FontWeight.w600),
-                ),
-                SizedBox(height: 12.rh),
-                OverviewSectionWidget(
-                  mission: orgDetails?.aboutUs ?? '',
-                  causes: [],
-                ),
-                SizedBox(height: 100.rh), // Space for bottom button
-              ],
+            child: Skeletonizer(
+              enabled: orgController.isOrgDetailsFetching.value,
+              child: Column(
+                children: [
+                  OrganizationHeaderWidget(organization: organizationDetails),
+                  SizedBox(height: 16.rh),
+                  ImpactCardWidget(
+                    impactText: 'Supported over 3,25,000 students since 2021',
+                  ),
+                  SizedBox(height: 16.rh),
+                  TotalDonationsCard2(
+                    color: const Color(0xFFEAF7EB),
+                    totalAmount: 8328,
+                    totalDonors: 150,
+                  ),
+                  SizedBox(height: 16.rh),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Overview', style: AppTextStyles.f16W500())
+                        .fontFamily(AppStrings.familjenGrotesk)
+                        .fontWeight(FontWeight.w600),
+                  ),
+                  SizedBox(height: 12.rh),
+
+                  /// Overview Section
+                  OverviewSectionWidget(
+                    mission:
+                        orgController.organizationDetails.value?.aboutUs ?? '',
+                    causes: [],
+                  ),
+                  SizedBox(height: 100.rh), // Space for bottom button
+                ],
+              ),
             ),
           ),
         );

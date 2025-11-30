@@ -52,6 +52,37 @@ class PaymentMethodController extends GetxController {
     );
   }
 
+  /// Delete a payment method by id
+  Future<bool> deletePaymentMethod(String id) async {
+    // Optimistic UI: remove locally, revert if failed
+    final index = paymentMethods.indexWhere((pm) => pm.id == id);
+    PaymentMethodModel? removed;
+    if (index != -1) {
+      removed = paymentMethods[index];
+      paymentMethods.removeAt(index);
+    }
+
+    final result = await _networkHelper.request(
+      'DELETE',
+      ApiUrl.deletePaymentMethod(id),
+    );
+
+    return result.fold(
+      (failure) {
+        // Revert UI if deletion failed
+        if (removed != null) {
+          paymentMethods.insert(index, removed);
+        }
+        errorMessage.value =
+            failure.message ?? 'Failed to delete payment method';
+        return false;
+      },
+      (_) {
+        return true;
+      },
+    );
+  }
+
   /// Create setup intent for card payment
   Future<SetupIntentData?> createSetupIntent() async {
     final result = await _networkHelper.request(
