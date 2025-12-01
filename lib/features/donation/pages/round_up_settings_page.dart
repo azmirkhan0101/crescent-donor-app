@@ -1,14 +1,17 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/plaid_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_settings_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/round_up_settings_widgets.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 /// Round Up Settings Page
 ///
@@ -19,69 +22,78 @@ class RoundUpSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(RoundUpSettingsController());
-    print(Get.size.height);
+    final roundUpSettingsCtrl = Get.put(RoundUpSettingsController());
+    final plaidController = Get.put(PlaidController());
+    // print(Get.size.height);
 
     return Scaffold(
       backgroundColor: DonationConstants.backgroundColor,
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(context, plaidController),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 16.rh),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildOrganizationField(controller),
+        child: Obx(() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildOrganizationField(roundUpSettingsCtrl),
 
-            SizedBox(height: 16.rh),
+              SizedBox(height: 16.rh),
 
-            // Bank Account Link
-            _buildBankAccountField(controller),
+              // Bank Account Link
+              _buildBankAccountField(roundUpSettingsCtrl),
 
-            SizedBox(height: 16.rh),
+              SizedBox(height: 16.rh),
 
-            // Frequency Selection
-            Obx(() {
-              if (controller
-                  .organizations[controller.selectedOrganizationIndex.value]
-                  .frequency) {
-                return _buildFrequencySection(controller).paddingB(16.rh);
-              }
-              return SizedBox.shrink();
-            }),
+              // Frequency Selection
+              Obx(() {
+                if (roundUpSettingsCtrl
+                    .organizations[roundUpSettingsCtrl
+                        .selectedOrganizationIndex
+                        .value]
+                    .frequency) {
+                  return _buildFrequencySection(
+                    roundUpSettingsCtrl,
+                  ).paddingB(16.rh);
+                }
+                return SizedBox.shrink();
+              }),
 
-            // Threshold Amount Selection
-            _buildThresholdAmountSection(controller),
+              // Threshold Amount Selection
+              _buildThresholdAmountSection(roundUpSettingsCtrl),
 
-            SizedBox(height: 16.rh),
+              SizedBox(height: 16.rh),
 
-            // Special Message
-            _buildSpecialMessageSection(controller),
+              // Special Message
+              _buildSpecialMessageSection(roundUpSettingsCtrl),
 
-            SizedBox(height: 24.rh),
+              SizedBox(height: 24.rh),
 
-            // Cancel Donation Button
-            _buildCancelDonationButton(controller),
+              // Cancel Donation Button
+              _buildCancelDonationButton(roundUpSettingsCtrl),
 
-            Get.size.height > 850 ? 80.rh.heightWidth : 16.rh.heightWidth,
+              Get.size.height > 850 ? 80.rh.heightWidth : 16.rh.heightWidth,
 
-            Obx(() {
-              if (!controller
-                  .organizations[controller.selectedOrganizationIndex.value]
-                  .frequency) {
-                return 60.rh.heightWidth;
-              }
-              return SizedBox.shrink();
-            }),
+              Obx(() {
+                if (!roundUpSettingsCtrl
+                    .organizations[roundUpSettingsCtrl
+                        .selectedOrganizationIndex
+                        .value]
+                    .frequency) {
+                  return 60.rh.heightWidth;
+                }
+                return SizedBox.shrink();
+              }),
 
-            _buildBottomButtons(controller, context),
-          ],
-        ),
+              _buildBottomButtons(roundUpSettingsCtrl, context),
+            ],
+          );
+        }),
       ),
     );
   }
 
   /// Build app bar with back button and title
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context, PlaidController plaidController) {
     return AppBar(
       backgroundColor: DonationConstants.backgroundColor,
       elevation: 0,
@@ -107,6 +119,34 @@ class RoundUpSettingsPage extends StatelessWidget {
         ),
       ),
       centerTitle: true,
+      actions: [
+        const SizedBox(width: 48), // Placeholder for symmetry
+        Obx(() {
+          return Skeletonizer(
+            enabled: plaidController.isLinkTokenLoading,
+            child: IconButton(
+              onPressed: () async {
+                final bool isSuccess = await plaidController
+                    .generateLinkToken();
+                if (isSuccess) {
+                  LinkTokenConfiguration _configuration =
+                      LinkTokenConfiguration(token: plaidController.linkToken);
+
+                  // Create the internal handler for Plaid Link.
+                  // This is a one-time use object that opens a Link session.
+                  // Must be called before `open()`.
+                  // Completes when Plaid is ready to open, or throws an error if setup fails.
+                  await PlaidLink.create(configuration: _configuration);
+
+                  /// Open Plaid Link by calling open on the handler.
+                  PlaidLink.open();
+                }
+              },
+              icon: Icon(Icons.add),
+            ),
+          );
+        }),
+      ],
     );
   }
 

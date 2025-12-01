@@ -49,6 +49,7 @@ dependencies:
   fluttertoast: ^9.0.0
   skeletonizer: ^2.1.0+1
   flutter_stripe: ^12.1.1
+  plaid_flutter: ^5.0.5
 
 dev_dependencies:
   flutter_test:

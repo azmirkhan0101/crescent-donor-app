@@ -49,4 +49,8 @@ class ApiUrl {
       '$baseUrl/payment-method/setup-intent';
   static const String addPaymentMethod = '$baseUrl/payment-method';
   static String deletePaymentMethod(String id) => '$baseUrl/payment-method/$id';
+
+  /// ======= Bank Connection =======
+  static const String generatePlaidLinkToken =
+      '$baseUrl/bank-connection/link-token';
 }
