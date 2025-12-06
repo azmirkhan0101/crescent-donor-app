@@ -89,6 +89,13 @@ class ApiUrl {
       '$baseUrl/payment-method/setup-intent';
   static const String addPaymentMethod = '$baseUrl/payment-method';
   static String deletePaymentMethod(String id) => '$baseUrl/payment-method/$id';
+  static const String getDefaultPaymentMethod =
+      '$baseUrl/payment-method/default';
+  static String getPaymentMethodDetails(String id) =>
+      '$baseUrl/payment-method/$id';
+  static String setDefaultPaymentMethod(String id) =>
+      '$baseUrl/payment-method/$id/default';
+  // Note: deletePaymentMethod is already defined above in the Payment Methods section
 
   /// ======= Bank Connection =======
   static const String generatePlaidLinkToken =
@@ -101,4 +108,38 @@ class ApiUrl {
   /// ======= Secure RoundUp =======
   static const String saveRoundupConsent =
       '$baseUrl/secure-roundup/consent/save';
+  static const String secureRoundupDashboard =
+      '$baseUrl/secure-roundup/dashboard';
+  static String revokeRoundupConsent(String bankConnectionId) =>
+      '$baseUrl/secure-roundup/consent/revoke/$bankConnectionId';
+  static const String switchRoundupCharity =
+      '$baseUrl/secure-roundup/charity/switch';
+  static const String resumeRoundup = '$baseUrl/secure-roundup/resume';
+  static const String processMonthlyDonation =
+      '$baseUrl/secure-roundup/process-monthly-donation';
+
+  /// ======= RoundUp Transactions =======
+  static String getRoundupTransactions({
+    String? status,
+    int? page,
+    int? limit,
+    int? month,
+    int? year,
+  }) {
+    final params = <String>[];
+
+    if (status != null && status.isNotEmpty) params.add('status=$status');
+    if (page != null) params.add('page=$page');
+    if (limit != null) params.add('limit=$limit');
+    if (month != null) params.add('month=$month');
+    if (year != null) params.add('year=$year');
+
+    final query = params.isEmpty ? '' : '?${params.join('&')}';
+    return '$baseUrl/roundup-transactions$query';
+  }
+
+  static const String getRoundupTransactionsSummary =
+      '$baseUrl/roundup-transactions/summary';
+  static String getRoundupTransactionDetails(String transactionId) =>
+      '$baseUrl/roundup-transactions/$transactionId';
 }

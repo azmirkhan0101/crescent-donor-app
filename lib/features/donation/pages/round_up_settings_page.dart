@@ -558,14 +558,15 @@ class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
             onChanged: (value) {
               if (getBankConnectionController
                   .connectedAccountsDataModel
-                  .isEmpty)
+                  .isEmpty) {
                 return;
+              }
 
-              final idx = getBankConnectionController.connectedAccountsDataModel
+              final index = getBankConnectionController.connectedAccountsDataModel
                   .indexWhere((e) => e.institutionName == value);
 
               // Only change if a valid index is found
-              if (idx >= 0) controller.changeBankAccount(idx);
+              if (index >= 0) controller.changeBankAccount(index);
             },
             // onChanged: (value) {
             //   int index = controller.organizations.indexWhere(
