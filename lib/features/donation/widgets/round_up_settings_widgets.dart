@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 class SpecialMessageField extends StatelessWidget {
   final String message;
   final Function(String) onMessageChanged;
+  final TextEditingController? controller;
 
   const SpecialMessageField({
     super.key,
     required this.message,
     required this.onMessageChanged,
+    this.controller,
   });
 
   @override
@@ -44,7 +46,7 @@ class SpecialMessageField extends StatelessWidget {
         SizedBox(height: 16.rh),
 
         TextField(
-          // controller: _messageController,
+          controller: controller,
           maxLines: 3,
           decoration: InputDecoration(
             border: InputBorder.none,

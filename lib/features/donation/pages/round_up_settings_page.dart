@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/bank_connect_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/create_plaid_link_token_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_conected_bank_acounts_controller.dart';
@@ -10,6 +11,7 @@ import 'package:cresent_charge_user_app/features/donation/utils/donation_constan
 import 'package:cresent_charge_user_app/features/donation/widgets/round_up_settings_widgets.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
+import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +36,10 @@ class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
   final bankConnectionController = Get.put(BankConnectionController());
   final getBankConnectionController = Get.put(GetConnectedBankAccounts());
   final createPlaidTokenCtrl = Get.put(CreatePlaidLinkToken());
+  final PaymentMethodController paymentMethodController =
+      Get.isRegistered<PaymentMethodController>()
+      ? Get.find<PaymentMethodController>()
+      : Get.put(PaymentMethodController());
   final OrganizationController organizationController =
       Get.find<OrganizationController>();
   // final plaidCtrl = Get.put(PlaidController());
@@ -129,6 +135,86 @@ class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
     debugPrint("onExit metadata: $metadata, error: $error");
   }
 
+  Future<void> _handleSave() async {
+    if (roundUpSettingsCtrl.isSavingConsent.value) return;
+
+    final orgs = organizationController.organizationsList;
+    if (orgs.isEmpty) {
+      ToastMsg.error('Please select an organization');
+      return;
+    }
+
+    int orgIndex = roundUpSettingsCtrl.selectedOrganizationIndex.value;
+    if (orgIndex < 0 || orgIndex >= orgs.length) {
+      orgIndex = 0;
+    }
+    final organization = orgs[orgIndex];
+
+    final banks = getBankConnectionController.connectedAccountsDataModel;
+    if (banks.isEmpty) {
+      ToastMsg.error('Please link a bank account');
+      return;
+    }
+
+    int bankIndex = roundUpSettingsCtrl.selectedBankAccountIndex.value;
+    if (bankIndex < 0 || bankIndex >= banks.length) {
+      bankIndex = 0;
+    }
+    final bank = banks[bankIndex];
+
+    final paymentMethods = paymentMethodController.paymentMethods;
+    if (paymentMethods.isEmpty) {
+      ToastMsg.error('Please add a payment method');
+      return;
+    }
+
+    final paymentMethod = paymentMethods.firstWhere(
+      (method) => method.isDefault,
+      orElse: () => paymentMethods.first,
+    );
+
+    final selectedAmount = roundUpSettingsCtrl.selectedAmountIndex.value;
+    double? monthlyThreshold;
+
+    if (selectedAmount == 'Custom') {
+      final custom = roundUpSettingsCtrl.customAmountController.text.trim();
+      monthlyThreshold = double.tryParse(custom);
+    } else if (selectedAmount == 'No Limit') {
+      monthlyThreshold = 0;
+    } else {
+      monthlyThreshold = double.tryParse(
+        selectedAmount.replaceAll(RegExp(r'[^0-9.]'), ''),
+      );
+    }
+
+    if (monthlyThreshold == null ||
+        (selectedAmount != 'No Limit' && monthlyThreshold <= 0)) {
+      ToastMsg.error('Please enter a valid threshold amount');
+      return;
+    }
+
+    final specialMessage = roundUpSettingsCtrl.specialMessageController.text
+        .trim();
+
+    final success = await roundUpSettingsCtrl.saveRoundUpConsent(
+      bankConnectionId: bank.id,
+      organizationId: organization.id,
+      paymentMethodId: paymentMethod.id,
+      monthlyThreshold: monthlyThreshold,
+      specialMessage: specialMessage.isEmpty ? null : specialMessage,
+    );
+
+    if (success) {
+      ToastMsg.success('Round up settings saved');
+      if (mounted) {
+        context.pop();
+      }
+    } else {
+      final error = roundUpSettingsCtrl.saveConsentError.value;
+      ToastMsg.error(error.isNotEmpty ? error : 'Failed to save settings');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // print(Get.size.height);
@@ -151,22 +237,22 @@ class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
 
               SizedBox(height: 16.rh),
 
-              // Frequency Selection
-              Obx(() {
-                final orgs = organizationController.organizationsList;
-                final selectedIndex =
-                    roundUpSettingsCtrl.selectedOrganizationIndex.value;
+              // // Frequency Selection
+              // Obx(() {
+              //   final orgs = organizationController.organizationsList;
+              //   final selectedIndex =
+              //       roundUpSettingsCtrl.selectedOrganizationIndex.value;
 
-                if (orgs.isNotEmpty &&
-                    selectedIndex >= 0 &&
-                    selectedIndex < orgs.length &&
-                    orgs[selectedIndex].serviceType == 'recurring') {
-                  return _buildFrequencySection(
-                    roundUpSettingsCtrl,
-                  ).paddingB(16.rh);
-                }
-                return SizedBox.shrink();
-              }),
+              //   if (orgs.isNotEmpty &&
+              //       selectedIndex >= 0 &&
+              //       selectedIndex < orgs.length &&
+              //       orgs[selectedIndex].serviceType == 'recurring') {
+              //     return _buildFrequencySection(
+              //       roundUpSettingsCtrl,
+              //     ).paddingB(16.rh);
+              //   }
+              //   return SizedBox.shrink();
+              // }),
 
               // Threshold Amount Selection
               _buildThresholdAmountSection(roundUpSettingsCtrl),
@@ -623,13 +709,42 @@ class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
             }).toList(),
           );
         }),
+
+        Obx(() {
+          final isCustomSelected =
+              controller.selectedAmountIndex.value == 'Custom';
+          if (!isCustomSelected) return SizedBox.shrink();
+
+          return Padding(
+            padding: EdgeInsets.only(top: 12.rh),
+            child: TextField(
+              controller: controller.customAmountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Enter custom amount',
+                hintText: 'e.g., 75',
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12.rw,
+                  vertical: 12.rh,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.rw),
+                ),
+              ),
+            ),
+          );
+        }),
       ],
     );
   }
 
   /// Build special message section
   Widget _buildSpecialMessageSection(RoundUpSettingsController controller) {
-    return SpecialMessageField(message: "", onMessageChanged: (message) {});
+    return SpecialMessageField(
+      message: '',
+      controller: controller.specialMessageController,
+      onMessageChanged: (message) {},
+    );
   }
 
   /// Build cancel donation button
@@ -665,7 +780,7 @@ class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
         children: [
           // Save Button
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => _handleSave(),
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(double.maxFinite, 52),
               backgroundColor: DonationConstants.secondaryLime,

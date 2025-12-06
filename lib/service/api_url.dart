@@ -97,4 +97,8 @@ class ApiUrl {
   static const String getConnectedAccounts =
       '$baseUrl/bank-connection/accounts';
   static const String getBankConnection = '$baseUrl/bank-connection/me';
+
+  /// ======= Secure RoundUp =======
+  static const String saveRoundupConsent =
+      '$baseUrl/secure-roundup/consent/save';
 }
