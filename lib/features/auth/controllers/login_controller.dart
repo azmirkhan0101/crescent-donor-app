@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   // TextEditingControllers
   final emailController = TextEditingController(
-    text: kDebugMode ? 'cctest1@yopmail.com' : '',
+    text: kDebugMode ? 'donor1@yopmail.com' : '',
   );
   final passwordController = TextEditingController(
     text: kDebugMode ? 'Abc@1234' : '',

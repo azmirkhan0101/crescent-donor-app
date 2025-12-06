@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/plaid_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/bank_connect_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/create_plaid_link_token_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_conected_bank_acounts_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_settings_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/round_up_settings_widgets.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -17,18 +22,120 @@ import 'package:skeletonizer/skeletonizer.dart';
 ///
 /// Allows users to configure their round-up donation settings including
 /// organization, bank account, threshold amounts, and custom messages
-class RoundUpSettingsPage extends StatelessWidget {
+class RoundUpSettingsPage extends StatefulWidget {
   const RoundUpSettingsPage({super.key});
 
   @override
+  State<RoundUpSettingsPage> createState() => _RoundUpSettingsPageState();
+}
+
+class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
+  final roundUpSettingsCtrl = Get.put(RoundUpSettingsController());
+  final bankConnectionController = Get.put(BankConnectionController());
+  final getBankConnectionController = Get.put(GetConnectedBankAccounts());
+  final createPlaidTokenCtrl = Get.put(CreatePlaidLinkToken());
+  final OrganizationController organizationController =
+      Get.find<OrganizationController>();
+  // final plaidCtrl = Get.put(PlaidController());
+
+  LinkTokenConfiguration? _configuration;
+  StreamSubscription<LinkEvent>? _streamEvent;
+  StreamSubscription<LinkExit>? _streamExit;
+  StreamSubscription<LinkSuccess>? _streamSuccess;
+  StreamSubscription<LinkOnLoad>? _streamOnLoad;
+
+  LinkObject? _successObject;
+  bool _isLoadingConfiguration = false;
+  final TextEditingController _orgSearchController = TextEditingController();
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getBankConnectionController.getConnectedBankAccounts();
+    _streamEvent = PlaidLink.onEvent.listen(_onEvent);
+    _streamExit = PlaidLink.onExit.listen(_onExit);
+    _streamSuccess = PlaidLink.onSuccess.listen(_onSuccess);
+    _streamOnLoad = PlaidLink.onLoad.listen(_onLoad);
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _orgSearchController.dispose();
+    _streamEvent?.cancel();
+    _streamExit?.cancel();
+    _streamSuccess?.cancel();
+    _streamOnLoad?.cancel();
+    super.dispose();
+  }
+
+  void _openLink() async {
+    if (_configuration == null) {
+      debugPrint("Configuration is null, please create it first.");
+      return;
+    }
+
+    try {
+      setState(() => _configuration = null);
+      await PlaidLink.open();
+    } catch (e) {
+      debugPrint("Error opening Link: $e");
+    }
+  }
+
+  void _createLinkTokenConfiguration() async {
+    final bool isSuccess = await createPlaidTokenCtrl.generateLinkToken();
+    if (isSuccess) {
+      LinkTokenConfiguration configuration = LinkTokenConfiguration(
+        token: createPlaidTokenCtrl.linkToken,
+      );
+      setState(() => _isLoadingConfiguration = true);
+
+      await PlaidLink.create(configuration: configuration);
+
+      setState(() {
+        _isLoadingConfiguration = false;
+        _configuration = configuration;
+      });
+
+      _openLink();
+    }
+  }
+
+  void _onLoad(_) {
+    debugPrint("LinkTokenConfiguration Loaded");
+  }
+
+  void _onEvent(LinkEvent event) {
+    final name = event.name;
+    final metadata = event.metadata.description();
+    debugPrint("onEvent: $name, metadata: $metadata");
+  }
+
+  void _onSuccess(LinkSuccess event) async {
+    final token = event.publicToken;
+    final metadata = event.metadata.description();
+    debugPrint("onSuccess: $token, metadata: $metadata");
+    setState(() => _successObject = event);
+
+    await bankConnectionController.connectBank(token);
+  }
+
+  void _onExit(LinkExit event) {
+    final metadata = event.metadata.description();
+    final error = event.error?.description();
+    debugPrint("onExit metadata: $metadata, error: $error");
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final roundUpSettingsCtrl = Get.put(RoundUpSettingsController());
-    final plaidController = Get.put(PlaidController());
     // print(Get.size.height);
 
     return Scaffold(
       backgroundColor: DonationConstants.backgroundColor,
-      appBar: _buildAppBar(context, plaidController),
+      appBar: _buildAppBar(context),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 16.rh),
         child: Obx(() {
@@ -46,11 +153,14 @@ class RoundUpSettingsPage extends StatelessWidget {
 
               // Frequency Selection
               Obx(() {
-                if (roundUpSettingsCtrl
-                    .organizations[roundUpSettingsCtrl
-                        .selectedOrganizationIndex
-                        .value]
-                    .frequency) {
+                final orgs = organizationController.organizationsList;
+                final selectedIndex =
+                    roundUpSettingsCtrl.selectedOrganizationIndex.value;
+
+                if (orgs.isNotEmpty &&
+                    selectedIndex >= 0 &&
+                    selectedIndex < orgs.length &&
+                    orgs[selectedIndex].serviceType == 'recurring') {
                   return _buildFrequencySection(
                     roundUpSettingsCtrl,
                   ).paddingB(16.rh);
@@ -74,11 +184,14 @@ class RoundUpSettingsPage extends StatelessWidget {
               Get.size.height > 850 ? 80.rh.heightWidth : 16.rh.heightWidth,
 
               Obx(() {
-                if (!roundUpSettingsCtrl
-                    .organizations[roundUpSettingsCtrl
-                        .selectedOrganizationIndex
-                        .value]
-                    .frequency) {
+                final orgs = organizationController.organizationsList;
+                final selIdx =
+                    roundUpSettingsCtrl.selectedOrganizationIndex.value;
+
+                if (orgs.isNotEmpty &&
+                    selIdx >= 0 &&
+                    selIdx < orgs.length &&
+                    orgs[selIdx].serviceType != 'recurring') {
                   return 60.rh.heightWidth;
                 }
                 return SizedBox.shrink();
@@ -93,7 +206,7 @@ class RoundUpSettingsPage extends StatelessWidget {
   }
 
   /// Build app bar with back button and title
-  AppBar _buildAppBar(BuildContext context, PlaidController plaidController) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: DonationConstants.backgroundColor,
       elevation: 0,
@@ -123,25 +236,9 @@ class RoundUpSettingsPage extends StatelessWidget {
         const SizedBox(width: 48), // Placeholder for symmetry
         Obx(() {
           return Skeletonizer(
-            enabled: plaidController.isLinkTokenLoading,
+            enabled: createPlaidTokenCtrl.isLinkTokenLoading,
             child: IconButton(
-              onPressed: () async {
-                final bool isSuccess = await plaidController
-                    .generateLinkToken();
-                if (isSuccess) {
-                  LinkTokenConfiguration _configuration =
-                      LinkTokenConfiguration(token: plaidController.linkToken);
-
-                  // Create the internal handler for Plaid Link.
-                  // This is a one-time use object that opens a Link session.
-                  // Must be called before `open()`.
-                  // Completes when Plaid is ready to open, or throws an error if setup fails.
-                  await PlaidLink.create(configuration: _configuration);
-
-                  /// Open Plaid Link by calling open on the handler.
-                  PlaidLink.open();
-                }
-              },
+              onPressed: _createLinkTokenConfiguration,
               icon: Icon(Icons.add),
             ),
           );
@@ -167,18 +264,111 @@ class RoundUpSettingsPage extends StatelessWidget {
 
         SizedBox(height: 8.rh),
 
+        // TextField(
+        //   controller: TextEditingController(),
+        //   decoration: InputDecoration(
+        //     hintText: 'Search Organization',
+        //     contentPadding: EdgeInsets.symmetric(
+        //       horizontal: 16.rw,
+        //       vertical: 16.rh,
+        //     ),
+        //   ),
+        //   onChanged: (value) async {
+        //     await organizationController.fetchAllOrganizations(
+        //       searchTerm: value,
+        //     );
+        //   },
+        // ),
+        // GetX<OrganizationController>(
+        //   builder: (orgCtrl) {
+        //     final orgs = orgCtrl.organizationsList;
+        //     if (orgs.isEmpty) {
+        //       return SizedBox(
+        //         height: 64.rh,
+        //         child: Center(
+        //           child: Text(
+        //             'No organizations found',
+        //             style: TextStyle(color: DonationConstants.offBlack),
+        //           ),
+        //         ),
+        //       );
+        //     }
+
+        //     return ListView.builder(
+        //       shrinkWrap: true,
+        //       physics: const NeverScrollableScrollPhysics(),
+        //       itemCount: orgs.length,
+        //       itemBuilder: (context, index) {
+        //         final organization = orgs[index];
+        //         return ListTile(title: Text(organization.name), onTap: () {});
+        //       },
+        //     );
+        //   },
+        // ),
+        // SizedBox(height: 8.rh),
         DropdownButtonHideUnderline(
           child: DropdownButton2(
-            items: controller.organizations
+            isExpanded: true,
+            items: organizationController.organizationsList
                 .map(
                   (e) => DropdownMenuItem(value: e.name, child: Text(e.name)),
                 )
                 .toList(),
+            dropdownSearchData: DropdownSearchData(
+              searchController: _orgSearchController,
+              searchInnerWidgetHeight: 50,
+              searchInnerWidget: Container(
+                height: 50,
+                padding: EdgeInsets.only(top: 8, bottom: 4, right: 8, left: 8),
+                child: TextFormField(
+                  controller: _orgSearchController,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                    hintText: 'Search organization...',
+                    hintStyle: TextStyle(fontSize: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (_debounce?.isActive ?? false) _debounce!.cancel();
+                    _debounce = Timer(
+                      const Duration(milliseconds: 500),
+                      () async {
+                        await organizationController.fetchAllOrganizations(
+                          searchTerm: value,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              searchMatchFn: (item, searchValue) {
+                return item.value.toString().toLowerCase().contains(
+                  searchValue.toLowerCase(),
+                );
+              },
+            ),
             onChanged: (value) {
-              int index = controller.organizations.indexWhere(
+              if (value == null) return;
+
+              int index = organizationController.organizationsList.indexWhere(
                 (e) => e.name == value,
               );
-              controller.changeOrganization(index);
+
+              if (index >= 0) {
+                controller.changeOrganization(index);
+              }
+              _orgSearchController.clear();
+            },
+            onMenuStateChange: (isOpen) {
+              if (!isOpen) {
+                _orgSearchController.clear();
+              }
             },
             customButton: Container(
               width: double.infinity,
@@ -192,12 +382,18 @@ class RoundUpSettingsPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Obx(() {
+                      final orgs = organizationController.organizationsList;
+                      final selIdx = controller.selectedOrganizationIndex.value;
+
+                      final name =
+                          (orgs.isNotEmpty &&
+                              selIdx >= 0 &&
+                              selIdx < orgs.length)
+                          ? orgs[selIdx].name
+                          : 'Select organization';
+
                       return Text(
-                        controller
-                            .organizations[controller
-                                .selectedOrganizationIndex
-                                .value]
-                            .name,
+                        name,
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
                           fontSize: 14.rfs,
@@ -249,21 +445,48 @@ class RoundUpSettingsPage extends StatelessWidget {
 
         DropdownButtonHideUnderline(
           child: DropdownButton2(
-            items: controller.organizations
-                .map(
-                  (e) => DropdownMenuItem(
-                    value: e.bankAccount,
-                    child: Text(e.bankAccount),
-                  ),
-                )
-                .toList(),
-
+            // items: controller.organizations
+            //     .map(
+            //       (e) => DropdownMenuItem(
+            //         value: e.bankAccount,
+            //         child: Text(e.bankAccount),
+            //       ),
+            //     )
+            //     .toList(),
+            items:
+                getBankConnectionController.connectedAccountsDataModel.isEmpty
+                ? [
+                    DropdownMenuItem<String>(
+                      value: null,
+                      child: Text('No linked accounts'),
+                    ),
+                  ]
+                : getBankConnectionController.connectedAccountsDataModel
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e.institutionName,
+                          child: Text(e.institutionName),
+                        ),
+                      )
+                      .toList(),
             onChanged: (value) {
-              int index = controller.organizations.indexWhere(
-                (e) => e.bankAccount == value,
-              );
-              controller.changeBankAccount(index);
+              if (getBankConnectionController
+                  .connectedAccountsDataModel
+                  .isEmpty)
+                return;
+
+              final idx = getBankConnectionController.connectedAccountsDataModel
+                  .indexWhere((e) => e.institutionName == value);
+
+              // Only change if a valid index is found
+              if (idx >= 0) controller.changeBankAccount(idx);
             },
+            // onChanged: (value) {
+            //   int index = controller.organizations.indexWhere(
+            //     (e) => e.bankAccount == value,
+            //   );
+            //   controller.changeBankAccount(index);
+            // },
             customButton: Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 16.rh),
@@ -276,12 +499,21 @@ class RoundUpSettingsPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Obx(() {
+                      final connected = getBankConnectionController
+                          .connectedAccountsDataModel;
+                      final selIndex = controller
+                          .selectedBankAccountIndex
+                          .value; // from RoundUpSettingsController
+
+                      final label =
+                          (connected.isNotEmpty &&
+                              selIndex >= 0 &&
+                              selIndex < connected.length)
+                          ? connected[selIndex].institutionName
+                          : 'No linked accounts';
+
                       return Text(
-                        controller
-                            .organizations[controller
-                                .selectedBankAccountIndex
-                                .value]
-                            .bankAccount,
+                        label,
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
                           fontSize: 14.rfs,
@@ -293,7 +525,11 @@ class RoundUpSettingsPage extends StatelessWidget {
                   ),
 
                   Text(
-                    'Change',
+                    getBankConnectionController
+                            .connectedAccountsDataModel
+                            .isEmpty
+                        ? 'Add'
+                        : 'Change',
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       color: const Color(

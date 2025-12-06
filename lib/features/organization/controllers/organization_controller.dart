@@ -20,15 +20,43 @@ class OrganizationController extends GetxController {
   RxBool isFetchingAllOrgs = false.obs;
   RxString fetchingAllOrgsErrMsg = ''.obs;
 
-  final List<OrganizationModel> organizationsList = [];
+  var organizationsList = <OrganizationModel>[].obs;
 
-  Future<bool> fetchAllOrganizations() async {
+  Future<bool> fetchAllOrganizations({
+    String? searchTerm,
+    String? country,
+    String? state,
+    String? serviceType,
+    bool? isProfileVisible,
+    String? dateFrom,
+    String? dateTo,
+    int? page,
+    int? limit,
+    String? sort,
+    String? fields,
+    String? status,
+    bool? populateCauses,
+  }) async {
     fetchingAllOrgsErrMsg.value = '';
     isFetchingAllOrgs.value = true;
 
     final result = await _networkHelper.request(
       'GET',
-      ApiUrl.getAllOrganizations,
+      ApiUrl.getAllOrganizations(
+        searchTerm: searchTerm,
+        country: country,
+        state: state,
+        serviceType: serviceType,
+        isProfileVisible: isProfileVisible,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        page: page,
+        limit: limit,
+        sort: sort,
+        fields: fields,
+        status: status,
+        populateCauses: populateCauses,
+      ),
       parser: (data) => OrganizationResponseModel.fromJson(data),
       withAuth: true,
     );

@@ -2,7 +2,9 @@ class ApiUrl {
   // For Android Emulator, use 10.0.2.2 to access host machine's localhost
   // For iOS Simulator, use localhost
   // For physical device, use your machine's IP address (e.g., 192.168.x.x)
-  static const String hostUrl = "http://10.0.2.2:5001"; // Android Emulator
+  static const String hostUrl = "http://10.0.2.2:5001"; // local server
+  // static const String hostUrl = "http://10.10.20.42:5000"; // Mustafiz's local server
+  // static const String hostUrl = "http://localhost:5001"; // Android Emulator
   static const String baseUrl = "$hostUrl/api/v1";
 
   // Alternative URLs (uncomment as needed):
@@ -35,7 +37,45 @@ class ApiUrl {
       '$baseUrl/cause/organization/$orgId';
 
   /// ======= charities =======
-  static const String getAllOrganizations = '$baseUrl/organization/get-all';
+  static String getAllOrganizations({
+    String? searchTerm,
+    String? country,
+    String? state,
+    String? serviceType,
+    bool? isProfileVisible,
+    String? dateFrom,
+    String? dateTo,
+    int? page,
+    int? limit,
+    String? sort,
+    String? fields,
+    String? status,
+    bool? populateCauses,
+  }) {
+    final params = <String>[];
+
+    if (searchTerm != null && searchTerm.isNotEmpty)
+      params.add('searchTerm=$searchTerm');
+    if (country != null && country.isNotEmpty) params.add('country=$country');
+    if (state != null && state.isNotEmpty) params.add('state=$state');
+    if (serviceType != null && serviceType.isNotEmpty)
+      params.add('serviceType=$serviceType');
+    if (isProfileVisible != null)
+      params.add('isProfileVisible=$isProfileVisible');
+    if (dateFrom != null && dateFrom.isNotEmpty)
+      params.add('dateFrom=$dateFrom');
+    if (dateTo != null && dateTo.isNotEmpty) params.add('dateTo=$dateTo');
+    if (page != null) params.add('page=$page');
+    if (limit != null) params.add('limit=$limit');
+    if (sort != null && sort.isNotEmpty) params.add('sort=$sort');
+    if (fields != null && fields.isNotEmpty) params.add('fields=$fields');
+    if (status != null && status.isNotEmpty) params.add('status=$status');
+    if (populateCauses != null) params.add('populateCauses=$populateCauses');
+
+    final query = params.isEmpty ? '' : '?${params.join('&')}';
+    return '$baseUrl/organization/get-all$query';
+  }
+
   static String getOrganizationDetails(String organizationId) =>
       '$baseUrl/organization/$organizationId';
 
@@ -53,4 +93,8 @@ class ApiUrl {
   /// ======= Bank Connection =======
   static const String generatePlaidLinkToken =
       '$baseUrl/bank-connection/link-token';
+  static const String bankConnection = '$baseUrl/bank-connection';
+  static const String getConnectedAccounts =
+      '$baseUrl/bank-connection/accounts';
+  static const String getBankConnection = '$baseUrl/bank-connection/me';
 }
