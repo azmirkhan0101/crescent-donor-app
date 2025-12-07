@@ -54,23 +54,45 @@ class ApiUrl {
   }) {
     final params = <String>[];
 
-    if (searchTerm != null && searchTerm.isNotEmpty)
+    if (searchTerm != null && searchTerm.isNotEmpty) {
       params.add('searchTerm=$searchTerm');
-    if (country != null && country.isNotEmpty) params.add('country=$country');
-    if (state != null && state.isNotEmpty) params.add('state=$state');
-    if (serviceType != null && serviceType.isNotEmpty)
+    }
+    if (country != null && country.isNotEmpty) {
+      params.add('country=$country');
+    }
+    if (state != null && state.isNotEmpty) {
+      params.add('state=$state');
+    }
+    if (serviceType != null && serviceType.isNotEmpty) {
       params.add('serviceType=$serviceType');
-    if (isProfileVisible != null)
+    }
+    if (isProfileVisible != null) {
       params.add('isProfileVisible=$isProfileVisible');
-    if (dateFrom != null && dateFrom.isNotEmpty)
+    }
+    if (dateFrom != null && dateFrom.isNotEmpty) {
       params.add('dateFrom=$dateFrom');
-    if (dateTo != null && dateTo.isNotEmpty) params.add('dateTo=$dateTo');
-    if (page != null) params.add('page=$page');
-    if (limit != null) params.add('limit=$limit');
-    if (sort != null && sort.isNotEmpty) params.add('sort=$sort');
-    if (fields != null && fields.isNotEmpty) params.add('fields=$fields');
-    if (status != null && status.isNotEmpty) params.add('status=$status');
-    if (populateCauses != null) params.add('populateCauses=$populateCauses');
+    }
+    if (dateTo != null && dateTo.isNotEmpty) {
+      params.add('dateTo=$dateTo');
+    }
+    if (page != null) {
+      params.add('page=$page');
+    }
+    if (limit != null) {
+      params.add('limit=$limit');
+    }
+    if (sort != null && sort.isNotEmpty) {
+      params.add('sort=$sort');
+    }
+    if (fields != null && fields.isNotEmpty) {
+      params.add('fields=$fields');
+    }
+    if (status != null && status.isNotEmpty) {
+      params.add('status=$status');
+    }
+    if (populateCauses != null) {
+      params.add('populateCauses=$populateCauses');
+    }
 
     final query = params.isEmpty ? '' : '?${params.join('&')}';
     return '$baseUrl/organization/get-all$query';
@@ -142,4 +164,21 @@ class ApiUrl {
       '$baseUrl/roundup-transactions/summary';
   static String getRoundupTransactionDetails(String transactionId) =>
       '$baseUrl/roundup-transactions/$transactionId';
+
+  /// ======= Rewards =======
+  static const String getRewards = '$baseUrl/rewards';
+  static String getRewardDetails(String rewardId) =>
+      '$baseUrl/rewards/$rewardId';
+  static String getRewardAvailability(String rewardId) =>
+      '$baseUrl/rewards/$rewardId/availability';
+  static const String getMyClaimedRewards = '$baseUrl/rewards/my/claimed';
+  static String getBusinessRewards(String businessId) =>
+      '$baseUrl/rewards/business/$businessId';
+
+  static String claimReward(String rewardId) =>
+      '$baseUrl/rewards/$rewardId/claim';
+  static String getRedemptionDetails(String redemptionId) =>
+      '$baseUrl/rewards/redemption/$redemptionId';
+  static String cancelRedemption(String redemptionId) =>
+      '$baseUrl/rewards/redemption/$redemptionId/cancel';
 }

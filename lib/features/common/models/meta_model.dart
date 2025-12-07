@@ -13,8 +13,8 @@ class MetaModel {
 
   factory MetaModel.fromJson(Map<String, dynamic> json) {
     return MetaModel(
-      page: json['page'] ?? 0,
-      limit: json['limit'] ?? 0,
+      page: int.tryParse(json['page']?.toString() ?? '0') ?? 0,
+      limit: int.tryParse(json['limit']?.toString() ?? '0') ?? 0,
       total: json['total'] ?? 0,
       totalPage: json['totalPage'] ?? 0,
     );
