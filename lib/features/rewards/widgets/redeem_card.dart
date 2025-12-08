@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/features/rewards/models/reward_model.dart';
 import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/redemption_code_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/reward_details_bottom_sheet.dart';
@@ -11,9 +12,10 @@ import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 
 class RedeemCard extends StatelessWidget {
-  const RedeemCard({super.key, required this.index});
+  const RedeemCard({super.key, required this.index, required this.reward});
 
   final int index;
+  final RewardModel reward;
 
   void _handleCardTap(BuildContext context) {
     showRewardsBottomSheet(

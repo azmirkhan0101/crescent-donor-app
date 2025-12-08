@@ -86,9 +86,4 @@ class YourRewardsController extends GetxController {
       colorText: Get.theme.colorScheme.onPrimary,
     );
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

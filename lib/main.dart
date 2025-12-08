@@ -7,6 +7,7 @@ import 'package:cresent_charge_user_app/service/socket_service.dart';
 import 'package:cresent_charge_user_app/utils/system_utils/system_utils.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
@@ -15,11 +16,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemUtil.setStatusBarColor(color: Colors.transparent);
 
+  // Load environment variables
+  await dotenv.load(fileName: ".env");
+
   // Initialize Stripe
-  // Set publishable key
-  Stripe.publishableKey =
-      'pk_test_51SRlzVGWHt6mKfvJc2YG3Bt8NX85IpFnPNbcZcUMTkfQLjQu6RX8f3WcPYHpL6MPEke0mKO5EbIkXIBvfsVoWj5G0046sAl8FY';
-  // 'pk_test_51SWjbnK1ijE5rN5Ysh5jg0XXhNxmfZMDQRPPsuShfensr6FsjXpakDqNdUJHv8Gc3qseUO4oUUDEsv5Mpe3Ksiw400u2W4nMLA';
+  // Set publishable key from environment variable
+  Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY']!;
 
   // Initialize Stripe instance (required for Android)
   await Stripe.instance.applySettings();

@@ -1,33 +1,8 @@
+import 'package:cresent_charge_user_app/features/rewards/models/reward_availability_models.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-
-class RewardAvailabilityModel {
-  final bool isAvailable;
-  final int remainingCount;
-  final bool userCanAfford;
-  final int userBalance;
-  final bool hasAlreadyClaimed;
-
-  RewardAvailabilityModel.fromJson(Map<String, dynamic> json)
-    : isAvailable = json['isAvailable'],
-      remainingCount = json['remainingCount'],
-      userCanAfford = json['userCanAfford'],
-      userBalance = json['userBalance'],
-      hasAlreadyClaimed = json['hasAlreadyClaimed'];
-}
-
-class RewardAvailabilityResponse {
-  final bool success;
-  final String message;
-  final RewardAvailabilityModel data;
-
-  RewardAvailabilityResponse.fromJson(Map<String, dynamic> json)
-    : success = json['success'],
-      message = json['message'],
-      data = RewardAvailabilityModel.fromJson(json['data']);
-}
 
 class GetRewardAvailabilityController extends GetxController {
   final NetworkHelper networkHelper = Get.find<NetworkHelper>();

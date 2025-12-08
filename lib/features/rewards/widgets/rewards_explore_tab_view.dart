@@ -1,9 +1,10 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/app_router.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/redeem_card.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class RewardsExploreTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<YourRewardsController>();
+    // final getAllRewardsController = Get.find<GetAllRewardsController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.rw),
       child: Column(
@@ -258,7 +260,7 @@ class RewardsExploreTabView extends StatelessWidget {
     );
   }
 
-  Widget _buildRewardCards(YourRewardsController controller) {
+  Widget _buildRewardCards(YourRewardsController yourRewardController) {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Calculate responsive card height based on screen dimensions
@@ -271,17 +273,26 @@ class RewardsExploreTabView extends StatelessWidget {
                   .rh // Medium devices
             : 280.rh; // Large devices
 
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12.rw,
-            mainAxisSpacing: 12.rh,
-            mainAxisExtent: cardHeight, // Responsive height
-          ),
-          itemCount: 20,
-          itemBuilder: (context, index) => RedeemCard(index: index),
+        return GetX<GetAllRewardsController>(
+          init: Get.find<GetAllRewardsController>(),
+          initState: (state) async {
+            await state.controller!.fetchRewards();
+          },
+          builder: (controller) {
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12.rw,
+                mainAxisSpacing: 12.rh,
+                mainAxisExtent: cardHeight, // Responsive height
+              ),
+              itemCount: controller.rewards.length,
+              itemBuilder: (context, index) =>
+                  RedeemCard(index: index, reward: controller.rewards[index]),
+            );
+          },
         );
       },
     );

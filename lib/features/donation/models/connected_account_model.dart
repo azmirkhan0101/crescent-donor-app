@@ -4,77 +4,65 @@
     "message": "Bank accounts retrieved successfully",
     "data": [
         {
-            "_id": "692fd93bbf4bbb063bf9cc6b",
-            "user": "692c2cc2a7a1e85346c2a3a3",
-            "itemId": "4WnMKKwK5Ai11o5jBGwdUG3Xl1BLlvCd8GAy3",
-            "accountId": "QLp9KKQKDRfBBxe81gwrT7kRZDkZmlcGkojMK",
-            "accountName": "Plaid Checking",
-            "accountType": "checking",
-            "institutionName": "American Express",
-            "institutionId": "ins_10",
-            "consentGivenAt": "2025-12-03T06:31:23.338Z",
-            "isActive": true,
-            "createdAt": "2025-12-03T06:31:23.344Z",
-            "updatedAt": "2025-12-03T06:31:23.344Z",
-            "__v": 0,
-            "isLinkedToActiveRoundUp": false
-        },
-        {
-            "_id": "692eb29b6e3ca62750bb5d26",
-            "user": "692c2cc2a7a1e85346c2a3a3",
-            "itemId": "GaXvyb7o1bT77LmPyN89cwQkP96MbrU16djMX",
-            "accountId": "Q1ywXQ8mnQhWWLK91dJqFNnKzAJkLJFwVejJM",
-            "accountName": "Plaid Checking",
-            "accountType": "checking",
-            "institutionName": "Chase",
-            "institutionId": "ins_56",
-            "consentGivenAt": "2025-12-02T09:34:19.300Z",
-            "isActive": true,
-            "createdAt": "2025-12-02T09:34:19.313Z",
-            "updatedAt": "2025-12-02T09:34:19.313Z",
-            "__v": 0,
-            "isLinkedToActiveRoundUp": false
-        },
-        {
-            "_id": "692d747e6141d6d05104754f",
-            "user": "692c2cc2a7a1e85346c2a3a3",
-            "itemId": "olLarRrebXfQPaGevdRkIM1Am3olo6HRrqWlV",
-            "accountId": "Rz1nrerpBVtg4DQxRW7dTEy5Pw4WpNiZK1gvV",
+            "_id": "692c146d4d94eae1f4186b96",
+            "user": "692c04f5fbf9aeae92a61dad",
+            "itemId": "4DLWzzl8NDHAVV9BKZreiLQjXvlX5ncdnaolx",
+            "accountId": "4DLWzzl8NDHAVV9BKZreiLQBvPNGjRClojnAb",
             "accountName": "Plaid Checking",
             "accountType": "checking",
             "institutionName": "Citibank Online",
             "institutionId": "ins_5",
-            "consentGivenAt": "2025-12-01T10:57:02.045Z",
+            "consentGivenAt": "2025-11-30T09:54:53.366Z",
             "isActive": true,
-            "createdAt": "2025-12-01T10:57:02.053Z",
-            "updatedAt": "2025-12-01T10:57:02.053Z",
+            "createdAt": "2025-11-30T09:54:53.371Z",
+            "updatedAt": "2025-12-08T06:00:02.329Z",
             "__v": 0,
-            "isLinkedToActiveRoundUp": false
+            "lastSyncAt": "2025-12-08T06:00:02.321Z",
+            "lastSyncCursor": "CAESJWRCRXpra1FWdkJVUEFBZW05bkdOU0pXQTVrYXBBUGlsUnhvS2EaDAicqbDJBhD49dSVASIMCJypsMkGEPj11JUBKgwInKmwyQYQ+PXUlQE=",
+            "isLinkedToActiveRoundUp": true,
+            "activeRoundUpId": "692c14854d94eae1f4186ba2",
+            "roundUpDetails": {
+                "roundUpId": "692c14854d94eae1f4186ba2",
+                "monthlyThreshold": 4.41,
+                "currentMonthTotal": 0,
+                "organization": "692c06cffbf9aeae92a61de1",
+                "organizationName": "sdfsdfg",
+                "cause": "692c082d15f3fb5a0bb29cb2",
+                "causeName": "backpacks and books",
+                "status": "pending",
+                "enabled": true,
+                "isTaxable": true
+            }
         }
     ],
     "meta": {
         "page": 1,
         "limit": 10,
-        "total": 3,
+        "total": 1,
         "totalPage": 1
     }
 }
 */
 
 class BankAccountModel {
-  final String id;
-  final String user;
-  final String itemId;
-  final String accountId;
-  final String accountName;
-  final String accountType;
-  final String institutionName;
-  final String institutionId;
-  final String consentGivenAt;
-  final bool isActive;
-  final String createdAt;
-  final String updatedAt;
-  final bool? isLinkedToActiveRoundUp;
+  String id;
+  String user;
+  String itemId;
+  String accountId;
+  String accountName;
+  String accountType;
+  String institutionName;
+  String institutionId;
+  String consentGivenAt;
+  bool isActive;
+  String createdAt;
+  String updatedAt;
+  int v;
+  String? lastSyncAt;
+  String? lastSyncCursor;
+  bool isLinkedToActiveRoundUp;
+  String? activeRoundUpId;
+  RoundedUpDetails? roundUpDetails;
 
   BankAccountModel({
     required this.id,
@@ -89,7 +77,12 @@ class BankAccountModel {
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
-    this.isLinkedToActiveRoundUp,
+    required this.v,
+    this.lastSyncAt,
+    this.lastSyncCursor,
+    required this.isLinkedToActiveRoundUp,
+    this.activeRoundUpId,
+    this.roundUpDetails,
   });
 
   factory BankAccountModel.fromJson(Map<String, dynamic> json) {
@@ -106,8 +99,57 @@ class BankAccountModel {
       isActive: json['isActive'] as bool,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
-      isLinkedToActiveRoundUp:
-          json['isLinkedToActiveRoundUp'] as bool? ?? false,
+      v: json['__v'] as int,
+      lastSyncAt: json['lastSyncAt'] as String?,
+      lastSyncCursor: json['lastSyncCursor'] as String?,
+      isLinkedToActiveRoundUp: json['isLinkedToActiveRoundUp'] as bool,
+      activeRoundUpId: json['activeRoundUpId'] as String?,
+      roundUpDetails: json['roundUpDetails'] != null
+          ? RoundedUpDetails.fromJson(
+              json['roundUpDetails'] as Map<String, dynamic>,
+            )
+          : null,
+    );
+  }
+}
+
+class RoundedUpDetails {
+  String roundUpId;
+  double monthlyThreshold;
+  double currentMonthTotal;
+  String organization;
+  String organizationName;
+  String cause;
+  String causeName;
+  String status;
+  bool enabled;
+  bool isTaxable;
+
+  RoundedUpDetails({
+    required this.roundUpId,
+    required this.monthlyThreshold,
+    required this.currentMonthTotal,
+    required this.organization,
+    required this.organizationName,
+    required this.cause,
+    required this.causeName,
+    required this.status,
+    required this.enabled,
+    required this.isTaxable,
+  });
+
+  factory RoundedUpDetails.fromJson(Map<String, dynamic> json) {
+    return RoundedUpDetails(
+      roundUpId: json['roundUpId'] as String,
+      monthlyThreshold: (json['monthlyThreshold'] as num).toDouble(),
+      currentMonthTotal: (json['currentMonthTotal'] as num).toDouble(),
+      organization: json['organization'] as String,
+      organizationName: json['organizationName'] as String,
+      cause: json['cause'] as String,
+      causeName: json['causeName'] as String,
+      status: json['status'] as String,
+      enabled: json['enabled'] as bool,
+      isTaxable: json['isTaxable'] as bool,
     );
   }
 }

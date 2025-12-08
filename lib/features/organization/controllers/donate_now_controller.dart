@@ -23,6 +23,8 @@ class DonateNowController extends GetxController {
   RxInt selectedAmountIndex = (-1).obs;
   var amount = Rx<num>(0);
 
+  RxString selectedBankAccountId = ''.obs;
+
   final donationAmountsList = [
     {'amount': 10, 'label': '\$10'},
     {'amount': 25, 'label': '\$25'},
@@ -32,12 +34,27 @@ class DonateNowController extends GetxController {
     {'amount': -1, 'label': 'Custom'},
   ];
 
+  final RxBool _contributeToAdminFees = true.obs;
+  var contributionAmount = Rx<num>(0);
+
+  bool get contributeToAdminFees => _contributeToAdminFees.value;
+
+  void toggleAdminFeesContribution() {
+    _contributeToAdminFees.value = !_contributeToAdminFees.value;
+    contributionAmount.value = _contributeToAdminFees.value
+        ? amount.value * 0.05
+        : 0;
+  }
+
   @override
   void onInit() {
     super.onInit();
     // Initialize organizationId if needed
     organizationId.value =
         orgDetailsController.organizationDetails.value?.id ?? '';
+    contributionAmount.value = _contributeToAdminFees.value
+        ? amount.value * 0.05
+        : 0;
   }
 
   String formatDate(DateTime dateTime) {

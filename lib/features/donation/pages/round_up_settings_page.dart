@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/bank_connect_controller.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/create_plaid_link_token_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_conected_bank_acounts_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/plaid_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_settings_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/round_up_settings_widgets.dart';
@@ -17,7 +16,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 /// Round Up Settings Page
@@ -33,106 +31,36 @@ class RoundUpSettingsPage extends StatefulWidget {
 
 class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
   final roundUpSettingsCtrl = Get.put(RoundUpSettingsController());
-  final bankConnectionController = Get.put(BankConnectionController());
   final getBankConnectionController = Get.put(GetConnectedBankAccounts());
-  final createPlaidTokenCtrl = Get.put(CreatePlaidLinkToken());
+  final PlaidController plaidCtrl = Get.isRegistered<PlaidController>()
+      ? Get.find<PlaidController>()
+      : Get.put(PlaidController());
   final PaymentMethodController paymentMethodController =
       Get.isRegistered<PaymentMethodController>()
       ? Get.find<PaymentMethodController>()
       : Get.put(PaymentMethodController());
   final OrganizationController organizationController =
       Get.find<OrganizationController>();
-  // final plaidCtrl = Get.put(PlaidController());
 
-  LinkTokenConfiguration? _configuration;
-  StreamSubscription<LinkEvent>? _streamEvent;
-  StreamSubscription<LinkExit>? _streamExit;
-  StreamSubscription<LinkSuccess>? _streamSuccess;
-  StreamSubscription<LinkOnLoad>? _streamOnLoad;
-
-  LinkObject? _successObject;
-  bool _isLoadingConfiguration = false;
   final TextEditingController _orgSearchController = TextEditingController();
   Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-
     getBankConnectionController.getConnectedBankAccounts();
-    _streamEvent = PlaidLink.onEvent.listen(_onEvent);
-    _streamExit = PlaidLink.onExit.listen(_onExit);
-    _streamSuccess = PlaidLink.onSuccess.listen(_onSuccess);
-    _streamOnLoad = PlaidLink.onLoad.listen(_onLoad);
+
+    // Set up callback to refresh bank accounts after successful link
+    plaidCtrl.onSuccessCallback = (event) {
+      getBankConnectionController.getConnectedBankAccounts();
+    };
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
     _orgSearchController.dispose();
-    _streamEvent?.cancel();
-    _streamExit?.cancel();
-    _streamSuccess?.cancel();
-    _streamOnLoad?.cancel();
     super.dispose();
-  }
-
-  void _openLink() async {
-    if (_configuration == null) {
-      debugPrint("Configuration is null, please create it first.");
-      return;
-    }
-
-    try {
-      setState(() => _configuration = null);
-      await PlaidLink.open();
-    } catch (e) {
-      debugPrint("Error opening Link: $e");
-    }
-  }
-
-  void _createLinkTokenConfiguration() async {
-    final bool isSuccess = await createPlaidTokenCtrl.generateLinkToken();
-    if (isSuccess) {
-      LinkTokenConfiguration configuration = LinkTokenConfiguration(
-        token: createPlaidTokenCtrl.linkToken,
-      );
-      setState(() => _isLoadingConfiguration = true);
-
-      await PlaidLink.create(configuration: configuration);
-
-      setState(() {
-        _isLoadingConfiguration = false;
-        _configuration = configuration;
-      });
-
-      _openLink();
-    }
-  }
-
-  void _onLoad(_) {
-    debugPrint("LinkTokenConfiguration Loaded");
-  }
-
-  void _onEvent(LinkEvent event) {
-    final name = event.name;
-    final metadata = event.metadata.description();
-    debugPrint("onEvent: $name, metadata: $metadata");
-  }
-
-  void _onSuccess(LinkSuccess event) async {
-    final token = event.publicToken;
-    final metadata = event.metadata.description();
-    debugPrint("onSuccess: $token, metadata: $metadata");
-    setState(() => _successObject = event);
-
-    await bankConnectionController.connectBank(token);
-  }
-
-  void _onExit(LinkExit event) {
-    final metadata = event.metadata.description();
-    final error = event.error?.description();
-    debugPrint("onExit metadata: $metadata, error: $error");
   }
 
   Future<void> _handleSave() async {
@@ -322,9 +250,11 @@ class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
         const SizedBox(width: 48), // Placeholder for symmetry
         Obx(() {
           return Skeletonizer(
-            enabled: createPlaidTokenCtrl.isLinkTokenLoading,
+            enabled:
+                plaidCtrl.isLoadingConfiguration.value ||
+                plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading,
             child: IconButton(
-              onPressed: _createLinkTokenConfiguration,
+              onPressed: () => plaidCtrl.createLinkTokenConfiguration(),
               icon: Icon(Icons.add),
             ),
           );
@@ -562,7 +492,8 @@ class _RoundUpSettingsPageState extends State<RoundUpSettingsPage> {
                 return;
               }
 
-              final index = getBankConnectionController.connectedAccountsDataModel
+              final index = getBankConnectionController
+                  .connectedAccountsDataModel
                   .indexWhere((e) => e.institutionName == value);
 
               // Only change if a valid index is found

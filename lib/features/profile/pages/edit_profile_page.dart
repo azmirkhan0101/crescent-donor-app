@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/theme/app_colors.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           fontFamily: DonationFonts.familjenGrotesk,
           fontSize: 20.rfs,
           fontWeight: FontWeight.bold,
-          color: const Color(0xFF000C0B),
+          color: AppColors.secondary,
           letterSpacing: -0.2,
         ),
       ),
@@ -111,7 +112,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           height: 120.rh,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: const Color(0xFFEBE9EC), width: 1.714),
+            border: Border.all(
+              color: AppColors.surfaceContainerHigh,
+              width: 1.714,
+            ),
             gradient: const LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -204,7 +208,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             fontFamily: DonationFonts.interDisplay,
             fontSize: 14.rfs,
             fontWeight: FontWeight.w500,
-            color: const Color(0xFF000C0B),
+            color: AppColors.secondary,
           ),
         ),
 
@@ -214,7 +218,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12.rw),
-            border: Border.all(color: const Color(0xFFE4E4E4), width: 1),
+            border: Border.all(color: AppColors.outline, width: 1),
           ),
           child: TextFormField(
             controller: controller,
@@ -230,7 +234,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               fontFamily: DonationFonts.interDisplay,
               fontSize: 14.rfs,
               fontWeight: maxLines > 1 ? FontWeight.w400 : FontWeight.w500,
-              color: const Color(0xFF000C0B),
+              color: AppColors.secondary,
             ),
           ),
         ),
@@ -249,7 +253,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             fontFamily: DonationFonts.interDisplay,
             fontSize: 14.rfs,
             fontWeight: FontWeight.w500,
-            color: const Color(0xFF000C0B),
+            color: AppColors.secondary,
           ),
         ),
 
@@ -261,7 +265,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12.rw),
-            border: Border.all(color: const Color(0xFFE4E4E4), width: 1),
+            border: Border.all(color: AppColors.outline, width: 1),
           ),
           child: Row(
             children: [
@@ -277,7 +281,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         fontFamily: DonationFonts.interDisplay,
                         fontSize: 14.rfs,
                         fontWeight: FontWeight.w400,
-                        color: const Color(0xFF000C0B),
+                        color: AppColors.secondary,
                       ),
                     ),
 
@@ -312,7 +316,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     fontFamily: DonationFonts.interDisplay,
                     fontSize: 14.rfs,
                     fontWeight: FontWeight.w400,
-                    color: const Color(0xFF000C0B),
+                    color: AppColors.secondary,
                   ),
                 ),
               ),
@@ -338,7 +342,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   fontFamily: DonationFonts.interDisplay,
                   fontSize: 14.rfs,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF000C0B),
+                  color: AppColors.secondary,
                 ),
               ),
 
@@ -350,7 +354,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12.rw),
-                  border: Border.all(color: const Color(0xFFE4E4E4), width: 1),
+                  border: Border.all(color: AppColors.outline, width: 1),
                 ),
                 child: Row(
                   children: [
@@ -361,7 +365,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           fontFamily: DonationFonts.interDisplay,
                           fontSize: 14.rfs,
                           fontWeight: FontWeight.w400,
-                          color: const Color(0xFF000C0B),
+                          color: AppColors.secondary,
                         ),
                       ),
                     ),
@@ -408,7 +412,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: ElevatedButton(
               onPressed: _saveProfile,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD1FF43),
+                backgroundColor: AppColors.primary,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.rw),
@@ -420,7 +424,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   fontFamily: DonationFonts.familjenGrotesk,
                   fontSize: 18.rfs,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF000C0B),
+                  color: AppColors.secondary,
                   letterSpacing: -0.36,
                 ),
               ),
@@ -438,7 +442,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 fontFamily: DonationFonts.interDisplay,
                 fontSize: 14.rfs,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF000C0B),
+                color: AppColors.secondary,
               ),
               textAlign: TextAlign.center,
             ),

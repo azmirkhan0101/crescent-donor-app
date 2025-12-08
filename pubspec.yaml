@@ -50,6 +50,7 @@ dependencies:
   skeletonizer: ^2.1.0+1
   flutter_stripe: ^12.1.1
   plaid_flutter: ^5.0.5
+  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/common/
     - assets/onboarding/
     - assets/bottom-nav/

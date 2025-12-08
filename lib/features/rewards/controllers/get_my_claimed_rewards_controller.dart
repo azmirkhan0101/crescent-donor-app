@@ -1,50 +1,9 @@
 import 'package:cresent_charge_user_app/features/common/models/meta_model.dart';
+import 'package:cresent_charge_user_app/features/rewards/models/claimed_rewards_models.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-
-class ClaimedRewardModel {
-  final String id;
-  final String rewardId;
-  final String userId;
-  final String code;
-  final String codeType;
-  final DateTime claimedAt;
-  final DateTime? expiresAt;
-  final bool isUsed;
-  final DateTime? usedAt;
-  final Map<String, dynamic>? reward;
-
-  ClaimedRewardModel.fromJson(Map<String, dynamic> json)
-    : id = json['_id'],
-      rewardId = json['rewardId'],
-      userId = json['userId'],
-      code = json['code'],
-      codeType = json['codeType'],
-      claimedAt = DateTime.parse(json['claimedAt']),
-      expiresAt = json['expiresAt'] != null
-          ? DateTime.parse(json['expiresAt'])
-          : null,
-      isUsed = json['isUsed'] ?? false,
-      usedAt = json['usedAt'] != null ? DateTime.parse(json['usedAt']) : null,
-      reward = json['reward'];
-}
-
-class ClaimedRewardsResponse {
-  final bool success;
-  final String message;
-  final MetaModel meta;
-  final List<ClaimedRewardModel> data;
-
-  ClaimedRewardsResponse.fromJson(Map<String, dynamic> json)
-    : success = json['success'],
-      message = json['message'],
-      meta = MetaModel.fromJson(json['meta']),
-      data = (json['data'] as List)
-          .map((e) => ClaimedRewardModel.fromJson(e))
-          .toList();
-}
 
 class GetMyClaimedRewardsController extends GetxController {
   final NetworkHelper networkHelper = Get.find<NetworkHelper>();

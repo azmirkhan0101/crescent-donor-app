@@ -253,29 +253,31 @@ class _AddCardPageState extends State<AddCardPage> {
                 // Add Card Button
                 Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: controller.isAddingCard.value
-                          ? null
-                          : _handleAddCard,
-                      style: ElevatedButton.styleFrom(
-                        fixedSize: Size(double.maxFinite, 56.rh),
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor: Colors.grey,
-                      ),
-                      child: controller.isAddingCard.value
-                          ? SizedBox(
-                              width: 20.rw,
-                              height: 20.rh,
-                              child: const CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
+                    Obx(() {
+                      return ElevatedButton(
+                        onPressed: controller.isAddingCard.value
+                            ? null
+                            : _handleAddCard,
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: Size(double.maxFinite, 56.rh),
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          disabledBackgroundColor: Colors.grey,
+                        ),
+                        child: controller.isAddingCard.value
+                            ? SizedBox(
+                                width: 20.rw,
+                                height: 20.rh,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white,
+                                  ),
                                 ),
-                              ),
-                            )
-                          : const Text('Add Card'),
-                    ),
+                              )
+                            : const Text('Add Card'),
+                      );
+                    }),
 
                     if (widget.fromSignup) ...[
                       // 16.rh.heightWidth,

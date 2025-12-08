@@ -56,7 +56,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
           // Handle bar and header
           _buildHeader(),
 
-          // Content
+          // --- Donation type, causes, amount, message ---
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 24.rw),
@@ -426,11 +426,21 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
     }
 
     // Close bottom sheet first
-    GoRouter.of(context).pop();
+    // GoRouter.of(context).pop();
     if (donateNowController.selectedDonationType.value ==
         DonationType.oneTime) {
-      GoRouter.of(context).pushNamed(RoutePath.linkedAccount);
-    } else {
+      GoRouter.of(context).pop();
+      Future.delayed(const Duration(milliseconds: 500));
+      GoRouter.of(context).pushNamed(RoutePath.linkedPaymentAccount);
+    }
+    if (donateNowController.selectedDonationType.value ==
+        DonationType.roundUp) {
+      GoRouter.of(context).pop();
+      Future.delayed(const Duration(milliseconds: 500));
+      GoRouter.of(context).pushNamed(RoutePath.connectedBankAccount);
+    }
+    if (donateNowController.selectedDonationType.value ==
+        DonationType.recurring) {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,

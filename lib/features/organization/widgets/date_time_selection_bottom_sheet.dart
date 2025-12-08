@@ -136,7 +136,7 @@ class _DateTimeSelectionBottomSheetState
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context); // Close the bottom sheet
-                      context.pushNamed(RoutePath.linkedAccount);
+                      context.pushNamed(RoutePath.linkedPaymentAccount);
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(double.maxFinite, 56.rh),

@@ -13,8 +13,8 @@ class GetConnectedBankAccounts extends GetxController {
 
   List<BankAccountModel> get connectedAccountsDataModel =>
       _connectedAccountList;
-  bool get isBankConnectionLoading => _isBankConnectionLoading.value;
-  String get bankConnectionError => _bankConnectionError.value;
+  RxBool get isBankConnectionLoading => _isBankConnectionLoading;
+  RxString get bankConnectionError => _bankConnectionError;
 
   Future<bool> getConnectedBankAccounts() async {
     _isBankConnectionLoading.value = true;

@@ -3,7 +3,6 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
-import 'package:cresent_charge_user_app/features/common/controllers/roundup-management/secure_roundup_dashboard_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
@@ -26,7 +25,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(SecureRoundupDashboardController()).fetchDashboard();
+    // Get.put(SecureRoundupDashboardController()).fetchDashboard();
     final getProfileController = Get.find<GetProfileController>();
     // ignore: unused_local_variable
     final getOrgsController = Get.put(OrganizationController());

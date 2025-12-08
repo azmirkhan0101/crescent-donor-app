@@ -74,6 +74,8 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
             child: Skeletonizer(
               enabled: orgController.isOrgDetailsFetching.value,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   OrganizationHeaderWidget(organization: organizationDetails),
                   SizedBox(height: 16.rh),
@@ -153,7 +155,20 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
   ) {
     return GestureDetector(
       onTap: () {
-        _showDonationBottomSheet(controller, context);
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => DraggableScrollableSheet(
+            initialChildSize: 0.85,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            builder: (context, scrollController) => DonationBottomSheet(
+              organizationName:
+                  controller.organizationDetails.value?.name ?? 'N/A',
+            ),
+          ),
+        );
       },
       child: Container(
         width: double.infinity,
@@ -171,25 +186,6 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
-        ),
-      ),
-    );
-  }
-
-  void _showDonationBottomSheet(
-    OrganizationController controller,
-    BuildContext context,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.85,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        builder: (context, scrollController) => DonationBottomSheet(
-          organizationName: controller.organizationDetails.value?.name ?? 'N/A',
         ),
       ),
     );

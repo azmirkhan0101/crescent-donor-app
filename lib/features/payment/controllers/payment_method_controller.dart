@@ -125,6 +125,7 @@ class PaymentMethodController extends GetxController {
       cardHolderName: cardHolderName,
       isDefault: isDefault,
     );
+    isAddingCard.value = false;
 
     final result = await _networkHelper.request(
       'POST',
