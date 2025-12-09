@@ -165,6 +165,10 @@ class ApiUrl {
   static String getRoundupTransactionDetails(String transactionId) =>
       '$baseUrl/roundup-transactions/$transactionId';
 
+  /// ======= Recurring Donations =======
+  static const String createScheduledDonation =
+      '$baseUrl/scheduled-donation/create';
+
   /// ======= Rewards =======
   static const String getRewards = '$baseUrl/rewards';
   static String getRewardDetails(String rewardId) =>

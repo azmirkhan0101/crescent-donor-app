@@ -17,6 +17,10 @@ class DonateNowController extends GetxController {
 
   final TextEditingController specialMsgController = TextEditingController();
 
+  var isRoundUp = false.obs;
+  var isRecurring = false.obs;
+  var isOneTime = false.obs;
+
   Rx<DonationType> selectedDonationType = DonationType.recurring.obs;
   RxString organizationId = ''.obs;
   Rx<CauseData?> selectedCause = Rx<CauseData?>(null);
@@ -24,6 +28,54 @@ class DonateNowController extends GetxController {
   var amount = Rx<num>(0);
 
   RxString selectedBankAccountId = ''.obs;
+
+  /// ============================================
+  /// Recurring Donation Variables
+  /// ============================================
+  var recurringStartDateTime = '2025-12-09 11:12:17.787872'.obs;
+  var selectedFrequency = 'daily'.obs;
+  var frequencyUnit = 'days'.obs;
+  var intervalValue = 1.obs;
+
+  /// Update recurring start date and time
+  void setRecurringDateTime(DateTime dateTime) {
+    recurringStartDateTime.value = dateTime.toString();
+  }
+
+  /// Update selected frequency (all lowercase: 'daily', 'weekly', 'monthly', 'quarterly', 'yearly', 'custom')
+  void setSelectedFrequency(String frequency) {
+    selectedFrequency.value = frequency.toLowerCase();
+  }
+
+  /// Update frequency unit (days, weeks, months)
+  void setFrequencyUnit(String unit) {
+    frequencyUnit.value = unit.toLowerCase();
+  }
+
+  /// Update interval value (integer)
+  void setIntervalValue(int value) {
+    intervalValue.value = value;
+  }
+
+  /// Get formatted datetime string as 'YYYY-MM-DD HH:MM:SS.milliseconds'
+  String getFormattedDateTime() {
+    return recurringStartDateTime.value;
+  }
+
+  /// Get recurring frequency summary (e.g., "Every 2 weeks starting Dec 09")
+  String getRecurringSummary() {
+    try {
+      final dateTime = DateTime.parse(recurringStartDateTime.value);
+      final formatter = DateFormat('MMM dd');
+      final dateStr = formatter.format(dateTime);
+      final frequencyStr = selectedFrequency.value == 'custom'
+          ? 'Every ${intervalValue.value} $frequencyUnit'
+          : selectedFrequency.value;
+      return '$frequencyStr starting $dateStr';
+    } catch (e) {
+      return 'Recurring donation';
+    }
+  }
 
   final donationAmountsList = [
     {'amount': 10, 'label': '\$10'},

@@ -1,7 +1,11 @@
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 /// Date & Time selection bottom sheet for recurring donations
@@ -16,9 +20,12 @@ class DateTimeSelectionBottomSheet extends StatefulWidget {
 
 class _DateTimeSelectionBottomSheetState
     extends State<DateTimeSelectionBottomSheet> {
-  DateTime selectedDate = DateTime(2025, 6, 30);
-  TimeOfDay selectedTime = TimeOfDay(hour: 9, minute: 41);
-  String selectedFrequency = 'Daily';
+  final donateNowController = Get.find<DonateNowController>();
+  late DateTime selectedDate;
+  late TimeOfDay selectedTime;
+  late String selectedFrequency;
+  late TextEditingController customIntervalController;
+  late String customUnit;
 
   final List<String> frequencies = [
     'Daily',
@@ -28,6 +35,25 @@ class _DateTimeSelectionBottomSheetState
     'Yearly',
     'Custom',
   ];
+
+  final unitOptions = ['days', 'weeks', 'months'];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize from controller or set defaults
+    selectedDate = DateTime.now().add(const Duration(days: 1));
+    selectedTime = const TimeOfDay(hour: 9, minute: 0);
+    selectedFrequency = 'Daily';
+    customUnit = 'days';
+    customIntervalController = TextEditingController(text: '1');
+  }
+
+  @override
+  void dispose() {
+    customIntervalController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,13 +156,27 @@ class _DateTimeSelectionBottomSheetState
                   // Frequency options
                   _buildFrequencyOptions(),
 
+                  SizedBox(height: 16.rh),
+
+                  // Custom frequency UI (shown only when Custom is selected)
+                  if (selectedFrequency == 'Custom') _buildCustomFrequency(),
+
                   Spacer(),
 
                   // Continue Button
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context); // Close the bottom sheet
-                      context.pushNamed(RoutePath.linkedPaymentAccount);
+                      print(
+                        '---- Continue pressed ----\n dataTime: ${donateNowController.recurringStartDateTime.value}, frequency: ${donateNowController.selectedFrequency.value}, interval: ${donateNowController.intervalValue.value}, unit: ${donateNowController.frequencyUnit.value}',
+                      );
+
+                      // _saveRecurringSettings();
+                      // Navigator.pop(context); // Close the bottom sheet
+                      GoRouter.of(context).pop();
+                      Future.delayed(const Duration(milliseconds: 500));
+                      GoRouter.of(
+                        context,
+                      ).pushNamed(RoutePath.linkedPaymentAccount);
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(double.maxFinite, 56.rh),
@@ -339,5 +379,160 @@ class _DateTimeSelectionBottomSheetState
         );
       }).toList(),
     );
+  }
+
+  /// Build custom frequency UI with dropdown and text field
+  Widget _buildCustomFrequency() {
+    return Container(
+      padding: EdgeInsets.all(16.rw),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAF6FF),
+        borderRadius: BorderRadius.circular(12.rw),
+        border: Border.all(color: const Color(0xFFE4E4E4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Custom Frequency',
+            style: TextStyle(
+              fontFamily: 'Inter Display',
+              fontSize: 14.rfs,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF000C0B),
+            ),
+          ),
+          SizedBox(height: 12.rh),
+          Row(
+            children: [
+              // Interval value text field
+              Expanded(
+                flex: 2,
+                child: TextField(
+                  controller: customIntervalController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: 'Enter number',
+                    hintStyle: TextStyle(
+                      fontSize: 14.rfs,
+                      color: const Color(0xFFB3B3B3),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.rw),
+                      borderSide: const BorderSide(color: Color(0xFFE4E4E4)),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12.rw,
+                      vertical: 12.rh,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.rw),
+              // Unit dropdown
+              Expanded(
+                flex: 2,
+                child: DropdownButton2<String>(
+                  value: customUnit,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        customUnit = value;
+                      });
+                    }
+                  },
+                  items: unitOptions
+                      .map(
+                        (unit) => DropdownMenuItem<String>(
+                          value: unit,
+                          child: Text(
+                            unit,
+                            style: TextStyle(
+                              fontSize: 14.rfs,
+                              color: const Color(0xFF000C0B),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  buttonStyleData: ButtonStyleData(
+                    height: 48.rh,
+                    padding: EdgeInsets.symmetric(horizontal: 12.rw),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.rw),
+                      border: Border.all(color: const Color(0xFFE4E4E4)),
+                    ),
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    maxHeight: 200.rh,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.rw),
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Save recurring settings to controller
+  void _saveRecurringSettings() {
+    // Combine selected date and time
+    final dateTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedTime.minute,
+    );
+
+    // Save to controller
+    donateNowController.setRecurringDateTime(dateTime);
+    donateNowController.setSelectedFrequency(selectedFrequency);
+
+    // If custom, save interval and unit
+    if (selectedFrequency == 'Custom') {
+      final interval = int.tryParse(customIntervalController.text) ?? 1;
+      donateNowController.setIntervalValue(interval);
+      donateNowController.setFrequencyUnit(customUnit);
+    } else {
+      // Map preset frequencies to interval and unit
+      switch (selectedFrequency) {
+        case 'Daily':
+          donateNowController.setIntervalValue(1);
+          donateNowController.setFrequencyUnit('days');
+          break;
+        case 'Weekly':
+          donateNowController.setIntervalValue(1);
+          donateNowController.setFrequencyUnit('weeks');
+          break;
+        case 'Monthly':
+          donateNowController.setIntervalValue(1);
+          donateNowController.setFrequencyUnit('months');
+          break;
+        case 'Quarterly':
+          donateNowController.setIntervalValue(3);
+          donateNowController.setFrequencyUnit('months');
+          break;
+        case 'Yearly':
+          donateNowController.setIntervalValue(12);
+          donateNowController.setFrequencyUnit('months');
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (kDebugMode) {
+      print('Recurring settings saved:');
+      print('DateTime: ${donateNowController.recurringStartDateTime.value}');
+      print('Frequency: ${donateNowController.selectedFrequency.value}');
+      print('Interval: ${donateNowController.intervalValue.value}');
+      print('Unit: ${donateNowController.frequencyUnit.value}');
+    }
   }
 }

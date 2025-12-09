@@ -26,7 +26,12 @@ class DonationTypeCard extends StatelessWidget {
     // final controller = Get.find<OrganizationDetailsController>();
     final donateNowController = Get.find<DonateNowController>();
     return GestureDetector(
-      onTap: () => donateNowController.selectedDonationType.value = type,
+      onTap: () {
+        donateNowController.selectedDonationType.value = type;
+        donateNowController.isOneTime.value = type == DonationType.oneTime;
+        donateNowController.isRecurring.value = type == DonationType.recurring;
+        donateNowController.isRoundUp.value = type == DonationType.roundUp;
+      },
       child: Stack(
         children: [
           AnimatedContainer(

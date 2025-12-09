@@ -6,6 +6,7 @@ import 'package:cresent_charge_user_app/features/donation/controllers/round_up_c
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/search_controller.dart';
 import 'package:cresent_charge_user_app/features/notification/controllers/notification_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/create_recurring_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/cancel_redemption_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
@@ -53,4 +54,5 @@ void initGetx() {
   Get.lazyPut(() => RoundUpController(), fenix: true);
   Get.lazyPut(() => GetConnectedBankAccounts(), fenix: true);
   Get.lazyPut(() => SaveRoundupController(), fenix: true);
+  Get.lazyPut(() => CreateRecurringController(), fenix: true);
 }

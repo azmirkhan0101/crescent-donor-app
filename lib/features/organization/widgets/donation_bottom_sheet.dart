@@ -73,17 +73,19 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
                   SizedBox(height: 24.rh),
 
-                  Obx(() {
-                    return donateNowController.selectedDonationType.value !=
-                            DonationType.recurring
-                        ? Column(
-                            children: [
-                              _selectAmountSection(donateNowController),
-                              24.rh.heightWidth,
-                            ],
-                          )
-                        : SizedBox.shrink();
-                  }),
+                  // Obx(() {
+                  //   return donateNowController.selectedDonationType.value !=
+                  //           DonationType.recurring
+                  //       ? Column(
+                  //           children: [
+                  //             _selectAmountSection(donateNowController),
+                  //             24.rh.heightWidth,
+                  //           ],
+                  //         )
+                  //       : SizedBox.shrink();
+                  // }),
+                  _selectAmountSection(donateNowController),
+                  24.rh.heightWidth,
 
                   // Message Section
                   _buildMessageSection(),
@@ -185,9 +187,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   icon: Assets.home.coins.path,
                   title: 'Round Up',
                   type: DonationType.roundUp,
-                  isSelected:
-                      controller.selectedDonationType.value ==
-                      DonationType.roundUp,
+                  isSelected: controller.isRoundUp.value,
                 ),
               ),
 
@@ -198,9 +198,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   icon: Assets.home.calendar.path,
                   title: 'Recurring',
                   type: DonationType.recurring,
-                  isSelected:
-                      controller.selectedDonationType.value ==
-                      DonationType.recurring,
+                  isSelected: controller.isRecurring.value,
                   isHighlighted: true,
                 ),
               ),
@@ -212,9 +210,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   icon: Assets.home.gift.path,
                   title: 'One Time',
                   type: DonationType.oneTime,
-                  isSelected:
-                      controller.selectedDonationType.value ==
-                      DonationType.oneTime,
+                  isSelected: controller.isOneTime.value,
                 ),
               ),
             ],
@@ -427,20 +423,17 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
     // Close bottom sheet first
     // GoRouter.of(context).pop();
-    if (donateNowController.selectedDonationType.value ==
-        DonationType.oneTime) {
+    if (donateNowController.isOneTime.value) {
       GoRouter.of(context).pop();
       Future.delayed(const Duration(milliseconds: 500));
       GoRouter.of(context).pushNamed(RoutePath.linkedPaymentAccount);
     }
-    if (donateNowController.selectedDonationType.value ==
-        DonationType.roundUp) {
+    if (donateNowController.isRoundUp.value) {
       GoRouter.of(context).pop();
       Future.delayed(const Duration(milliseconds: 500));
       GoRouter.of(context).pushNamed(RoutePath.connectedBankAccount);
     }
-    if (donateNowController.selectedDonationType.value ==
-        DonationType.recurring) {
+    if (donateNowController.isRecurring.value) {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,

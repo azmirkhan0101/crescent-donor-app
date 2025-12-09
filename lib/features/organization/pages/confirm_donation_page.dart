@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/common/controllers/roundup-management/save_roundup_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/create_recurring_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
@@ -468,6 +469,22 @@ class ConfirmDonationPage extends StatelessWidget {
           }
           if (isRecurring) {
             print('Recurring Donation Confirmed');
+            bool isSuccess = await Get.find<CreateRecurringController>()
+                .createScheduledDonation(
+                  organizationId: donateNowController.organizationId.value,
+                  causeId: donateNowController.selectedCause.value?.id ?? '',
+                  amount: donateNowController.amount.value,
+                  frequency: donateNowController.selectedFrequency.value,
+                  paymentMethodId: paymentMethodId,
+                );
+            if (isSuccess) {
+              ToastMsg.success('Recurring donation saved successfully');
+              GoRouter.of(context).goNamed(RoutePath.home);
+            } else {
+              ToastMsg.error(
+                Get.find<CreateRecurringController>().errorMessage.value,
+              );
+            }
           }
         },
         style: ElevatedButton.styleFrom(
