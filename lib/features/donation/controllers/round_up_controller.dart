@@ -1,5 +1,8 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/common/mixins/activity_expansion_mixin.dart';
+import 'package:cresent_charge_user_app/features/donation/models/roundup_stats_model.dart';
+import 'package:cresent_charge_user_app/service/api_url.dart';
+import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +18,10 @@ class RoundUpController extends GetxController with ActivityExpansionMixin {
 
   /// Controls whether to show progress chart or detailed view
   final RxBool showDetailedProgress = false.obs;
+
+  var roundupStats = Rx<RoundupStats?>(null);
+  var isLoadingRoundupStats = false.obs;
+  var errorMessageRoundupStats = ''.obs;
 
   /// List of organizations that have received donations
   final List<DonatedOrganization> donatedOrganizations = [
@@ -117,6 +124,30 @@ class RoundUpController extends GetxController with ActivityExpansionMixin {
   /// Toggle between progress chart and detailed view
   void toggleProgressView() {
     showDetailedProgress.value = !showDetailedProgress.value;
+  }
+
+  Future<void> fetchRoundupStats() async {
+    isLoadingRoundupStats.value = true;
+    errorMessageRoundupStats.value = '';
+
+    final response = await Get.find<NetworkHelper>().request(
+      'GET',
+      ApiUrl.roundupStats,
+      withAuth: true,
+    );
+    isLoadingRoundupStats.value = false;
+
+    response.fold(
+      (error) {
+        errorMessageRoundupStats.value = error.message ?? 'An error occurred';
+        debugPrint('Error fetching roundup stats: ${error.message}');
+      },
+      (data) {
+        final roundupStatsResponse = RoundupStatsResponse.fromJson(data);
+        roundupStats.value = roundupStatsResponse.data;
+        debugPrint('Roundup stats fetched successfully');
+      },
+    );
   }
 }
 

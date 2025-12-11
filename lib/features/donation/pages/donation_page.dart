@@ -1,11 +1,14 @@
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/calender_badge_sections.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_components.dart';
-import 'package:cresent_charge_user_app/features/donation/widgets/donation_sections.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/overview_section.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/section_header.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 /// Donation Page
 ///
@@ -19,9 +22,9 @@ class DonationPage extends StatefulWidget {
 }
 
 class _DonationPageState extends State<DonationPage> {
+  final donationController = Get.find<DonationController>();
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<DonationController>();
     return Scaffold(
       backgroundColor: DonationConstants.backgroundColor,
       body: SafeArea(
@@ -34,8 +37,8 @@ class _DonationPageState extends State<DonationPage> {
                   SizedBox(height: 8.rh),
                   Obx(() {
                     return DonationHeader(
-                      pointsEarned: controller.pointsEarned.value,
-                      filterText: controller.selectedFilter.value,
+                      pointsEarned: donationController.pointsEarned.value,
+                      filterText: donationController.selectedFilter.value,
                       onFilterTap: _showFilterOptions,
                     );
                   }),
@@ -60,11 +63,14 @@ class _DonationPageState extends State<DonationPage> {
                 children: [
                   SectionHeader(title: 'Track Progress'),
                   SizedBox(height: DonationConstants.sectionSpacing.rh),
-                  SectionContainer(
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: DonationConstants.paddingHorizontal.rw,
+                    ),
                     child: ProgressTrackingCard(
-                      totalAmount: '120.75',
-                      avgDailyAmount: '4.025',
-                      donationStreak: '36',
+                      // totalAmount: '120.75',
+                      // avgDailyAmount: '4.025',
+                      // donationStreak: '36',
                     ),
                   ),
                   SizedBox(height: DonationConstants.paddingVertical.rh),
@@ -88,12 +94,30 @@ class _DonationPageState extends State<DonationPage> {
                 children: [
                   SectionHeader(title: 'Upcoming Donations'),
                   SizedBox(height: DonationConstants.sectionSpacing.rh),
-                  SectionContainer(
-                    child: UpcomingDonationCard(
-                      scheduledDate: '17 July - 10:00 AM',
-                      organizationName: 'Hope for Learning Foundation',
-                      organizationLocation: 'Sydney, Australia',
-                      donationAmount: '5.50',
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: DonationConstants.paddingHorizontal.rw,
+                    ),
+                    child: GetX<DonationController>(
+                      builder: (controller) {
+                        final upcomingDonations =
+                            controller.clientStats.value?.upcomingDonations ??
+                            [];
+                        if (upcomingDonations.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        final donation = upcomingDonations.first;
+                        return UpcomingDonationCard(
+                          scheduledDate: DateFormat(
+                            'd MMM - hh:mm a',
+                          ).format(DateTime.parse(donation.nextDate)),
+                          organizationName: donation.organizationName,
+                          organizationLocation:
+                              '${donation.organizationAddress}, ${donation.organizationState}',
+                          donationAmount: donation.amount.toString(),
+                          organizationImage: donation.organizationLogo,
+                        );
+                      },
                     ),
                   ),
                   SizedBox(height: DonationConstants.paddingVertical.rh),

@@ -3,6 +3,7 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -38,11 +39,16 @@ class _GetStartPageState extends State<GetStartPage> {
       if (!mounted) return;
 
       if (getProfileController.profile.value?.id.isNotEmpty ?? false) {
+        _callApis();
         context.replaceNamed(RoutePath.home);
       } else {
         context.replaceNamed(RoutePath.fewDetails);
       }
     }
+  }
+
+  _callApis() {
+    Get.find<DonationController>().fetchClientStats();
   }
 
   @override

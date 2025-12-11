@@ -18,9 +18,14 @@ class RoundUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<RoundUpController>(
+    return GetX<RoundUpController>(
       init: RoundUpController(),
+      initState: (state) {
+        final controller = state.controller!;
+        controller.fetchRoundupStats();
+      },
       builder: (controller) {
+        final roundupStats = controller.roundupStats.value;
         return Scaffold(
           backgroundColor: DonationConstants.backgroundColor,
           appBar: CustomAppBar(
@@ -46,17 +51,33 @@ class RoundUpPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 16.rw),
                   child: Obx(
                     () => controller.showDetailedProgress.value
-                        ? DetailedProgressChart(
-                            totalAmount: 120.75,
-                            progressPercentage: 60,
-                            todaysRoundUp: 0.5,
-                            daysLeft: 6,
+                        ? RoundUpProgressChart(
+                            totalAmount:
+                                roundupStats?.currentRoundupBalance ?? 0.0,
+                            progressPercentage:
+                                roundupStats?.roundupPercentage ?? 0,
+                            todaysRoundUp:
+                                roundupStats?.todaysRoundupAmount ?? 0.0,
+                            daysLeft: roundupStats?.daysLeft ?? 0,
                             controller: controller,
                           )
-                        : RoundUpProgressChart(
-                            currentAmount: 30,
-                            targetAmount: 50,
-                            recentlyRoundedUp: 0.5,
+                        : RoundUpCard(
+                            currentAmount:
+                                controller
+                                    .roundupStats
+                                    .value
+                                    ?.currentRoundupBalance ??
+                                0.0,
+                            targetAmount:
+                                controller.roundupStats.value?.monthlyThreshold
+                                    .toDouble() ??
+                                0.0,
+                            recentlyRoundedUp:
+                                controller
+                                    .roundupStats
+                                    .value
+                                    ?.lastTransactionAmount ??
+                                0.0,
                             controller: controller,
                           ),
                   ),

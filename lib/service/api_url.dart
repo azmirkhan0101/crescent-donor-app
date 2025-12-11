@@ -104,6 +104,8 @@ class ApiUrl {
   /// ======= Donations =======
   static const String oneTimeDonationCreate =
       '$baseUrl/donation/one-time/create';
+  static const String clientStats = '$baseUrl/donation/analytics/client-stats';
+  static const String roundupStats = '$baseUrl/client/roundup-stats';
 
   /// ======= Payment Methods =======
   static const String getPaymentMethods = '$baseUrl/payment-method';

@@ -1,12 +1,15 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_chart.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 
 /// Donation Page Header Widget
 ///
@@ -137,142 +140,64 @@ class DonationHeader extends StatelessWidget {
 ///
 /// Contains donation chart and statistics
 class ProgressTrackingCard extends StatelessWidget {
-  final String totalAmount;
-  final String avgDailyAmount;
-  final String donationStreak;
-
-  const ProgressTrackingCard({
-    super.key,
-    required this.totalAmount,
-    required this.avgDailyAmount,
-    required this.donationStreak,
-  });
+  const ProgressTrackingCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: DonationConstants.progressCardBg,
-        borderRadius: BorderRadius.circular(
-          DonationConstants.cardBorderRadius.rw,
-        ),
-        border: Border.all(color: DonationConstants.cardBorder, width: 1),
-      ),
-      padding: EdgeInsets.all(16.rw),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with icon and title
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10.rw),
-                decoration: BoxDecoration(
-                  color: DonationConstants.roundUpCardBg,
-                  borderRadius: BorderRadius.circular(
-                    DonationConstants.buttonBorderRadius.rw,
-                  ),
-                ),
-                child: Assets.common.heartOnHand.svg(
-                  colorFilter: ColorFilter.mode(
-                    AppColors.primaryColor,
-                    BlendMode.srcIn,
-                  ),
-                ),
-                // child: Icon(
-                //   Icons.volunteer_activism_outlined,
-                //   size: DonationConstants.iconSizeMedium.rfs,
-                //   color: DonationConstants.offBlack,
-                // ),
-              ),
-              SizedBox(width: 8.rw),
-              Text(
-                'Total Donations',
-                style: TextStyle(
-                  fontFamily: DonationFonts.interDisplay,
-                  fontSize: DonationConstants.fontSize14.rfs,
-                  fontWeight: FontWeight.w600,
-                  color: DonationConstants.offBlack,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.rh),
-          // Total donation info
-          Text(
-            "You've donated a total of",
-            style: TextStyle(
-              fontFamily: DonationFonts.interDisplay,
-              fontSize: DonationConstants.fontSize12.rfs,
-              fontWeight: FontWeight.w400,
-              color: DonationConstants.offBlack,
-              height: 16 / 12,
+    return GetX<DonationController>(
+      builder: (controller) {
+        return Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: DonationConstants.progressCardBg,
+            borderRadius: BorderRadius.circular(
+              DonationConstants.cardBorderRadius.rw,
             ),
+            border: Border.all(color: DonationConstants.cardBorder, width: 1),
           ),
-          SizedBox(height: 4.rh),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          padding: EdgeInsets.all(16.rw),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '\$',
-                      style: TextStyle(
-                        fontFamily: DonationFonts.familjenGrotesk,
-                        fontSize: DonationConstants.fontSize24.rfs,
-                        fontWeight: FontWeight.w700,
-                        color: DonationConstants.offBlack.withValues(
-                          alpha: DonationConstants.amountOpacity,
-                        ),
-                        letterSpacing: -0.7,
+              // Header with icon and title
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10.rw),
+                    decoration: BoxDecoration(
+                      color: DonationConstants.roundUpCardBg,
+                      borderRadius: BorderRadius.circular(
+                        DonationConstants.buttonBorderRadius.rw,
                       ),
                     ),
-                    TextSpan(
-                      text: totalAmount,
-                      style: TextStyle(
-                        fontFamily: DonationFonts.familjenGrotesk,
-                        fontSize: DonationConstants.fontSize24.rfs,
-                        fontWeight: FontWeight.w700,
-                        color: DonationConstants.offBlack,
-                        letterSpacing: -0.7,
+                    child: Assets.common.heartOnHand.svg(
+                      colorFilter: ColorFilter.mode(
+                        AppColors.primaryColor,
+                        BlendMode.srcIn,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 4.rw),
-              Padding(
-                padding: EdgeInsets.only(bottom: 2.rh),
-                child: Text(
-                  'in last 30 days.',
-                  style: TextStyle(
-                    fontFamily: DonationFonts.interDisplay,
-                    fontSize: DonationConstants.fontSize12.rfs,
-                    fontWeight: FontWeight.w400,
-                    color: DonationConstants.offBlack,
-                    height: 16 / 12,
+                    // child: Icon(
+                    //   Icons.volunteer_activism_outlined,
+                    //   size: DonationConstants.iconSizeMedium.rfs,
+                    //   color: DonationConstants.offBlack,
+                    // ),
                   ),
-                ),
+                  SizedBox(width: 8.rw),
+                  Text(
+                    'Total Donations',
+                    style: TextStyle(
+                      fontFamily: DonationFonts.interDisplay,
+                      fontSize: DonationConstants.fontSize14.rfs,
+                      fontWeight: FontWeight.w600,
+                      color: DonationConstants.offBlack,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          SizedBox(height: 16.rh),
-          // Donation Chart
-          DonationChart(
-            donationData: DonationChartData.getSampleDonationData(),
-            labels: DonationChartData.getSampleLabels(),
-          ),
-          SizedBox(height: 16.rh),
-          // Divider
-          Container(height: 1, color: DonationConstants.lightGray),
-          SizedBox(height: 16.rh),
-          // Statistics
-          Row(
-            children: [
+              SizedBox(height: 16.rh),
+              // Total donation info
               Text(
-                'Avg. daily donation:',
+                "You've donated a total of",
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
                   fontSize: DonationConstants.fontSize12.rfs,
@@ -281,47 +206,120 @@ class ProgressTrackingCard extends StatelessWidget {
                   height: 16 / 12,
                 ),
               ),
-              SizedBox(width: 4.rw),
-              Text(
-                '\$$avgDailyAmount',
-                style: TextStyle(
-                  fontFamily: DonationFonts.interDisplay,
-                  fontSize: DonationConstants.fontSize12.rfs,
-                  fontWeight: FontWeight.w500,
-                  color: DonationConstants.primaryPurpleDark,
-                  height: 16 / 12,
-                ),
+              SizedBox(height: 4.rh),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '\$',
+                          style: TextStyle(
+                            fontFamily: DonationFonts.familjenGrotesk,
+                            fontSize: DonationConstants.fontSize24.rfs,
+                            fontWeight: FontWeight.w700,
+                            color: DonationConstants.offBlack.withValues(
+                              alpha: DonationConstants.amountOpacity,
+                            ),
+                            letterSpacing: -0.7,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                              controller.clientStats.value?.totalDonationAmount
+                                  .toStringAsFixed(2) ??
+                              '0.00',
+                          style: TextStyle(
+                            fontFamily: DonationFonts.familjenGrotesk,
+                            fontSize: DonationConstants.fontSize24.rfs,
+                            fontWeight: FontWeight.w700,
+                            color: DonationConstants.offBlack,
+                            letterSpacing: -0.7,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 4.rw),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 2.rh),
+                    child: Text(
+                      'in last 30 days.',
+                      style: TextStyle(
+                        fontFamily: DonationFonts.interDisplay,
+                        fontSize: DonationConstants.fontSize12.rfs,
+                        fontWeight: FontWeight.w400,
+                        color: DonationConstants.offBlack,
+                        height: 16 / 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.rh),
+              // Donation Chart
+              DonationChart(),
+              SizedBox(height: 16.rh),
+              // Divider
+              Container(height: 1, color: DonationConstants.lightGray),
+              SizedBox(height: 16.rh),
+              // Statistics
+              Row(
+                children: [
+                  Text(
+                    'Avg. daily donation:',
+                    style: TextStyle(
+                      fontFamily: DonationFonts.interDisplay,
+                      fontSize: DonationConstants.fontSize12.rfs,
+                      fontWeight: FontWeight.w400,
+                      color: DonationConstants.offBlack,
+                      height: 16 / 12,
+                    ),
+                  ),
+                  SizedBox(width: 4.rw),
+                  Text(
+                    '\$${controller.clientStats.value?.averageDonation.toStringAsFixed(2) ?? '0.00'}',
+                    style: TextStyle(
+                      fontFamily: DonationFonts.interDisplay,
+                      fontSize: DonationConstants.fontSize12.rfs,
+                      fontWeight: FontWeight.w500,
+                      color: DonationConstants.primaryPurpleDark,
+                      height: 16 / 12,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 4.rh),
+              Row(
+                children: [
+                  Text(
+                    'Donation streak:',
+                    style: TextStyle(
+                      fontFamily: DonationFonts.interDisplay,
+                      fontSize: DonationConstants.fontSize12.rfs,
+                      fontWeight: FontWeight.w400,
+                      color: DonationConstants.offBlack,
+                      height: 16 / 12,
+                    ),
+                  ),
+                  SizedBox(width: 4.rw),
+                  Text(
+                    '${controller.clientStats.value?.maxConsistencyStreak ?? '0'} days',
+                    style: TextStyle(
+                      fontFamily: DonationFonts.interDisplay,
+                      fontSize: DonationConstants.fontSize12.rfs,
+                      fontWeight: FontWeight.w500,
+                      color: DonationConstants.primaryPurpleDark,
+                      height: 16 / 12,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          SizedBox(height: 4.rh),
-          Row(
-            children: [
-              Text(
-                'Donation streak:',
-                style: TextStyle(
-                  fontFamily: DonationFonts.interDisplay,
-                  fontSize: DonationConstants.fontSize12.rfs,
-                  fontWeight: FontWeight.w400,
-                  color: DonationConstants.offBlack,
-                  height: 16 / 12,
-                ),
-              ),
-              SizedBox(width: 4.rw),
-              Text(
-                '$donationStreak days',
-                style: TextStyle(
-                  fontFamily: DonationFonts.interDisplay,
-                  fontSize: DonationConstants.fontSize12.rfs,
-                  fontWeight: FontWeight.w500,
-                  color: DonationConstants.primaryPurpleDark,
-                  height: 16 / 12,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -416,10 +414,34 @@ class UpcomingDonationCard extends StatelessWidget {
                 child: Row(
                   children: [
                     // Organization image
-                    Assets.home.donateCauseProfile2.image(
-                      width: 48.rw,
-                      height: 48.rh,
-                    ),
+                    if (organizationImage != null)
+                      ClipOval(
+                        child: Image.network(
+                          parseImageUrl(organizationImage!),
+                          width: 48.rw,
+                          height: 48.rh,
+                          errorBuilder: (context, error, stackTrace) =>
+                              SizedBox(
+                                width: 48.rw,
+                                height: 48.rh,
+                                child: Icon(
+                                  Icons.image_not_supported,
+                                  size: 24.rfs,
+                                  color: DonationConstants.mediumGrayText,
+                                ),
+                              ),
+                        ),
+                      )
+                    else
+                      SizedBox(
+                        width: 48.rw,
+                        height: 48.rh,
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 24.rfs,
+                          color: DonationConstants.mediumGrayText,
+                        ),
+                      ),
                     SizedBox(width: 8.rw),
                     // Organization details
                     Expanded(
@@ -492,11 +514,11 @@ class UpcomingDonationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDefaultOrgIcon() {
-    return Icon(
-      Icons.favorite_outline,
-      size: 24.rfs,
-      color: DonationConstants.mediumGrayText,
-    );
-  }
+  // Widget _buildDefaultOrgIcon() {
+  //   return Icon(
+  //     Icons.favorite_outline,
+  //     size: 24.rfs,
+  //     color: DonationConstants.mediumGrayText,
+  //   );
+  // }
 }

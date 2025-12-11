@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -16,13 +16,13 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 /// Round Up Progress Chart Widget
 ///
 /// Displays the current round up progress with a circular design
-class RoundUpProgressChart extends StatelessWidget {
+class RoundUpCard extends StatelessWidget {
   final double currentAmount;
   final double targetAmount;
   final double recentlyRoundedUp;
   final RoundUpController controller;
 
-  const RoundUpProgressChart({
+  const RoundUpCard({
     super.key,
     required this.currentAmount,
     required this.targetAmount,
@@ -121,14 +121,14 @@ class RoundUpProgressChart extends StatelessWidget {
 /// Detailed Progress Chart Widget
 ///
 /// Shows detailed donation statistics with semicircular progress chart
-class DetailedProgressChart extends StatelessWidget {
+class RoundUpProgressChart extends StatelessWidget {
   final double totalAmount;
-  final int progressPercentage;
+  final double progressPercentage;
   final double todaysRoundUp;
   final int daysLeft;
   final RoundUpController controller;
 
-  const DetailedProgressChart({
+  const RoundUpProgressChart({
     super.key,
     required this.totalAmount,
     required this.progressPercentage,
@@ -221,7 +221,8 @@ class DetailedProgressChart extends StatelessWidget {
                 ),
                 SizedBox(height: 4.rh),
                 Text(
-                  'in last 30 days.',
+                  // 'in last 30 days.',
+                  'in this month.',
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
                     fontSize: 12.rfs,
@@ -238,8 +239,8 @@ class DetailedProgressChart extends StatelessWidget {
             Stack(
               children: [
                 CircularStepProgressIndicator(
-                  totalSteps: 22,
-                  currentStep: 16,
+                  totalSteps: 25,
+                  currentStep: ((progressPercentage / 100) * 25).round(),
                   stepSize: 66.rh,
                   selectedColor: Color(0xFF1B7ED3),
                   unselectedColor: Color(0xFFD9DBDA),
@@ -258,7 +259,7 @@ class DetailedProgressChart extends StatelessWidget {
                   right: 0,
                   child: Center(
                     child: Text(
-                      '60%',
+                      '$progressPercentage%',
                       style: AppTextStyles.f20w600(),
                     ).fontSize(32.rfs),
                   ),

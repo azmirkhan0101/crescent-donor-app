@@ -556,6 +556,7 @@ class $AssetsRewardsGen {
 class Assets {
   const Assets._();
 
+  static const String aEnv = '.env';
   static const $AssetsBottomNavGen bottomNav = $AssetsBottomNavGen();
   static const $AssetsCommonGen common = $AssetsCommonGen();
   static const $AssetsDonationGen donation = $AssetsDonationGen();
@@ -563,6 +564,9 @@ class Assets {
   static const $AssetsOnboardingGen onboarding = $AssetsOnboardingGen();
   static const $AssetsProfileGen profile = $AssetsProfileGen();
   static const $AssetsRewardsGen rewards = $AssetsRewardsGen();
+
+  /// List of all assets
+  static List<String> get values => [aEnv];
 }
 
 class AssetGenImage {
