@@ -2,9 +2,9 @@ class ApiUrl {
   // For Android Emulator, use 10.0.2.2 to access host machine's localhost
   // For iOS Simulator, use localhost
   // For physical device, use your machine's IP address (e.g., 192.168.x.x)
-  static const String hostUrl = "http://13.55.115.124:5000"; // local server
+  static const String hostUrl = "http://13.55.115.124:5000"; // aws server
   // static const String hostUrl = "http://10.0.2.2:5001"; // local server
-  // static const String hostUrl = "http://10.10.20.42:5000"; // Mustafiz's local server
+  // static const String hostUrl = "http://10.10.20.42:5000"; // Local
   // static const String hostUrl =
   //     "https://donation-app-server-production.up.railway.app"; // Android Emulator
   static const String baseUrl = "$hostUrl/api/v1";
@@ -85,6 +85,11 @@ class ApiUrl {
       '$baseUrl/secure-roundup/consent/save';
   static const String secureRoundupDashboard =
       '$baseUrl/secure-roundup/dashboard';
+  static const String getRoundupConfig = '$baseUrl/secure-roundup/get-by-user';
+  static String updateRoundupConfig(String roundupId) =>
+      '$baseUrl/secure-roundup/$roundupId';
+  static String cancelRoundupConfig(String roundupId) =>
+      '$baseUrl/secure-roundup/$roundupId/cancel';
   static String revokeRoundupConsent(String bankConnectionId) =>
       '$baseUrl/secure-roundup/consent/revoke/$bankConnectionId';
   static const String switchRoundupCharity =

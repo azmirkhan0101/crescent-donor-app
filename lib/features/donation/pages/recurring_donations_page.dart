@@ -92,7 +92,8 @@ class RecurringDonationsPage extends StatelessWidget {
                                         context.pushNamed(
                                           RoutePath.organizationDonations,
                                           extra: {
-                                            'organizationId': donation.id,
+                                            'organizationId':
+                                                donation.organizationDetails.id,
                                           },
                                         );
                                       },

@@ -251,27 +251,27 @@ class CustomInterval {
 }
 
 class OrganizationDetails {
-  final String? id;
-  final String? name;
-  final String? coverImage;
-  final String? registeredCharityName;
-  final String? logoImage;
+  final String id;
+  final String name;
+  final String coverImage;
+  final String registeredCharityName;
+  final String logoImage;
 
   OrganizationDetails({
-    this.id,
-    this.name,
-    this.coverImage,
-    this.registeredCharityName,
-    this.logoImage,
+    required this.id,
+    required this.name,
+    required this.coverImage,
+    required this.registeredCharityName,
+    required this.logoImage,
   });
 
   factory OrganizationDetails.fromJson(Map<String, dynamic> json) {
     return OrganizationDetails(
-      id: json['_id'] as String?,
-      name: json['name'] as String?,
-      coverImage: json['coverImage'] as String?,
-      registeredCharityName: json['registeredCharityName'] as String?,
-      logoImage: json['logoImage'] as String?,
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      coverImage: json['coverImage'] ?? '',
+      registeredCharityName: json['registeredCharityName'] ?? '',
+      logoImage: json['logoImage'] ?? '',
     );
   }
 }

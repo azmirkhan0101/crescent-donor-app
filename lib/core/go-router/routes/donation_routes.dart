@@ -19,7 +19,8 @@ class DonationRoutes extends AppRouteConfig {
       name: RoutePath.organizationDonations,
       path: RoutePath.organizationDonations.addBasePath,
       builder: (context, state) {
-        final organizationId = state.pathParameters['organizationId'] as String;
+        final extra = state.extra as Map<String, dynamic>?;
+        final organizationId = extra?['organizationId'] as String;
         return OrganizationDonationsPage(organizationId: organizationId);
       },
       // Only authenticated users - no guest access for donation history
