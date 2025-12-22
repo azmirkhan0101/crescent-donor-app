@@ -8,6 +8,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 /// Overview Section Widget
 ///
@@ -18,71 +19,77 @@ class OverviewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetX<DonationController>(
-      builder: (donateCtrl) {
-        final clientStats = donateCtrl.clientStats.value;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SectionHeader(title: 'Overview'),
-            SizedBox(height: DonationConstants.sectionSpacing.rh),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: DonationConstants.paddingHorizontal.rw,
+      initState: (state) {
+        state.controller?.fetchClientStats();
+      },
+      builder: (donationController) {
+        final clientStats = donationController.clientStats.value;
+        return Skeletonizer(
+          enabled: donationController.isLoadingClientStats.value,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SectionHeader(title: 'Overview'),
+              SizedBox(height: DonationConstants.sectionSpacing.rh),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: DonationConstants.paddingHorizontal.rw,
+                ),
+                child: Column(
+                  children: [
+                    // Round Up Card (full width)
+                    RoundUpCard(
+                      roundUpAmount:
+                          clientStats?.roundUpAmount.toStringAsFixed(0) ?? '0',
+                      donationOrganization: clientStats != null
+                          ? clientStats.roundUpStatusData.organizationName
+                          : 'N/A',
+                      daysUntilDonation: clientStats != null
+                          ? clientStats.roundUpStatusData.daysRemaining
+                                .toString()
+                          : '0',
+                      onTap: () {
+                        context.pushNamed(RoutePath.roundUp);
+                      },
+                    ),
+                    SizedBox(height: DonationConstants.cardSpacing.rh),
+                    // Two small cards in a row
+                    Row(
+                      children: [
+                        SmallDonationCard(
+                          title: 'Recurring',
+                          amount: clientStats != null
+                              ? clientStats.recurringAmount.toStringAsFixed(0)
+                              : '0',
+                          backgroundColor: DonationConstants.recurringCardBg,
+                          borderColor: DonationConstants.recurringBorder,
+                          amountColor: DonationConstants.recurringAmountColor,
+                          icon: Assets.common.calendar.path,
+                          onTap: () {
+                            context.pushNamed(RoutePath.recurringDonations);
+                          },
+                        ),
+                        SizedBox(width: DonationConstants.cardSpacing.rw),
+                        SmallDonationCard(
+                          title: 'One Time',
+                          amount:
+                              clientStats?.oneTimeAmount.toStringAsFixed(0) ??
+                              '0',
+                          backgroundColor: DonationConstants.oneTimeCardBg,
+                          borderColor: DonationConstants.oneTimeBorder,
+                          amountColor: DonationConstants.oneTimeAmountColor,
+                          icon: Assets.common.gift.path,
+                          onTap: () {
+                            context.pushNamed(RoutePath.oneTime);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              child: Column(
-                children: [
-                  // Round Up Card (full width)
-                  RoundUpCard(
-                    roundUpAmount: clientStats != null
-                        ? clientStats.roundUpAmount.toStringAsFixed(2)
-                        : '0.00',
-                    donationOrganization: clientStats != null
-                        ? clientStats.roundUpStatusData.organizationName
-                        : 'N/A',
-                    daysUntilDonation: clientStats != null
-                        ? clientStats.roundUpStatusData.daysRemaining.toString()
-                        : '0',
-                    onTap: () {
-                      context.pushNamed(RoutePath.roundUp);
-                    },
-                  ),
-                  SizedBox(height: DonationConstants.cardSpacing.rh),
-                  // Two small cards in a row
-                  Row(
-                    children: [
-                      SmallDonationCard(
-                        title: 'Recurring',
-                        amount: clientStats != null
-                            ? clientStats.recurringAmount.toStringAsFixed(0)
-                            : '0',
-                        backgroundColor: DonationConstants.recurringCardBg,
-                        borderColor: DonationConstants.recurringBorder,
-                        amountColor: DonationConstants.recurringAmountColor,
-                        icon: Assets.common.calendar.path,
-                        onTap: () {
-                          context.pushNamed(RoutePath.recurringDonations);
-                        },
-                      ),
-                      SizedBox(width: DonationConstants.cardSpacing.rw),
-                      SmallDonationCard(
-                        title: 'One Time',
-                        amount: clientStats != null
-                            ? clientStats.oneTimeAmount.toStringAsFixed(0)
-                            : '0',
-                        backgroundColor: DonationConstants.oneTimeCardBg,
-                        borderColor: DonationConstants.oneTimeBorder,
-                        amountColor: DonationConstants.oneTimeAmountColor,
-                        icon: Assets.common.gift.path,
-                        onTap: () {
-                          context.pushNamed(RoutePath.oneTime);
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

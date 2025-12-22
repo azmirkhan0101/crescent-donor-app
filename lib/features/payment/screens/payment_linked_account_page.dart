@@ -213,7 +213,8 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
                         },
                         child: _buildCardItem(
                           cardBrand: paymentMethod.cardBrand,
-                          cardHolderName: paymentMethod.cardHolderName,
+                          cardHolderName:
+                              paymentMethod.cardHolderName ?? 'Card Holder',
                           cardLast4: paymentMethod.cardLast4,
                           cardExpMonth: paymentMethod.cardExpMonth,
                           cardExpYear: paymentMethod.cardExpYear,

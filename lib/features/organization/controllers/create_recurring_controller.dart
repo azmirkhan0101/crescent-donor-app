@@ -1,41 +1,40 @@
+import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CreateRecurringController extends GetxController {
+  final donateNowController = Get.find<DonateNowController>();
   final RxBool isSaving = false.obs;
   final RxString errorMessage = ''.obs;
 
   Future<bool> createScheduledDonation({
-    required String organizationId,
-    required String causeId,
-    required num amount,
-    required String frequency,
     required String paymentMethodId,
     bool coverFees = false,
-    String? customIntervalUnit,
-    int? customIntervalValue,
-    String? specialMessage,
+    // String? customIntervalUnit,
+    // int? customIntervalValue,
   }) async {
     isSaving.value = true;
     errorMessage.value = '';
 
     final body = <String, dynamic>{
-      'organizationId': organizationId,
-      'causeId': causeId,
-      'amount': amount,
-      'frequency': frequency,
+      'organizationId': donateNowController.organizationId.value,
+      'causeId': donateNowController.selectedCause.value?.id ?? '',
+      'amount': donateNowController.amount.value,
+
+      'frequency': donateNowController.selectedFrequency.value,
+      "startDate": donateNowController.recurringStartDateTime.value,
       'paymentMethodId': paymentMethodId,
       'coverFees': coverFees,
     };
-    if (specialMessage != null && specialMessage.isNotEmpty) {
-      body['specialMessage'] = specialMessage;
+    if (donateNowController.specialMsgController.text.isNotEmpty) {
+      body['specialMessage'] = donateNowController.specialMsgController.text;
     }
-    if (frequency == 'custom') {
+    if (donateNowController.selectedFrequency.value == 'custom') {
       body['customInterval'] = {
-        'unit': customIntervalUnit,
-        'value': customIntervalValue,
+        'unit': donateNowController.frequencyUnit.value,
+        'value': donateNowController.intervalValue.value,
       };
     }
 

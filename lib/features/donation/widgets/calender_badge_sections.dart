@@ -1,6 +1,7 @@
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/badges_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/custom_calendar.dart';
@@ -10,6 +11,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CalendarSection extends StatefulWidget {
   const CalendarSection({super.key});
@@ -181,37 +183,115 @@ class BadgesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(
-          title: 'Badges',
-          actionText: 'View all',
-          onActionTap: () {
-            context.pushNamed(RoutePath.badges);
-          },
-        ),
-        SizedBox(height: DonationConstants.sectionSpacing.rh),
-        SizedBox(
-          height: 230.rh, // Fixed height for horizontal scroll
-          child: ListView.separated(
-            padding: EdgeInsets.symmetric(
-              horizontal: DonationConstants.paddingHorizontal.rw,
-            ),
-            scrollDirection: Axis.horizontal,
-            itemCount: Get.put(BadgesController()).badges.length,
-            separatorBuilder: (context, index) =>
-                SizedBox(width: DonationConstants.cardSpacing.rw),
-            itemBuilder: (context, index) {
-              final badge = Get.put(BadgesController()).badges[index];
-              return SizedBox(
-                width: 180.rw, // Fixed width for each badge card
-                child: BadgeCard(badge: badge),
-              );
-            },
+    return GetX<GetBadgesProgressController>(
+      initState: (state) {
+        state.controller!.fetchBadgesProgress();
+      },
+      builder: (controller) {
+        return Skeletonizer(
+          enabled: controller.isLoading.value,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SectionHeader(
+                title: 'Badges',
+                actionText: 'View all',
+                onActionTap: () {
+                  context.pushNamed(RoutePath.badges);
+                },
+              ),
+              SizedBox(height: DonationConstants.sectionSpacing.rh),
+
+              // Show empty state or badges list
+              controller.badgesProgressData.isEmpty &&
+                      !controller.isLoading.value
+                  ? Container(
+                      height: 230.rh,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: DonationConstants.paddingHorizontal.rw,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16.rw),
+                        border: Border.all(
+                          color: const Color(0xFFE4E4E4),
+                          width: 1,
+                        ),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.emoji_events_outlined,
+                              size: 48.rw,
+                              color: const Color(0xFFB3B3B3),
+                            ),
+                            SizedBox(height: 12.rh),
+                            Text(
+                              'No badges yet',
+                              style: TextStyle(
+                                fontFamily: DonationFonts.familjenGrotesk,
+                                fontSize: 18.rfs,
+                                fontWeight: FontWeight.w600,
+                                color: DonationConstants.offBlack,
+                              ),
+                            ),
+                            SizedBox(height: 8.rh),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32.rw),
+                              child: Text(
+                                'Keep donating to unlock amazing badges\nand track your progress!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: DonationFonts.interDisplay,
+                                  fontSize: 14.rfs,
+                                  color: const Color(0xFF515A59),
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 230.rh, // Fixed height for horizontal scroll
+                      child: ListView.separated(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: DonationConstants.paddingHorizontal.rw,
+                        ),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: controller.badgesProgressData.length,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: DonationConstants.cardSpacing.rw),
+                        itemBuilder: (context, index) {
+                          final badgeData =
+                              controller.badgesProgressData[index];
+                          final badgesController = Get.put(BadgesController());
+
+                          // Find matching badge from local badges list
+                          final badge = badgesController.badges
+                              .firstWhereOrNull(
+                                (b) => b.name == badgeData.badge?.name,
+                              );
+
+                          if (badge == null) return const SizedBox.shrink();
+
+                          return SizedBox(
+                            width: 180.rw, // Fixed width for each badge card
+                            child: BadgeCard(
+                              badge: badge,
+                              badgeDataModel: badgeData,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ],
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }

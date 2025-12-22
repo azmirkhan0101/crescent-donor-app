@@ -9,7 +9,6 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -413,87 +412,166 @@ class SemicircleProgressPainter extends CustomPainter {
 ///
 /// Displays the list of recent round up activities
 class RecentActivityList extends StatelessWidget {
-  final List<RecentActivity> activities;
-  final RoundUpController controller;
+  // final List<RecentActivity> activities;
+  // final RoundUpController controller;
 
   const RecentActivityList({
     super.key,
-    required this.activities,
-    required this.controller,
+    // required this.activities,
+    // required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(8.rw),
-      decoration: BoxDecoration(
-        color: DonationConstants.cardWhite,
-        borderRadius: BorderRadius.circular(12.rw),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Today section
-          Padding(
-            padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
-            child: Text(
-              'Today',
-              style: TextStyle(
-                fontFamily: DonationFonts.interDisplay,
-                fontSize: 11.rfs,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.withValues(alpha: 0.6),
-                height: 16 / 11,
+    return GetX<RoundUpController>(
+      builder: (controller) {
+        final recentActivities =
+            controller.roundupStats.value?.recentTransactions;
+        if (recentActivities == null || recentActivities.isEmpty) {
+          return Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(8.rw),
+            decoration: BoxDecoration(
+              color: DonationConstants.cardWhite,
+              borderRadius: BorderRadius.circular(12.rw),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                'No recent activities.',
+                style: TextStyle(
+                  fontFamily: DonationFonts.interDisplay,
+                  fontSize: 14.rfs,
+                  fontWeight: FontWeight.w400,
+                  color: DonationConstants.offBlack.withValues(alpha: 0.5),
+                  height: 18 / 14,
+                ),
               ),
             ),
-          ),
-
-          // Activities list
-          ...activities.asMap().entries.map(
-            (entry) => ActivityItem(
-              activity: entry.value,
-              index: entry.key,
-              controller: controller,
-            ),
-          ),
-
-          SizedBox(height: 16.rh),
-
-          // 20 July section (placeholder for earlier activities)
-          Padding(
-            padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
-            child: Text(
-              '20 July',
-              style: TextStyle(
-                fontFamily: DonationFonts.interDisplay,
-                fontSize: 11.rfs,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.withValues(alpha: 0.6),
-                height: 16 / 11,
+          );
+        }
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(8.rw),
+          decoration: BoxDecoration(
+            color: DonationConstants.cardWhite,
+            borderRadius: BorderRadius.circular(12.rw),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
               ),
-            ),
+            ],
           ),
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: recentActivities?.length ?? 0,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  // Today section
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
+                    child: Text(
+                      recentActivities[index].title,
+                      style: TextStyle(
+                        fontFamily: DonationFonts.interDisplay,
+                        fontSize: 11.rfs,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey.withValues(alpha: 0.6),
+                        height: 16 / 11,
+                      ),
+                    ),
+                  ),
 
-          // Earlier activities from controller
-          ...controller.earlierActivities.asMap().entries.map(
-            (entry) => ActivityItem(
-              activity: entry.value,
-              index:
-                  activities.length +
-                  entry.key, // Offset by today's activities length
-              controller: controller,
-            ),
+                  ...recentActivities[index].transactions.map((entry) {
+                    /// TODO: Organization name, brand name, logo and timeAgo need to handle properly
+                    final activity = RecentActivity(
+                      brandName: entry.transactionName,
+                      brandLogo: 'https://picsum.photos/200', // picsum URL
+                      purchaseAmount: entry.transactionAmount,
+                      roundUpAmount: entry.roundupAmount,
+                      timeAgo: entry.createdAt,
+                      brandColor: Colors.white,
+                    );
+                    return ActivityItem(
+                      activity: activity,
+                      index: index,
+                      controller: controller,
+                    );
+                  }),
+
+                  SizedBox(height: 16.rh),
+                ],
+              );
+            },
           ),
-        ],
-      ),
+          // child: Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     // Today section
+          //     Padding(
+          //       padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
+          //       child: Text(
+          //         'Today',
+          //         style: TextStyle(
+          //           fontFamily: DonationFonts.interDisplay,
+          //           fontSize: 11.rfs,
+          //           fontWeight: FontWeight.w500,
+          //           color: Colors.grey.withValues(alpha: 0.6),
+          //           height: 16 / 11,
+          //         ),
+          //       ),
+          //     ),
+
+          //     // Activities list
+          //     ...activities.asMap().entries.map(
+          //       (entry) => ActivityItem(
+          //         activity: entry.value,
+          //         index: entry.key,
+          //         controller: controller,
+          //       ),
+          //     ),
+
+          //     SizedBox(height: 16.rh),
+
+          //     // 20 July section (placeholder for earlier activities)
+          //     Padding(
+          //       padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
+          //       child: Text(
+          //         '20 July',
+          //         style: TextStyle(
+          //           fontFamily: DonationFonts.interDisplay,
+          //           fontSize: 11.rfs,
+          //           fontWeight: FontWeight.w500,
+          //           color: Colors.grey.withValues(alpha: 0.6),
+          //           height: 16 / 11,
+          //         ),
+          //       ),
+          //     ),
+
+          //     // Earlier activities from controller
+          //     ...controller.earlierActivities.asMap().entries.map(
+          //       (entry) => ActivityItem(
+          //         activity: entry.value,
+          //         index:
+          //             activities.length +
+          //             entry.key, // Offset by today's activities length
+          //         controller: controller,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+        );
+      },
     );
   }
 }
@@ -545,13 +623,20 @@ class ActivityItem extends StatelessWidget {
                       height: 44.rh,
                       padding: EdgeInsets.all(11.rw),
                       decoration: BoxDecoration(
-                        color: activity.brandColor,
+                        color: Colors.black,
                         borderRadius: BorderRadius.circular(22.rw),
                       ),
-                      child: SvgPicture.asset(
-                        activity.brandLogo,
-                        width: 44.rw,
-                        height: 44.rh,
+                      child: Center(
+                        child: Text(
+                          activity.brandName.isNotEmpty
+                              ? activity.brandName[0].toUpperCase()
+                              : '',
+                          style: TextStyle(
+                            fontSize: 18.rfs,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
 

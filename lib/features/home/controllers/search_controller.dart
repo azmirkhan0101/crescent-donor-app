@@ -167,17 +167,21 @@ class SearchController extends GetxController {
     isSearching.value = true;
     searchErrorMessage.value = '';
 
+    // Build query parameters
+    final params = <String>[];
+    params.add('searchTerm=${query.trim()}');
+    if (selectedLocation.value != 'Brisbane') {
+      params.add('state=${selectedLocation.value}');
+    }
+    params.add('isProfileVisible=true');
+    params.add('populateCauses=true');
+
+    final url = '${ApiUrl.getAllOrganizations}?${params.join('&')}';
+
     // Make direct API call without affecting shared organizationsList
     final result = await _networkHelper.request(
       'GET',
-      ApiUrl.getAllOrganizations(
-        searchTerm: query.trim(),
-        state: selectedLocation.value != 'Brisbane'
-            ? selectedLocation.value
-            : null,
-        isProfileVisible: true,
-        populateCauses: true,
-      ),
+      url,
       parser: (data) => OrganizationResponseModel.fromJson(data),
       withAuth: true,
     );

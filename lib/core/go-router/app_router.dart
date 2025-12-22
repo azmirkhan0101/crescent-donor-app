@@ -171,7 +171,7 @@ class AppRouter {
     routes['Donation - Organization Donations'] =
         RoutePath.organizationDonations;
     routes['Donation - Round Up'] = RoutePath.roundUp;
-    routes['Donation - Round Up Settings'] = RoutePath.roundUpSettings;
+    routes['Donation - Round Up Settings'] = RoutePath.settings;
     routes['Donation - Recurring Donations'] = RoutePath.recurringDonations;
 
     // Add profile routes

@@ -118,15 +118,20 @@ class RoundUpTransactionsController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
+    // Build query parameters
+    final params = <String>[];
+    if (status != null && status.isNotEmpty) params.add('status=$status');
+    if (page != null) params.add('page=$page');
+    if (limit != null) params.add('limit=$limit');
+    if (month != null) params.add('month=$month');
+    if (year != null) params.add('year=$year');
+
+    final query = params.isEmpty ? '' : '?${params.join('&')}';
+    final url = '${ApiUrl.getRoundupTransactions}$query';
+
     final result = await _networkHelper.request(
       'GET',
-      ApiUrl.getRoundupTransactions(
-        status: status,
-        page: page,
-        limit: limit,
-        month: month,
-        year: year,
-      ),
+      url,
       withAuth: true,
       parser: (data) => RoundUpTransactionsResponse.fromJson(data),
     );

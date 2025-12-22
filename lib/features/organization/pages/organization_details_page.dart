@@ -85,8 +85,9 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                   SizedBox(height: 16.rh),
                   TotalDonationsCard2(
                     color: const Color(0xFFEAF7EB),
-                    totalAmount: 8328,
-                    totalDonors: 150,
+                    totalAmount: organizationDetails.totalDonationAmount
+                        .toDouble(),
+                    totalDonors: organizationDetails.totalDonation,
                   ),
                   SizedBox(height: 16.rh),
                   Align(

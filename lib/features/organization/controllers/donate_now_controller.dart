@@ -32,14 +32,16 @@ class DonateNowController extends GetxController {
   /// ============================================
   /// Recurring Donation Variables
   /// ============================================
-  var recurringStartDateTime = '2025-12-09 11:12:17.787872'.obs;
+  var recurringStartDateTime = ''.obs;
   var selectedFrequency = 'daily'.obs;
   var frequencyUnit = 'days'.obs;
   var intervalValue = 1.obs;
 
   /// Update recurring start date and time
   void setRecurringDateTime(DateTime dateTime) {
-    recurringStartDateTime.value = dateTime.toString();
+    // Format to ISO 8601 without microseconds for API compatibility
+    String isoString = dateTime.toUtc().toIso8601String();
+    recurringStartDateTime.value = '${isoString.split('.').first}Z';
   }
 
   /// Update selected frequency (all lowercase: 'daily', 'weekly', 'monthly', 'quarterly', 'yearly', 'custom')

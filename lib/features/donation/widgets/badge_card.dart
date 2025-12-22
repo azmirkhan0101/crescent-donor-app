@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/badge_modal.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -25,14 +26,27 @@ class Badge {
 }
 
 class BadgeCard extends StatelessWidget {
-  const BadgeCard({super.key, required this.badge});
+  const BadgeCard({
+    super.key,
+    required this.badge,
+    required this.badgeDataModel,
+  });
 
   final Badge badge;
+  final BadgeDataModel badgeDataModel;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => showBadgeModal(context, badge),
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          useRootNavigator: true,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => BadgeModal(selectedBadge: badge, badgeDataModel: badgeDataModel),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -50,7 +64,7 @@ class BadgeCard extends StatelessWidget {
           padding: EdgeInsets.all(6.rw),
           child: Column(
             children: [
-              // Badge Icon Container
+              /// Badge Icon Container
               Expanded(
                 flex: 3,
                 child: Container(
@@ -60,9 +74,11 @@ class BadgeCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.rw),
                   ),
                   child: Center(
-                    child: Container(
+                    child: SizedBox(
                       width: 72.rw,
                       height: 72.rh,
+
+                      /// ===> Badge Icon <===
                       child: Image.asset(badge.iconPath),
                     ),
                   ),
@@ -85,7 +101,8 @@ class BadgeCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              badge.name,
+                              badgeDataModel.badge?.name ??
+                                  '', // <== Badge Name
                               style: TextStyle(
                                 color: const Color(0xFF000C0B),
                                 fontSize: 14.rfs,
@@ -120,7 +137,8 @@ class BadgeCard extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           widthFactor: badge.isCompleted
                               ? 1.0
-                              : badge.currentProgress / badge.totalProgress,
+                              : (badgeDataModel.progressPercentage ?? 0) /
+                                    100, // <== Progress Percentage
                           child: Container(
                             decoration: BoxDecoration(
                               color: const Color(0xFF000C0B),
@@ -132,10 +150,11 @@ class BadgeCard extends StatelessWidget {
 
                       SizedBox(height: 8.rh),
 
-                      // Description
+                      // <== Description ==>
                       Expanded(
                         child: Text(
-                          badge.description,
+                          badgeDataModel.badge?.description ??
+                              '', // <== Badge Description
                           style: TextStyle(
                             color: const Color(0xFF818F8D),
                             fontSize: 12.rfs,

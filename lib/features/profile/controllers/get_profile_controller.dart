@@ -9,35 +9,30 @@ class GetProfileController extends GetxController {
   Rx<ProfileModel?> profile = Rx<ProfileModel?>(null);
 
   Future<bool> fetchProfile() async {
-    try {
-      errorMessage.value = '';
-      isLoading.value = true;
-      final network = Get.find<NetworkHelper>();
-      final result = await network.request(
-        'GET',
-        ApiUrl.getProfile,
-        parser: (data) => ProfileModel.fromJson(data["data"] ?? {}),
-        withAuth: true,
-      );
-      return result.fold(
-        (err) {
-          errorMessage.value = err.message ?? 'Failed to load profile';
+    errorMessage.value = '';
+    isLoading.value = true;
+    final result = await Get.find<NetworkHelper>().request(
+      'GET',
+      ApiUrl.getProfile,
+      parser: (data) => ProfileModel.fromJson(data["data"] ?? {}),
+      withAuth: true,
+    );
+
+    isLoading.value = false;
+
+    return result.fold(
+      (err) {
+        errorMessage.value = err.message ?? 'Failed to load profile';
+        return false;
+      },
+      (data) {
+        profile.value = data;
+        if (data.id.isEmpty) {
+          errorMessage.value = 'Profile data is empty';
           return false;
-        },
-        (data) {
-          profile.value = data;
-          if (data.id.isEmpty) {
-            errorMessage.value = 'Profile data is empty';
-            return false;
-          }
-          return true;
-        },
-      );
-    } catch (e) {
-      errorMessage.value = 'Profile error';
-      return false;
-    } finally {
-      isLoading.value = false;
-    }
+        }
+        return true;
+      },
+    );
   }
 }

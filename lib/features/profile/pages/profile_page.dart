@@ -31,37 +31,40 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profile = Get.find<GetProfileController>().profile;
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Main content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16.rw),
-                child: Column(
-                  children: [
-                    SizedBox(height: 16.rh),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Get.find<GetProfileController>().fetchProfile();
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16.rw),
+            child: Obx(() {
+              final profile = Get.find<GetProfileController>().profile.value;
+              return Column(
+                children: [
+                  SizedBox(height: 16.rh),
 
-                    // Profile Header Section
-                    _buildProfileHeader(context, profile.value),
+                  // Profile Header Section
+                  _buildProfileHeader(context, profile),
 
-                    SizedBox(height: 16.rh),
+                  SizedBox(height: 16.rh),
 
-                    // Menu Items Section
-                    _buildMenuItems(context),
-                  ],
-                ),
-              ),
-            ),
+                  // Menu Items Section
+                  _buildMenuItems(context),
 
-            // Logout Button
-            _buildLogoutButton(context),
+                  SizedBox(height: 24.rh),
 
-            SizedBox(height: 80.rh),
-          ],
+                  // Logout Button
+                  _buildLogoutButton(context),
+
+                  SizedBox(height: 80.rh),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
@@ -74,7 +77,7 @@ class ProfilePage extends StatelessWidget {
         // Profile Avatar
         Center(
           child: CustomNetworkImage(
-            imageUrl: parseImageUrl(profile?.image ?? ''),
+            imageUrl: parseImageUrl('${profile?.image}'),
             height: 120.rh,
             width: 120.rw,
             borderRadius: BorderRadius.circular(60.rw),
@@ -202,13 +205,13 @@ class ProfilePage extends StatelessWidget {
           context.pushNamed(RoutePath.changePassword);
         },
       ),
-      MenuItemData(
-        icon: Assets.common.calendar.path,
-        title: 'Subscriptions',
-        onTap: () {
-          context.pushNamed(RoutePath.subscription);
-        },
-      ),
+      // MenuItemData(
+      //   icon: Assets.common.calendar.path,
+      //   title: 'Subscriptions',
+      //   onTap: () {
+      //     context.pushNamed(RoutePath.subscription);
+      //   },
+      // ),
       MenuItemData(
         icon: Assets.common.globe.path, // Using globe for terms & conditions
         title: 'Terms & Conditions',

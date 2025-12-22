@@ -1,50 +1,38 @@
 /*
 {
-    "success": true,
-    "message": "Bank accounts retrieved successfully",
-    "data": [
-        {
-            "_id": "692c146d4d94eae1f4186b96",
-            "user": "692c04f5fbf9aeae92a61dad",
-            "itemId": "4DLWzzl8NDHAVV9BKZreiLQjXvlX5ncdnaolx",
-            "accountId": "4DLWzzl8NDHAVV9BKZreiLQBvPNGjRClojnAb",
-            "accountName": "Plaid Checking",
-            "accountType": "checking",
-            "institutionName": "Citibank Online",
-            "institutionId": "ins_5",
-            "consentGivenAt": "2025-11-30T09:54:53.366Z",
-            "isActive": true,
-            "createdAt": "2025-11-30T09:54:53.371Z",
-            "updatedAt": "2025-12-08T06:00:02.329Z",
-            "__v": 0,
-            "lastSyncAt": "2025-12-08T06:00:02.321Z",
-            "lastSyncCursor": "CAESJWRCRXpra1FWdkJVUEFBZW05bkdOU0pXQTVrYXBBUGlsUnhvS2EaDAicqbDJBhD49dSVASIMCJypsMkGEPj11JUBKgwInKmwyQYQ+PXUlQE=",
-            "isLinkedToActiveRoundUp": true,
-            "activeRoundUpId": "692c14854d94eae1f4186ba2",
-            "roundUpDetails": {
-                "roundUpId": "692c14854d94eae1f4186ba2",
-                "monthlyThreshold": 4.41,
-                "currentMonthTotal": 0,
-                "organization": "692c06cffbf9aeae92a61de1",
-                "organizationName": "sdfsdfg",
-                "cause": "692c082d15f3fb5a0bb29cb2",
-                "causeName": "backpacks and books",
-                "status": "pending",
-                "enabled": true,
-                "isTaxable": true
-            }
-        }
-    ],
-    "meta": {
-        "page": 1,
-        "limit": 10,
-        "total": 1,
-        "totalPage": 1
+    "_id": "694148d8a4532242abd6ad7f",
+    "user": "694118ddaee83632dca37e08",
+    "itemId": "vQlDV8rQAXHwvn55G6W9TVLMVwqANMtWqxw85",
+    "accountId": "JXVxe7GX9LtWyELL7aJzUvDkkrqWWqcQyvadP",
+    "accountName": "Plaid Checking",
+    "accountType": "checking",
+    "institutionName": "Citibank Online",
+    "institutionId": "ins_5",
+    "consentGivenAt": "2025-12-16T11:56:08.106Z",
+    "isActive": true,
+    "createdAt": "2025-12-16T11:56:08.115Z",
+    "updatedAt": "2025-12-20T08:00:02.351Z",
+    "__v": 0,
+    "lastSyncAt": "2025-12-20T08:00:02.349Z",
+    "lastSyncCursor": "CAESJTlYNjduOXZYS3J0V1A5dnZ4WEtMVUdMb0tkalJOakY0b1c1cVoaDAjDkoXKBhDIkpfBAiIMCMOShcoGEMiSl8ECKgwIw5KFygYQyJKXwQI=",
+    "isLinkedToActiveRoundUp": true,
+    "activeRoundUpId": "69414923a4532242abd6ad89",
+    "roundUpDetails": {
+        "roundUpId": "69414923a4532242abd6ad89",
+        "monthlyThreshold": 4.41,
+        "currentMonthTotal": 0,
+        "organization": "69411a87aee83632dca37e54",
+        "organizationName": "Test ORG",
+        "cause": "69412fbeeaa7c8a7c9ca04b7",
+        "causeName": "Test",
+        "status": "pending",
+        "enabled": true,
+        "isTaxable": false
     }
 }
 */
 
-class BankAccountModel {
+class RoundUpBankConnectionModel {
   String id;
   String user;
   String itemId;
@@ -57,14 +45,13 @@ class BankAccountModel {
   bool isActive;
   String createdAt;
   String updatedAt;
-  int v;
   String? lastSyncAt;
   String? lastSyncCursor;
   bool isLinkedToActiveRoundUp;
   String? activeRoundUpId;
   RoundedUpDetails? roundUpDetails;
 
-  BankAccountModel({
+  RoundUpBankConnectionModel({
     required this.id,
     required this.user,
     required this.itemId,
@@ -77,7 +64,6 @@ class BankAccountModel {
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
-    required this.v,
     this.lastSyncAt,
     this.lastSyncCursor,
     required this.isLinkedToActiveRoundUp,
@@ -85,8 +71,8 @@ class BankAccountModel {
     this.roundUpDetails,
   });
 
-  factory BankAccountModel.fromJson(Map<String, dynamic> json) {
-    return BankAccountModel(
+  factory RoundUpBankConnectionModel.fromJson(Map<String, dynamic> json) {
+    return RoundUpBankConnectionModel(
       id: json['_id'] as String,
       user: json['user'] as String,
       itemId: json['itemId'] as String,
@@ -99,7 +85,6 @@ class BankAccountModel {
       isActive: json['isActive'] as bool,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
-      v: json['__v'] as int,
       lastSyncAt: json['lastSyncAt'] as String?,
       lastSyncCursor: json['lastSyncCursor'] as String?,
       isLinkedToActiveRoundUp: json['isLinkedToActiveRoundUp'] as bool,

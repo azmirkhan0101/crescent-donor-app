@@ -1,13 +1,13 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/rewards/pages/redeem_success_page.dart';
-import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/rewards/models/reward_details_models.dart';
+import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 enum RedemptionMethod { qrCode, nfc, staticCode }
@@ -15,20 +15,12 @@ enum RedemptionMethod { qrCode, nfc, staticCode }
 class TabbedRedemptionBottomSheet extends StatefulWidget {
   const TabbedRedemptionBottomSheet({
     super.key,
-    required this.rewardTitle,
-    required this.rewardDescription,
     required this.redemptionCode,
-    required this.expiryDate,
-    this.brandIcon,
-    this.initialMethod = RedemptionMethod.qrCode,
+    required this.availableMethods,
   });
 
-  final String rewardTitle;
-  final String rewardDescription;
   final String redemptionCode;
-  final String expiryDate;
-  final Widget? brandIcon;
-  final RedemptionMethod initialMethod;
+  final InStoreRedemptionMethods availableMethods;
 
   @override
   State<TabbedRedemptionBottomSheet> createState() =>
@@ -42,19 +34,23 @@ class _TabbedRedemptionBottomSheetState
   @override
   void initState() {
     super.initState();
-    selectedMethod = widget.initialMethod;
+    // selectedMethod = widget.availableMethods.contains('qrCode')
+    //     ? RedemptionMethod.qrCode
+    //     : widget.availableMethods.contains('staticCode')
+    //     ? RedemptionMethod.staticCode
+    //     : RedemptionMethod.nfc;
+    // selectedMethod = widget.initialMethod;
+    selectedMethod = widget.availableMethods.qrCode
+        ? RedemptionMethod.qrCode
+        : widget.availableMethods.staticCode
+        ? RedemptionMethod.staticCode
+        : RedemptionMethod.nfc;
   }
 
   void _copyCodeToClipboard() {
+    print('Copying code: ${widget.redemptionCode}');
     Clipboard.setData(ClipboardData(text: widget.redemptionCode));
-    Get.snackbar(
-      'Copied!',
-      'Redemption code copied to clipboard',
-      backgroundColor: AppColors.secondaryColor,
-      colorText: const Color(0xFF000C0B),
-      snackPosition: SnackPosition.TOP,
-      duration: const Duration(seconds: 2),
-    );
+    ToastMsg.success('Redemption code copied to clipboard');
   }
 
   @override
@@ -139,21 +135,71 @@ class _TabbedRedemptionBottomSheetState
                       ),
                       child: Row(
                         children: [
-                          Expanded(
-                            child: _buildTabButton(
-                              'QR Code',
-                              RedemptionMethod.qrCode,
+                          if (widget.availableMethods.qrCode)
+                            Expanded(
+                              child: _buildTabButton(
+                                'QR Code',
+                                RedemptionMethod.qrCode,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: _buildTabButton('NFC', RedemptionMethod.nfc),
-                          ),
-                          Expanded(
-                            child: _buildTabButton(
-                              'Static Code',
-                              RedemptionMethod.staticCode,
+                          if (widget.availableMethods.nfcTap)
+                            Expanded(
+                              child: _buildTabButton(
+                                'NFC',
+                                RedemptionMethod.nfc,
+                              ),
                             ),
-                          ),
+                          if (widget.availableMethods.staticCode)
+                            Expanded(
+                              child: _buildTabButton(
+                                'Static Code',
+                                RedemptionMethod.staticCode,
+                              ),
+                            ),
+
+                          /// "qr", "static-code", "nfc"
+                          // ...widget.availableMethods.map((method) {
+                          //   switch (method) {
+                          //     case 'qr':
+                          //       return Expanded(
+                          //         child: _buildTabButton(
+                          //           'QR Code',
+                          //           RedemptionMethod.qrCode,
+                          //         ),
+                          //       );
+                          //     case 'nfc':
+                          //       return Expanded(
+                          //         child: _buildTabButton(
+                          //           'NFC',
+                          //           RedemptionMethod.nfc,
+                          //         ),
+                          //       );
+                          //     case 'static-code':
+                          //       return Expanded(
+                          //         child: _buildTabButton(
+                          //           'Static Code',
+                          //           RedemptionMethod.staticCode,
+                          //         ),
+                          //       );
+                          //     default:
+                          //       return SizedBox.shrink();
+                          //   }
+                          // }),
+                          // Expanded(
+                          //   child: _buildTabButton(
+                          //     'QR Code',
+                          //     RedemptionMethod.qrCode,
+                          //   ),
+                          // ),
+                          // Expanded(
+                          //   child: _buildTabButton('NFC', RedemptionMethod.nfc),
+                          // ),
+                          // Expanded(
+                          //   child: _buildTabButton(
+                          //     'Static Code',
+                          //     RedemptionMethod.staticCode,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -172,12 +218,10 @@ class _TabbedRedemptionBottomSheetState
 
               // Fixed bottom section with action button
               BottomSheetButtonWidget(
-                    text: _getActionButtonText(),
-                    backgroundColor: AppColors.secondaryColor,
-                  )
-                  .onLongPress(() => _copyCodeToClipboard())
-                  .paddingX(24.rw)
-                  .paddingB(24.rh),
+                text: 'Copy Code',
+                backgroundColor: AppColors.secondaryColor,
+                onTap: () => _copyCodeToClipboard(),
+              ).paddingX(24.rw).paddingB(24.rh),
             ],
           );
         },
@@ -272,10 +316,12 @@ class _TabbedRedemptionBottomSheetState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'SWB-QR- ${widget.redemptionCode}',
+                  widget.redemptionCode,
                   style: AppTextStyles.f14W400(),
                 ).color(const Color(0xFF000000)),
-                Assets.common.copy.svg(width: 20.rw, height: 20.rh),
+                Assets.common.copy
+                    .svg(width: 20.rw, height: 20.rh)
+                    .onTap(() => _copyCodeToClipboard()),
               ],
             ),
           ),
@@ -365,7 +411,7 @@ class _TabbedRedemptionBottomSheetState
                 spacing: 20,
                 children: [
                   Text(
-                    'AMAZON10FRESH',
+                    widget.redemptionCode,
                     style: TextStyle(
                       color: const Color(
                         0xFF9C68DD,
@@ -377,7 +423,9 @@ class _TabbedRedemptionBottomSheetState
                       letterSpacing: 0.70,
                     ),
                   ),
-                  Assets.common.copy.svg(width: 20.rw, height: 20.rh),
+                  Assets.common.copy
+                      .svg(width: 20.rw, height: 20.rh)
+                      .onTap(() => _copyCodeToClipboard()),
                 ],
               ),
             ),
@@ -399,45 +447,45 @@ class _TabbedRedemptionBottomSheetState
     );
   }
 
-  String _getActionButtonText() {
-    switch (selectedMethod) {
-      case RedemptionMethod.qrCode:
-        return 'Save QR Code';
-      case RedemptionMethod.nfc:
-        return 'Activate NFC';
-      case RedemptionMethod.staticCode:
-        return 'Copy Code';
-    }
-  }
+  // String _getActionButtonText() {
+  //   switch (selectedMethod) {
+  //     case RedemptionMethod.qrCode:
+  //       return 'Save QR Code';
+  //     case RedemptionMethod.nfc:
+  //       return 'Activate NFC';
+  //     case RedemptionMethod.staticCode:
+  //       return 'Copy Code';
+  //   }
+  // }
 
-  VoidCallback _getActionButtonCallback() {
-    switch (selectedMethod) {
-      case RedemptionMethod.qrCode:
-        return () {
-          // Save QR code functionality
-          Get.snackbar(
-            'Saved!',
-            'QR code saved to gallery',
-            backgroundColor: AppColors.secondaryColor,
-            colorText: const Color(0xFF000C0B),
-            snackPosition: SnackPosition.TOP,
-            duration: const Duration(seconds: 2),
-          );
-        };
-      case RedemptionMethod.nfc:
-        return () {
-          // Activate NFC functionality
-          Get.snackbar(
-            'NFC Activated!',
-            'Your reward is ready for NFC redemption',
-            backgroundColor: AppColors.secondaryColor,
-            colorText: const Color(0xFF000C0B),
-            snackPosition: SnackPosition.TOP,
-            duration: const Duration(seconds: 2),
-          );
-        };
-      case RedemptionMethod.staticCode:
-        return _copyCodeToClipboard;
-    }
-  }
+  // VoidCallback _getActionButtonCallback() {
+  //   switch (selectedMethod) {
+  //     case RedemptionMethod.qrCode:
+  //       return () {
+  //         // Save QR code functionality
+  //         Get.snackbar(
+  //           'Saved!',
+  //           'QR code saved to gallery',
+  //           backgroundColor: AppColors.secondaryColor,
+  //           colorText: const Color(0xFF000C0B),
+  //           snackPosition: SnackPosition.TOP,
+  //           duration: const Duration(seconds: 2),
+  //         );
+  //       };
+  //     case RedemptionMethod.nfc:
+  //       return () {
+  //         // Activate NFC functionality
+  //         Get.snackbar(
+  //           'NFC Activated!',
+  //           'Your reward is ready for NFC redemption',
+  //           backgroundColor: AppColors.secondaryColor,
+  //           colorText: const Color(0xFF000C0B),
+  //           snackPosition: SnackPosition.TOP,
+  //           duration: const Duration(seconds: 2),
+  //         );
+  //       };
+  //     case RedemptionMethod.staticCode:
+  //       return _copyCodeToClipboard;
+  //   }
+  // }
 }

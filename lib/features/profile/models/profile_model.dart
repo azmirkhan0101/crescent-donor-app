@@ -48,6 +48,7 @@ class ProfileModel {
   final String address;
   final String state;
   final String postalCode;
+  final String? phoneNumber;
   final String? image;
   final String createdAt;
   final String updatedAt;
@@ -59,6 +60,7 @@ class ProfileModel {
     required this.address,
     required this.state,
     required this.postalCode,
+    this.phoneNumber,
     this.image,
     required this.createdAt,
     required this.updatedAt,
@@ -72,6 +74,7 @@ class ProfileModel {
       address: json['address'] ?? '',
       state: json['state'] ?? '',
       postalCode: json['postalCode'] ?? '',
+      phoneNumber: json['phoneNumber'],
       image: json['image'],
       createdAt: json['createdAt'] ?? '',
       updatedAt: json['updatedAt'] ?? '',

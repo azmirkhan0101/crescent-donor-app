@@ -30,10 +30,10 @@ class OrganizationHeaderWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(12.rw)),
                   color: const Color(0xFFF5F5F5), // Fallback background
-                  image: organization.coverImage.isNotEmpty
+                  image: organization.coverImage?.isNotEmpty ?? false
                       ? DecorationImage(
                           image: NetworkImage(
-                            parseImageUrl(organization.coverImage),
+                            parseImageUrl(organization.coverImage!),
                           ),
                           fit: BoxFit.cover,
                           onError: (exception, stackTrace) {
@@ -54,10 +54,10 @@ class OrganizationHeaderWidget extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(
                     color: const Color(0xFFE5E5E5), // Fallback background
-                    image: organization.logoImage.isNotEmpty
+                    image: organization.logoImage?.isNotEmpty ?? false
                         ? DecorationImage(
                             image: NetworkImage(
-                              parseImageUrl(organization.logoImage),
+                              parseImageUrl(organization.logoImage!),
                             ),
                             fit: BoxFit.cover,
                             onError: (exception, stackTrace) {
@@ -73,7 +73,7 @@ class OrganizationHeaderWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(99),
                     ),
                   ),
-                  child: organization.logoImage.isEmpty
+                  child: organization.logoImage?.isEmpty ?? true
                       ? Icon(Icons.business, size: 40.rw, color: Colors.grey)
                       : null,
                 ),

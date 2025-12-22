@@ -153,20 +153,29 @@ class PaymentMethodController extends GetxController {
     );
   }
 
-  /// Complete card setup process
-  /// This method combines creating setup intent, confirming with Stripe, and adding to backend
+  /// Complete card setup process using backend setup intent
   Future<bool> setupCard({
     required String cardHolderName,
     bool isDefault = true,
   }) async {
+    isAddingCard.value = true;
+    errorMessage.value = '';
+
     try {
-      // Step 1: Create setup intent
+      // Step 1: Create setup intent via backend
       final setupIntentData = await createSetupIntent();
       if (setupIntentData == null) {
+        isAddingCard.value = false;
         return false;
       }
 
-      // Step 2: Confirm card setup with Stripe using the client secret
+      if (kDebugMode) {
+        print('Setup Intent Created:');
+        print('  ID: ${setupIntentData.setupIntentId}');
+        print('  Client Secret: ${setupIntentData.clientSecret}');
+      }
+
+      // Step 2: Confirm setup intent with Stripe using card field
       final result = await stripe.Stripe.instance.confirmSetupIntent(
         paymentIntentClientSecret: setupIntentData.clientSecret,
         params: const stripe.PaymentMethodParams.card(
@@ -175,41 +184,62 @@ class PaymentMethodController extends GetxController {
       );
 
       if (kDebugMode) {
-        print('Setup intent status: ${result.status}');
+        print('Stripe Confirmation Result:');
+        print('  Status: ${result.status}');
+        print('  ID: ${result.id}');
+        print('  Payment Method ID: ${result.paymentMethodId}');
       }
 
-      // Check if setup was successful
-      // The status should be Succeeded after confirmation
-      if (result.status == stripe.PaymentIntentsStatus.Canceled ||
-          result.status == stripe.PaymentIntentsStatus.RequiresAction ||
-          result.status == stripe.PaymentIntentsStatus.RequiresCapture ||
-          result.status == stripe.PaymentIntentsStatus.RequiresConfirmation) {
-        errorMessage.value = 'Card setup was not successful: ${result.status}';
+      // Check if confirmation was successful
+      // For setup intents, status is a String enum value
+      if (result.status.toString() != 'Succeeded') {
+        errorMessage.value = 'Card setup failed: ${result.status}';
+        isAddingCard.value = false;
         return false;
       }
 
-      // Get the payment method ID from the result
+      // Get the payment method ID
       final paymentMethodId = result.paymentMethodId;
       if (paymentMethodId.isEmpty) {
-        errorMessage.value = 'Payment method ID not found';
+        errorMessage.value = 'Payment method ID not found after confirmation';
         if (kDebugMode) {
-          print('Payment method ID is empty');
+          print('ERROR: Payment method ID is empty');
         }
+        isAddingCard.value = false;
         return false;
       }
 
       if (kDebugMode) {
-        print('Payment method ID: $paymentMethodId');
+        print(
+          'Successfully confirmed setup intent with payment method: $paymentMethodId',
+        );
       }
 
       // Step 3: Add payment method to backend
-      return await addPaymentMethod(
+      final success = await addPaymentMethod(
         stripePaymentMethodId: paymentMethodId,
         cardHolderName: cardHolderName,
         isDefault: isDefault,
       );
+
+      isAddingCard.value = false;
+      return success;
     } catch (e) {
-      errorMessage.value = 'Failed to setup card: ${e.toString()}';
+      isAddingCard.value = false;
+
+      // Better error handling for common Stripe errors
+      String errorMsg = 'Failed to setup card';
+      if (e.toString().contains('No such setupintent')) {
+        errorMsg =
+            'Stripe configuration error: Setup intent not found. Please contact support.';
+      } else if (e.toString().contains('resource_missing')) {
+        errorMsg =
+            'Stripe configuration mismatch. Please check your Stripe keys.';
+      } else {
+        errorMsg = 'Failed to setup card: ${e.toString()}';
+      }
+
+      errorMessage.value = errorMsg;
       if (kDebugMode) {
         print('Setup card exception: $e');
       }

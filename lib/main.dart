@@ -1,11 +1,13 @@
 import 'package:cresent_charge_user_app/core/dependency_injection/getx_injection.dart';
 import 'package:cresent_charge_user_app/core/go-router/app_router.dart';
 import 'package:cresent_charge_user_app/core/theme/theme.dart';
+import 'package:cresent_charge_user_app/firebase_options.dart';
 import 'package:cresent_charge_user_app/global/language/controller/language_controller.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/service/socket_service.dart';
 import 'package:cresent_charge_user_app/utils/system_utils/system_utils.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,6 +46,8 @@ void main() async {
 
   // Initialize theme controller
   Get.put(ThemeController());
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(DevicePreview(enabled: false, builder: (context) => const MyApp()));
 }

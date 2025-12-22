@@ -1,3 +1,43 @@
+/*
+{
+    "success": true,
+    "message": "Organization details retrieved successfully!",
+    "data": {
+        "_id": "693d3498c139b728a8d734d7",
+        "auth": {
+            "_id": "693d3498c139b728a8d734bb",
+            "email": "gohomen778@alexida.com",
+            "role": "ORGANIZATION",
+            "isActive": true,
+            "status": "verified"
+        },
+        "name": "Copeland and Merrill Inc",
+        "serviceType": "Charity",
+        "address": "Walters and Castaneda Traders",
+        "state": "California",
+        "postalCode": "Ipsum doloribus sun",
+        "website": "Bonner Casey Traders",
+        "phoneNumber": "+1 (481) 897-3611",
+        "coverImage": null,
+        "logoImage": null,
+        "aboutUs": "",
+        "registeredCharityName": "",
+        "totalDonation": 5,
+        "totalDonationAmount": 405,
+        "recentDonors": [
+            {
+                "lastDonationDate": "2025-12-14T05:15:52.988Z",
+                "lastDonationAmount": 5,
+                "donorId": "69301feaddbf3fdf987e86e8",
+                "donorName": "Mostafizur",
+                "donorImage": "/images/scaled_18-1765684240320.jpg",
+                "donorAddress": "Dhaka, Mohakhai"
+            }
+        ]
+    }
+}
+*/
+
 class OrganizationDetailsModel {
   final String id;
   final Auth? auth;
@@ -8,10 +48,12 @@ class OrganizationDetailsModel {
   final String postalCode;
   final String website;
   final String phoneNumber;
-  final String coverImage;
+  final String? coverImage;
   final String registeredCharityName;
   final String aboutUs;
-  final String logoImage;
+  final String? logoImage;
+  final int totalDonation;
+  final double totalDonationAmount;
   final List<RecentDonor> recentDonors;
 
   OrganizationDetailsModel({
@@ -24,10 +66,12 @@ class OrganizationDetailsModel {
     required this.postalCode,
     required this.website,
     required this.phoneNumber,
-    required this.coverImage,
+    this.coverImage,
     required this.registeredCharityName,
     required this.aboutUs,
-    required this.logoImage,
+    this.logoImage,
+    required this.totalDonation,
+    required this.totalDonationAmount,
     required this.recentDonors,
   });
 
@@ -42,10 +86,12 @@ class OrganizationDetailsModel {
       postalCode: json['postalCode'] ?? '',
       website: json['website'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
-      coverImage: json['coverImage'] ?? '',
+      coverImage: json['coverImage'],
       registeredCharityName: json['registeredCharityName'] ?? '',
       aboutUs: json['aboutUs'] ?? '',
-      logoImage: json['logoImage'] ?? '',
+      logoImage: json['logoImage'],
+      totalDonation: json['totalDonation'] ?? 0,
+      totalDonationAmount: (json['totalDonationAmount'] ?? 0).toDouble(),
       recentDonors:
           (json['recentDonors'] as List<dynamic>?)
               ?.map((e) => RecentDonor.fromJson(e as Map<String, dynamic>))
@@ -69,6 +115,8 @@ class OrganizationDetailsModel {
       'registeredCharityName': registeredCharityName,
       'aboutUs': aboutUs,
       'logoImage': logoImage,
+      'totalDonation': totalDonation,
+      'totalDonationAmount': totalDonationAmount,
       'recentDonors': recentDonors.map((e) => e.toJson()).toList(),
     };
   }
@@ -79,12 +127,14 @@ class Auth {
   final String email;
   final String role;
   final bool isActive;
+  final String status;
 
   Auth({
     required this.id,
     required this.email,
     required this.role,
     required this.isActive,
+    required this.status,
   });
 
   factory Auth.fromJson(Map<String, dynamic> json) {
@@ -93,60 +143,57 @@ class Auth {
       email: json['email'] ?? '',
       role: json['role'] ?? '',
       isActive: json['isActive'] ?? false,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'_id': id, 'email': email, 'role': role, 'isActive': isActive};
-  }
-}
-
-class RecentDonor {
-  final Donor? donor;
-  final String lastDonationDate;
-  final double lastDonationAmount;
-
-  RecentDonor({
-    this.donor,
-    required this.lastDonationDate,
-    required this.lastDonationAmount,
-  });
-
-  factory RecentDonor.fromJson(Map<String, dynamic> json) {
-    return RecentDonor(
-      donor: json['donor'] != null ? Donor.fromJson(json['donor']) : null,
-      lastDonationDate: json['lastDonationDate'] ?? '',
-      lastDonationAmount: (json['lastDonationAmount'] ?? 0).toDouble(),
+      status: json['status'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'donor': donor?.toJson(),
-      'lastDonationDate': lastDonationDate,
-      'lastDonationAmount': lastDonationAmount,
+      '_id': id,
+      'email': email,
+      'role': role,
+      'isActive': isActive,
+      'status': status,
     };
   }
 }
 
-class Donor {
-  final String id;
-  final String? name;
-  final String? email;
-  final String? image;
+class RecentDonor {
+  final String lastDonationDate;
+  final double lastDonationAmount;
+  final String donorId;
+  final String donorName;
+  final String donorImage;
+  final String donorAddress;
 
-  Donor({required this.id, this.name, this.email, this.image});
+  RecentDonor({
+    required this.lastDonationDate,
+    required this.lastDonationAmount,
+    required this.donorId,
+    required this.donorName,
+    required this.donorImage,
+    required this.donorAddress,
+  });
 
-  factory Donor.fromJson(Map<String, dynamic> json) {
-    return Donor(
-      id: json['_id'] ?? '',
-      name: json['name'],
-      email: json['email'],
-      image: json['image'],
+  factory RecentDonor.fromJson(Map<String, dynamic> json) {
+    return RecentDonor(
+      lastDonationDate: json['lastDonationDate'] ?? '',
+      lastDonationAmount: (json['lastDonationAmount'] ?? 0).toDouble(),
+      donorId: json['donorId'] ?? '',
+      donorName: json['donorName'] ?? '',
+      donorImage: json['donorImage'] ?? '',
+      donorAddress: json['donorAddress'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'_id': id, 'name': name, 'email': email, 'image': image};
+    return {
+      'lastDonationDate': lastDonationDate,
+      'lastDonationAmount': lastDonationAmount,
+      'donorId': donorId,
+      'donorName': donorName,
+      'donorImage': donorImage,
+      'donorAddress': donorAddress,
+    };
   }
 }

@@ -1,37 +1,26 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/rewards/models/reward_model.dart';
+import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_time_converter.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/models/reward_details_models.dart';
+import 'package:cresent_charge_user_app/features/rewards/models/reward_model.dart'
+    hide InStoreRedemptionMethods;
 import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/redemption_code_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/reward_details_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/tabbed_redemption_bottom_sheet.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class RedeemCard extends StatelessWidget {
   const RedeemCard({super.key, required this.index, required this.reward});
 
   final int index;
   final RewardModel reward;
-
-  void _handleCardTap(BuildContext context) {
-    showRewardsBottomSheet(
-      context,
-      RewardDetailsBottomSheet(
-        index: index,
-        isStoreReward: index == 1, // Example: make second card a store reward
-        expiryDateTime: index == 1
-            ? DateTime.now().add(
-                const Duration(days: 5, hours: 12, minutes: 32),
-              )
-            : null,
-        storeName: index == 1 ? 'Amazon Store' : null,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,22 +43,53 @@ class RedeemCard extends StatelessWidget {
                     height: 100.rh, // Reduced height
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.rw),
-                      image: DecorationImage(
-                        image: AssetImage(Assets.rewards.groceries.path),
-                        fit: BoxFit.cover,
-                      ),
+                      color: Colors.grey[200],
+                      image:
+                          reward.business?.coverImage != null &&
+                              reward.business!.coverImage!.isNotEmpty
+                          ? DecorationImage(
+                              image: NetworkImage(reward.business!.coverImage!),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
                     ),
+                    child:
+                        reward.business?.coverImage == null ||
+                            reward.business!.coverImage!.isEmpty
+                        ? Center(
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 40.rw,
+                              color: Colors.grey[400],
+                            ),
+                          )
+                        : null,
                   ),
                   Positioned(
                     bottom: 0.rh,
                     left: 10.rw,
                     child: Container(
-                      padding: EdgeInsets.all(8.rh),
+                      width: 32.rw,
+                      height: 32.rh,
+                      // padding: EdgeInsets.all(8.rh),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(999.rw),
                         color: Colors.black,
                       ),
-                      child: Assets.rewards.amazonA.svg(width: 16.rw),
+                      child: Center(
+                        child: Text(
+                          reward.business?.name != null &&
+                                  reward.business!.name.isNotEmpty
+                              ? reward.business!.name[0].toUpperCase()
+                              : 'B',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter Display',
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -81,7 +101,10 @@ class RedeemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: "10% off on Groceries".text(AppTextStyles.f16W500()),
+                    // child: "10% off on Groceries".text(AppTextStyles.f16W500()),
+                    child: reward.title
+                        .text(AppTextStyles.f16W500())
+                        .fontWeight(FontWeight.w500),
                   ),
                   Row(
                     children: [
@@ -92,7 +115,8 @@ class RedeemCard extends StatelessWidget {
                           BlendMode.srcIn,
                         ),
                       ),
-                      "450"
+                      // "450"
+                      "${reward.pointsCost}"
                           .text(AppTextStyles.f16W500())
                           .fontWeight(FontWeight.w600)
                           .fontFamily(AppStrings.interDisplay),
@@ -101,27 +125,21 @@ class RedeemCard extends StatelessWidget {
                 ],
               ),
               4.rh.heightWidth,
-              // Offer description
-              RichText(
-                text: TextSpan(
-                  text: 'Enjoy ',
-                  style: TextStyle(
-                    color: const Color(0xFF808E8D),
-                    fontSize: 12,
-                    fontFamily: 'Inter Display',
-                    fontWeight: FontWeight.w400,
-                    height: 1.33,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: '10% off',
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    TextSpan(text: ' on your next grocery'),
-                  ],
+
+              /// ===> Description <===
+              Text(
+                reward.description,
+                style: TextStyle(
+                  color: const Color(0xFF808E8D),
+                  fontSize: 12,
+                  fontFamily: 'Inter Display',
+                  fontWeight: FontWeight.w400,
+                  height: 1.33,
                 ),
               ),
               4.rh.heightWidth,
+
+              /// ===> Expiry Date <===
               RichText(
                 text: TextSpan(
                   text: 'Expires:',
@@ -134,43 +152,52 @@ class RedeemCard extends StatelessWidget {
                   ),
                   children: [
                     TextSpan(
-                      text: ' 28 May 2025',
+                      text: reward.expiryDate != null
+                          ? ' ${DateConverter.estimatedDate(DateTime.parse(reward.expiryDate!))}'
+                          : ' N/A',
                       style: TextStyle(fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
               ),
-              const Spacer(), // Push button to bottom
-              Container(
-                width: double.infinity,
-                height: 32.rh,
-                decoration: BoxDecoration(
-                  color: index % 3 != 0
-                      ? const Color(0xFFEBE9EC)
-                      : AppColors.secondaryColor,
-                  borderRadius: BorderRadius.circular(8.rw),
-                ),
-                child: index % 3 != 2
-                    ? Center(
-                        child: Text(
-                          'Redeem',
-                          style: TextStyle(
-                            color: const Color(0xFF000C0B),
-                            fontSize: 12,
-                            fontFamily: 'Inter Display',
-                            fontWeight: FontWeight.w600,
-                            height: 1.33,
-                          ),
-                        ),
-                      )
-                    : Row(
+              const Spacer(),
+
+              /// ===> Claim / Redeem Button <===
+              GetX<ClaimRewardController>(
+                init: ClaimRewardController(),
+                builder: (controller) {
+                  return GestureDetector(
+                    onTap: () => _onTapClaimButton(context, controller),
+                    child: Container(
+                      width: double.infinity,
+                      height: 32.rh,
+                      decoration: BoxDecoration(
+                        color:
+                            reward.isAlreadyRedeemed == true ||
+                                (controller.isLoading.value &&
+                                    reward.id == controller.clickedId.value)
+                            ? const Color(0xFFEBE9EC)
+                            : AppColors.secondaryColor,
+                        borderRadius: BorderRadius.circular(8.rw),
+                      ),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         spacing: 4.rw,
                         children: [
-                          Assets.rewards.checkmark.svg(width: 14.rw),
-                          "Claimed".text(
-                            TextStyle(
+                          if (reward.userStatus == 'claimed')
+                            Assets.rewards.checkmark.svg(width: 14.rw),
+
+                          Text(
+                            reward.id == controller.clickedId.value &&
+                                    controller.isLoading.value
+                                ? 'Processing...'
+                                : reward.userStatus == 'redeemed'
+                                ? "Redeemed"
+                                : reward.userStatus == 'not_claimed'
+                                ? "Claim"
+                                : "claimed",
+                            style: TextStyle(
                               color: const Color(0xFF000C0B),
                               fontSize: 12,
                               fontFamily: 'Inter Display',
@@ -180,47 +207,104 @@ class RedeemCard extends StatelessWidget {
                           ),
                         ],
                       ),
-              ).onTap(() {
-                // Show different bottom sheets based on card state
-                if (index % 3 == 2) {
-                  // Claimed rewards - show tabbed redemption
-                  showRewardsBottomSheet(
-                    context,
-                    TabbedRedemptionBottomSheet(
-                      rewardTitle: '10% off on Groceries',
-                      rewardDescription:
-                          'Enjoy 10% off on your next grocery run at amazon!',
-                      redemptionCode: '9842736590',
-                      expiryDate: '28 May 2025',
-                      brandIcon: Assets.rewards.amazonA.svg(
-                        width: 14.rw,
-                        height: 14.rh,
-                      ),
-                      initialMethod: RedemptionMethod.qrCode,
                     ),
                   );
-                } else {
-                  // Unclaimed rewards - show simple redemption code
-                  showRewardsBottomSheet(
-                    context,
-                    RedemptionCodeBottomSheet(
-                      rewardTitle: '10% off on Groceries',
-                      rewardDescription:
-                          'Enjoy 10% off on your next grocery run at amazon!',
-                      redemptionCode: '9842736590',
-                      expiryDate: '28 May 2025',
-                      brandIcon: Assets.rewards.amazonA.svg(
-                        width: 14.rw,
-                        height: 14.rh,
-                      ),
-                    ),
-                  );
-                }
-              }),
+                },
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _handleCardTap(BuildContext context) {
+    // print('Card tapped: ${reward.title}');
+    // print('User status: ${reward.userStatus}');
+    // if user status is 'not_claimed', show online reward details bottom sheet
+
+    showRewardsBottomSheet(
+      context,
+      RewardDetailsBottomSheet(
+        rewardId: reward.id,
+        userStatus: reward.userStatus,
+      ),
+    );
+  }
+
+  void _onTapClaimButton(
+    BuildContext context,
+    ClaimRewardController controller,
+  ) async {
+    if (reward.userStatus == 'not_claimed') {
+      controller.clickedId.value = reward.id;
+
+      /// ===> Claim Reward Flow <===
+      bool success = await controller.claimReward(reward.id);
+      if (success) {
+        if (!context.mounted) return;
+        showRewardsBottomSheet(
+          context,
+          TabbedRedemptionBottomSheet(
+            redemptionCode: controller.claimResult.value?.code ?? '',
+            availableMethods: InStoreRedemptionMethods(
+              qrCode:
+                  controller.claimResult.value?.availableMethods.contains(
+                    'qr',
+                  ) ??
+                  false,
+              staticCode:
+                  controller.claimResult.value?.availableMethods.contains(
+                    'static',
+                  ) ??
+                  false,
+              nfcTap:
+                  controller.claimResult.value?.availableMethods.contains(
+                    'nfc',
+                  ) ??
+                  false,
+            ),
+          ),
+        );
+      }
+    }
+
+    /// ===> Redeemed Rewards <===
+    if (reward.userStatus == 'claimed') {
+      // Unclaimed rewards - show simple redemption code
+      showRewardsBottomSheet(
+        context,
+        RedemptionCodeBottomSheet(
+          rewardTitle: reward.title,
+          rewardDescription: reward.description,
+          redemptionCode: '9842736590',
+          expiryDate: reward.expiryDate != null
+              ? DateConverter.estimatedDate(DateTime.parse(reward.expiryDate!))
+              : 'N/A',
+          brandIcon: Container(
+            width: 24.rw,
+            height: 24.rh,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(999.rw),
+              color: Colors.black,
+            ),
+            child: Center(
+              child: Text(
+                reward.business?.name != null &&
+                        reward.business!.name.isNotEmpty
+                    ? reward.business!.name[0].toUpperCase()
+                    : 'B',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter Display',
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

@@ -16,10 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-/// Home Page
-///
-/// The main dashboard of the app displaying welcome message, impact tracking,
-/// cause categories, verified charities, and donation opportunities.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -34,25 +30,32 @@ class HomePage extends StatelessWidget {
     final charitiesController = Get.put(CharitiesController());
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: SingleChildScrollView(
-        child: Obx(() {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              8.rh.heightWidth, // Top spacing
-              _buildHeader(context, getProfileController).paddingR(16.rw),
-              20.rh.heightWidth,
-              _buildImpactSection().paddingR(16.rw),
-              20.rh.heightWidth,
-              _buildCauseCategories(),
-              20.rh.heightWidth,
-              _buildVerifiedCharities(context),
-              20.rh.heightWidth,
-              _buildDonateForCause(context, causesController).paddingR(16.rw),
-              100.rh.heightWidth, // Bottom spacing for navigation
-            ],
-          ).paddingL(16.rw);
-        }),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await getProfileController.fetchProfile();
+          await causesController.fetchAllCauses();
+          await getOrgsController.fetchAllOrganizations();
+        },
+        child: SingleChildScrollView(
+          child: Obx(() {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                8.rh.heightWidth, // Top spacing
+                _buildHeader(context, getProfileController).paddingR(16.rw),
+                20.rh.heightWidth,
+                _buildImpactSection().paddingR(16.rw),
+                20.rh.heightWidth,
+                _buildCauseCategories(),
+                20.rh.heightWidth,
+                _buildVerifiedCharities(context),
+                20.rh.heightWidth,
+                _buildDonateForCause(context, causesController).paddingR(16.rw),
+                100.rh.heightWidth, // Bottom spacing for navigation
+              ],
+            ).paddingL(16.rw);
+          }),
+        ),
       ),
     );
   }

@@ -1,69 +1,59 @@
-import 'package:cresent_charge_user_app/features/donation/models/roundup_setting_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 /// Controller for managing Round Up Settings state and business logic
-class RoundUpSettingsController extends GetxController {
+class SettingsController extends GetxController {
   TextEditingController organizationController = TextEditingController();
   TextEditingController bankAccountController = TextEditingController();
   TextEditingController customAmountController = TextEditingController();
   TextEditingController specialMessageController = TextEditingController();
-  final _networkHelper = Get.find<NetworkHelper>();
-  RxList<RoundUpSettingModel> organizations = [
-    RoundUpSettingModel(
-      name: 'WorldVision International',
-      bankAccount: 'CHASUS33 XXXXXXXXX 1234',
-      thresholdAmount: '10',
-      frequency: false,
-    ),
-    RoundUpSettingModel(
-      name: 'Hope for Learning Foundation',
-      bankAccount: 'CHASUS33 XXXXXXXXX 6789',
-      thresholdAmount: '10',
-      frequency: true,
-    ),
-  ].obs;
 
-  final frequency = [
+  final List<String> frequency = [
     'Daily',
     'Weekly',
     'Monthly',
-    "Quarterly",
-    "Yearly",
-    "Custom",
+    'Quarterly',
+    'Yearly',
+    'Custom',
   ];
 
-  final amounts = ['\$10', '\$20', '\$30', '\$50', 'Custom', 'No Limit'];
+  // final amounts = ['10', '20', '30', '50', 'Custom'];
+  final thresholdAmounts = [
+    {'10': 10.00},
+    {'20': 20.00},
+    {'30': 30.00},
+    {'50': 50.00},
+    {'Custom': 0.00},
+  ];
 
-  var selectedOrganizationIndex = 0.obs;
-  var selectedBankAccountIndex = 0.obs;
-  var selectedAmountIndex = '\$10'.obs;
-  var selectedFrequencyIndex = 'Daily'.obs;
-  RxBool isSavingConsent = false.obs;
-  RxString saveConsentError = ''.obs;
+  var selectedRoundUpModelIndex = 0.obs;
+  var selectedRecurringConnectionIndex = 0.obs;
+  RxString selectedFrequency = ''.obs;
+  var customInterval = {"unit": "days", "value": 2}.obs;
+  var selectedAmountIndex = 0.obs;
+
+  void changeRoundUpModelIndex(int index) {
+    selectedRoundUpModelIndex.value = index;
+  }
 
   void changeOrganization(int index) {
     selectedOrganizationIndex.value = index;
   }
 
-  void changeBankAccount(int index) {
-    selectedBankAccountIndex.value = index;
-  }
-
-  void changeAmount(String amount) {
-    selectedAmountIndex.value = amount;
-
-    // Clear custom input when switching away from custom
-    if (amount != 'Custom') {
-      customAmountController.clear();
-    }
-  }
-
   void changeFrequency(String frequency) {
-    selectedFrequencyIndex.value = frequency;
+    selectedFrequency.value = frequency.toLowerCase();
   }
+
+  void changeCustomInterval(String unit, int value) {
+    customInterval.value = {"unit": unit, "value": value};
+    print('Custom Interval updated: $customInterval');
+  }
+
+  var selectedOrganizationIndex = 0.obs;
+  RxBool isSavingConsent = false.obs;
+  RxString saveConsentError = ''.obs;
 
   Future<bool> saveRoundUpConsent({
     required String bankConnectionId,
@@ -93,7 +83,7 @@ class RoundUpSettingsController extends GetxController {
       body['specialMessage'] = specialMessage;
     }
 
-    final result = await _networkHelper.request(
+    final result = await Get.find<NetworkHelper>().request(
       'POST',
       ApiUrl.saveRoundupConsent,
       body: body,
@@ -112,6 +102,10 @@ class RoundUpSettingsController extends GetxController {
       },
     );
   }
+
+  ///=======================================================
+  /// Get Recurring
+  ///=======================================================
 
   @override
   void onClose() {

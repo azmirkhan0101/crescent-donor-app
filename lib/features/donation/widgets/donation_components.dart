@@ -9,7 +9,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+import 'package:get/get.dart';
 
 /// Donation Page Header Widget
 ///
@@ -81,7 +81,7 @@ class DonationHeader extends StatelessWidget {
                   children: [
                     Assets.common.coins.svg(),
                     4.rw.heightWidth,
-                    "16000".text(AppTextStyles.f20w600()),
+                    pointsEarned.text(AppTextStyles.f20w600()),
                   ],
                 ),
               ],

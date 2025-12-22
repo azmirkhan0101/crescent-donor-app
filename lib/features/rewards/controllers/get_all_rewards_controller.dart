@@ -13,6 +13,7 @@ class GetAllRewardsController extends GetxController {
   var meta = Rx<MetaModel?>(null);
 
   String _buildRewardsUrl({
+    String? businessId,
     int? page,
     int? limit,
     String? type,
@@ -24,6 +25,10 @@ class GetAllRewardsController extends GetxController {
     String? sortOrder,
   }) {
     final params = <String>[];
+
+    if (businessId != null && businessId.isNotEmpty) {
+      params.add('businessId=$businessId');
+    }
 
     if (page != null) {
       params.add('page=$page');
@@ -58,6 +63,7 @@ class GetAllRewardsController extends GetxController {
   }
 
   Future<void> fetchRewards({
+    String? businessId,
     int? page,
     int? limit,
     String? type,
@@ -72,6 +78,7 @@ class GetAllRewardsController extends GetxController {
     errorMessage.value = '';
 
     final url = _buildRewardsUrl(
+      businessId: businessId,
       page: page,
       limit: limit,
       type: type,
@@ -96,9 +103,16 @@ class GetAllRewardsController extends GetxController {
         debugPrint('Error fetching rewards: ${error.message}');
       },
       (data) {
+        debugPrint('Full API Response: $data');
         final rewardsResponse = RewardsResponse.fromJson(data);
         rewards.assignAll(rewardsResponse.data);
         meta.value = rewardsResponse.meta;
+        if (rewards.isNotEmpty) {
+          final first = rewards.first;
+          debugPrint(
+            'First reward: userStatus=${first.userStatus}, claimStatus=${first.claimStatus}, isAlreadyClaimed=${first.isAlreadyClaimed}, isAlreadyRedeemed=${first.isAlreadyRedeemed}',
+          );
+        }
         debugPrint('Rewards fetched successfully: ${rewards.length} items');
       },
     );

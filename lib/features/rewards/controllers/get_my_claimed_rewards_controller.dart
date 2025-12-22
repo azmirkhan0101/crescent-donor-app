@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 class GetMyClaimedRewardsController extends GetxController {
   final NetworkHelper networkHelper = Get.find<NetworkHelper>();
 
-  var claimedRewards = <ClaimedRewardModel>[].obs;
+  var claimedRewards = <ClaimedRewardsModel>[].obs;
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var meta = Rx<MetaModel?>(null);
@@ -70,9 +70,11 @@ class GetMyClaimedRewardsController extends GetxController {
         debugPrint('Error fetching claimed rewards: ${error.message}');
       },
       (data) {
-        final claimedRewardsResponse = ClaimedRewardsResponse.fromJson(data);
-        claimedRewards.assignAll(claimedRewardsResponse.data);
-        meta.value = claimedRewardsResponse.meta;
+        final rewardsList = (data['data'] as List)
+            .map((item) => ClaimedRewardsModel.fromJson(item))
+            .toList();
+        claimedRewards.value = rewardsList;
+        meta.value = MetaModel.fromJson(data['meta']);
         debugPrint(
           'Claimed rewards fetched successfully: ${claimedRewards.length} items',
         );

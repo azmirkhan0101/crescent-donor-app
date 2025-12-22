@@ -1,11 +1,17 @@
+import 'package:cresent_charge_user_app/features/donation/models/recent_donations_groupe_model.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 class RecentDonation extends StatelessWidget {
-  const RecentDonation({super.key});
+  const RecentDonation({super.key, required this.recentDonations});
+
+  final List<RecentDonationsGroupModel> recentDonations;
 
   @override
   Widget build(BuildContext context) {
+    if (recentDonations.isEmpty) {
+      return Center(child: Text("No recent donations"));
+    }
     return Container(
       padding: EdgeInsets.all(16.rw),
       decoration: BoxDecoration(
@@ -17,56 +23,93 @@ class RecentDonation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          ...List.generate(recentDonations?.length ?? 0, (groupIndex) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  recentDonations?[groupIndex].title ?? '',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ...List.generate(
+                  recentDonations?[groupIndex].donations.length ?? 0,
+                  (donationIndex) {
+                    final donation =
+                        recentDonations?[groupIndex].donations[donationIndex];
+                    return Column(
+                      children: [
+                        _buildDonationItem(
+                          donation?.orgName ?? '',
+                          donation?.amount ?? 0.0,
+                          donation?.timeAgo ?? '',
+
+                          ///TODO: add network image instead of asset
+                          'assets/hope_foundation_logo.png',
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            );
+          }),
           // TODAY Section
-          const Text(
-            'TODAY',
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
-            ),
-          ),
-          const SizedBox(height: 8),
+          // const Text(
+          //   'TODAY',
+          //   style: TextStyle(
+          //     fontSize: 11,
+          //     color: Colors.grey,
+          //     fontWeight: FontWeight.w500,
+          //     fontFamily: 'Inter',
+          //   ),
+          // ),
+          // const SizedBox(height: 8),
 
-          // Today's donation
-          _buildDonationItem(
-            'Hope for Learning Foundation',
-            20.0,
-            '4 hours ago',
-            'assets/hope_foundation_logo.png',
-          ),
+          // // Today's donation
+          // _buildDonationItem(
+          //   'Hope for Learning Foundation',
+          //   20.0,
+          //   '4 hours ago',
+          //   'assets/hope_foundation_logo.png',
+          // ),
 
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
 
-          // 20 July Section
-          const Text(
-            '20 July',
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
-            ),
-          ),
-          const SizedBox(height: 8),
+          // // 20 July Section
+          // const Text(
+          //   '20 July',
+          //   style: TextStyle(
+          //     fontSize: 11,
+          //     color: Colors.grey,
+          //     fontWeight: FontWeight.w500,
+          //     fontFamily: 'Inter',
+          //   ),
+          // ),
+          // const SizedBox(height: 8),
 
-          // Previous donations
-          _buildDonationItem(
-            'Hope for Learning Foundation',
-            10.0,
-            '2 days ago',
-            'assets/hope_foundation_logo.png',
-          ),
+          // // Previous donations
+          // _buildDonationItem(
+          //   'Hope for Learning Foundation',
+          //   10.0,
+          //   '2 days ago',
+          //   'assets/hope_foundation_logo.png',
+          // ),
 
-          const SizedBox(height: 12),
+          // const SizedBox(height: 12),
 
-          _buildDonationItem(
-            'Animal Care & Shelter',
-            20.2,
-            '2 days ago',
-            'assets/animal_care_logo.png',
-          ),
+          // _buildDonationItem(
+          //   'Animal Care & Shelter',
+          //   20.2,
+          //   '2 days ago',
+          //   'assets/animal_care_logo.png',
+          // ),
         ],
       ),
     );

@@ -318,7 +318,10 @@ class ConfirmDonationPage extends StatelessWidget {
               orgDetailsCtrl.organizationDetails.value?.name ?? '',
             ),
             // _buildTransactionItem('From:', controller.fromUser),
-            _buildTransactionItem('From:', paymentMethod.cardHolderName),
+            _buildTransactionItem(
+              'From:',
+              paymentMethod.cardHolderName ?? 'Card Holder',
+            ),
             // _buildTransactionItem('By Debit Card:', controller.cardDisplayName),
             _buildTransactionItem(
               'By ${paymentMethod.cardBrand.toUpperCase()} Card:',
@@ -447,7 +450,7 @@ class ConfirmDonationPage extends StatelessWidget {
             );
           }
           if (isRoundUp) {
-            print('Round Up Donation Confirmed');
+            // print('Round Up Donation Confirmed');
             bool isSuccess = await Get.find<SaveRoundupController>()
                 .saveRoundupConsent(
                   bankConnectionId:
@@ -468,15 +471,9 @@ class ConfirmDonationPage extends StatelessWidget {
             }
           }
           if (isRecurring) {
-            print('Recurring Donation Confirmed');
+            // print('Recurring Donation Confirmed');
             bool isSuccess = await Get.find<CreateRecurringController>()
-                .createScheduledDonation(
-                  organizationId: donateNowController.organizationId.value,
-                  causeId: donateNowController.selectedCause.value?.id ?? '',
-                  amount: donateNowController.amount.value,
-                  frequency: donateNowController.selectedFrequency.value,
-                  paymentMethodId: paymentMethodId,
-                );
+                .createScheduledDonation(paymentMethodId: paymentMethodId);
             if (isSuccess) {
               ToastMsg.success('Recurring donation saved successfully');
               GoRouter.of(context).goNamed(RoutePath.home);

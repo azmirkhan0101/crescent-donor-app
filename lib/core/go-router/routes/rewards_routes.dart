@@ -1,11 +1,10 @@
-import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
+import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/rewards/pages/redeem_error_page.dart';
 import 'package:cresent_charge_user_app/features/rewards/pages/redeem_success_page.dart';
 import 'package:cresent_charge_user_app/features/rewards/pages/store_profile_page.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class RewardsRoutes extends AppRouteConfig {
@@ -16,17 +15,8 @@ class RewardsRoutes extends AppRouteConfig {
       name: RoutePath.storeProfile,
       path: RoutePath.storeProfile.addBasePath,
       builder: (context, state) {
-        Map<String, dynamic>? data = state.extra as Map<String, dynamic>?;
-        final storeName = data?['storeName'] as String;
-        final storeDescription = data?['storeDescription'] as String;
-        final storeImage = data?['storeImage'] as String;
-        final storeLogo = data?['storeLogo'] as Widget;
-        return StoreProfilePage(
-          storeName: storeName,
-          storeDescription: storeDescription,
-          storeImage: storeImage,
-          storeLogo: storeLogo,
-        );
+        String? storeId = state.extra as String;
+        return StoreProfilePage(storeId: storeId);
       },
       redirect: AuthGuard.authRequired.redirect,
     ),

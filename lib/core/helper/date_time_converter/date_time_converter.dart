@@ -1,6 +1,38 @@
 import 'package:intl/intl.dart';
 
 class DateConverter {
+  static String? isoStringToFormattedDateTime(
+    String? isoString, {
+    bool useUtc = false,
+  }) {
+    if (isoString == null) return null;
+    try {
+      final dateTime = DateTime.parse(isoString);
+      final targetTime = useUtc ? dateTime.toUtc() : dateTime.toLocal();
+      final formatter = DateFormat('d MMM y - hh:mm a', 'en_US');
+      return formatter.format(targetTime);
+    } catch (e) {
+      // Optionally log error
+      return null; // or return isoString, or "Invalid date"
+    }
+  }
+
+  static String? isoStringToFormattedDate(
+    String? isoString, {
+    bool useUtc = false,
+  }) {
+    if (isoString == null) return null;
+    try {
+      final dateTime = DateTime.parse(isoString);
+      final targetTime = useUtc ? dateTime.toUtc() : dateTime.toLocal();
+      final formatter = DateFormat('d MMM yyyy', 'en_US');
+      return formatter.format(targetTime);
+    } catch (e) {
+      // Optionally log error
+      return null; // or return isoString, or "Invalid date"
+    }
+  }
+
   static String estimatedDate(DateTime dateTime) {
     return DateFormat('dd MMM yyyy').format(dateTime);
   }
@@ -78,7 +110,7 @@ class DateConverter {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return months[month - 1];
   }

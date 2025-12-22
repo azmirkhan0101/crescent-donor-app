@@ -1,13 +1,13 @@
 import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/badges_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/one_time_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/organization_donations_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/recurring_donations_page.dart';
 import 'package:cresent_charge_user_app/features/donation/pages/round_up_page.dart';
-import 'package:cresent_charge_user_app/features/donation/pages/round_up_settings_page.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/donation/pages/settings_page.dart';
 import 'package:go_router/go_router.dart';
 
 class DonationRoutes extends AppRouteConfig {
@@ -19,7 +19,7 @@ class DonationRoutes extends AppRouteConfig {
       name: RoutePath.organizationDonations,
       path: RoutePath.organizationDonations.addBasePath,
       builder: (context, state) {
-        final organizationId = state.pathParameters['organizationId'];
+        final organizationId = state.pathParameters['organizationId'] as String;
         return OrganizationDonationsPage(organizationId: organizationId);
       },
       // Only authenticated users - no guest access for donation history
@@ -39,9 +39,12 @@ class DonationRoutes extends AppRouteConfig {
     /// Round Up Settings Page - Configure round-up donation settings
     /// AUTH REQUIRED: Round up settings require account access
     GoRoute(
-      name: RoutePath.roundUpSettings,
-      path: RoutePath.roundUpSettings.addBasePath,
-      builder: (context, state) => const RoundUpSettingsPage(),
+      name: RoutePath.settings,
+      path: RoutePath.settings.addBasePath,
+      builder: (context, state) {
+        bool isRecurring = state.extra != null && state.extra as bool;
+        return SettingsPage(isRecurring: isRecurring);
+      },
       // Only authenticated users - no guest access for round up settings
       redirect: AuthGuard.authRequired.redirect,
     ),

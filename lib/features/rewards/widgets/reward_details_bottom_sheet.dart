@@ -3,28 +3,32 @@ import 'dart:async';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/app_router.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
-import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
+import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_time_converter.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_reward_detail_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
+import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
+import 'package:cresent_charge_user_app/features/rewards/widgets/tabbed_redemption_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class RewardDetailsBottomSheet extends StatefulWidget {
   const RewardDetailsBottomSheet({
     super.key,
-    required this.index,
-    this.isStoreReward = false,
-    this.expiryDateTime,
-    this.storeName,
+    required this.rewardId,
+    this.userStatus,
   });
 
-  final int index;
-  final bool isStoreReward;
-  final DateTime? expiryDateTime;
-  final String? storeName;
+  final String rewardId;
+  final String? userStatus;
 
   @override
   State<RewardDetailsBottomSheet> createState() =>
@@ -34,16 +38,11 @@ class RewardDetailsBottomSheet extends StatefulWidget {
 class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
   Timer? _timer;
   Duration _timeRemaining = Duration.zero;
+  DateTime? _expiryDateTime;
 
   @override
   void initState() {
     super.initState();
-    if (widget.isStoreReward && widget.expiryDateTime != null) {
-      _updateTimeRemaining();
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        _updateTimeRemaining();
-      });
-    }
   }
 
   @override
@@ -52,413 +51,501 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
     super.dispose();
   }
 
-  void _updateTimeRemaining() {
-    if (widget.expiryDateTime != null) {
-      final now = DateTime.now();
-      final difference = widget.expiryDateTime!.difference(now);
-      if (mounted) {
-        setState(() {
-          _timeRemaining = difference.isNegative ? Duration.zero : difference;
-        });
-      }
+  void _initializeCountdown(String expiryDateString) {
+    final parsedDate = DateTime.tryParse(expiryDateString);
+    if (parsedDate == null) return;
+
+    final localExpiry = parsedDate.toLocal();
+    if (_expiryDateTime != null && _expiryDateTime == localExpiry) {
+      return;
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      _timer?.cancel();
+      setState(() {
+        _expiryDateTime = localExpiry;
+      });
+
+      _updateTimeRemaining();
+
+      _timer = Timer.periodic(
+        const Duration(seconds: 1),
+        (_) => _updateTimeRemaining(),
+      );
+    });
+  }
+
+  void _updateTimeRemaining() {
+    if (_expiryDateTime == null) return;
+
+    final now = DateTime.now();
+    final difference = _expiryDateTime!.difference(now);
+
+    if (!mounted) return;
+
+    setState(() {
+      _timeRemaining = difference.isNegative ? Duration.zero : difference;
+    });
+
+    if (difference.isNegative) {
+      _timer?.cancel();
+      _timer = null;
+    }
+  }
+
+  String _formattedExpiryDateTime() {
+    if (_expiryDateTime == null) return 'N/A';
+    return DateFormat('h:mm a, MMM d, yyyy').format(_expiryDateTime!);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        border: Border(
-          top: BorderSide(color: Color(0xFFEBE9EC), width: 1),
-          left: BorderSide(color: Color(0xFFEBE9EC), width: 1),
-          right: BorderSide(color: Color(0xFFEBE9EC), width: 1),
-        ),
-      ),
-      child: DraggableScrollableSheet(
-        initialChildSize: widget.isStoreReward ? 0.8 : 0.65,
-        minChildSize: 0.5,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, scrollController) {
-          return Column(
-            children: [
-              // Fixed top section with handle, title, and image
-              Container(
-                padding: EdgeInsets.fromLTRB(24.rw, 12.rh, 24.rw, 0),
-                child: Column(
-                  children: [
-                    // Handle bar
-                    Container(
-                      width: 32.rw,
-                      height: 4.rh,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF000C0B),
-                        borderRadius: BorderRadius.circular(100.rw),
-                      ),
-                    ),
+    return GetX<GetRewardDetailController>(
+      initState: (state) {
+        Get.find<GetRewardDetailController>().fetchRewardDetail(
+          widget.rewardId,
+        );
+      },
+      builder: (controller) {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-                    16.rh.heightWidth,
+        final bool isStoreReward =
+            controller.rewardDetail.value?.type == 'in-store';
 
-                    // Title and close button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        print(
+          "is redeemed ====> ${controller.rewardDetail.value?.redeemedCount}",
+        );
+
+        final expiryDate = controller.rewardDetail.value?.expiryDate;
+        if (isStoreReward && expiryDate != null) {
+          _initializeCountdown(expiryDate);
+        } else if (!isStoreReward && _timer != null) {
+          _timer?.cancel();
+          _timer = null;
+        }
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+            border: Border(
+              top: BorderSide(color: Color(0xFFEBE9EC), width: 1),
+              left: BorderSide(color: Color(0xFFEBE9EC), width: 1),
+              right: BorderSide(color: Color(0xFFEBE9EC), width: 1),
+            ),
+          ),
+          child: DraggableScrollableSheet(
+            initialChildSize: isStoreReward ? 0.8 : 0.65,
+            minChildSize: 0.5,
+            maxChildSize: 0.9,
+            expand: false,
+            builder: (context, scrollController) {
+              return Column(
+                children: [
+                  // Fixed top section with handle, title, and image
+                  Container(
+                    padding: EdgeInsets.fromLTRB(24.rw, 12.rh, 24.rw, 0),
+                    child: Column(
                       children: [
-                        Text(
-                          'Reward Details',
-                          style: AppTextStyles.f20w600().copyWith(
-                            color: const Color(0xFF000C0B),
-                            fontSize: 20.rfs,
-                            height: 1.2,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: SizedBox(
-                            width: 20.rw,
-                            height: 20.rh,
-                            child: Icon(
-                              Icons.close,
-                              size: 14.rfs,
-                              color: const Color(0xFF000C0B),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    16.rh.heightWidth,
-
-                    // Reward image
-                    Stack(
-                      children: [
-                        SizedBox(height: 146.rh),
-                        // Background image
+                        // Handle bar
                         Container(
-                          width: double.infinity,
-                          height: 120.rh,
+                          width: 32.rw,
+                          height: 4.rh,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.rw),
-                            image: DecorationImage(
-                              image: AssetImage(Assets.rewards.groceries.path),
-                              fit: BoxFit.cover,
-                            ),
+                            color: const Color(0xFF000C0B),
+                            borderRadius: BorderRadius.circular(100.rw),
                           ),
                         ),
-                        // Brand logo positioned at bottom left
-                        Positioned(
-                          bottom: 0.rh,
-                          left: 12.rw,
-                          child: Container(
-                            width: 56.rw,
-                            height: 56.rh,
-                            padding: EdgeInsets.all(14.rw),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF000C0B),
-                              borderRadius: BorderRadius.circular(1748.25.rw),
+
+                        16.rh.heightWidth,
+
+                        // Title and close button
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Reward Details',
+                              style: AppTextStyles.f20w600().copyWith(
+                                color: const Color(0xFF000C0B),
+                                fontSize: 20.rfs,
+                                height: 1.2,
+                              ),
                             ),
-                            child: Assets.rewards.amazonA.svg(
-                              width: 28.rw,
-                              height: 28.rh,
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: SizedBox(
+                                width: 20.rw,
+                                height: 20.rh,
+                                child: Icon(
+                                  Icons.close,
+                                  size: 14.rfs,
+                                  color: const Color(0xFF000C0B),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
+                        ),
+
+                        16.rh.heightWidth,
+
+                        // Reward image
+                        Stack(
+                          children: [
+                            SizedBox(height: 146.rh),
+                            // Background image
+                            Container(
+                              width: double.infinity,
+                              height: 120.rh,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.rw),
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                    Assets.rewards.groceries.path,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            // Brand logo positioned at bottom left
+                            Positioned(
+                              bottom: 0.rh,
+                              left: 12.rw,
+                              child: Container(
+                                width: 56.rw,
+                                height: 56.rh,
+                                padding: EdgeInsets.all(14.rw),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF000C0B),
+                                  borderRadius: BorderRadius.circular(
+                                    1748.25.rw,
+                                  ),
+                                ),
+                                child: Assets.rewards.amazonA.svg(
+                                  width: 28.rw,
+                                  height: 28.rh,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
 
-              // Scrollable content
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: EdgeInsets.fromLTRB(24.rw, 16.rh, 24.rw, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title and points row
-                      Row(
+                  // Scrollable content
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      padding: EdgeInsets.fromLTRB(24.rw, 16.rh, 24.rw, 0),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text(
-                              '10% off on Groceries',
-                              style: AppTextStyles.f16W500().copyWith(
-                                color: const Color(0xFF000C0B),
-                                fontSize: 16.rfs,
-                                height: 1.5,
-                              ),
-                            ),
-                          ),
-                          4.rw.heightWidth,
+                          /// Title and points row
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Assets.rewards.rewardCoin.svg(
-                                width: 24.rw,
-                                height: 24.rh,
-                                colorFilter: ColorFilter.mode(
-                                  const Color(0xFF000C0B),
-                                  BlendMode.srcIn,
+                              Expanded(
+                                child: Text(
+                                  controller.rewardDetail.value?.title ?? 'N/A',
+                                  style: AppTextStyles.f16W500().copyWith(
+                                    color: const Color(0xFF000C0B),
+                                    fontSize: 16.rfs,
+                                    height: 1.5,
+                                  ),
                                 ),
                               ),
-                              2.rw.heightWidth,
-                              Text(
-                                '150',
-                                style: TextStyle(
-                                  color: const Color(0xFF000C0B),
-                                  fontSize: 20.rfs,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: AppStrings.familjenGrotesk,
-                                  height: 1.2,
-                                  letterSpacing: -0.2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-
-                      8.rh.heightWidth,
-
-                      // Conditional content based on reward type
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.rw,
-                          vertical: 8.rh,
-                        ),
-                        decoration: BoxDecoration(
-                          color: widget.isStoreReward
-                              ? const Color(0xFFFFF9E2)
-                              : const Color(0xFFE9FDF9),
-                          borderRadius: BorderRadius.circular(16.rw),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            widget.isStoreReward
-                                ? Assets.rewards.shopIcon.svg(
-                                    width: 18.rw,
-                                    height: 18.rh,
-                                  )
-                                : Assets.common.globe.svg(
-                                    width: 18.rw,
-                                    height: 18.rh,
+                              4.rw.heightWidth,
+                              Row(
+                                children: [
+                                  Assets.rewards.rewardCoin.svg(
+                                    width: 24.rw,
+                                    height: 24.rh,
                                     colorFilter: ColorFilter.mode(
                                       const Color(0xFF000C0B),
                                       BlendMode.srcIn,
                                     ),
                                   ),
-
-                            4.rw.heightWidth,
-                            Text(
-                                  widget.isStoreReward
-                                      ? 'In Store Reward'
-                                      : 'Online Reward',
-                                  style: AppTextStyles.f14W400(),
-                                )
-                                .fontSize(12.rfs)
-                                .color(
-                                  widget.isStoreReward
-                                      ? const Color(0xFFA18200)
-                                      : const Color(0xFF000C0B),
-                                ),
-                          ],
-                        ),
-                      ),
-                      8.rh.heightWidth,
-
-                      // Description
-                      RichText(
-                        text: TextSpan(
-                          text: 'Enjoy ',
-                          style: TextStyle(
-                            color: const Color(0xFF818F8D),
-                            fontSize: widget.isStoreReward ? 12.rfs : 14.rfs,
-                            fontFamily: 'Inter Display',
-                            fontWeight: FontWeight.w400,
-                            height: 1.43,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: '10% off',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            TextSpan(text: ' on your next grocery'),
-                          ],
-                        ),
-                      ),
-
-                      8.rh.heightWidth,
-
-                      // Expiry
-                      RichText(
-                        text: TextSpan(
-                          text: 'Expires: ',
-                          style: TextStyle(
-                            color: const Color(0xFF818F8D),
-                            fontSize: widget.isStoreReward ? 12.rfs : 14.rfs,
-                            fontFamily: 'Inter Display',
-                            fontWeight: FontWeight.w500,
-                            height: 1.43,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: '28 May 2025',
-                              style: TextStyle(fontWeight: FontWeight.w400),
-                            ),
-                          ],
-                        ),
-                      ),
-                      24.rh.heightWidth,
-
-                      // Countdown Timer Box
-                      if (widget.isStoreReward)
-                        Container(
-                          padding: EdgeInsets.all(16.rw),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF5F0FC),
-                            borderRadius: BorderRadius.circular(12.rw),
-                            border: Border.all(
-                              color: const Color(0xFFC08FFF),
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.hourglass_empty,
-                                    size: 18.rfs,
-                                    color: const Color(0xFF000C0B),
-                                  ),
-                                  8.rw.heightWidth,
+                                  2.rw.heightWidth,
                                   Text(
-                                    'Expires in',
-                                    style: AppTextStyles.f14W400(),
-                                  ).color(AppColors.black),
-                                ],
-                              ),
-
-                              8.rh.heightWidth,
-
-                              RichText(
-                                text: TextSpan(
-                                  text: _timeRemaining.inDays.toString(),
-                                  style: AppTextStyles.f20w600().copyWith(
-                                    fontSize: 24.rfs,
+                                    controller.rewardDetail.value?.pointsCost
+                                            .toString() ??
+                                        'N/A',
+                                    style: TextStyle(
+                                      color: const Color(0xFF000C0B),
+                                      fontSize: 20.rfs,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: AppStrings.familjenGrotesk,
+                                      height: 1.2,
+                                      letterSpacing: -0.2,
+                                    ),
                                   ),
-                                  children: [
-                                    TextSpan(
-                                      text: ' Days  ',
-                                      style: AppTextStyles.f14W400().copyWith(
-                                        color: const Color(0xFF000C0B),
-                                        fontSize: 14,
-                                        height: 1.29,
-                                      ),
-                                    ),
-
-                                    TextSpan(
-                                      text: (_timeRemaining.inHours % 24)
-                                          .toString(),
-                                      style: AppTextStyles.f20w600().copyWith(
-                                        fontSize: 24.rfs,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ' Hours  ',
-                                      style: AppTextStyles.f14W400().copyWith(
-                                        color: const Color(0xFF000C0B),
-                                        fontSize: 14,
-                                        height: 1.29,
-                                      ),
-                                    ),
-
-                                    TextSpan(
-                                      text: (_timeRemaining.inMinutes % 60)
-                                          .toString(),
-                                      style: AppTextStyles.f20w600().copyWith(
-                                        fontSize: 24.rfs,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ' Minutes',
-                                      style: AppTextStyles.f14W400().copyWith(
-                                        color: const Color(0xFF000C0B),
-                                        fontSize: 14,
-                                        height: 1.29,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // Countdown display
-                              12.rh.heightWidth,
-
-                              // Specific time
-                              Text(
-                                ' 7:42 PM, Apr 16, 2025',
-                                style: AppTextStyles.f14W400().copyWith(
-                                  color: const Color(0xFF000C0B),
-                                  fontSize: 14,
-                                  height: 1.29,
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        ),
 
-                      // Add some bottom padding
-                      24.rh.heightWidth,
-                    ],
+                          8.rh.heightWidth,
+
+                          // Conditional content based on reward type
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.rw,
+                              vertical: 8.rh,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isStoreReward
+                                  ? const Color(0xFFFFF9E2)
+                                  : const Color(0xFFE9FDF9),
+                              borderRadius: BorderRadius.circular(16.rw),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                isStoreReward
+                                    ? Assets.rewards.shopIcon.svg(
+                                        width: 18.rw,
+                                        height: 18.rh,
+                                      )
+                                    : Assets.common.globe.svg(
+                                        width: 18.rw,
+                                        height: 18.rh,
+                                        colorFilter: ColorFilter.mode(
+                                          const Color(0xFF000C0B),
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+
+                                4.rw.heightWidth,
+                                Text(
+                                      isStoreReward
+                                          ? 'In Store Reward'
+                                          : 'Online Reward',
+                                      style: AppTextStyles.f14W400(),
+                                    )
+                                    .fontSize(12.rfs)
+                                    .color(
+                                      isStoreReward
+                                          ? const Color(0xFFA18200)
+                                          : const Color(0xFF000C0B),
+                                    ),
+                              ],
+                            ),
+                          ),
+                          8.rh.heightWidth,
+
+                          // Description
+                          Text(
+                            controller.rewardDetail.value?.description ?? 'N/A',
+                            style: AppTextStyles.f14W400().copyWith(
+                              color: const Color(0xFF818F8D),
+                              fontSize: isStoreReward ? 12.rfs : 14.rfs,
+                              height: 1.43,
+                            ),
+                          ),
+
+                          8.rh.heightWidth,
+
+                          // Expiry
+                          RichText(
+                            text: TextSpan(
+                              text: 'Expires: ',
+                              style: TextStyle(
+                                color: const Color(0xFF818F8D),
+                                fontSize: isStoreReward ? 12.rfs : 14.rfs,
+                                fontFamily: 'Inter Display',
+                                fontWeight: FontWeight.w500,
+                                height: 1.43,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      controller
+                                              .rewardDetail
+                                              .value
+                                              ?.expiryDate !=
+                                          null
+                                      ? ' ${DateConverter.estimatedDate(DateTime.parse(controller.rewardDetail.value!.expiryDate))}'
+                                      : ' N/A',
+                                  style: TextStyle(fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          ),
+                          24.rh.heightWidth,
+
+                          // Countdown Timer Box
+                          if (isStoreReward)
+                            Container(
+                              padding: EdgeInsets.all(16.rw),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF5F0FC),
+                                borderRadius: BorderRadius.circular(12.rw),
+                                border: Border.all(
+                                  color: const Color(0xFFC08FFF),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.hourglass_empty,
+                                        size: 18.rfs,
+                                        color: const Color(0xFF000C0B),
+                                      ),
+                                      8.rw.heightWidth,
+                                      Text(
+                                        'Expires in',
+                                        style: AppTextStyles.f14W400(),
+                                      ).color(AppColors.black),
+                                    ],
+                                  ),
+
+                                  8.rh.heightWidth,
+
+                                  RichText(
+                                    text: TextSpan(
+                                      text: _timeRemaining.inDays.toString(),
+                                      style: AppTextStyles.f20w600().copyWith(
+                                        fontSize: 24.rfs,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: ' Days  ',
+                                          style: AppTextStyles.f14W400()
+                                              .copyWith(
+                                                color: const Color(0xFF000C0B),
+                                                fontSize: 14,
+                                                height: 1.29,
+                                              ),
+                                        ),
+
+                                        TextSpan(
+                                          text: (_timeRemaining.inHours % 24)
+                                              .toString(),
+                                          style: AppTextStyles.f20w600()
+                                              .copyWith(fontSize: 24.rfs),
+                                        ),
+                                        TextSpan(
+                                          text: ' Hours  ',
+                                          style: AppTextStyles.f14W400()
+                                              .copyWith(
+                                                color: const Color(0xFF000C0B),
+                                                fontSize: 14,
+                                                height: 1.29,
+                                              ),
+                                        ),
+
+                                        TextSpan(
+                                          text: (_timeRemaining.inMinutes % 60)
+                                              .toString(),
+                                          style: AppTextStyles.f20w600()
+                                              .copyWith(fontSize: 24.rfs),
+                                        ),
+                                        TextSpan(
+                                          text: ' Minutes',
+                                          style: AppTextStyles.f14W400()
+                                              .copyWith(
+                                                color: const Color(0xFF000C0B),
+                                                fontSize: 14,
+                                                height: 1.29,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  // Countdown display
+                                  12.rh.heightWidth,
+
+                                  // Specific time
+                                  Text(
+                                    _formattedExpiryDateTime(),
+                                    style: AppTextStyles.f14W400().copyWith(
+                                      color: const Color(0xFF000C0B),
+                                      fontSize: 14,
+                                      height: 1.29,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          // Add some bottom padding
+                          24.rh.heightWidth,
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
 
-              // Fixed bottom section with button
-              widget.isStoreReward
-                  ? Row(
+                  // Fixed bottom section with button
+                  if (isStoreReward && widget.userStatus != 'redeemed')
+                    Row(
                       spacing: 8.rw,
                       children: [
-                        Expanded(
-                          child: BottomSheetButtonWidget(
-                            backgroundColor: const Color(0xFFF5F5F5),
-                            text: 'Save',
-                            onTap: () {
-                              Navigator.pop(context);
-                              Get.snackbar(
-                                'Saved',
-                                'Reward saved to your favorites!',
-                                backgroundColor: Colors.grey[100],
-                                colorText: const Color(0xFF000C0B),
-                                snackPosition: SnackPosition.TOP,
-                              );
-                            },
+                        if (widget.userStatus == 'not_claimed')
+                          Expanded(
+                            child: BottomSheetButtonWidget(
+                              backgroundColor: const Color(0xFFF5F5F5),
+                              text: 'Save',
+                              onTap: () async {
+                                bool success =
+                                    await Get.find<ClaimRewardController>()
+                                        .claimReward(widget.rewardId);
+                                if (success) {
+                                  Navigator.pop(context);
+                                  Get.find<GetAllRewardsController>()
+                                      .fetchRewards();
+                                  ToastMsg.success(
+                                    'Reward Claimed Successfully!',
+                                  );
+                                }
+                              },
+                            ),
                           ),
-                        ),
                         Expanded(
                           child: BottomSheetButtonWidget(
                             backgroundColor: const Color(0xFFD1FF43),
-                            text: 'Redeem',
-                            onTap: () {
-                              Navigator.pop(context);
-                              context.safeNavigateToRoute(
-                                RoutePath.redeemSuccess,
-                              );
+                            text: widget.userStatus == 'claimed'
+                                ? 'Redeem Reward'
+                                : ' Claim Reward',
+                            onTap: () async {
+                              if (widget.userStatus == 'claimed') {
+                                Navigator.pop(context);
+                                _openRedemptionBottomSheet(context, controller);
+                                return;
+                              } else {
+                                /// ===> Claim Reward Flow <===
+                                bool success =
+                                    await Get.find<ClaimRewardController>()
+                                        .claimReward(widget.rewardId);
+                                if (success) {
+                                  Navigator.pop(context);
+                                  Get.find<GetAllRewardsController>()
+                                      .fetchRewards();
+                                  _openRedemptionBottomSheet(
+                                    context,
+                                    controller,
+                                  );
+                                }
+                              }
                             },
                           ),
                         ),
                       ],
-                    ).paddingX(24.rw)
-                  : BottomSheetButtonWidget(
-                      text: "Redeem Reward",
+                    ).paddingX(24.rw),
+
+                  if (!isStoreReward && widget.userStatus != 'redeemed')
+                    BottomSheetButtonWidget(
+                      text: "Claim Reward",
                       backgroundColor: const Color(0xFFD1FF43),
                       onTap: () {
                         Navigator.pop(context);
@@ -466,10 +553,26 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
                       },
                     ).paddingX(24.rw),
 
-              16.rh.heightWidth,
-            ],
-          );
-        },
+                  16.rh.heightWidth,
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _openRedemptionBottomSheet(
+    BuildContext context,
+    GetRewardDetailController controller,
+  ) {
+    showRewardsBottomSheet(
+      context,
+      TabbedRedemptionBottomSheet(
+        redemptionCode: controller.rewardDetail.value?.codePrefix ?? '',
+        availableMethods:
+            controller.rewardDetail.value!.inStoreRedemptionMethods,
       ),
     );
   }

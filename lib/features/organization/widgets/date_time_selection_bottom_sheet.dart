@@ -42,11 +42,16 @@ class _DateTimeSelectionBottomSheetState
   void initState() {
     super.initState();
     // Initialize from controller or set defaults
-    selectedDate = DateTime.now().add(const Duration(days: 1));
-    selectedTime = const TimeOfDay(hour: 9, minute: 0);
+    selectedDate = DateTime.now();
+    selectedTime = TimeOfDay.now();
     selectedFrequency = 'Daily';
     customUnit = 'days';
     customIntervalController = TextEditingController(text: '1');
+    donateNowController.setRecurringDateTime(
+      DateTime.now().add(
+        const Duration(minutes: 5),
+      ), // Set to 5 minutes in the future
+    );
   }
 
   @override
@@ -482,13 +487,20 @@ class _DateTimeSelectionBottomSheetState
   /// Save recurring settings to controller
   void _saveRecurringSettings() {
     // Combine selected date and time
-    final dateTime = DateTime(
+    DateTime dateTime = DateTime(
       selectedDate.year,
       selectedDate.month,
       selectedDate.day,
       selectedTime.hour,
       selectedTime.minute,
     );
+
+    // Ensure the date/time is in the future (at least 5 minutes from now)
+    final now = DateTime.now();
+    final minFutureTime = now.add(const Duration(minutes: 5));
+    if (dateTime.isBefore(minFutureTime)) {
+      dateTime = minFutureTime;
+    }
 
     // Save to controller
     donateNowController.setRecurringDateTime(dateTime);

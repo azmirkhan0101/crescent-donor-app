@@ -1,9 +1,12 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/theme/app_colors.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/update_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 /// Edit Profile Page
@@ -18,27 +21,17 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  // Text controllers for form fields
-  final _nameController = TextEditingController(text: 'Talha Shafqat');
-  final _phoneController = TextEditingController(text: '87879 98900');
-  final _emailController = TextEditingController(text: 'talha@gmail.com');
-  final _addressController = TextEditingController(
-    text: '1234 Elm Street Suite 205 Springfield, IL 2704, United States',
-  );
-  final _pinCodeController = TextEditingController(text: '94105');
-
-  // Selected values for dropdowns
-  final String _selectedCountryCode = '+1';
-  final String _selectedState = 'New York';
+  late final UpdateProfileController _updCtrl;
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
-    _addressController.dispose();
-    _pinCodeController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    // Ensure GetProfileController exists to prefill once
+    if (!Get.isRegistered<GetProfileController>()) {
+      Get.put<GetProfileController>(GetProfileController());
+    }
+    // Initialize update controller - GetX will handle disposal
+    _updCtrl = Get.put(UpdateProfileController());
   }
 
   @override
@@ -104,59 +97,102 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   /// Build profile avatar with edit button
   Widget _buildProfileAvatar() {
-    return Stack(
-      children: [
-        // Main Avatar
-        Container(
-          width: 120.rw,
-          height: 120.rh,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: AppColors.surfaceContainerHigh,
-              width: 1.714,
-            ),
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFFC08FFF), Color(0xFF8B5CF6)],
-            ),
-          ),
-          child: Center(
-            child: Icon(
-              Icons.person_outline,
-              size: 60.rfs,
-              color: Colors.white,
-            ),
-          ),
-        ),
-
-        // Edit Button
-        Positioned(
-          bottom: 0,
-          right: 16.rw,
-          child: Container(
-            width: 24.rw,
-            height: 24.rh,
-            decoration: const BoxDecoration(
-              color: Color(0xFF000C0B),
+    return Obx(() {
+      final selectedImage = _updCtrl.imageFile.value;
+      return Stack(
+        children: [
+          // Main Avatar
+          Container(
+            width: 120.rw,
+            height: 120.rh,
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.surfaceContainerHigh,
+                width: 1.714,
+              ),
+              gradient: selectedImage == null
+                  ? const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xFFC08FFF), Color(0xFF8B5CF6)],
+                    )
+                  : null,
+              image: selectedImage != null
+                  ? DecorationImage(
+                      image: FileImage(selectedImage),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
-            child: Center(
-              child: SvgPicture.asset(
-                Assets.common.add.path, // Using add icon as edit icon
-                width: 12.rw,
-                height: 12.rh,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
+            child: selectedImage == null
+                ? Center(
+                    child: Icon(
+                      Icons.person_outline,
+                      size: 60.rfs,
+                      color: Colors.white,
+                    ),
+                  )
+                : null,
+          ),
+
+          // Edit Button
+          Positioned(
+            bottom: 0,
+            right: 16.rw,
+            child: GestureDetector(
+              onTap: () async {
+                // Show picker options
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => SafeArea(
+                    child: Wrap(
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.photo_library),
+                          title: const Text('Pick from gallery'),
+                          onTap: () async {
+                            await _updCtrl.pickImageFromGallery();
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.photo_camera),
+                          title: const Text('Take a photo'),
+                          onTap: () async {
+                            await _updCtrl.pickImageFromCamera();
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                width: 24.rw,
+                height: 24.rh,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF000C0B),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: SvgPicture.asset(
+                    Assets.common.add.path,
+                    width: 12.rw,
+                    height: 12.rh,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   /// Build form fields section
@@ -164,7 +200,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Column(
       children: [
         // Name Field
-        _buildInputField(label: 'Name', controller: _nameController),
+        _buildInputField(label: 'Name', controller: _updCtrl.nameController),
 
         SizedBox(height: 16.rh),
 
@@ -173,15 +209,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
         SizedBox(height: 16.rh),
 
-        // Email Field
-        _buildInputField(label: 'Email', controller: _emailController),
+        // Email Field (read-only)
+        _buildInputField(
+          label: 'Email',
+          controller: _updCtrl.emailController,
+          readOnly: true,
+        ),
 
         SizedBox(height: 16.rh),
 
         // Address Field
         _buildInputField(
           label: 'Address',
-          controller: _addressController,
+          controller: _updCtrl.addressController,
           maxLines: 3,
         ),
 
@@ -198,6 +238,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     required String label,
     required TextEditingController controller,
     int maxLines = 1,
+    bool readOnly = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,13 +257,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: readOnly ? Colors.grey[100] : Colors.white,
             borderRadius: BorderRadius.circular(12.rw),
             border: Border.all(color: AppColors.outline, width: 1),
           ),
           child: TextFormField(
             controller: controller,
             maxLines: maxLines,
+            readOnly: readOnly,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.rw),
@@ -234,7 +276,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               fontFamily: DonationFonts.interDisplay,
               fontSize: 14.rfs,
               fontWeight: maxLines > 1 ? FontWeight.w400 : FontWeight.w500,
-              color: AppColors.secondary,
+              color: readOnly ? Colors.grey[600] : AppColors.secondary,
             ),
           ),
         ),
@@ -267,60 +309,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
             borderRadius: BorderRadius.circular(12.rw),
             border: Border.all(color: AppColors.outline, width: 1),
           ),
-          child: Row(
-            children: [
-              // Country Code Dropdown
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 8.rh),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      _selectedCountryCode,
-                      style: TextStyle(
-                        fontFamily: DonationFonts.interDisplay,
-                        fontSize: 14.rfs,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.secondary,
-                      ),
-                    ),
-
-                    SizedBox(width: 4.rw),
-
-                    SvgPicture.asset(
-                      Assets.common.arrowDown.path,
-                      width: 16.rw,
-                      height: 16.rh,
-                      colorFilter: const ColorFilter.mode(
-                        Color(0xFF000C0B),
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(width: 8.rw),
-
-              // Phone Number Input
-              Expanded(
-                child: TextFormField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
-                  style: TextStyle(
-                    fontFamily: DonationFonts.interDisplay,
-                    fontSize: 14.rfs,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.secondary,
-                  ),
-                ),
-              ),
-            ],
+          child: TextFormField(
+            controller: _updCtrl.phoneController,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+            ),
+            style: TextStyle(
+              fontFamily: DonationFonts.interDisplay,
+              fontSize: 14.rfs,
+              fontWeight: FontWeight.w400,
+              color: AppColors.secondary,
+            ),
           ),
         ),
       ],
@@ -356,30 +358,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   borderRadius: BorderRadius.circular(12.rw),
                   border: Border.all(color: AppColors.outline, width: 1),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _selectedState,
-                        style: TextStyle(
-                          fontFamily: DonationFonts.interDisplay,
-                          fontSize: 14.rfs,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.secondary,
-                        ),
-                      ),
-                    ),
-
-                    SvgPicture.asset(
-                      Assets.common.arrowDown.path,
-                      width: 16.rw,
-                      height: 16.rh,
-                      colorFilter: const ColorFilter.mode(
-                        Color(0xFF000C0B),
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ],
+                child: TextFormField(
+                  controller: _updCtrl.stateController,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.zero,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  style: TextStyle(
+                    fontFamily: DonationFonts.interDisplay,
+                    fontSize: 14.rfs,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.secondary,
+                  ),
                 ),
               ),
             ],
@@ -392,7 +384,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         Expanded(
           child: _buildInputField(
             label: 'Pin Code',
-            controller: _pinCodeController,
+            controller: _updCtrl.postalCodeController,
           ),
         ),
       ],
@@ -453,16 +445,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   /// Save profile changes
-  void _saveProfile() {
-    // TODO: Implement save functionality
-    // For now, just show a success message and go back
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profile updated successfully'),
-        backgroundColor: Colors.green,
-      ),
+  void _saveProfile() async {
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(child: CircularProgressIndicator());
+      },
     );
-    context.pop();
+
+    final ok = await _updCtrl.submit();
+
+    // Hide loading indicator
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
+
+    final msg = ok
+        ? 'Profile updated successfully'
+        : _updCtrl.errorMessage.value;
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          backgroundColor: ok ? Colors.green : Colors.red,
+        ),
+      );
+    }
+
+    if (ok && mounted) {
+      context.pop();
+    }
   }
 
   /// Discard profile changes

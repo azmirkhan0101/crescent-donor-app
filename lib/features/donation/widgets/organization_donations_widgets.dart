@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/organization_donations_controller.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/donation/models/recurring_org_state_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,32 @@ import 'package:gap/gap.dart';
 /// Displays organization information including cover image, logo, name,
 /// verification badge, tags, and description
 class OrganizationDetailCard extends StatelessWidget {
-  final OrganizationData organization;
+  final String? coverImageUrl;
+  final String? logoUrl;
+  final String? orgName;
+  final String? aboutUs;
+  final String? serviceType;
+  final String? state;
 
-  const OrganizationDetailCard({super.key, required this.organization});
+  const OrganizationDetailCard({
+    super.key,
+    this.coverImageUrl,
+    this.logoUrl,
+    this.orgName,
+    this.aboutUs,
+    this.serviceType,
+    this.state,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // print('name: $orgName, logo: $logoUrl, cover: $coverImageUrl');
+    final parsedCoverUrl = (coverImageUrl?.isNotEmpty ?? false)
+        ? parseImageUrl(coverImageUrl!)
+        : null;
+    final parsedLogoUrl = (logoUrl?.isNotEmpty ?? false)
+        ? parseImageUrl(logoUrl!)
+        : null;
     return Column(
       children: [
         Stack(
@@ -29,7 +50,9 @@ class OrganizationDetailCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(16.rw)),
                 image: DecorationImage(
-                  image: NetworkImage("https://picsum.photos/343/120"),
+                  image: NetworkImage(
+                    parsedCoverUrl ?? "https://picsum.photos/343/120",
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -44,7 +67,9 @@ class OrganizationDetailCard extends StatelessWidget {
                   border: Border.all(color: Color(0xFFE9B7AD)),
                   image: DecorationImage(
                     alignment: Alignment.center,
-                    image: NetworkImage("https://picsum.photos/id/237/200/300"),
+                    image: NetworkImage(
+                      parsedLogoUrl ?? "https://picsum.photos/id/237/200/300",
+                    ),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -60,7 +85,7 @@ class OrganizationDetailCard extends StatelessWidget {
           spacing: 8.rw,
           children: [
             Text(
-              'Hope for Learning Foundation',
+              orgName ?? 'N/A',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: const Color(0xFF000C0B) /* Colors-Off-Black */,
@@ -82,9 +107,24 @@ class OrganizationDetailCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8.rw,
           children: [
-            _buildTag('📚 Education', const Color(0xFFC5F6C9)),
-            _buildTag('🌍 South Asia', const Color(0xFFFFFFFF)),
+            _buildTag('🤝 $serviceType', const Color(0xFFC5F6C9)),
+            _buildTag('🌍 $state', const Color(0xFFFFFFFF)),
           ],
+        ),
+
+        // Description
+        Gap(16.rh),
+        Text(
+          aboutUs ?? 'N/A',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: const Color(0xFF000C0B) /* Colors-Off-Black */,
+            fontSize: 14,
+            fontFamily: 'Inter Display',
+            fontWeight: FontWeight.w400,
+            height: 1.43,
+            letterSpacing: -0.28,
+          ),
         ),
       ],
     );
@@ -125,13 +165,15 @@ class OrganizationDetailCard extends StatelessWidget {
 /// Displays individual donation items with date calendar, title,
 /// status and amount based on the donation state
 class OrganizationDonationItem extends StatelessWidget {
-  final OrganizationDonation donation;
+  final RecurringUpcomingModel? upcomingModel;
+  final RecurringPreviousModel? previousModel;
   final bool isUpcoming;
 
   const OrganizationDonationItem({
     super.key,
-    required this.donation,
     required this.isUpcoming,
+    this.upcomingModel,
+    this.previousModel,
   });
 
   @override
@@ -140,7 +182,7 @@ class OrganizationDonationItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Date Calendar
-        _buildDateCalendar(),
+        _buildDateCalendar(previousModel?.status ?? 'failed'),
 
         SizedBox(width: 9.rw),
 
@@ -153,7 +195,7 @@ class OrganizationDonationItem extends StatelessWidget {
               children: [
                 // Title
                 Text(
-                  donation.title,
+                  "${isUpcoming ? upcomingModel?.frequency ?? 'N/A' : previousModel?.scheduledDonationId.frequency ?? 'N/A'} recurring donation",
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
                     fontSize: 14.rfs,
@@ -179,23 +221,33 @@ class OrganizationDonationItem extends StatelessWidget {
   }
 
   /// Build date calendar widget
-  Widget _buildDateCalendar() {
+  Widget _buildDateCalendar(String status) {
     final isUpcomingStyle = isUpcoming;
+    final DateTime? targetDate = isUpcoming
+        ? upcomingModel?.nextDonationDate
+        : previousModel?.donationDate;
+    final dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final String dayName = targetDate != null
+        ? dayNames[targetDate.weekday - 1]
+        : '---';
+    final String dayNumber = targetDate != null
+        ? targetDate.day.toString()
+        : '--';
     final bgColor = isUpcomingStyle
         ? DonationConstants.calendarActiveBg
-        : (donation.status == DonationStatus.successful
+        : (status == 'completed'
               ? DonationConstants.cardWhite
               : const Color(0x14F0323C)); // rgba(240,50,60,0.08)
 
     final borderColor = isUpcomingStyle
         ? DonationConstants.calendarActiveBg
-        : (donation.status == DonationStatus.successful
+        : (status == 'completed'
               ? DonationConstants.calendarActiveBorder
               : const Color(0xFFF0323C));
 
     final textColor = isUpcomingStyle
         ? DonationConstants.cardWhite
-        : (donation.status == DonationStatus.successful
+        : (status == 'completed'
               ? DonationConstants.calendarActiveBg
               : const Color(0xFFF0323C));
 
@@ -211,12 +263,12 @@ class OrganizationDonationItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (donation.status != DonationStatus.failed)
+          if (status != 'failed')
             Assets.common.rewardCoin.svg(
               colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
             ),
           Text(
-            'Wed',
+            dayName,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: textColor,
@@ -227,7 +279,7 @@ class OrganizationDonationItem extends StatelessWidget {
             ),
           ),
           Text(
-            '17',
+            dayNumber,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: textColor,
@@ -248,7 +300,7 @@ class OrganizationDonationItem extends StatelessWidget {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 12.rw, vertical: 8.rh),
         decoration: BoxDecoration(
-          color: donation.status.backgroundColor,
+          color: Color(0xFFE9FDF9),
           borderRadius: BorderRadius.circular(16.rw),
         ),
         child: Row(
@@ -261,7 +313,7 @@ class OrganizationDonationItem extends StatelessWidget {
             ),
             SizedBox(width: 4.rw),
             Text(
-              '${donation.formattedDate} - ${donation.time}',
+              _formatDateTime(upcomingModel?.nextDonationDate),
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
                 fontSize: 12.rfs,
@@ -279,22 +331,26 @@ class OrganizationDonationItem extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.rw, vertical: 8.rh),
             decoration: BoxDecoration(
-              color: donation.status.backgroundColor,
+              color: previousModel?.status == 'completed'
+                  ? Color(0xFFDEF7E5)
+                  : Color(0x14F0323C),
               borderRadius: BorderRadius.circular(16.rw),
             ),
             child: Text(
-              donation.status.displayName,
+              previousModel?.status ?? 'N/A',
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
                 fontSize: 12.rfs,
                 fontWeight: FontWeight.w400,
-                color: donation.status.textColor,
+                color: previousModel?.status == 'completed'
+                    ? Color(0xFF027A48)
+                    : Color(0xFFF0323C),
               ),
             ),
           ),
           SizedBox(width: 8.rw),
           Text(
-            '${donation.formattedDate} - ${donation.time}',
+            _formatDateTime(previousModel?.donationDate),
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
               fontSize: 12.rfs,
@@ -309,9 +365,9 @@ class OrganizationDonationItem extends StatelessWidget {
 
   /// Build amount section
   Widget _buildAmountSection() {
-    final displayText = donation.status.amountDisplay.isEmpty
-        ? '${donation.status.amountPrefix}${donation.amount.toInt()}'
-        : donation.status.amountDisplay;
+    final displayText = isUpcoming
+        ? '\$${upcomingModel?.amount ?? '0.00'}'
+        : '\$${previousModel?.amount ?? '0.00'}';
 
     return Text(
       displayText,
@@ -319,8 +375,34 @@ class OrganizationDonationItem extends StatelessWidget {
         fontFamily: DonationFonts.interDisplay,
         fontSize: 14.rfs,
         fontWeight: FontWeight.w400,
-        color: donation.status.amountColor,
+        color: Colors.black,
       ),
     );
+  }
+
+  String _formatDateTime(DateTime? dt) {
+    if (dt == null) return 'N/A';
+    final local = dt.toLocal();
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    final day = local.day; // 1-31
+    final month = months[local.month - 1];
+    int hour = local.hour % 12;
+    hour = hour == 0 ? 12 : hour; // 0 or 12 -> 12
+    final minute = local.minute.toString().padLeft(2, '0');
+    final period = local.hour >= 12 ? 'PM' : 'AM';
+    return '$day $month - $hour:$minute $period';
   }
 }

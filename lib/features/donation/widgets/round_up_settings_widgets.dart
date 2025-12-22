@@ -4,16 +4,10 @@ import 'package:flutter/material.dart';
 
 /// Special message field widget
 class SpecialMessageField extends StatelessWidget {
-  final String message;
-  final Function(String) onMessageChanged;
-  final TextEditingController? controller;
+  const SpecialMessageField({super.key, this.label, this.controller});
 
-  const SpecialMessageField({
-    super.key,
-    required this.message,
-    required this.onMessageChanged,
-    this.controller,
-  });
+  final String? label;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +16,7 @@ class SpecialMessageField extends StatelessWidget {
       children: [
         RichText(
           text: TextSpan(
-            text: 'Add a Special Message ',
+            text: label ?? 'Add a Special Message',
             style: TextStyle(
               fontFamily: 'Inter Display',
               fontSize: 16.rfs,
@@ -32,7 +26,6 @@ class SpecialMessageField extends StatelessWidget {
             children: [
               TextSpan(
                 text: '(Optional)',
-
                 style: TextStyle(
                   color: const Color(0xFFE4E4E4),
                   fontSize: 12.rfs,

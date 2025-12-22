@@ -20,8 +20,8 @@ class ClientStatsResponse {
 
 class ClientStats {
   final double roundUpAmount;
-  final int recurringAmount;
-  final int oneTimeAmount;
+  final double recurringAmount;
+  final double oneTimeAmount;
   final double totalDonationAmount;
   final double averageDonation;
   final int maxConsistencyStreak;
@@ -50,8 +50,8 @@ class ClientStats {
   factory ClientStats.fromJson(Map<String, dynamic> json) {
     return ClientStats(
       roundUpAmount: json['roundUpAmount'].toDouble(),
-      recurringAmount: json['recurringAmount'],
-      oneTimeAmount: json['oneTimeAmount'],
+      recurringAmount: json['recurringAmount'].toDouble(),
+      oneTimeAmount: json['oneTimeAmount'].toDouble(),
       totalDonationAmount: json['totalDonationAmount'].toDouble(),
       averageDonation: json['averageDonation'].toDouble(),
       maxConsistencyStreak: json['maxConsistencyStreak'],
@@ -138,18 +138,18 @@ class UpcomingDonation {
 
   factory UpcomingDonation.fromJson(Map<String, dynamic> json) {
     return UpcomingDonation(
-      id: json['_id'],
+      id: json['_id'] ?? '',
       amount: json['amount'].toDouble(),
-      nextDate: json['nextDate'],
-      causeName: json['causeName'],
-      organizationName: json['organizationName'],
-      organizationLogo: json['organizationLogo'],
-      organizationCoverImage: json['organizationCoverImage'],
-      organizationRegisteredName: json['organizationRegisteredName'],
-      organizationCountry: json['organizationCountry'],
-      organizationPostalCode: json['organizationPostalCode'],
-      organizationAddress: json['organizationAddress'],
-      organizationState: json['organizationState'],
+      nextDate: json['nextDate'] ?? '',
+      causeName: json['causeName'] ?? '',
+      organizationName: json['organizationName'] ?? '',
+      organizationLogo: json['organizationLogo'] ?? '',
+      organizationCoverImage: json['organizationCoverImage'] ?? '',
+      organizationRegisteredName: json['organizationRegisteredName'] ?? '',
+      organizationCountry: json['organizationCountry'] ?? '',
+      organizationPostalCode: json['organizationPostalCode'] ?? '',
+      organizationAddress: json['organizationAddress'] ?? '',
+      organizationState: json['organizationState'] ?? '',
     );
   }
 }
@@ -169,13 +169,22 @@ class RoundUpStatusData {
     required this.nextDate,
   });
 
-  factory RoundUpStatusData.fromJson(Map<String, dynamic> json) {
+  factory RoundUpStatusData.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return RoundUpStatusData(
+        isEnabled: false,
+        organizationName: 'N/A',
+        registeredCharityName: '',
+        daysRemaining: 0,
+        nextDate: '',
+      );
+    }
     return RoundUpStatusData(
-      isEnabled: json['isEnabled'],
-      organizationName: json['organizationName'],
-      registeredCharityName: json['registeredCharityName'],
-      daysRemaining: json['daysRemaining'],
-      nextDate: json['nextDate'],
+      isEnabled: json['isEnabled'] ?? false,
+      organizationName: json['organizationName'] ?? 'N/A',
+      registeredCharityName: json['registeredCharityName'] ?? '',
+      daysRemaining: json['daysRemaining'] ?? 0,
+      nextDate: json['nextDate'] ?? '',
     );
   }
 }

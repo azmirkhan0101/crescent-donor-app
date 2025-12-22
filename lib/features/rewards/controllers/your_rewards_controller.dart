@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:get/get.dart';
 
 class YourRewardsController extends GetxController {
@@ -14,6 +18,7 @@ class YourRewardsController extends GetxController {
 
   // Search state
   final RxString _searchQuery = ''.obs;
+  Timer? _debounceTimer;
 
   // Reward categories
   final List<String> _categories = [
@@ -54,10 +59,36 @@ class YourRewardsController extends GetxController {
 
   void updateSearchQuery(String query) {
     _searchQuery.value = query;
+
+    // Cancel previous timer
+    _debounceTimer?.cancel();
+
+    // Create new timer with 500ms delay
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      _fetchRewardsWithFilters();
+    });
   }
 
   void selectCategory(int index) {
     _selectedCategoryIndex.value = index;
+    _fetchRewardsWithFilters();
+  }
+
+  void _fetchRewardsWithFilters() {
+    final getAllRewardsController = Get.find<GetAllRewardsController>();
+
+    // Determine category value (null for 'All', lowercase otherwise)
+    String? categoryValue;
+    if (_selectedCategoryIndex.value != 0) {
+      categoryValue = _categories[_selectedCategoryIndex.value].toLowerCase();
+    }
+
+    // Fetch with current filters
+    getAllRewardsController.fetchRewards(
+      search: _searchQuery.value.isEmpty ? null : _searchQuery.value,
+      category: categoryValue,
+      status: 'active',
+    );
   }
 
   void onDonateNowPressed() {
@@ -67,23 +98,17 @@ class YourRewardsController extends GetxController {
 
   void onRedeemReward(String rewardId) {
     // Handle reward redemption
-    Get.snackbar(
-      'Success',
-      'Reward redeemed successfully!',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Get.theme.primaryColor,
-      colorText: Get.theme.colorScheme.onPrimary,
-    );
+    ToastMsg.success('Reward redeemed successfully!');
   }
 
   void onClaimReward(String rewardId) {
     // Handle reward claiming
-    Get.snackbar(
-      'Claimed',
-      'Reward claimed and added to your rewards!',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Get.theme.primaryColor,
-      colorText: Get.theme.colorScheme.onPrimary,
-    );
+    ToastMsg.success('Reward claimed successfully!');
+  }
+
+  @override
+  void onClose() {
+    _debounceTimer?.cancel();
+    super.onClose();
   }
 }

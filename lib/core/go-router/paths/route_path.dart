@@ -41,7 +41,7 @@ class RoutePath {
   //=================== Donation screens ===================
   static const String donation = 'donation';
   static const String roundUp = 'roundUp';
-  static const String roundUpSettings = 'roundUpSettings';
+  static const String settings = 'settings';
   static const String recurringDonations = 'recurringDonations';
   static const String organizationDonations = 'organizationDonations';
   static const String oneTime = 'oneTime';

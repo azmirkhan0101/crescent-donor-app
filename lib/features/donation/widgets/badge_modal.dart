@@ -1,14 +1,17 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_badge_history_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/recent_donation.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart' hide Badge;
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 const Color _lightGray = Color(0xFFEBE9EC);
 const Color _progressStart = Color(0xFFC08FFF);
@@ -19,8 +22,13 @@ const Color _progressEnd = Color(0xFF735699);
 /// Shows detailed badge information with progress bar and recent donations
 class BadgeModal extends StatelessWidget {
   final Badge selectedBadge;
+  final BadgeDataModel badgeDataModel;
 
-  const BadgeModal({super.key, required this.selectedBadge});
+  const BadgeModal({
+    super.key,
+    required this.selectedBadge,
+    required this.badgeDataModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +79,7 @@ class BadgeModal extends StatelessWidget {
                   SizedBox(height: 4.rh),
 
                   // Selected Badge Display
-                  _buildSelectedBadge(controller),
+                  _buildSelectedBadge(controller, badgeDataModel),
 
                   SizedBox(height: 32.rh),
 
@@ -84,7 +92,28 @@ class BadgeModal extends StatelessWidget {
                   Text('Recent Donations', style: AppTextStyles.f16W500()),
                   SizedBox(height: 12.rh),
 
-                  RecentDonation(),
+                  /// === Recent Donations List === ///
+                  GetX<GetBadgeHistoryController>(
+                    initState: (state) {
+                      state.controller!.fetchBadgeHistory(
+                        badgeDataModel.badge?.id ?? '',
+                      );
+                    },
+                    builder: (controller) {
+                      return Skeletonizer(
+                        enabled: controller.isLoading.value,
+                        child: RecentDonation(
+                          recentDonations:
+                              controller
+                                  .badgeHistoryModel
+                                  .value
+                                  ?.data
+                                  .recentDonations ??
+                              [],
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -94,7 +123,10 @@ class BadgeModal extends StatelessWidget {
     );
   }
 
-  Widget _buildSelectedBadge(YourRewardsController controller) {
+  Widget _buildSelectedBadge(
+    YourRewardsController controller,
+    BadgeDataModel badgeDataModel,
+  ) {
     return Center(
       child: Column(
         children: [
@@ -113,7 +145,7 @@ class BadgeModal extends StatelessWidget {
             width: 327,
             height: 22,
             child: Text(
-              selectedBadge.name,
+              badgeDataModel.badge?.name ?? '',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: const Color(0xFF0C0B0D),
@@ -131,7 +163,8 @@ class BadgeModal extends StatelessWidget {
           SizedBox(
             width: 215,
             child: Text(
-              'You’ve turned small change into real change — literally.',
+              // 'You’ve turned small change into real change — literally.',
+              badgeDataModel.badge?.description ?? '',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: const Color(0xFF6D6D6D),
@@ -164,22 +197,21 @@ class BadgeModal extends StatelessWidget {
             ),
 
             // Active progress bar with gradient
-            Obx(
-              () => FractionallySizedBox(
-                alignment: Alignment.centerLeft,
-                widthFactor: controller.progressPercentage / 100,
-                child: Container(
-                  height: 10.rh,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [_progressStart, _progressEnd],
-                      stops: [0.75, 1.0],
-                    ),
-                    borderRadius: BorderRadius.circular(24),
+            FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: (badgeDataModel.progressPercentage ?? 0) / 100,
+              child: Container(
+                height: 10.rh,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [_progressStart, _progressEnd],
+                    stops: [0.75, 1.0],
                   ),
+                  borderRadius: BorderRadius.circular(24),
                 ),
               ),
             ),
+
             Transform.translate(
               offset: Offset(0, -7.rh),
               child: Row(
@@ -223,7 +255,10 @@ class BadgeModal extends StatelessWidget {
                   color: const Color(0xFF000C0B),
                 ),
               ),
-              TextSpan(text: ' Silver', style: AppTextStyles.f14W400()),
+              TextSpan(
+                text: ' ${badgeDataModel.currentTier ?? ''}',
+                style: AppTextStyles.f14W400(),
+              ),
             ],
           ),
         ),
@@ -234,7 +269,7 @@ class BadgeModal extends StatelessWidget {
         SizedBox(
           width: 311,
           child: Text(
-            'Only 3 more round-up donations to reach Gold!',
+            'Only ${badgeDataModel.nextTier?.requiredCount ?? 'N/A'} more round-up donations to reach ${badgeDataModel.nextTier?.tier ?? ''}!',
             textAlign: TextAlign.center,
             style: AppTextStyles.f14W400(),
           ),
@@ -286,16 +321,5 @@ Widget _buildProgressPoint(int value, bool isActive, [Widget? icon]) {
                   height: 24.rh,
                 )),
     ),
-  );
-}
-
-/// Show Badge Modal Bottom Sheet
-void showBadgeModal(BuildContext context, Badge badge) {
-  showModalBottomSheet(
-    context: context,
-    useRootNavigator: true,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) => BadgeModal(selectedBadge: badge),
   );
 }

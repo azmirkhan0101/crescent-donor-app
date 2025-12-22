@@ -2,7 +2,7 @@ import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/get_conected_bank_acounts_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/plaid_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
@@ -21,7 +21,7 @@ class ConnectedBankAccountPage extends StatefulWidget {
 
 class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
   final paymentMethodController = Get.put(PaymentMethodController());
-  final connectedBankAccountsController = Get.find<GetConnectedBankAccounts>();
+  final connectedBankAccountsController = Get.find<GetRoundUpBankConnection>();
   final PlaidController plaidCtrl = Get.isRegistered<PlaidController>()
       ? Get.find<PlaidController>()
       : Get.put(PlaidController());
@@ -29,11 +29,11 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
   @override
   void initState() {
     super.initState();
-    connectedBankAccountsController.getConnectedBankAccounts();
+    connectedBankAccountsController.fetchRoundUpBankConnection();
 
     // Set up callback to refresh bank accounts after successful Plaid link
     plaidCtrl.onSuccessCallback = (event) {
-      connectedBankAccountsController.getConnectedBankAccounts();
+      connectedBankAccountsController.fetchRoundUpBankConnection();
     };
   }
 
@@ -72,11 +72,12 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
       ),
       body: SafeArea(
         child: Obx(() {
-          if (connectedBankAccountsController.isBankConnectionLoading.value) {
+          if (connectedBankAccountsController.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
           return RefreshIndicator(
-            onRefresh: connectedBankAccountsController.getConnectedBankAccounts,
+            onRefresh:
+                connectedBankAccountsController.fetchRoundUpBankConnection,
             child: CustomScrollView(
               slivers: [
                 SliverFillRemaining(
@@ -87,7 +88,7 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
                       Expanded(
                         child:
                             connectedBankAccountsController
-                                .connectedAccountsDataModel
+                                .roundUpBankConnectionModel
                                 .isNotEmpty
                             ? _buildLinkedAccountsContent()
                             : _buildNoAccountsContent(),
@@ -193,7 +194,7 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ...connectedBankAccountsController.connectedAccountsDataModel.map((
+            ...connectedBankAccountsController.roundUpBankConnectionModel.map((
               bancAccount,
             ) {
               return Padding(

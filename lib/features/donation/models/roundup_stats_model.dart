@@ -21,7 +21,7 @@ class RoundupStatsResponse {
 class RoundupStats {
   final double currentRoundupBalance;
   final double todaysRoundupAmount;
-  final int monthlyThreshold;
+  final double monthlyThreshold;
   final double lastTransactionAmount;
   final double roundupPercentage;
   final int daysLeft;
@@ -41,7 +41,7 @@ class RoundupStats {
     return RoundupStats(
       currentRoundupBalance: json['currentRoundupBalance'].toDouble(),
       todaysRoundupAmount: json['todaysRoundupAmount'].toDouble(),
-      monthlyThreshold: json['monthlyThreshold'],
+      monthlyThreshold: json['monthlyThreshold'].toDouble(),
       lastTransactionAmount: json['lastTransactionAmount'].toDouble(),
       roundupPercentage: json['roundupPercentage'].toDouble(),
       daysLeft: json['daysLeft'],

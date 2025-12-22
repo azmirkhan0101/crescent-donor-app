@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/recurring_donations_controller.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/donation/models/recurring_states_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -131,13 +132,15 @@ class RecurringOrganizationCard extends StatelessWidget {
                     width: 44.rw,
                     height: 44.rh,
                     decoration: BoxDecoration(
-                      color: donation.backgroundColor,
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(22.rw),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(22.rw),
                       child: Image.network(
-                        "https://picsum.photos/200/300",
+                        parseImageUrl(
+                          donation.organizationDetails.logoImage ?? '',
+                        ),
                         width: 44.rw,
                         height: 44.rh,
                         fit: BoxFit.cover,
@@ -145,7 +148,7 @@ class RecurringOrganizationCard extends StatelessWidget {
                           width: 44.rw,
                           height: 44.rh,
                           decoration: BoxDecoration(
-                            color: donation.backgroundColor,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(22.rw),
                           ),
                           child: Icon(
@@ -166,7 +169,7 @@ class RecurringOrganizationCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          donation.organizationName,
+                          donation.organizationDetails.name ?? 'N/A',
                           style: TextStyle(
                             fontFamily: DonationFonts.interDisplay,
                             fontSize: 12.rfs,
@@ -209,7 +212,7 @@ class RecurringOrganizationCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  donation.schedule,
+                  donation.label,
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
                     fontSize: 14.rfs,

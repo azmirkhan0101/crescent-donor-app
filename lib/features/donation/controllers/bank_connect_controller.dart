@@ -1,5 +1,5 @@
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/get_conected_bank_acounts_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:get/get.dart';
@@ -40,8 +40,8 @@ class BankConnectionController extends GetxController {
       (response) {
         print('Bank Connection Response:---> $response');
         ToastMsg.success('Bank connected successfully');
-        Get.find<GetConnectedBankAccounts>()
-            .getConnectedBankAccounts(); // Refresh the connected accounts
+        Get.find<GetRoundUpBankConnection>()
+            .fetchRoundUpBankConnection(); // Refresh the connected accounts
         return true;
       },
     );

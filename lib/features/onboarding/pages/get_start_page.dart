@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_point_balance_controller.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
@@ -21,10 +22,10 @@ class GetStartPage extends StatefulWidget {
 }
 
 class _GetStartPageState extends State<GetStartPage> {
-  @override
-  void initState() {
-    super.initState();
-    _checkAuthAndNavigate();
+  _callApis() {
+    // Get.find<DonationController>().fetchClientStats();
+    Get.find<GetProfileController>().fetchProfile();
+    Get.find<GetPointBalanceController>().fetchUserPoints();
   }
 
   Future<void> _checkAuthAndNavigate() async {
@@ -41,14 +42,19 @@ class _GetStartPageState extends State<GetStartPage> {
       if (getProfileController.profile.value?.id.isNotEmpty ?? false) {
         _callApis();
         context.replaceNamed(RoutePath.home);
+      } else if (getProfileController.errorMessage.value ==
+          'User not exists!') {
+        return;
       } else {
         context.replaceNamed(RoutePath.fewDetails);
       }
     }
   }
 
-  _callApis() {
-    Get.find<DonationController>().fetchClientStats();
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthAndNavigate();
   }
 
   @override
