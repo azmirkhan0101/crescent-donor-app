@@ -9,7 +9,6 @@ import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_car
 import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
 import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
 import 'package:cresent_charge_user_app/features/notification/controllers/fcm_token_controller.dart';
-import 'package:cresent_charge_user_app/features/notification/controllers/get_notifications_controller.dart';
 import 'package:cresent_charge_user_app/features/notification/controllers/unseen_notification_count_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
@@ -35,8 +34,8 @@ class HomePage extends StatelessWidget {
     // Initialize FCM token controller and send token to backend
     final fcmTokenController = Get.put(FcmTokenController());
     fcmTokenController.sendFcmTokenToBackend();
-    final getNotificationsController = Get.put(GetNotificationsController());
-    getNotificationsController.fetchNotifications(refresh: true);
+    // final getNotificationsController = Get.put(GetNotificationsController());
+    // getNotificationsController.fetchNotifications(refresh: true);
     // Initialize unseen notification count controller
     Get.put(UnseenNotificationCountController());
 

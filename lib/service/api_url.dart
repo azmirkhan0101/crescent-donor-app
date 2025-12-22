@@ -38,6 +38,8 @@ class ApiUrl {
   static const String getNotifications = '$baseUrl/notification/me';
   static const String unseenNotificationCount =
       '$baseUrl/notification/unseen-notification-count';
+  static String markNotificationAsRead(String notificationId) =>
+      '$baseUrl/notification/mark-notification/$notificationId';
 
   /// ======= causes =======
   static const String getAllCauses = '$baseUrl/cause';

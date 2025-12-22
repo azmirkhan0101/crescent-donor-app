@@ -55,6 +55,32 @@ class NotificationModel {
   /// Check if notification is unread
   bool get isUnread => !isSeen;
 
+  /// Create a copy of this notification with updated fields
+  NotificationModel copyWith({
+    String? id,
+    String? title,
+    String? message,
+    bool? isSeen,
+    String? receiver,
+    String? type,
+    String? redirectId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isUnread,
+  }) {
+    return NotificationModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      message: message ?? this.message,
+      isSeen: isSeen ?? this.isSeen,
+      receiver: receiver ?? this.receiver,
+      type: type ?? this.type,
+      redirectId: redirectId ?? this.redirectId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   /// Get notification type category
   NotificationType get notificationType {
     switch (type.toLowerCase()) {

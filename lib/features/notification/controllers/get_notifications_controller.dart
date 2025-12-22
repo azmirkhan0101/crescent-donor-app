@@ -135,14 +135,44 @@ class GetNotificationsController extends GetxController {
         .toList();
   }
 
-  /// Mark notification as read (local only - you may need to call API)
-  void markAsRead(String notificationId) {
-    final index = notifications.indexWhere((n) => n.id == notificationId);
-    if (index != -1) {
-      // Note: You may need to call an API endpoint to mark as read on backend
-      debugPrint('Mark notification as read: $notificationId');
-      // TODO: Call backend API to mark as read
-    }
+  /// Mark notification as read
+  ///
+  /// [notificationId] - ID of the notification to mark as read
+  /// Returns true if successful, false otherwise
+  Future<bool> markNotificationAsRead(String notificationId) async {
+    debugPrint('📌 Marking notification as read: $notificationId');
+
+    final url = ApiUrl.markNotificationAsRead(notificationId);
+
+    final response = await Get.find<NetworkHelper>().request(
+      'PATCH',
+      url,
+      withAuth: true,
+    );
+
+    return response.fold(
+      (error) {
+        debugPrint('❌ Error marking notification as read: ${error.message}');
+        return false;
+      },
+      (data) {
+        debugPrint('✅ Notification marked as read: $notificationId');
+
+        // Update local state - mark notification as seen
+        final index = notifications.indexWhere((n) => n.id == notificationId);
+        if (index != -1) {
+          final updatedNotification = notifications[index].copyWith(
+            isSeen: true,
+            isUnread: false,
+          );
+          notifications[index] = updatedNotification;
+          notifications.refresh(); // Trigger UI update
+          debugPrint('🔄 Local notification state updated');
+        }
+
+        return true;
+      },
+    );
   }
 
   /// Check if has more notifications to load

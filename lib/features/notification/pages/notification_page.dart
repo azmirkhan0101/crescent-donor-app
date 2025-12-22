@@ -284,20 +284,31 @@ class _NotificationsPageState extends State<NotificationsPage> {
         notification.type.contains('failed') ||
         notification.type.contains('alert');
 
-    return Container(
-      padding: EdgeInsets.all(16.rw),
-      decoration: BoxDecoration(
-        color: isAlert ? const Color(0xFFFFF5F5) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFEDEDED), width: 1),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildNotificationIcon(notifType, isAlert),
-          SizedBox(width: 12.rw),
-          Expanded(child: _buildNotificationContent(notification)),
-        ],
+    return GestureDetector(
+      onTap: () async {
+        // Mark notification as read when tapped
+        if (!notification.isSeen) {
+          debugPrint('🖱️ Notification tapped: ${notification.id}');
+          await notificationController.markNotificationAsRead(notification.id);
+        }
+        // TODO: Handle navigation based on notification type/redirectId
+        // Example: if (notification.redirectId != null) { navigate to detail }
+      },
+      child: Container(
+        padding: EdgeInsets.all(16.rw),
+        decoration: BoxDecoration(
+          color: isAlert ? const Color(0xFFFFF5F5) : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFEDEDED), width: 1),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildNotificationIcon(notifType, isAlert),
+            SizedBox(width: 12.rw),
+            Expanded(child: _buildNotificationContent(notification)),
+          ],
+        ),
       ),
     );
   }
