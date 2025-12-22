@@ -32,6 +32,12 @@ class ApiUrl {
   // Assuming get profile endpoint (client) – adjust if backend differs
   static const String getProfile = '$baseUrl/auth/profile';
   static const String changePassword = '$baseUrl/auth/change-password';
+  static const String updateFcmToken = '$baseUrl/auth/update-fcm';
+
+  /// ======= Notifications =======
+  static const String getNotifications = '$baseUrl/notification/me';
+  static const String unseenNotificationCount =
+      '$baseUrl/notification/unseen-notification-count';
 
   /// ======= causes =======
   static const String getAllCauses = '$baseUrl/cause';

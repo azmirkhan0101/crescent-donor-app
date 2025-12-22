@@ -8,6 +8,9 @@ import 'package:cresent_charge_user_app/features/home/controllers/charities_cont
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
 import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
+import 'package:cresent_charge_user_app/features/notification/controllers/fcm_token_controller.dart';
+import 'package:cresent_charge_user_app/features/notification/controllers/get_notifications_controller.dart';
+import 'package:cresent_charge_user_app/features/notification/controllers/unseen_notification_count_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -28,6 +31,15 @@ class HomePage extends StatelessWidget {
     final causesController = Get.put(CausesController());
     // ignore: unused_local_variable
     final charitiesController = Get.put(CharitiesController());
+
+    // Initialize FCM token controller and send token to backend
+    final fcmTokenController = Get.put(FcmTokenController());
+    fcmTokenController.sendFcmTokenToBackend();
+    final getNotificationsController = Get.put(GetNotificationsController());
+    getNotificationsController.fetchNotifications(refresh: true);
+    // Initialize unseen notification count controller
+    Get.put(UnseenNotificationCountController());
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: RefreshIndicator(
@@ -119,32 +131,40 @@ class HomePage extends StatelessWidget {
               }),
               12.rw.heightWidth,
 
-              // Notification icon with red dot
-              Container(
-                width: 40.rw,
-                height: 40.rh,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.rw),
-                ),
-                child: Center(
-                  child: Stack(
-                    children: [
-                      Assets.home.notification.svg(width: 20.rw, height: 20.rh),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Assets.home.redDot.svg(
-                          width: 8.rw,
-                          height: 8.rh,
-                        ),
+              // Notification icon with conditional red dot
+              GetBuilder<UnseenNotificationCountController>(
+                builder: (unseenCtrl) {
+                  return Container(
+                    width: 40.rw,
+                    height: 40.rh,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.rw),
+                    ),
+                    child: Center(
+                      child: Stack(
+                        children: [
+                          Assets.home.notification.svg(
+                            width: 20.rw,
+                            height: 20.rh,
+                          ),
+                          if (unseenCtrl.hasUnseenNotifications)
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Assets.home.redDot.svg(
+                                width: 8.rw,
+                                height: 8.rh,
+                              ),
+                            ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ).onTap(() {
-                context.pushNamed(RoutePath.notifications);
-              }),
+                    ),
+                  ).onTap(() {
+                    context.pushNamed(RoutePath.notifications);
+                  });
+                },
+              ),
             ],
           ),
         ],

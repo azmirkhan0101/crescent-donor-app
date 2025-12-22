@@ -36,7 +36,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
   void initState() {
     super.initState();
     // Fetch notifications on page load
-    debugPrint('🔔 NotificationsPage: Fetching notifications...');
     notificationController.fetchNotifications(refresh: true);
   }
 
@@ -110,20 +109,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Widget _buildNotificationList() {
     return Obx(() {
-      debugPrint(
-        '🔄 Building notification list - Total: ${notificationController.notifications.length}, Loading: ${notificationController.isLoading.value}',
-      );
-
       if (notificationController.isLoading.value &&
           notificationController.notifications.isEmpty) {
         return const Center(child: CircularProgressIndicator());
       }
 
       final filteredNotifications = _getFilteredNotifications();
-      debugPrint('📊 Filtered notifications: ${filteredNotifications.length}');
-
       final groups = _groupNotificationsByTime(filteredNotifications);
-      debugPrint('📦 Groups created: ${groups.length}');
 
       if (groups.isEmpty) {
         return _buildEmptyState();
