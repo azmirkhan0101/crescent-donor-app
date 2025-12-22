@@ -21,6 +21,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
     GetNotificationsController(),
   );
 
+  final ScrollController _scrollController = ScrollController();
+
   final categories = [
     'All',
     'Impact',
@@ -38,6 +40,28 @@ class _NotificationsPageState extends State<NotificationsPage> {
     // Fetch notifications on page load
     debugPrint('🔔 NotificationsPage: Fetching notifications...');
     notificationController.fetchNotifications(refresh: true);
+    // Add scroll listener for pagination
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  /// Handle scroll events for pagination
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      // Load more when user is 200px from bottom
+      if (notificationController.hasMore &&
+          !notificationController.isLoadingMore.value) {
+        debugPrint('📄 Loading more notifications...');
+        notificationController.loadMore();
+      }
+    }
   }
 
   @override
@@ -132,9 +156,23 @@ class _NotificationsPageState extends State<NotificationsPage> {
       return RefreshIndicator(
         onRefresh: () => notificationController.refreshNotifications(),
         child: ListView.builder(
+          controller: _scrollController,
           padding: EdgeInsets.symmetric(horizontal: 16.rw),
-          itemCount: groups.length,
+          itemCount: groups.length + 1,
           itemBuilder: (context, groupIndex) {
+            // Show loading indicator at the bottom
+            if (groupIndex == groups.length) {
+              return Obx(() {
+                if (notificationController.isLoadingMore.value) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.rh),
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                }
+                return const SizedBox.shrink();
+              });
+            }
+
             final group = groups[groupIndex];
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
