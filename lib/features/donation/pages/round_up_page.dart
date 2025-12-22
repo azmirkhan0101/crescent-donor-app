@@ -9,18 +9,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-/// Round Up Page
-///
-/// Displays detailed round up information including progress chart,
-/// donated organizations, and recent activity
 class RoundUpPage extends StatelessWidget {
   const RoundUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<RoundUpController>(
+    return GetX<RoundUpController>(
       init: RoundUpController(),
+      initState: (state) {
+        final controller = state.controller!;
+        controller.fetchRoundupStats();
+      },
       builder: (controller) {
+        final roundupStats = controller.roundupStats.value;
         return Scaffold(
           backgroundColor: DonationConstants.backgroundColor,
           appBar: CustomAppBar(
@@ -30,121 +31,145 @@ class RoundUpPage extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () {
-                  context.pushNamed(RoutePath.roundUpSettings);
+                  context.pushNamed(RoutePath.settings, extra: false);
                 },
               ),
             ],
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20.rh),
+          body: RefreshIndicator(
+            onRefresh: () => controller.fetchRoundupStats(),
+            color: DonationConstants.primaryPurple,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20.rh),
 
-                // Progress Chart Section
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.rw),
-                  child: Obx(
-                    () => controller.showDetailedProgress.value
-                        ? DetailedProgressChart(
-                            totalAmount: 120.75,
-                            progressPercentage: 60,
-                            todaysRoundUp: 0.5,
-                            daysLeft: 6,
-                            controller: controller,
-                          )
-                        : RoundUpProgressChart(
-                            currentAmount: 30,
-                            targetAmount: 50,
-                            recentlyRoundedUp: 0.5,
-                            controller: controller,
+                  // Progress Chart Section
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.rw),
+                    child: Obx(
+                      () => controller.showDetailedProgress.value
+                          ? RoundUpProgressChart(
+                              totalAmount:
+                                  roundupStats?.currentRoundupBalance ?? 0.0,
+                              progressPercentage:
+                                  roundupStats?.roundupPercentage ?? 0,
+                              todaysRoundUp:
+                                  roundupStats?.todaysRoundupAmount ?? 0.0,
+                              daysLeft: roundupStats?.daysLeft ?? 0,
+                              controller: controller,
+                            )
+                          : RoundUpCard(
+                              currentAmount:
+                                  controller
+                                      .roundupStats
+                                      .value
+                                      ?.currentRoundupBalance ??
+                                  0.0,
+                              targetAmount:
+                                  controller
+                                      .roundupStats
+                                      .value
+                                      ?.monthlyThreshold
+                                      .toDouble() ??
+                                  0.0,
+                              recentlyRoundedUp:
+                                  controller
+                                      .roundupStats
+                                      .value
+                                      ?.lastTransactionAmount ??
+                                  0.0,
+                              controller: controller,
+                            ),
+                    ),
+                  ),
+
+                  SizedBox(height: 20.rh),
+
+                  // Donated To Section
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.rw),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Donated to',
+                          style: TextStyle(
+                            fontFamily: DonationFonts.familjenGrotesk,
+                            fontSize: 20.rfs,
+                            fontWeight: FontWeight.w600,
+                            color: DonationConstants.offBlack,
+                            letterSpacing: -0.2,
                           ),
-                  ),
-                ),
-
-                SizedBox(height: 20.rh),
-
-                // Donated To Section
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.rw),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Donated to',
-                        style: TextStyle(
-                          fontFamily: DonationFonts.familjenGrotesk,
-                          fontSize: 20.rfs,
-                          fontWeight: FontWeight.w600,
-                          color: DonationConstants.offBlack,
-                          letterSpacing: -0.2,
                         ),
-                      ),
-                      SizedBox(height: 12.rh),
+                        SizedBox(height: 12.rh),
 
-                      // Organizations horizontal list
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          spacing: 8.rw,
-                          children:
-                              Get.find<CharitiesController>().verifiedCharities,
+                        // Organizations horizontal list
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            spacing: 8.rw,
+                            children: Get.find<CharitiesController>()
+                                .verifiedCharities,
+                          ),
                         ),
-                      ),
-                      // SizedBox(
-                      //   height: 220.rh,
-                      //   child: ListView.separated(
-                      //     scrollDirection: Axis.horizontal,
-                      //     itemCount: controller.donatedOrganizations.length,
-                      //     separatorBuilder: (context, index) =>
-                      //         SizedBox(width: 8.rw),
-                      //     itemBuilder: (context, index) {
-                      //       final org = controller.donatedOrganizations[index];
-                      //       return DonatedOrganizationCard(
-                      //         imageUrl: org.imageUrl,
-                      //         name: org.name,
-                      //         location: org.location,
-                      //         category: org.category,
-                      //         categoryColor: org.categoryColor,
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
-                    ],
+                        // SizedBox(
+                        //   height: 220.rh,
+                        //   child: ListView.separated(
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: controller.donatedOrganizations.length,
+                        //     separatorBuilder: (context, index) =>
+                        //         SizedBox(width: 8.rw),
+                        //     itemBuilder: (context, index) {
+                        //       final org = controller.donatedOrganizations[index];
+                        //       return DonatedOrganizationCard(
+                        //         imageUrl: org.imageUrl,
+                        //         name: org.name,
+                        //         location: org.location,
+                        //         category: org.category,
+                        //         categoryColor: org.categoryColor,
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
-                ),
 
-                SizedBox(height: 20.rh),
+                  SizedBox(height: 20.rh),
 
-                // Recent Activity Section
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.rw),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Recent Activity',
-                        style: TextStyle(
-                          fontFamily: DonationFonts.familjenGrotesk,
-                          fontSize: 20.rfs,
-                          fontWeight: FontWeight.w600,
-                          color: DonationConstants.offBlack,
-                          letterSpacing: -0.2,
+                  // Recent Activity Section
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.rw),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Recent Activity',
+                          style: TextStyle(
+                            fontFamily: DonationFonts.familjenGrotesk,
+                            fontSize: 20.rfs,
+                            fontWeight: FontWeight.w600,
+                            color: DonationConstants.offBlack,
+                            letterSpacing: -0.2,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 12.rh),
+                        SizedBox(height: 12.rh),
 
-                      // Recent activity list
-                      RecentActivityList(
-                        activities: controller.recentActivities,
-                        controller: controller,
-                      ),
-                    ],
+                        // Recent activity list
+                        RecentActivityList(
+                          // activities: controller.roundupStats.value?.recentTransactions,
+                          // controller: controller,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                SizedBox(height: 100.rh), // Bottom padding for safe area
-              ],
+                  SizedBox(height: 100.rh), // Bottom padding for safe area
+                ],
+              ),
             ),
           ),
         );

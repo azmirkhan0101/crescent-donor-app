@@ -1,5 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -18,6 +18,8 @@ class CustomInputField extends StatelessWidget {
     this.prefixIcon,
     this.isPrefixIcon = true,
     this.minLines = 1,
+    this.validator,
+    this.onChanged,
   });
 
   final TextEditingController? controller;
@@ -28,6 +30,8 @@ class CustomInputField extends StatelessWidget {
   final Widget? prefixIcon;
   final bool isPrefixIcon;
   final int minLines;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,8 @@ class CustomInputField extends StatelessWidget {
       textAlignVertical: TextAlignVertical.top,
       keyboardType: keyboardType ?? TextInputType.emailAddress,
       textInputAction: textInputAction ?? TextInputAction.next,
+      validator: validator,
+      onChanged: onChanged,
       style: AppTextStyles.baseStyle().copyWith(
         color: AppColors.black,
         fontWeight: FontWeight.w500,

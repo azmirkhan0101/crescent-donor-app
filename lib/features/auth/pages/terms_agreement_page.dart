@@ -1,9 +1,13 @@
+import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_loader.dart';
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/auth/controllers/profile_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/signup_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
@@ -12,8 +16,61 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-class TermsAgreementPage extends StatelessWidget {
+class TermsAgreementPage extends StatefulWidget {
   const TermsAgreementPage({super.key});
+
+  @override
+  State<TermsAgreementPage> createState() => _TermsAgreementPageState();
+}
+
+class _TermsAgreementPageState extends State<TermsAgreementPage> {
+  late final SignupController signupController;
+  late final ProfileController profileController;
+
+  @override
+  void initState() {
+    super.initState();
+    signupController = Get.isRegistered<SignupController>()
+        ? Get.find<SignupController>()
+        : Get.put(SignupController());
+    profileController = Get.isRegistered<ProfileController>()
+        ? Get.find<ProfileController>()
+        : Get.put(ProfileController());
+  }
+
+  Future<void> _handleAgreeAndContinue() async {
+    if (!signupController.agreeToTerms.value) {
+      ToastMsg.error('Please agree to the terms and conditions');
+      return;
+    }
+
+    // Create profile
+    final success = await profileController.createProfile();
+
+    if (!mounted) return;
+
+    if (success) {
+      final getProfileController = Get.put(GetProfileController());
+      await getProfileController.fetchProfile();
+      ToastMsg.success('Profile created successfully!');
+
+      if (!mounted) return;
+      // Navigate to login first
+      context.pushReplacementNamed(RoutePath.home);
+
+      // Clean up controllers after navigation completes
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (Get.isRegistered<SignupController>()) {
+          Get.delete<SignupController>();
+        }
+        if (Get.isRegistered<ProfileController>()) {
+          Get.delete<ProfileController>();
+        }
+      });
+    } else if (profileController.errorMessage.value.isNotEmpty) {
+      ToastMsg.error(profileController.errorMessage.value);
+    }
+  }
 
   List<String> get termsList => [
     "Allow us to process recurring donations on your behalf based on your chosen plan.",
@@ -25,7 +82,6 @@ class TermsAgreementPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final signupController = Get.find<SignupController>();
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,12 +163,15 @@ class TermsAgreementPage extends StatelessWidget {
           Column(
             children: [
               // Continue button
-              CustomFilledButton(
-                title: "Agree & Continue",
-                onTap: () {
-                  context.pushNamed(RoutePath.login);
-                },
-              ),
+              Obx(() {
+                if (profileController.isLoading.value) {
+                  return const CustomLoader();
+                }
+                return CustomFilledButton(
+                  title: "Agree & Continue",
+                  onTap: _handleAgreeAndContinue,
+                );
+              }),
 
               24.heightWidth,
             ],

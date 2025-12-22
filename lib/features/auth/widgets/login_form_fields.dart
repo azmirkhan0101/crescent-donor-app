@@ -1,7 +1,7 @@
 import 'package:cresent_charge_user_app/common-widgets/form-fields/form_fields.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
@@ -19,28 +19,25 @@ class LoginFormFields extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginController = controller ?? Get.find<LoginController>();
 
-    return Form(
-      key: loginController.formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Email field
-          _buildEmailField(loginController),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Email field
+        _buildEmailField(loginController),
 
-          24.heightWidth,
+        24.heightWidth,
 
-          // Password field
-          _buildPasswordField(loginController),
+        // Password field
+        _buildPasswordField(loginController),
 
-          16.heightWidth,
+        16.heightWidth,
 
-          // Remember password and forgot password row
-          _buildRememberAndForgotRow(loginController, context),
+        // Remember password and forgot password row
+        _buildRememberAndForgotRow(loginController, context),
 
-          // Error message display
-          Obx(() => _buildErrorMessage(loginController)),
-        ],
-      ),
+        // Error message display
+        Obx(() => _buildErrorMessage(loginController)),
+      ],
     );
   }
 

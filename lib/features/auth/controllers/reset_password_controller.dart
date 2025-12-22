@@ -1,99 +1,150 @@
+import 'package:cresent_charge_user_app/service/api_url.dart';
+import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ResetPasswordController extends GetxController {
-  // Text controllers
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  // Observable variables
-  var newPassword = ''.obs;
-  var confirmPassword = ''.obs;
-  var isNewPasswordVisible = false.obs;
-  var isConfirmPasswordVisible = false.obs;
+  // Visibility
+  RxBool isNewPasswordVisible = false.obs;
+  RxBool isConfirmPasswordVisible = false.obs;
 
-  // Password validation observables
-  var hasMinLength = false.obs;
-  var hasUppercase = false.obs;
-  var hasLowercase = false.obs;
-  var hasNumber = false.obs;
-  var hasSpecialChar = false.obs;
-  var passwordsMatch = false.obs;
+  // Validation flags
+  RxBool hasMinLength = false.obs;
+  RxBool hasUppercase = false.obs;
+  RxBool hasLowercase = false.obs;
+  RxBool hasNumber = false.obs;
+  RxBool hasSpecialChar = false.obs;
+  RxBool passwordsMatch = false.obs;
 
-  // Computed properties
+  // Errors & loading
+  RxString newPasswordError = ''.obs;
+  RxString confirmPasswordError = ''.obs;
+  RxString errorMessage = ''.obs;
+  RxBool isLoading = false.obs;
+
+  String? _resetToken; // obtained from previous flow
+
   bool get isPasswordValid =>
       hasMinLength.value &&
       hasUppercase.value &&
       hasLowercase.value &&
       hasNumber.value &&
       hasSpecialChar.value;
-
-  bool get canSubmit => isPasswordValid && passwordsMatch.value;
+  bool get canSubmit =>
+      isPasswordValid &&
+      passwordsMatch.value &&
+      newPasswordError.value.isEmpty &&
+      confirmPasswordError.value.isEmpty;
 
   @override
   void onInit() {
     super.onInit();
+    // Try to obtain token from OTP or forgot password controllers (if present)
+    // if (Get.isRegistered<ForgotPasswordOtpController>()) {
+    //   _resetToken = Get.find<ForgotPasswordOtpController>().token.value;
+    // } else if (Get.isRegistered<ForgotPasswordController>()) {
+    //   _resetToken = Get.find<ForgotPasswordController>().resetToken.value;
+    // }
 
-    // Listen to password changes
     newPasswordController.addListener(() {
-      newPassword.value = newPasswordController.text;
-      validatePassword(newPasswordController.text);
-      checkPasswordsMatch();
+      final pwd = newPasswordController.text;
+      _validatePassword(pwd);
+      _validateConfirm(confirmPasswordController.text);
     });
-
     confirmPasswordController.addListener(() {
-      confirmPassword.value = confirmPasswordController.text;
-      checkPasswordsMatch();
+      _validateConfirm(confirmPasswordController.text);
     });
   }
 
-  void validatePassword(String password) {
-    // At least 8 characters
+  void _validatePassword(String password) {
     hasMinLength.value = password.length >= 8;
-
-    // At least one uppercase letter
     hasUppercase.value = password.contains(RegExp(r'[A-Z]'));
-
-    // At least one lowercase letter
     hasLowercase.value = password.contains(RegExp(r'[a-z]'));
-
-    // At least one number
     hasNumber.value = password.contains(RegExp(r'[0-9]'));
-
-    // At least one special character
     hasSpecialChar.value = password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
-  }
 
-  void checkPasswordsMatch() {
-    passwordsMatch.value =
-        newPassword.value.isNotEmpty &&
-        newPassword.value == confirmPassword.value;
-  }
-
-  void toggleNewPasswordVisibility() {
-    isNewPasswordVisible.toggle();
-  }
-
-  void toggleConfirmPasswordVisibility() {
-    isConfirmPasswordVisible.toggle();
-  }
-
-  void resetPassword() {
-    if (canSubmit) {
-      // TODO: Implement actual reset password logic
-      Get.snackbar(
-        'Success',
-        'Password reset successfully',
-        snackPosition: SnackPosition.TOP,
-      );
-      // Navigate to login or success page
+    if (password.isEmpty) {
+      newPasswordError.value = 'Password is required';
+    } else if (!hasMinLength.value) {
+      newPasswordError.value = 'Min 8 characters';
+    } else if (!hasUppercase.value) {
+      newPasswordError.value = 'Add uppercase letter';
+    } else if (!hasLowercase.value) {
+      newPasswordError.value = 'Add lowercase letter';
+    } else if (!hasNumber.value) {
+      newPasswordError.value = 'Add a number';
+    } else if (!hasSpecialChar.value) {
+      newPasswordError.value = 'Add special character';
     } else {
-      Get.snackbar(
-        'Error',
-        'Please meet all password requirements',
-        snackPosition: SnackPosition.TOP,
-      );
+      newPasswordError.value = '';
     }
+  }
+
+  void _validateConfirm(String value) {
+    passwordsMatch.value =
+        newPasswordController.text.isNotEmpty &&
+        value == newPasswordController.text;
+    if (value.isEmpty) {
+      confirmPasswordError.value = 'Confirm your password';
+    } else if (!passwordsMatch.value) {
+      confirmPasswordError.value = 'Passwords do not match';
+    } else {
+      confirmPasswordError.value = '';
+    }
+  }
+
+  void toggleNewPasswordVisibility() => isNewPasswordVisible.toggle();
+  void toggleConfirmPasswordVisibility() => isConfirmPasswordVisible.toggle();
+
+  Future<bool> resetPassword(String resetToken) async {
+    errorMessage.value = '';
+    _validatePassword(newPasswordController.text);
+    _validateConfirm(confirmPasswordController.text);
+    if (!canSubmit) return false;
+    if (resetToken.isEmpty) {
+      errorMessage.value = 'Reset token missing. Restart flow.';
+      return false;
+    }
+    isLoading.value = true;
+    // try {
+    final network = Get.find<NetworkHelper>();
+    final result = await network.request<dynamic>(
+      'POST',
+      ApiUrl.resetPassword,
+      body: {
+        'newPassword': newPasswordController.text.trim(),
+        "resetPasswordToken": resetToken,
+      },
+      withAuth: false,
+      parser: (d) => d,
+    );
+
+    isLoading.value = false;
+
+    return result.fold(
+      (l) {
+        errorMessage.value = l.message ?? 'Reset failed';
+        return false;
+      },
+      (r) {
+        if (r is Map && r['success'] == true) {
+          return true;
+        }
+        errorMessage.value = (r is Map && r['message'] != null)
+            ? r['message']
+            : 'Reset failed';
+        return false;
+      },
+    );
+    // } catch (e) {
+    //   errorMessage.value = 'Reset error';
+    //   return false;
+    // } finally {
+    //   isLoading.value = false;
+    // }
   }
 
   @override

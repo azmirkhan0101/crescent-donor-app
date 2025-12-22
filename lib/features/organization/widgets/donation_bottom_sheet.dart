@@ -1,13 +1,18 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/core/theme/theme.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/organization_details_controller.dart';
+import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/date_time_selection_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_type_card.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 /// Donation bottom sheet with donation types and options
 class DonationBottomSheet extends StatefulWidget {
@@ -20,24 +25,22 @@ class DonationBottomSheet extends StatefulWidget {
 }
 
 class _DonationBottomSheetState extends State<DonationBottomSheet> {
-  final TextEditingController _messageController = TextEditingController();
+  final donateNowController = Get.put(DonateNowController());
+
+  final orgDetailsController = Get.find<OrganizationController>();
+  final causesController = Get.find<CausesController>();
 
   @override
   void initState() {
     super.initState();
-    _messageController.text =
-        '"Sending love & hope to everyone you\'re helping 💛."';
-  }
-
-  @override
-  void dispose() {
-    _messageController.dispose();
-    super.dispose();
+    causesController.fetchCausesByOrgId(
+      donateNowController.organizationId.value,
+      // orgDetailsController.organizationDetails.value!.id,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<OrganizationDetailsController>();
     return Container(
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
@@ -53,7 +56,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
           // Handle bar and header
           _buildHeader(),
 
-          // Content
+          // --- Donation type, causes, amount, message ---
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 24.rw),
@@ -61,47 +64,41 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Donation Type Section
-                  _buildDonationTypeSection(controller: controller),
+                  _buildDonationTypeSection(controller: donateNowController),
 
                   16.rh.heightWidth,
 
                   // Causes Section
-                  _buildCausesSection(controller),
+                  _buildCausesSection(donateNowController, causesController),
 
                   SizedBox(height: 24.rh),
 
-                  Obx(() {
-                    return controller.selectedDonationType.value !=
-                            DonationType.recurring
-                        ? Column(
-                            children: [
-                              _selectAmountSection(controller),
-                              24.rh.heightWidth,
-                            ],
-                          )
-                        : SizedBox.shrink();
-                  }),
+                  // Obx(() {
+                  //   return donateNowController.selectedDonationType.value !=
+                  //           DonationType.recurring
+                  //       ? Column(
+                  //           children: [
+                  //             _selectAmountSection(donateNowController),
+                  //             24.rh.heightWidth,
+                  //           ],
+                  //         )
+                  //       : SizedBox.shrink();
+                  // }),
+                  _selectAmountSection(donateNowController),
+                  24.rh.heightWidth,
 
                   // Message Section
                   _buildMessageSection(),
 
-                  SizedBox(height: 24.rh),
+                  SizedBox(height: 200.rh),
                 ],
               ),
             ),
           ),
 
-          // Continue Button
+          /// Continue Button
           ElevatedButton(
-            onPressed: () {
-              context.pop();
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => const DateTimeSelectionBottomSheet(),
-              );
-            },
+            onPressed: () => _onClickContinueButton(),
             style: ElevatedButton.styleFrom(
               fixedSize: Size(double.maxFinite, 56.rh),
               backgroundColor: const Color(0xFF000C0B),
@@ -109,7 +106,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
             ),
             child: Text('Continue'),
           ).paddingXY(X: 56.rw),
-          8.rh.heightWidth,
+          24.rh.heightWidth,
         ],
       ),
     );
@@ -166,9 +163,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
     );
   }
 
-  Widget _buildDonationTypeSection({
-    required OrganizationDetailsController controller,
-  }) {
+  Widget _buildDonationTypeSection({required DonateNowController controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -192,9 +187,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   icon: Assets.home.coins.path,
                   title: 'Round Up',
                   type: DonationType.roundUp,
-                  isSelected:
-                      controller.selectedDonationType.value ==
-                      DonationType.roundUp,
+                  isSelected: controller.isRoundUp.value,
                 ),
               ),
 
@@ -205,9 +198,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   icon: Assets.home.calendar.path,
                   title: 'Recurring',
                   type: DonationType.recurring,
-                  isSelected:
-                      controller.selectedDonationType.value ==
-                      DonationType.recurring,
+                  isSelected: controller.isRecurring.value,
                   isHighlighted: true,
                 ),
               ),
@@ -219,9 +210,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   icon: Assets.home.gift.path,
                   title: 'One Time',
                   type: DonationType.oneTime,
-                  isSelected:
-                      controller.selectedDonationType.value ==
-                      DonationType.oneTime,
+                  isSelected: controller.isOneTime.value,
                 ),
               ),
             ],
@@ -242,9 +231,10 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
     );
   }
 
-  Widget _buildCausesSection(OrganizationDetailsController controller) {
-    final causes = ['Youth', 'Utilities', 'Emam'];
-
+  Widget _buildCausesSection(
+    DonateNowController controller,
+    CausesController causesController,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -263,29 +253,39 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
         Obx(() {
           return Wrap(
             spacing: 8.rw,
-            children: causes.map((cause) {
-              final isSelected = controller.selectedCause.value == cause;
+            children: causesController.causesByOrgId.map((cause) {
+              final isSelected = controller.selectedCause.value?.id == cause.id;
               return CapsuleButton(
-                title: cause,
+                title: cause.category,
                 isSelected: isSelected,
                 onTap: () {
-                  controller.changeSelectedCause(cause);
+                  controller.selectedCause.value = cause;
                 },
-              );
+              ).paddingB(8.rh);
             }).toList(),
+            // children: causes.map((cause) {
+            //   final isSelected = controller.selectedCause.value == cause;
+            //   return CapsuleButton(
+            //     title: cause,
+            //     isSelected: isSelected,
+            //     onTap: () {
+            //       controller.changeSelectedCause(cause);
+            //     },
+            //   );
+            // }).toList(),
           );
         }),
       ],
     );
   }
 
-  Widget _selectAmountSection(OrganizationDetailsController controller) {
+  Widget _selectAmountSection(DonateNowController donateNowController) {
     return Obx(() {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Causes',
+            'Amount',
             style: TextStyle(
               fontFamily: 'Inter Display',
               fontSize: 16.rfs,
@@ -298,17 +298,61 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
           Wrap(
             spacing: 8.rw,
-            children: controller.donationAmounts.map((e) {
-              final isSelected = controller.selectedCause.value == e;
+            children: donateNowController.donationAmountsList.map((e) {
+              final isSelected =
+                  donateNowController.selectedAmountIndex.value ==
+                  donateNowController.donationAmountsList.indexOf(e);
               return CapsuleButton(
-                title: e,
+                title: e['label'] as String,
                 isSelected: isSelected,
                 onTap: () {
-                  controller.changeSelectedCause(e);
+                  donateNowController.selectedAmountIndex.value =
+                      donateNowController.donationAmountsList.indexOf(e);
+                  if (donateNowController.selectedAmountIndex.value !=
+                      donateNowController.donationAmountsList.length - 1) {
+                    donateNowController.amount.value = e['amount'] as num;
+                  }
                 },
               ).paddingB(8.rh);
             }).toList(),
           ),
+
+          // Custom Amount Input
+          SizedBox(height: 12.rh),
+          if (donateNowController.selectedAmountIndex.value ==
+              donateNowController.donationAmountsList.length - 1)
+            GestureDetector(
+              onTap: () {
+                donateNowController.amount.value = 0;
+              },
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  prefixText: '\$',
+                  prefixStyle: TextStyle(
+                    fontFamily: 'Inter Display',
+                    fontSize: 14.rfs,
+                    color: const Color(0xFF000C0B),
+                  ),
+                  border: InputBorder.none,
+                  hintText: 'Custom Amount',
+                  hintStyle: TextStyle(
+                    fontFamily: 'Inter Display',
+                    fontSize: 14.rfs,
+                    color: const Color(0xFF9E9E9E),
+                  ),
+                ),
+                style: TextStyle(
+                  fontFamily: 'Inter Display',
+                  fontSize: 14.rfs,
+                  color: const Color(0xFF000C0B),
+                ),
+                onChanged: (value) {
+                  final parsedValue = double.tryParse(value) ?? 0;
+                  donateNowController.amount.value = parsedValue;
+                },
+              ),
+            ),
         ],
       );
     });
@@ -344,7 +388,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
         SizedBox(height: 16.rh),
 
         TextField(
-          controller: _messageController,
+          controller: donateNowController.specialMsgController,
           maxLines: 4,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -363,6 +407,40 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
         ),
       ],
     );
+  }
+
+  void _onClickContinueButton() {
+    // If no cause selected, show Error
+    if (donateNowController.selectedCause.value == null) {
+      ToastMsg.error('Please select a cause to proceed.');
+      return;
+    }
+    // If no amount selected, show Error
+    if (donateNowController.amount.value <= 0) {
+      ToastMsg.error('Please select a valid donation amount to proceed.');
+      return;
+    }
+
+    // Close bottom sheet first
+    // GoRouter.of(context).pop();
+    if (donateNowController.isOneTime.value) {
+      GoRouter.of(context).pop();
+      Future.delayed(const Duration(milliseconds: 500));
+      GoRouter.of(context).pushNamed(RoutePath.linkedPaymentAccount);
+    }
+    if (donateNowController.isRoundUp.value) {
+      GoRouter.of(context).pop();
+      Future.delayed(const Duration(milliseconds: 500));
+      GoRouter.of(context).pushNamed(RoutePath.connectedBankAccount);
+    }
+    if (donateNowController.isRecurring.value) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => const DateTimeSelectionBottomSheet(),
+      );
+    }
   }
 }
 

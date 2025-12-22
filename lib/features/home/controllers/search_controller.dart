@@ -1,11 +1,21 @@
+import 'dart:async';
+
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/home/models/organization_model.dart';
+import 'package:cresent_charge_user_app/service/api_url.dart';
+import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SearchController extends GetxController {
+  final NetworkHelper _networkHelper = Get.find<NetworkHelper>();
   // Text editing controller for search input
   final TextEditingController searchTextController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
+
+  // Debounce timer
+  Timer? _debounceTimer;
 
   // Observable variables
   final RxString searchQuery = ''.obs;
@@ -39,6 +49,7 @@ class SearchController extends GetxController {
 
   // Search results (for future implementation)
   final RxList<SearchResultItem> searchResults = <SearchResultItem>[].obs;
+  final RxString searchErrorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -49,6 +60,7 @@ class SearchController extends GetxController {
 
   @override
   void onClose() {
+    _debounceTimer?.cancel();
     searchTextController.dispose();
     searchFocusNode.dispose();
     super.onClose();
@@ -57,8 +69,15 @@ class SearchController extends GetxController {
   void _setupSearchListener() {
     searchTextController.addListener(() {
       searchQuery.value = searchTextController.text;
+
+      // Cancel previous timer
+      _debounceTimer?.cancel();
+
       if (searchTextController.text.isNotEmpty) {
-        _performSearch(searchTextController.text);
+        // Set new timer for 500ms debounce
+        _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+          _performSearch(searchTextController.text);
+        });
       } else {
         searchResults.clear();
         isSearching.value = false;
@@ -75,7 +94,7 @@ class SearchController extends GetxController {
   // Handle location selection
   void selectLocation(String location) {
     selectedLocation.value = location;
-    // Optionally refresh search results based on new location
+    // Refresh search results based on new location
     if (searchQuery.value.isNotEmpty) {
       _performSearch(searchQuery.value);
     }
@@ -126,7 +145,7 @@ class SearchController extends GetxController {
         RecentSearchItem(
           name: query,
           location: selectedLocation.value,
-          logoAsset: 'assets/home/user-1.png', // Default logo
+          logoAsset: Assets.home.varifiedCharitiesBlog1.path,
         ),
       );
 
@@ -138,27 +157,68 @@ class SearchController extends GetxController {
   }
 
   // Perform search (placeholder for actual search logic)
-  void _performSearch(String query) {
-    isSearching.value = true;
-
-    // Simulate search delay
-    Future.delayed(const Duration(milliseconds: 500), () {
-      // TODO: Implement actual search API call
-      searchResults.value = _mockSearchResults(query);
+  Future<void> _performSearch(String query) async {
+    if (query.trim().isEmpty) {
+      searchResults.clear();
       isSearching.value = false;
-    });
-  }
+      return;
+    }
 
-  // Mock search results (replace with actual API call)
-  List<SearchResultItem> _mockSearchResults(String query) {
-    return [
-      SearchResultItem(
-        name: 'Results for "$query"',
-        description: 'Sample search result',
-        location: selectedLocation.value,
-        logoAsset: 'assets/home/user-1.png',
-      ),
-    ];
+    isSearching.value = true;
+    searchErrorMessage.value = '';
+
+    // Build query parameters
+    final params = <String>[];
+    params.add('searchTerm=${query.trim()}');
+    if (selectedLocation.value != 'Brisbane') {
+      params.add('state=${selectedLocation.value}');
+    }
+    params.add('isProfileVisible=true');
+    params.add('populateCauses=true');
+
+    final url = '${ApiUrl.getAllOrganizations}?${params.join('&')}';
+
+    // Make direct API call without affecting shared organizationsList
+    final result = await _networkHelper.request(
+      'GET',
+      url,
+      parser: (data) => OrganizationResponseModel.fromJson(data),
+      withAuth: true,
+    );
+
+    isSearching.value = false;
+
+    result.fold(
+      (err) {
+        searchErrorMessage.value =
+            err.message ?? 'Failed to load organizations';
+        searchResults.clear();
+      },
+      (data) {
+        // Convert organizations to search results
+        searchResults.value = data.data
+            .map(
+              (org) => SearchResultItem(
+                id: org.id,
+                name: org.name.isNotEmpty ? org.name : 'Unknown Organization',
+                description: org.aboutUs.isNotEmpty
+                    ? org.aboutUs
+                    : (org.serviceType.isNotEmpty
+                          ? org.serviceType
+                          : 'No description'),
+                location: '${org.state ?? ''}, ${org.country ?? ''}'.trim(),
+                logoAsset: org.logoImage.isNotEmpty
+                    ? parseImageUrl(org.logoImage)
+                    : Assets.home.varifiedCharitiesBlog1.path,
+                serviceType: org.serviceType.isNotEmpty
+                    ? org.serviceType
+                    : null,
+                organization: org,
+              ),
+            )
+            .toList();
+      },
+    );
   }
 
   // Handle recent search item tap
@@ -183,15 +243,21 @@ class RecentSearchItem {
 }
 
 class SearchResultItem {
+  final String id;
   final String name;
   final String description;
   final String location;
   final String logoAsset;
+  final String? serviceType;
+  final OrganizationModel? organization;
 
   SearchResultItem({
+    required this.id,
     required this.name,
     required this.description,
     required this.location,
     required this.logoAsset,
+    this.serviceType,
+    this.organization,
   });
 }

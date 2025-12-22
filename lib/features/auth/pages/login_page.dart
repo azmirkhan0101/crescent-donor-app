@@ -1,11 +1,13 @@
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/login_form_fields.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
@@ -57,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               16.heightWidth,
 
-            // Back button and theme toggle
+              // Back button and theme toggle
               AuthHeader(
                 onTap: () {
                   context.pushReplacementNamed(RoutePath.getStartPage);
@@ -98,8 +100,21 @@ class _LoginPageState extends State<LoginPage> {
             loadingText: controller.isLoading.value ? "Logging In..." : null,
             onTap: () async {
               final success = await controller.login();
+              if (!context.mounted) return;
               if (success) {
-                context.pushReplacementNamed(RoutePath.home);
+                final getProfileController = Get.put(GetProfileController());
+                await getProfileController.fetchProfile();
+
+                // Make sure context is still valid after the async gap
+                if (!context.mounted) return;
+
+                if (getProfileController.profile.value?.id.isNotEmpty ??
+                    false) {
+                  context.replaceNamed(RoutePath.home);
+                } else {
+                  ToastMsg.error('Incomplete profile data');
+                  context.replaceNamed(RoutePath.fewDetails);
+                }
               }
             },
           ),

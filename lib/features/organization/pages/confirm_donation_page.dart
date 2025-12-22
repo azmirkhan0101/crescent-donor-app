@@ -1,12 +1,21 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/confirm_donation_controller.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/common/controllers/roundup-management/save_roundup_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/create_recurring_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
+import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 // Define colors from Figma design
 const Color _offBlack = Color(0xFF000C0B);
@@ -15,11 +24,20 @@ const Color _grayText = Color(0xFF6E6E6E);
 const Color _borderColor = Color(0xFFEDEDED);
 
 class ConfirmDonationPage extends StatelessWidget {
-  const ConfirmDonationPage({super.key});
+  const ConfirmDonationPage({super.key, this.paymentMethodId});
+  final String? paymentMethodId;
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ConfirmDonationController());
+    // final confirmDonationController = Get.put(ConfirmDonationController());
+
+    // Organization details controller
+    final orgController = Get.find<OrganizationController>();
+    // donate now controller
+    final donateNowCtrl = Get.find<DonateNowController>();
+    // cause controller
+    // payment method controller
+    final paymentMethodCtrl = Get.find<PaymentMethodController>();
 
     return Scaffold(
       backgroundColor: AppColors.lightPageBackground,
@@ -32,29 +50,43 @@ class ConfirmDonationPage extends StatelessWidget {
         child: Column(
           children: [
             // Organization Card
-            _buildOrganizationCard(),
-            
+            _buildOrganizationCard(
+              orgLogoUrl:
+                  orgController.organizationDetails.value?.logoImage ?? '',
+              causeDetails:
+                  donateNowCtrl.selectedCause.value?.description ?? '',
+              orgName: orgController.organizationDetails.value?.name ?? '',
+            ),
+
             16.rh.heightWidth,
-            
+
             // Details Card
-            _buildDetailsCard(controller),
-            
+            _buildDetailsCard(donateNowCtrl, context),
+
             16.rh.heightWidth,
-            
+
             // Transaction Details Card
-            _buildTransactionDetailsCard(controller),
-            
+            _buildTransactionDetailsCard(),
+
             24.rh.heightWidth,
-            
+
             // Confirm & Donate Button
-            _buildConfirmButton(controller, context),
+            _buildConfirmButton(
+              donateNowCtrl,
+              context,
+              paymentMethodId: paymentMethodId,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOrganizationCard() {
+  Widget _buildOrganizationCard({
+    required String causeDetails,
+    required String orgName,
+    required String orgLogoUrl,
+  }) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -64,7 +96,7 @@ class ConfirmDonationPage extends StatelessWidget {
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -82,14 +114,23 @@ class ConfirmDonationPage extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Assets.home.varifiedCharitiesBlog1.image(
+              child: Image.network(
+                parseImageUrl(orgLogoUrl),
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Assets.home.varifiedCharitiesBlog1.image(
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
+              // child: Assets.home.varifiedCharitiesBlog1.image(
+              //   fit: BoxFit.cover,
+              // ),
             ),
           ),
-          
+
           12.rw.heightWidth,
-          
+
           // Organization Details
           Expanded(
             child: Padding(
@@ -99,19 +140,16 @@ class ConfirmDonationPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Bringing education to rural villages.',
-                    style: AppTextStyles.f16W500().copyWith(
-                      color: _offBlack,
-                    ),
+                    causeDetails,
+                    style: AppTextStyles.f16W500().copyWith(color: _offBlack),
                   ),
-                  
+
                   8.rh.heightWidth,
-                  
+
                   Text(
-                    'Healing Hands International',
-                    style: AppTextStyles.f14W400().copyWith(
-                      color: _grayText,
-                    ),
+                    // 'Healing Hands International',
+                    orgName,
+                    style: AppTextStyles.f14W400().copyWith(color: _grayText),
                   ),
                 ],
               ),
@@ -122,7 +160,10 @@ class ConfirmDonationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailsCard(ConfirmDonationController controller) {
+  Widget _buildDetailsCard(
+    DonateNowController donateNowCtrl,
+    BuildContext context,
+  ) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -132,7 +173,7 @@ class ConfirmDonationPage extends StatelessWidget {
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -148,51 +189,58 @@ class ConfirmDonationPage extends StatelessWidget {
               children: [
                 Text(
                   'Details',
-                  style: AppTextStyles.f16W500().copyWith(
-                    color: _offBlack,
-                  ),
+                  style: AppTextStyles.f16W500().copyWith(color: _offBlack),
                 ),
                 GestureDetector(
-                  onTap: () => controller.onEditDetails(),
+                  onTap: () => _onEditTap(context),
                   child: Text(
                     'Edit',
-                    style: AppTextStyles.f14W400().copyWith(
-                      color: _grayText,
-                    ),
+                    style: AppTextStyles.f14W400().copyWith(color: _grayText),
                   ),
                 ),
               ],
             ),
           ),
-          
+
           // Detail Items
-          _buildDetailItem('Donation type:', controller.donationType),
-          _buildDetailItem('Donation cause:', controller.donationCause),
-          _buildDetailItem('Threshold amount (per month):', controller.thresholdAmount),
-          
+          _buildDetailItem(
+            'Donation type:',
+            donateNowCtrl.selectedDonationType.value.name,
+          ),
+          _buildDetailItem(
+            'Donation cause:',
+            donateNowCtrl.selectedCause.value?.name ?? '',
+          ),
+          _buildDetailItem(
+            'Threshold amount:',
+            "\$${donateNowCtrl.amount.value.toString()}",
+          ),
+
           // Special Message
-          Padding(
-            padding: EdgeInsets.all(4.rw),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Special message:',
-                  style: AppTextStyles.f14W400().copyWith(
-                    color: _grayText,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.all(4.rw),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Special message:',
+                    style: AppTextStyles.f14W400().copyWith(color: _grayText),
                   ),
-                ),
-                
-                8.rh.heightWidth,
-                
-                Text(
-                  controller.specialMessage,
-                  style: AppTextStyles.f14W400().copyWith(
-                    color: _offBlack,
-                    fontWeight: FontWeight.w500,
+
+                  8.rh.heightWidth,
+
+                  Text(
+                    donateNowCtrl.specialMsgController.text,
+                    style: AppTextStyles.f14W400().copyWith(
+                      color: _offBlack,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -207,13 +255,11 @@ class ConfirmDonationPage extends StatelessWidget {
         children: [
           Text(
             label,
-            style: AppTextStyles.f14W400().copyWith(
-              color: _grayText,
-            ),
+            style: AppTextStyles.f14W400().copyWith(color: _grayText),
           ),
-          
+
           8.rw.heightWidth,
-          
+
           Text(
             value,
             style: AppTextStyles.f14W400().copyWith(
@@ -226,7 +272,15 @@ class ConfirmDonationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTransactionDetailsCard(ConfirmDonationController controller) {
+  Widget _buildTransactionDetailsCard() {
+    final orgDetailsCtrl = Get.find<OrganizationController>();
+    final paymentMethodCtrl = Get.find<PaymentMethodController>();
+    final donateNowCtrl = Get.find<DonateNowController>();
+
+    final paymentMethod = paymentMethodCtrl.paymentMethods.firstWhere(
+      (method) => method.id == paymentMethodId,
+    );
+    final stripeFees = donateNowCtrl.amount.value * 0.0475; // 4.75%
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -236,84 +290,112 @@ class ConfirmDonationPage extends StatelessWidget {
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Column(
-        children: [
-          // Header
-          Padding(
-            padding: EdgeInsets.all(4.rw),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Transaction Details',
-                style: AppTextStyles.f16W500().copyWith(
-                  color: _offBlack,
+      child: Obx(() {
+        return Column(
+          children: [
+            // Header
+            Padding(
+              padding: EdgeInsets.all(4.rw),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Transaction Details',
+                  style: AppTextStyles.f16W500().copyWith(color: _offBlack),
                 ),
               ),
             ),
-          ),
-          
-          // Transaction Items
-          _buildTransactionItem('To:', controller.organizationName),
-          _buildTransactionItem('From:', controller.fromUser),
-          _buildTransactionItem('By Debit Card:', controller.cardNumber),
-          _buildTransactionItem('Taxes & Fees:', controller.taxesAndFees),
-          
-          // Divider
-          Container(
-            height: 1,
-            width: double.infinity,
-            color: _borderColor,
-            margin: EdgeInsets.symmetric(vertical: 8.rh),
-          ),
-          
-          // Admin Fees Checkbox
-          Obx(() => Row(
-            children: [
-              GestureDetector(
-                onTap: () => controller.toggleAdminFeesContribution(),
-                child: Container(
-                  width: 20.rw,
-                  height: 20.rh,
-                  decoration: BoxDecoration(
-                    color: controller.contributeToAdminFees 
-                        ? AppColors.primaryColor 
-                        : Colors.transparent,
-                    border: Border.all(
-                      color: controller.contributeToAdminFees 
-                          ? AppColors.primaryColor 
-                          : _grayText,
-                      width: 2,
+
+            // Transaction Items
+            // _buildTransactionItem('To:', controller.organizationName),
+            _buildTransactionItem(
+              'To:',
+              orgDetailsCtrl.organizationDetails.value?.name ?? '',
+            ),
+            // _buildTransactionItem('From:', controller.fromUser),
+            _buildTransactionItem(
+              'From:',
+              paymentMethod.cardHolderName ?? 'Card Holder',
+            ),
+            // _buildTransactionItem('By Debit Card:', controller.cardDisplayName),
+            _buildTransactionItem(
+              'By ${paymentMethod.cardBrand.toUpperCase()} Card:',
+              "**** **** **** ${paymentMethod.cardLast4}",
+            ),
+            // Stripe fees : 4.75%
+            _buildTransactionItem('Stripe fees:', "\$$stripeFees"),
+
+            // _buildTransactionItem('Taxes & Fees:', controller.taxesAndFees),
+            _buildTransactionItem(
+              'Taxes & Admin Fees:',
+              "\$${donateNowCtrl.contributionAmount.value.toStringAsFixed(2)}",
+            ),
+
+            // Divider
+            Container(
+              height: 1,
+              width: double.infinity,
+              color: _borderColor,
+              margin: EdgeInsets.symmetric(vertical: 8.rh),
+            ),
+
+            _buildTransactionItem(
+              "Total",
+              "\$${(donateNowCtrl.amount.value + stripeFees + donateNowCtrl.contributionAmount.value).toStringAsFixed(3)}",
+            ),
+
+            // Divider
+            Container(
+              height: 1,
+              width: double.infinity,
+              color: _borderColor,
+              margin: EdgeInsets.symmetric(vertical: 8.rh),
+            ),
+
+            // Admin Fees Checkbox
+            Obx(
+              () => Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => donateNowCtrl.toggleAdminFeesContribution(),
+                    child: Container(
+                      width: 20.rw,
+                      height: 20.rh,
+                      decoration: BoxDecoration(
+                        color: donateNowCtrl.contributeToAdminFees
+                            ? AppColors.primaryColor
+                            : Colors.transparent,
+                        border: Border.all(
+                          color: donateNowCtrl.contributeToAdminFees
+                              ? AppColors.primaryColor
+                              : _grayText,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: donateNowCtrl.contributeToAdminFees
+                          ? const Icon(Icons.check, color: _white, size: 14)
+                          : null,
                     ),
-                    borderRadius: BorderRadius.circular(4),
                   ),
-                  child: controller.contributeToAdminFees
-                      ? const Icon(
-                          Icons.check,
-                          color: _white,
-                          size: 14,
-                        )
-                      : null,
-                ),
+
+                  8.rw.heightWidth,
+
+                  Text(
+                    'Contribute to admin fees.',
+                    style: AppTextStyles.f14W400().copyWith(color: _offBlack),
+                  ),
+                ],
               ),
-              
-              8.rw.heightWidth,
-              
-              Text(
-                'Contribute to admin fees.',
-                style: AppTextStyles.f14W400().copyWith(
-                  color: _offBlack,
-                ),
-              ),
-            ],
-          )),
-        ],
-      ),
+            ),
+          ],
+        );
+      }),
     );
   }
 
@@ -325,11 +407,9 @@ class ConfirmDonationPage extends StatelessWidget {
         children: [
           Text(
             label,
-            style: AppTextStyles.f14W400().copyWith(
-              color: _grayText,
-            ),
+            style: AppTextStyles.f14W400().copyWith(color: _grayText),
           ),
-          
+
           Flexible(
             child: Text(
               value,
@@ -345,24 +425,116 @@ class ConfirmDonationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildConfirmButton(ConfirmDonationController controller, BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => controller.onConfirmDonation(context),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: _offBlack,
-        fixedSize: Size(double.maxFinite, 56.rh),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+  Widget _buildConfirmButton(
+    DonateNowController donateNowController,
+    BuildContext context, {
+    required paymentMethodId,
+  }) {
+    return Obx(() {
+      final isOneTime =
+          donateNowController.selectedDonationType.value ==
+          DonationType.oneTime;
+      final isRecurring =
+          donateNowController.selectedDonationType.value ==
+          DonationType.recurring;
+      final isRoundUp =
+          donateNowController.selectedDonationType.value ==
+          DonationType.roundUp;
+      return ElevatedButton(
+        onPressed: () async {
+          if (donateNowController.isPaymentProcessing.value) return;
+          if (isOneTime) {
+            donateNowController.onConfirmDonation(
+              context,
+              paymentMethodId: paymentMethodId,
+            );
+          }
+          if (isRoundUp) {
+            // print('Round Up Donation Confirmed');
+            bool isSuccess = await Get.find<SaveRoundupController>()
+                .saveRoundupConsent(
+                  bankConnectionId:
+                      donateNowController.selectedBankAccountId.value,
+                  organizationId: donateNowController.organizationId.value,
+                  causeId: donateNowController.selectedCause.value?.id ?? '',
+                  monthlyThreshold: donateNowController.amount.value.toDouble(),
+                  paymentMethodId: paymentMethodId,
+                );
+
+            if (isSuccess) {
+              ToastMsg.success('Round Up donation saved successfully');
+              GoRouter.of(context).goNamed(RoutePath.home);
+            } else {
+              ToastMsg.error(
+                Get.find<SaveRoundupController>().errorMessage.value,
+              );
+            }
+          }
+          if (isRecurring) {
+            // print('Recurring Donation Confirmed');
+            bool isSuccess = await Get.find<CreateRecurringController>()
+                .createScheduledDonation(paymentMethodId: paymentMethodId);
+            if (isSuccess) {
+              ToastMsg.success('Recurring donation saved successfully');
+              GoRouter.of(context).goNamed(RoutePath.home);
+            } else {
+              ToastMsg.error(
+                Get.find<CreateRecurringController>().errorMessage.value,
+              );
+            }
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _offBlack,
+          fixedSize: Size(double.maxFinite, 56.rh),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          disabledBackgroundColor: _grayText,
+        ),
+        child: donateNowController.isPaymentProcessing.value
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(_white),
+                ),
+              )
+            : Text(
+                isOneTime
+                    ? 'Confirm & Donate'
+                    : isRoundUp
+                    ? 'Save Round Up'
+                    : 'Save Recurring Donation',
+                style: AppTextStyles.f16W500().copyWith(
+                  color: _white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+      ).paddingXY(X: 56.rw);
+    });
+  }
+
+  void _onEditTap(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (context, scrollController) => DonationBottomSheet(
+          organizationName:
+              Get.find<OrganizationController>()
+                  .organizationDetails
+                  .value
+                  ?.name ??
+              'N/A',
         ),
       ),
-      child: Text(
-        'Confirm & Donate',
-        style: AppTextStyles.f16W500().copyWith(
-          color: _white,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    ).paddingXY(X: 56.rw);
+    );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/common/mixins/activity_expansion_mixin.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
+import 'package:cresent_charge_user_app/features/profile/models/transaction_history_model.dart';
+import 'package:cresent_charge_user_app/service/api_url.dart';
+import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +20,25 @@ class TransactionHistoryController extends GetxController
 
   /// Loading state for transaction data
   final RxBool isLoading = false.obs;
+
+  /// Loading state for pagination
+  final RxBool isLoadingMore = false.obs;
+
+  /// Error message
+  final RxString errorMessage = ''.obs;
+
+  /// Transaction history grouped by date
+  final RxList<TransactionHistoryModel> transactionHistory =
+      <TransactionHistoryModel>[].obs;
+
+  /// Pagination
+  final RxInt currentPage = 1.obs;
+  final RxInt totalItems = 0.obs;
+  final RxInt totalPages = 1.obs;
+  final int limit = 120;
+
+  /// Check if there are more pages to load
+  bool get hasMorePages => currentPage.value < totalPages.value;
 
   /// Current filter selection
   final RxString selectedFilter = 'All'.obs;
@@ -118,8 +140,72 @@ class TransactionHistoryController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    // Initialize with all activities collapsed
-    _initializeExpansionStates();
+    // Fetch initial transactions
+    fetchTransactionHistory();
+  }
+
+  /// Fetch transaction history from API
+  Future<void> fetchTransactionHistory({bool refresh = false}) async {
+    if (refresh) {
+      currentPage.value = 1;
+      transactionHistory.clear();
+    }
+
+    if (isLoading.value || isLoadingMore.value) return;
+
+    try {
+      if (currentPage.value == 1) {
+        isLoading.value = true;
+      } else {
+        isLoadingMore.value = true;
+      }
+      errorMessage.value = '';
+
+      // Build URL with pagination parameters
+      final url =
+          '${ApiUrl.getTransactionHistory}?page=${currentPage.value}&limit=$limit';
+
+      final response = await Get.find<NetworkHelper>().request(
+        'GET',
+        url,
+        withAuth: true,
+        parser: (data) => TransactionHistoryResponse.fromJson(data),
+      );
+
+      response.fold(
+        (error) {
+          errorMessage.value = error.message ?? 'Failed to fetch transactions';
+          debugPrint('Error fetching transactions: ${error.message}');
+        },
+        (data) {
+          if (refresh || currentPage.value == 1) {
+            transactionHistory.assignAll(data.data);
+          } else {
+            transactionHistory.addAll(data.data);
+          }
+          totalItems.value = data.meta.total;
+          totalPages.value = data.meta.totalPage;
+          currentPage.value = data.meta.page;
+          debugPrint(
+            'Transactions fetched: ${transactionHistory.length} groups, Total: ${data.meta.total}',
+          );
+        },
+      );
+    } catch (e) {
+      errorMessage.value = 'An error occurred: $e';
+      debugPrint('Exception fetching transactions: $e');
+    } finally {
+      isLoading.value = false;
+      isLoadingMore.value = false;
+    }
+  }
+
+  /// Load next page
+  Future<void> loadNextPage() async {
+    if (!hasMorePages || isLoadingMore.value) return;
+
+    currentPage.value++;
+    await fetchTransactionHistory();
   }
 
   /// Initialize expansion states for all activities
@@ -181,26 +267,8 @@ class TransactionHistoryController extends GetxController
 
   /// Refresh transaction data
   Future<void> refreshTransactions() async {
-    isLoading.value = true;
-
-    try {
-      // Simulate API call delay
-      await Future.delayed(const Duration(seconds: 1));
-
-      // TODO: Implement actual API call to refresh transaction data
-      // For now, we'll just refresh the current data
-      _initializeExpansionStates();
-    } catch (e) {
-      // Handle error
-      Get.snackbar(
-        'Error',
-        'Failed to refresh transactions: ${e.toString()}',
-        backgroundColor: Colors.red[100],
-        colorText: Colors.red[800],
-      );
-    } finally {
-      isLoading.value = false;
-    }
+    await fetchTransactionHistory(refresh: true);
+    _initializeExpansionStates();
   }
 
   /// Get total transaction count

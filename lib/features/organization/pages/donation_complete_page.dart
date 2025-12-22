@@ -1,7 +1,8 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donation_complete_controller.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -21,6 +22,7 @@ class DonationCompletePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(DonationCompleteController());
+    final donateNowCtrl = Get.find<DonateNowController>();
 
     return Scaffold(
       backgroundColor: AppColors.lightPageBackground,
@@ -51,7 +53,7 @@ class DonationCompletePage extends StatelessWidget {
             32.rh.heightWidth,
 
             // Summary Card
-            _buildSummaryCard(controller),
+            _buildSummaryCard(controller, donateNowCtrl),
 
             24.rh.heightWidth,
 
@@ -99,7 +101,10 @@ class DonationCompletePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryCard(DonationCompleteController controller) {
+  Widget _buildSummaryCard(
+    DonationCompleteController controller,
+    DonateNowController donateNowCtrl,
+  ) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -128,9 +133,23 @@ class DonationCompletePage extends StatelessWidget {
           ),
 
           // Summary Items
-          _buildSummaryItem('Amount donated:', controller.amountDonated),
-          _buildSummaryItem('Organization:', controller.organization),
-          _buildSummaryItem('Donation Type:', controller.donationType),
+          _buildSummaryItem(
+            'Amount donated:',
+            "\$${donateNowCtrl.amount.value.toStringAsFixed(2).toString()}",
+          ),
+          _buildSummaryItem(
+            'Organization:',
+            donateNowCtrl
+                    .orgDetailsController
+                    .organizationDetails
+                    .value
+                    ?.name ??
+                '',
+          ),
+          _buildSummaryItem(
+            'Donation Type:',
+            donateNowCtrl.selectedDonationType.value.name,
+          ),
 
           // Special Message
           Padding(
@@ -146,7 +165,9 @@ class DonationCompletePage extends StatelessWidget {
                 8.rh.heightWidth,
 
                 Text(
-                  controller.specialMessage,
+                  donateNowCtrl.specialMsgController.text.isNotEmpty
+                      ? '"${donateNowCtrl.specialMsgController.text}"'
+                      : "No special message provided.",
                   style: AppTextStyles.f14W400().copyWith(
                     color: _offBlack,
                     fontWeight: FontWeight.w500,
@@ -165,8 +186,17 @@ class DonationCompletePage extends StatelessWidget {
           ),
 
           // Timestamp and Transaction ID
-          _buildSummaryItem('Timestamp:', controller.timestamp),
-          _buildSummaryItem('Transaction ID:', controller.transactionId),
+          _buildSummaryItem(
+            'Timestamp:',
+            donateNowCtrl.formatDate(
+              donateNowCtrl.donationResponse.value?.donation?.donationDate ??
+                  DateTime.now(),
+            ),
+          ),
+          _buildSummaryItem(
+            'Transaction ID:',
+            donateNowCtrl.donationResponse.value?.donation?.id ?? '',
+          ),
         ],
       ),
     );

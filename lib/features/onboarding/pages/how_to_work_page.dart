@@ -1,7 +1,7 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/onboarding/widgets/footer_section.dart';
 import 'package:cresent_charge_user_app/features/onboarding/widgets/reword_section.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';

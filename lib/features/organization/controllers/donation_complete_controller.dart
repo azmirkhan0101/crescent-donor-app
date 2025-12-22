@@ -7,7 +7,8 @@ class DonationCompleteController extends GetxController {
   final RxString _amountDonated = 'Round Up'.obs;
   final RxString _organization = 'Healing Hands International'.obs;
   final RxString _donationType = 'One-Time'.obs;
-  final RxString _specialMessage = '"Sending love & hope to everyone you\'re helping 💛."'.obs;
+  final RxString _specialMessage =
+      '"Sending love & hope to everyone you\'re helping 💛."'.obs;
   final RxString _timestamp = ''.obs;
   final RxString _transactionId = '8FSD-4829-ACDF'.obs;
 
@@ -23,14 +24,17 @@ class DonationCompleteController extends GetxController {
   void onInit() {
     super.onInit();
     _generateTimestamp();
-    
+
     // Get donation data from previous page if passed
     final donationData = Get.arguments as Map<String, dynamic>?;
     if (donationData != null) {
       _amountDonated.value = donationData['amount'] ?? 'Round Up';
-      _organization.value = donationData['organization'] ?? 'Healing Hands International';
+      _organization.value =
+          donationData['organization'] ?? 'Healing Hands International';
       _donationType.value = donationData['type'] ?? 'One-Time';
-      _specialMessage.value = donationData['message'] ?? '"Sending love & hope to everyone you\'re helping 💛."';
+      _specialMessage.value =
+          donationData['message'] ??
+          '"Sending love & hope to everyone you\'re helping 💛."';
     }
   }
 
@@ -61,10 +65,5 @@ class DonationCompleteController extends GetxController {
   void onClosePressed() {
     // Close the page and go back to home
     Get.offAllNamed('/home');
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

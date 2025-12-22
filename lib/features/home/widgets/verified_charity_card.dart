@@ -1,15 +1,16 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:get/utils.dart';
 import 'package:go_router/go_router.dart';
 
 class VerifiedCharityCard extends StatelessWidget {
   const VerifiedCharityCard({
     super.key,
+    required this.id,
     required this.title,
     required this.location,
     required this.category,
@@ -17,6 +18,7 @@ class VerifiedCharityCard extends StatelessWidget {
     required this.imagePath,
   });
 
+  final String id;
   final String title;
   final String location;
   final String category;
@@ -43,7 +45,7 @@ class VerifiedCharityCard extends StatelessWidget {
                 height: 120.rh,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(imagePath),
+                    image: NetworkImage(parseImageUrl(imagePath)),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(8.rw),
@@ -101,7 +103,10 @@ class VerifiedCharityCard extends StatelessWidget {
         ),
       ),
     ).onTap(() {
-      context.pushNamed(RoutePath.organizationDetails);
+      context.pushNamed(
+        RoutePath.organizationDetails,
+        extra: {"organizationId": id},
+      );
     });
   }
 }

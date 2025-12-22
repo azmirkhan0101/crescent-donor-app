@@ -1,8 +1,10 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_point_balance_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/my_rewards_tab_view.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/rewards_explore_tab_view.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -22,6 +24,21 @@ const Color _progressEnd = Color(0xFF735699);
 class YourRewardsPage extends StatelessWidget {
   const YourRewardsPage({super.key});
 
+  Future<void> _refreshData() async {
+    // final controller = Get.find<YourRewardsController>();
+    await Future.wait([
+      Get.find<GetAllRewardsController>().fetchRewards(
+        // search: controller.searchQuery.isEmpty ? null : controller.searchQuery,
+        // category: controller.selectedCategoryIndex != 0
+        //     ? controller.categories[controller.selectedCategoryIndex]
+        //           .toLowerCase()
+        //     : null,
+        status: 'all',
+      ),
+      Get.find<GetPointBalanceController>().fetchUserPoints(),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(YourRewardsController());
@@ -36,20 +53,27 @@ class YourRewardsPage extends StatelessWidget {
 
             // Scrollable Content
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // Badge Section
-                    _buildBadgeProgressSection(controller).paddingXY(X: 16.rw),
+              child: RefreshIndicator(
+                onRefresh: _refreshData,
+                color: _progressStart,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      // Badge Section
+                      _buildBadgeProgressSection(
+                        controller,
+                      ).paddingXY(X: 16.rw),
 
-                    // Tabs
-                    _buildTabs(controller),
+                      // Tabs
+                      _buildTabs(controller),
 
-                    // Content
-                    _buildContent(controller),
+                      // Content
+                      _buildContent(controller),
 
-                    48.heightWidth,
-                  ],
+                      48.heightWidth,
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -252,10 +276,12 @@ class YourRewardsPage extends StatelessWidget {
               ),
               Obx(
                 () => Text(
-                  controller.totalPoints.toString().replaceAllMapped(
-                    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                    (Match m) => '${m[1]},',
-                  ),
+                  Get.find<GetPointBalanceController>()
+                          .balance
+                          .value
+                          ?.currentBalance
+                          .toString() ??
+                      '0',
                   style: AppTextStyles.f20w600().copyWith(color: _offBlack),
                 ),
               ),

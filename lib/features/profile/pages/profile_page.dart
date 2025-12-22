@@ -1,10 +1,16 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
+import 'package:cresent_charge_user_app/features/profile/models/profile_model.dart';
+import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 /// Menu item data model
@@ -28,50 +34,54 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Main content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16.rw),
-                child: Column(
-                  children: [
-                    SizedBox(height: 16.rh),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Get.find<GetProfileController>().fetchProfile();
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 16.rw),
+            child: Obx(() {
+              final profile = Get.find<GetProfileController>().profile.value;
+              return Column(
+                children: [
+                  SizedBox(height: 16.rh),
 
-                    // Profile Header Section
-                    _buildProfileHeader(context),
+                  // Profile Header Section
+                  _buildProfileHeader(context, profile),
 
-                    SizedBox(height: 16.rh),
+                  SizedBox(height: 16.rh),
 
-                    // Menu Items Section
-                    _buildMenuItems(context),
-                  ],
-                ),
-              ),
-            ),
+                  // Menu Items Section
+                  _buildMenuItems(context),
 
-            // Logout Button
-            _buildLogoutButton(context),
+                  SizedBox(height: 24.rh),
 
-            SizedBox(height: 80.rh),
-          ],
+                  // Logout Button
+                  _buildLogoutButton(context),
+
+                  SizedBox(height: 80.rh),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
   }
 
   /// Build profile header with avatar and user info
-  Widget _buildProfileHeader(BuildContext context) {
+  Widget _buildProfileHeader(BuildContext context, ProfileModel? profile) {
     return Column(
       children: [
         // Profile Avatar
         Center(
-          child: Assets.home.profileImage.svg(width: 120.rw, height: 120.rh),
-          // child: Icon(
-          //   Icons.person_outline,
-          //   size: 60.rfs,
-          //   color: Colors.white,
-          // ),
+          child: CustomNetworkImage(
+            imageUrl: parseImageUrl('${profile?.image}'),
+            height: 120.rh,
+            width: 120.rw,
+            borderRadius: BorderRadius.circular(60.rw),
+          ),
         ),
 
         SizedBox(height: 15.rh),
@@ -89,7 +99,7 @@ class ProfilePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Talha S.',
+                        profile?.name ?? 'N/A',
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
                           fontSize: 24.rfs,
@@ -99,7 +109,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                       SizedBox(height: 4.rh),
                       Text(
-                        'talha@gmail.com',
+                        profile?.auth.email ?? 'N/A',
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
                           fontSize: 12.rfs,
@@ -178,7 +188,6 @@ class ProfilePage extends StatelessWidget {
         icon: Assets.common.alert.path, // Using alert for notifications
         title: 'Notifications',
         onTap: () {
-          print("Tapped Notifications");
           context.pushNamed(RoutePath.notificationSettings);
         },
       ),
@@ -305,6 +314,7 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
     ).onTap(() {
+      AppStorageService.clearAll();
       context.goNamed(RoutePath.login);
     });
   }

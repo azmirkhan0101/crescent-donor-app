@@ -1,11 +1,16 @@
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/calender_badge_sections.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_components.dart';
-import 'package:cresent_charge_user_app/features/donation/widgets/donation_sections.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/overview_section.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/section_header.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_point_balance_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 /// Donation Page
 ///
@@ -19,101 +24,142 @@ class DonationPage extends StatefulWidget {
 }
 
 class _DonationPageState extends State<DonationPage> {
+  final donationController = Get.find<DonationController>();
+  final getBalanceController = Get.find<GetPointBalanceController>();
+
+  Future<void> _refreshData() async {
+    await Future.wait([
+      donationController.fetchClientStats(),
+      getBalanceController.fetchUserPoints(),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<DonationController>();
     return Scaffold(
       backgroundColor: DonationConstants.backgroundColor,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            // Header section with profile and points
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SizedBox(height: 8.rh),
-                  Obx(() {
-                    return DonationHeader(
-                      pointsEarned: controller.pointsEarned.value,
-                      filterText: controller.selectedFilter.value,
-                      onFilterTap: _showFilterOptions,
-                    );
-                  }),
-                  SizedBox(height: DonationConstants.paddingVertical.rh),
-                ],
-              ),
-            ),
+        child: RefreshIndicator(
+          onRefresh: _refreshData,
+          color: DonationConstants.primaryPurple,
+          child: CustomScrollView(
+            slivers: [
+              // Header section with profile and points
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    SizedBox(height: 8.rh),
+                    Obx(() {
+                      return DonationHeader(
+                        profileImageUrl: parseImageUrl(
+                          '${getBalanceController.balance.value?.user?.image}',
+                        ),
+                        pointsEarned:
+                            getBalanceController.balance.value?.currentBalance
+                                .toString() ??
+                            '0',
+                        filterText: donationController.selectedFilter.value,
+                        onFilterTap: _showFilterOptions,
+                      );
+                    }),
 
-            // Overview Section
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  const OverviewSection(),
-                  SizedBox(height: DonationConstants.paddingVertical.rh),
-                ],
+                    SizedBox(height: 20.rh),
+                  ],
+                ),
               ),
-            ),
 
-            // Track Progress Section
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SectionHeader(title: 'Track Progress'),
-                  SizedBox(height: DonationConstants.sectionSpacing.rh),
-                  SectionContainer(
-                    child: ProgressTrackingCard(
-                      totalAmount: '120.75',
-                      avgDailyAmount: '4.025',
-                      donationStreak: '36',
+              // Overview Section
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const OverviewSection(),
+                    SizedBox(height: 20.rh),
+                  ],
+                ),
+              ),
+
+              // Track Progress Section
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    SectionHeader(title: 'Track Progress'),
+                    SizedBox(height: DonationConstants.sectionSpacing.rh),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: DonationConstants.paddingHorizontal.rw,
+                      ),
+                      child: ProgressTrackingCard(
+                        // totalAmount: '120.75',
+                        // avgDailyAmount: '4.025',
+                        // donationStreak: '36',
+                      ),
                     ),
-                  ),
-                  SizedBox(height: DonationConstants.paddingVertical.rh),
-                ],
+                    SizedBox(height: DonationConstants.paddingVertical.rh),
+                  ],
+                ),
               ),
-            ),
 
-            // Calendar Section
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  const CalendarSection(),
-                  SizedBox(height: DonationConstants.paddingVertical.rh),
-                ],
+              // Calendar Section
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const CalendarSection(),
+                    SizedBox(height: DonationConstants.paddingVertical.rh),
+                  ],
+                ),
               ),
-            ),
 
-            // Upcoming Donations Section
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SectionHeader(title: 'Upcoming Donations'),
-                  SizedBox(height: DonationConstants.sectionSpacing.rh),
-                  SectionContainer(
-                    child: UpcomingDonationCard(
-                      scheduledDate: '17 July - 10:00 AM',
-                      organizationName: 'Hope for Learning Foundation',
-                      organizationLocation: 'Sydney, Australia',
-                      donationAmount: '5.50',
+              // Upcoming Donations Section
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    SectionHeader(title: 'Upcoming Donations'),
+                    SizedBox(height: DonationConstants.sectionSpacing.rh),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: DonationConstants.paddingHorizontal.rw,
+                      ),
+                      child: GetX<DonationController>(
+                        builder: (controller) {
+                          final upcomingDonations =
+                              controller.clientStats.value?.upcomingDonations ??
+                              [];
+                          if (upcomingDonations.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          final donation = upcomingDonations.first;
+                          return UpcomingDonationCard(
+                            scheduledDate: DateFormat(
+                              'd MMM - hh:mm a',
+                            ).format(DateTime.parse(donation.nextDate)),
+                            organizationName: donation.organizationName,
+                            organizationLocation:
+                                '${donation.organizationAddress}, ${donation.organizationState}',
+                            donationAmount: donation.amount.toString(),
+                            organizationImage: donation.organizationLogo,
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(height: DonationConstants.paddingVertical.rh),
-                ],
+                    SizedBox(height: DonationConstants.paddingVertical.rh),
+                  ],
+                ),
               ),
-            ),
 
-            // Badges Section
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  const BadgesSection(),
-                  SizedBox(height: DonationConstants.paddingVertical.rh),
-                ],
+              // Badges Section
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const BadgesSection(),
+                    SizedBox(height: 20.rh),
+                  ],
+                ),
               ),
-            ),
 
-            // Bottom padding for navigation bar
-            SliverToBoxAdapter(child: SizedBox(height: 100.rh)),
-          ],
+              // Bottom padding for navigation bar
+              SliverToBoxAdapter(child: SizedBox(height: 100.rh)),
+            ],
+          ),
         ),
       ),
     );

@@ -6,7 +6,7 @@ import 'package:cresent_charge_user_app/features/profile/pages/edit_profile_page
 import 'package:cresent_charge_user_app/features/profile/pages/notification_settings_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/subscription_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/transaction_history_page.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfileRoutes extends AppRouteConfig {

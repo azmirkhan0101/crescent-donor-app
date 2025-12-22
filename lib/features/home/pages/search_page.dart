@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/search_controller.dart'
     as search_ctrl;
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -7,6 +8,7 @@ import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -208,13 +210,15 @@ class SearchPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Search Results',
-                style: TextStyle(
-                  color: const Color(0xFF6B7280),
-                  fontSize: 16.rfs,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Inter',
+              Obx(
+                () => Text(
+                  'Search Results (${controller.searchResults.length})',
+                  style: TextStyle(
+                    color: const Color(0xFF6B7280),
+                    fontSize: 16.rfs,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
+                  ),
                 ),
               ),
               if (controller.searchQuery.value.isNotEmpty)
@@ -234,15 +238,62 @@ class SearchPage extends StatelessWidget {
           ),
           SizedBox(height: 16.rh),
           Expanded(
-            child: ListView.separated(
-              itemCount: controller.searchResults.length,
-              separatorBuilder: (context, index) => SizedBox(height: 12.rh),
-              itemBuilder: (context, index) {
-                final result = controller.searchResults[index];
-                return _buildSearchResultItem(result);
-              },
+            child: controller.searchResults.isEmpty
+                ? _buildNoResults(controller)
+                : ListView.separated(
+                    itemCount: controller.searchResults.length,
+                    separatorBuilder: (context, index) =>
+                        SizedBox(height: 12.rh),
+                    itemBuilder: (context, index) {
+                      final result = controller.searchResults[index];
+                      return _buildSearchResultItem(context, result);
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoResults(search_ctrl.SearchController controller) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.search_off, size: 64.rw, color: const Color(0xFF9CA3AF)),
+          SizedBox(height: 16.rh),
+          Text(
+            'No results found',
+            style: TextStyle(
+              color: const Color(0xFF6B7280),
+              fontSize: 16.rfs,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
             ),
           ),
+          SizedBox(height: 8.rh),
+          Text(
+            'Try searching with different keywords',
+            style: TextStyle(
+              color: const Color(0xFF9CA3AF),
+              fontSize: 14.rfs,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'Inter',
+            ),
+          ),
+          if (controller.searchErrorMessage.value.isNotEmpty) ...[
+            SizedBox(height: 8.rh),
+            Text(
+              controller.searchErrorMessage.value,
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 12.rfs,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Inter',
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ],
       ),
     );
@@ -282,21 +333,21 @@ class SearchPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.rh),
-          Expanded(
-            child: Obx(
-              () => controller.recentSearches.isEmpty
-                  ? _buildEmptyRecentSearches()
-                  : ListView.separated(
-                      itemCount: controller.recentSearches.length,
-                      separatorBuilder: (context, index) =>
-                          SizedBox(height: 12.rh),
-                      itemBuilder: (context, index) {
-                        final item = controller.recentSearches[index];
-                        return _buildRecentSearchItem(controller, item);
-                      },
-                    ),
-            ),
-          ),
+          // Expanded(
+          //   child: Obx(
+          //     () => controller.recentSearches.isEmpty
+          //         ? _buildEmptyRecentSearches()
+          //         : ListView.separated(
+          //             itemCount: controller.recentSearches.length,
+          //             separatorBuilder: (context, index) =>
+          //                 SizedBox(height: 12.rh),
+          //             itemBuilder: (context, index) {
+          //               final item = controller.recentSearches[index];
+          //               return _buildRecentSearchItem(controller, item);
+          //             },
+          //           ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -337,6 +388,8 @@ class SearchPage extends StatelessWidget {
     search_ctrl.SearchController controller,
     search_ctrl.RecentSearchItem item,
   ) {
+    final bool isNetworkImage = item.logoAsset.startsWith('http');
+
     return GestureDetector(
       onTap: () => controller.onRecentSearchTap(item),
       child: Container(
@@ -351,13 +404,31 @@ class SearchPage extends StatelessWidget {
             Container(
               width: 40.rw,
               height: 40.rh,
-              padding: EdgeInsets.all(10.rw),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                  image: AssetImage(item.logoAsset),
-                  fit: BoxFit.cover,
-                ),
+                color: const Color(0xFFF4EAE2),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: isNetworkImage
+                    ? Image.network(
+                        item.logoAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Assets.home.varifiedCharitiesBlog1.image(
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        item.logoAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Assets.home.varifiedCharitiesBlog1.image(
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
               ),
             ),
             SizedBox(width: 12.rw),
@@ -406,57 +477,138 @@ class SearchPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchResultItem(search_ctrl.SearchResultItem result) {
-    return Container(
-      padding: EdgeInsets.all(16.rw),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40.rw,
-            height: 40.rh,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: AssetImage(result.logoAsset),
-                fit: BoxFit.cover,
+  Widget _buildSearchResultItem(
+    BuildContext context,
+    search_ctrl.SearchResultItem result,
+  ) {
+    final bool isNetworkImage = result.logoAsset.startsWith('http');
+
+    return GestureDetector(
+      onTap: () {
+        // Navigate to organization details
+        if (result.organization?.id != null &&
+            result.organization!.id.isNotEmpty) {
+          context.pushNamed(
+            RoutePath.organizationDetails,
+            extra: {'organizationId': result.organization!.id},
+          );
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(16.rw),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 56.rw,
+              height: 56.rh,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                color: const Color(0xFFF4EAE2),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: isNetworkImage
+                    ? Image.network(
+                        result.logoAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Assets.home.varifiedCharitiesBlog1.image(
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        result.logoAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Assets.home.varifiedCharitiesBlog1.image(
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
               ),
             ),
-          ),
-          SizedBox(width: 12.rw),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  result.name,
-                  style: TextStyle(
-                    color: const Color(0xFF000C0B),
-                    fontSize: 16.rfs,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+            SizedBox(width: 12.rw),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    result.name,
+                    style: TextStyle(
+                      color: const Color(0xFF000C0B),
+                      fontSize: 16.rfs,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 4.rh),
-                Text(
-                  result.description,
-                  style: TextStyle(
-                    color: const Color(0xFF6B7280),
-                    fontSize: 14.rfs,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Inter',
+                  SizedBox(height: 4.rh),
+                  if (result.serviceType != null) ...[
+                    Text(
+                      result.serviceType!,
+                      style: TextStyle(
+                        color: const Color(0xFF9CA3AF),
+                        fontSize: 12.rfs,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                    SizedBox(height: 4.rh),
+                  ],
+                  Text(
+                    result.description,
+                    style: TextStyle(
+                      color: const Color(0xFF6B7280),
+                      fontSize: 14.rfs,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Inter',
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                  if (result.location.isNotEmpty) ...[
+                    SizedBox(height: 4.rh),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          size: 14.rw,
+                          color: const Color(0xFF9CA3AF),
+                        ),
+                        SizedBox(width: 4.rw),
+                        Expanded(
+                          child: Text(
+                            result.location,
+                            style: TextStyle(
+                              color: const Color(0xFF9CA3AF),
+                              fontSize: 12.rfs,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Inter',
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ),
-        ],
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16.rw,
+              color: const Color(0xFF9CA3AF),
+            ),
+          ],
+        ),
       ),
     );
   }

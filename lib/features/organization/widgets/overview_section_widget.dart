@@ -23,6 +23,7 @@ class OverviewSectionWidget extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(height: 12.rh),
           Text(

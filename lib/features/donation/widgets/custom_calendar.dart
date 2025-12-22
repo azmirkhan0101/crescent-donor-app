@@ -1,6 +1,8 @@
+import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 /// Shows custom calendar modal that matches Figma design
 void showCustomCalendarModal(BuildContext context) {
@@ -44,36 +46,48 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
   }
 
   void _generateSampleCompletedDates() {
-    final now = DateTime.now();
+    _completedDates.clear();
+    try {
+      final controller = Get.find<DonationController>();
+      final uniqueDonationDates =
+          controller.clientStats.value?.uniqueDonationDates ?? [];
 
-    // Add uncompleted dates matching the image pattern
-    _completedDates.addAll([
-      DateTime(now.year, now.month, 4), // 4th (green border)
-      DateTime(now.year, now.month, 9), // 9th (green border)
-      DateTime(now.year, now.month, 12), // 12th (green border)
-      DateTime(now.year, now.month, 15), // 15th (green border)
-      DateTime(now.year, now.month, 17), // 17th (filled green - today)
-    ]);
+      for (final dateStr in uniqueDonationDates) {
+        final parsedDate = DateTime.tryParse(dateStr);
+        if (parsedDate != null) {
+          _completedDates.add(
+            DateTime(parsedDate.year, parsedDate.month, parsedDate.day),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading completed dates: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: DonationConstants.cardWhite,
-        borderRadius: BorderRadius.circular(20.rw),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 24.rh),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildHeader(),
-          SizedBox(height: 28.rh),
-          _buildWeekdayHeaders(),
-          SizedBox(height: 20.rh),
-          _buildCalendarGrid(),
-        ],
-      ),
+    return GetX<DonationController>(
+      builder: (controller) {
+        _generateSampleCompletedDates();
+        return Container(
+          decoration: BoxDecoration(
+            color: DonationConstants.cardWhite,
+            borderRadius: BorderRadius.circular(20.rw),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 24.rh),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(),
+              SizedBox(height: 28.rh),
+              _buildWeekdayHeaders(),
+              SizedBox(height: 20.rh),
+              _buildCalendarGrid(),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -203,17 +217,22 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
     Color borderColor = Colors.transparent;
 
     // Style based on the image pattern
-    if (isToday && !isCompleted) {
-      // Today and completed (day 17 in image) - filled green
+    if (isToday && isCompleted) {
+      // Today with completed donation - filled green
       backgroundColor = DonationConstants.calendarCompletedCurrentBg;
       textColor = DonationConstants.cardWhite;
       borderColor = DonationConstants.calendarCompletedCurrentBorder;
-    } else if (!isCompleted && !isToday && isPastDate) {
-      // Completed previous days (4, 9, 12, 15) - green border only
+    } else if (isToday && !isCompleted) {
+      // Today without completed donation - no background
+      backgroundColor = Colors.transparent;
+      textColor = DonationConstants.offBlack;
+      borderColor = Colors.transparent;
+    } else if (isCompleted && !isToday && isPastDate) {
+      // Completed previous days - green border only
       backgroundColor = Colors.transparent;
       textColor = DonationConstants.calendarActiveText;
       borderColor = DonationConstants.calendarCompletedCurrentBorder;
-    } else if (isPastDate && isCompleted) {
+    } else if (isPastDate && !isCompleted) {
       // Past uncompleted days - gray background
       backgroundColor = DonationConstants.lightGray.withValues(alpha: 0.5);
       textColor = DonationConstants.mediumGrayText;

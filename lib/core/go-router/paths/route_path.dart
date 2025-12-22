@@ -22,7 +22,8 @@ class RoutePath {
   static const String charities = 'charities';
   static const String verifiedCharities = 'verifiedCharities';
   static const String organizationDetails = 'organizationDetails';
-  static const String linkedAccount = 'linkedAccount';
+  static const String linkedPaymentAccount = 'linkedPaymentAccount';
+  static const String connectedBankAccount = 'connectedBankAccount';
   static const String addNewCard = 'addNewCard';
   static const String makePayment = 'makePayment';
   static const String confirmDonation = 'confirmDonation';
@@ -40,7 +41,7 @@ class RoutePath {
   //=================== Donation screens ===================
   static const String donation = 'donation';
   static const String roundUp = 'roundUp';
-  static const String roundUpSettings = 'roundUpSettings';
+  static const String settings = 'settings';
   static const String recurringDonations = 'recurringDonations';
   static const String organizationDonations = 'organizationDonations';
   static const String oneTime = 'oneTime';

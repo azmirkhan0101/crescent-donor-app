@@ -1,8 +1,12 @@
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_point_balance_controller.dart';
+import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -10,12 +14,51 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-class GetStartPage extends StatelessWidget {
+class GetStartPage extends StatefulWidget {
   const GetStartPage({super.key});
 
   @override
+  State<GetStartPage> createState() => _GetStartPageState();
+}
+
+class _GetStartPageState extends State<GetStartPage> {
+  _callApis() {
+    // Get.find<DonationController>().fetchClientStats();
+    Get.find<GetProfileController>().fetchProfile();
+    Get.find<GetPointBalanceController>().fetchUserPoints();
+  }
+
+  Future<void> _checkAuthAndNavigate() async {
+    final String authToken = await AppStorageService.getAuthToken() ?? '';
+    if (!mounted) return;
+
+    if (authToken.isNotEmpty) {
+      final getProfileController = Get.put(GetProfileController());
+      await getProfileController.fetchProfile();
+
+      // Make sure context is still valid after the async gap
+      if (!mounted) return;
+
+      if (getProfileController.profile.value?.id.isNotEmpty ?? false) {
+        _callApis();
+        context.replaceNamed(RoutePath.home);
+      } else if (getProfileController.errorMessage.value ==
+          'User not exists!') {
+        return;
+      } else {
+        context.replaceNamed(RoutePath.fewDetails);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthAndNavigate();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Column(

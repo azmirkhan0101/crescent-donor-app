@@ -1,59 +1,85 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
+import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
-import 'package:cresent_charge_user_app/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
+import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
+import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-/// Home Page
-///
-/// The main dashboard of the app displaying welcome message, impact tracking,
-/// cause categories, verified charities, and donation opportunities.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final charitiesController = Get.find<CharitiesController>();
+    // Get.put(SecureRoundupDashboardController()).fetchDashboard();
+    final getProfileController = Get.find<GetProfileController>();
+    // ignore: unused_local_variable
+    final getOrgsController = Get.put(OrganizationController());
+    final causesController = Get.put(CausesController());
+    // ignore: unused_local_variable
+    final charitiesController = Get.put(CharitiesController());
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            8.rh.heightWidth, // Top spacing
-            _buildHeader(context).paddingR(16.rw),
-            20.rh.heightWidth,
-            _buildImpactSection().paddingR(16.rw),
-            20.rh.heightWidth,
-            _buildCauseCategories(),
-            20.rh.heightWidth,
-            _buildVerifiedCharities(context, charitiesController),
-            20.rh.heightWidth,
-            _buildDonateForCause(context, charitiesController).paddingR(16.rw),
-            100.rh.heightWidth, // Bottom spacing for navigation
-          ],
-        ).paddingL(16.rw),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await getProfileController.fetchProfile();
+          await causesController.fetchAllCauses();
+          await getOrgsController.fetchAllOrganizations();
+        },
+        child: SingleChildScrollView(
+          child: Obx(() {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                8.rh.heightWidth, // Top spacing
+                _buildHeader(context, getProfileController).paddingR(16.rw),
+                20.rh.heightWidth,
+                _buildImpactSection().paddingR(16.rw),
+                20.rh.heightWidth,
+                _buildCauseCategories(),
+                20.rh.heightWidth,
+                _buildVerifiedCharities(context),
+                20.rh.heightWidth,
+                _buildDonateForCause(context, causesController).paddingR(16.rw),
+                100.rh.heightWidth, // Bottom spacing for navigation
+              ],
+            ).paddingL(16.rw);
+          }),
+        ),
       ),
     );
   }
 
   /// Build the header with welcome message, profile, and notification
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(
+    BuildContext context,
+    GetProfileController getProfileController,
+  ) {
+    final profile = getProfileController.profile;
     return SizedBox(
       // height: 44.rh,
       child: Row(
         children: [
           // Profile image
-          Container(
-            width: 46.rw,
-            height: 46.rh,
-            decoration: const BoxDecoration(shape: BoxShape.circle),
+          GestureDetector(
+            onTap: () => _goToProfilePage(context),
             child: Center(
-              child: Assets.home.profileImage.svg(fit: BoxFit.cover),
+              child: CustomNetworkImage(
+                imageUrl: parseImageUrl(profile.value?.image ?? ''),
+                height: 44.rh,
+                width: 44.rw,
+                borderRadius: BorderRadius.circular(22.rw),
+              ),
             ),
           ),
 
@@ -61,12 +87,18 @@ class HomePage extends StatelessWidget {
 
           // Welcome text
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Welcome back!", style: AppTextStyles.f14W400()),
-                Text("Talha S.", style: AppTextStyles.f20w600()),
-              ],
+            child: GestureDetector(
+              onTap: () => _goToProfilePage(context),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Welcome back!", style: AppTextStyles.f14W400()),
+                  Text(
+                    profile.value?.name ?? 'N/A',
+                    style: AppTextStyles.f20w600(),
+                  ),
+                ],
+              ),
             ),
           ),
           // Search and notification icons
@@ -232,7 +264,8 @@ class HomePage extends StatelessWidget {
   /// Build the verified charities section
   Widget _buildVerifiedCharities(
     BuildContext context,
-    CharitiesController charitiesController,
+    // CharitiesController charitiesController,
+    // GetOrgsController getOrgsController,
   ) {
     return Column(
       children: [
@@ -253,11 +286,43 @@ class HomePage extends StatelessWidget {
           ],
         ).paddingR(16.rw),
         12.rh.heightWidth,
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            spacing: 8.rw,
-            children: charitiesController.verifiedCharities,
+        // SingleChildScrollView(
+        //   scrollDirection: Axis.horizontal,
+        //   child: Row(
+        //     spacing: 8.rw,
+        //     // children: charitiesController.verifiedCharities,
+        //     children: getOrgsController.organizations
+        //         .map(
+        //           (org) => VerifiedCharityCard(
+        //             charityLogo: org.logoImage,
+        //             charityName: org.name,
+        //             charityDescription: org.description,
+        //           ),
+        //         )
+        //         .toList(),
+        //   ),
+        // ),
+        SizedBox(
+          height: 226.rh,
+          child: GetBuilder<OrganizationController>(
+            builder: (orgController) {
+              return ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  final org = orgController.organizationsList[index];
+                  return VerifiedCharityCard(
+                    id: org.id,
+                    title: org.name,
+                    location: org.address ?? '',
+                    category: org.serviceType,
+                    backgroundColor: Colors.green,
+                    imagePath: org.logoImage,
+                  );
+                },
+                separatorBuilder: (context, index) => 8.rw.heightWidth,
+                itemCount: orgController.organizationsList.length,
+              );
+            },
           ),
         ),
       ],
@@ -267,7 +332,7 @@ class HomePage extends StatelessWidget {
   /// Build the donate for cause section
   Widget _buildDonateForCause(
     BuildContext context,
-    CharitiesController charitiesController,
+    CausesController getAllCausesController,
   ) {
     return Column(
       children: [
@@ -296,13 +361,33 @@ class HomePage extends StatelessWidget {
         ),
         16.rh.heightWidth,
         Column(
-          children: [
-            charitiesController.charities[0],
-            16.rh.heightWidth,
-            charitiesController.charities[1],
-          ],
+          // children: [
+          //   charitiesController.charities[0],
+          //   16.rh.heightWidth,
+          //   charitiesController.charities[1],
+          // ],
+          children: getAllCausesController.causes
+              .map(
+                (cause) => DonationCauseCard(
+                  causeBanner: cause.organization.coverImage,
+                  orgLogo: cause.organization.logoImage,
+                  description: cause.description,
+                  category: cause.category,
+                  amount: cause.totalDonationAmount,
+                  totalDonors: cause.totalDonors,
+                  recentDonors: cause.recentDonors,
+                ),
+              )
+              .toList(),
         ),
       ],
     );
+  }
+
+  void _goToProfilePage(BuildContext context) {
+    // Get the route for this tab index
+    String routePath = Get.find<MainLayoutController>().getRouteForIndex(3);
+    // Navigate to the route
+    context.goNamed(routePath);
   }
 }
