@@ -44,19 +44,51 @@ class OrganizationDetailCard extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             SizedBox(height: 160.rh),
+            // Cover Image
             Container(
               height: 120.rh,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(16.rw)),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    parsedCoverUrl ?? "https://picsum.photos/343/120",
-                  ),
-                  fit: BoxFit.cover,
-                ),
+                color: const Color(0xFFF5F5F5),
               ),
+              child: parsedCoverUrl != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(16.rw)),
+                      child: Image.network(
+                        parsedCoverUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Icon(
+                              Icons.image_not_supported,
+                              size: 40.rw,
+                              color: const Color(0xFFBDBDBD),
+                            ),
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  : Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 40.rw,
+                        color: const Color(0xFFBDBDBD),
+                      ),
+                    ),
             ),
+            // Logo Image
             Positioned(
               bottom: 0,
               child: Container(
@@ -64,15 +96,50 @@ class OrganizationDetailCard extends StatelessWidget {
                 height: 80.rh,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(100.rw)),
-                  border: Border.all(color: Color(0xFFE9B7AD)),
-                  image: DecorationImage(
-                    alignment: Alignment.center,
-                    image: NetworkImage(
-                      parsedLogoUrl ?? "https://picsum.photos/id/237/200/300",
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+                  border: Border.all(color: const Color(0xFFE9B7AD)),
+                  color: Colors.white,
                 ),
+                child: parsedLogoUrl != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(100.rw)),
+                        child: Image.network(
+                          parsedLogoUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                size: 30.rw,
+                                color: const Color(0xFFBDBDBD),
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: SizedBox(
+                                width: 20.rw,
+                                height: 20.rh,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  value:
+                                      loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : Center(
+                        child: Icon(
+                          Icons.broken_image,
+                          size: 30.rw,
+                          color: const Color(0xFFBDBDBD),
+                        ),
+                      ),
               ),
             ),
           ],

@@ -4,14 +4,13 @@ import 'package:cresent_charge_user_app/features/common/controllers/roundup-mana
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badge_history_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_recurring_org_state_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/one_time_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/recurring_states_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/search_controller.dart';
-import 'package:cresent_charge_user_app/features/notification/controllers/notification_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/create_recurring_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/business_website_count_update_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/cancel_redemption_controller.dart';
@@ -43,7 +42,6 @@ void initGetx() {
   // ================== Home Controllers ==================
   Get.lazyPut(() => SearchController(), fenix: true);
   Get.lazyPut(() => CharitiesController(), fenix: true);
-  Get.lazyPut(() => NotificationController(), fenix: true);
 
   // =================== Profile Controllers ==================
   Get.lazyPut(() => ProfileController(), fenix: true);

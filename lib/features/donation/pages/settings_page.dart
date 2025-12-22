@@ -4,11 +4,13 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/cancel_recurring_donation_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/cancel_roundup_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_recurring_connection_controller.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_roundup_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/plaid_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/settings_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/update_recurring_donation_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/update_roundup_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/round_up_settings_widgets.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
@@ -35,7 +37,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final settingsCtrl = Get.put(SettingsController());
-  final getBankConnectionController = Get.put(GetRoundUpBankConnection());
+  // final getBankConnectionController = Get.put(GetRoundUpBankConnection());
   final PlaidController plaidCtrl = Get.isRegistered<PlaidController>()
       ? Get.find<PlaidController>()
       : Get.put(PlaidController());
@@ -51,7 +53,13 @@ class _SettingsPageState extends State<SettingsPage> {
   ///==========================
   /// New
   ///==========================
-  final getRoundUpConnectionController = Get.put(GetRoundUpBankConnection());
+  /// Round-Up controllers
+  // final getRoundUpConnectionController = Get.put(GetRoundUpBankConnection());
+  final getRoundupController = Get.put(GetRoundupController());
+  final cancelRoundupController = Get.put(CancelRoundupController());
+  final updateRoundupController = Get.put(UpdateRoundupController());
+
+  /// Recurring controllers
   final getRecurringConnectionController = Get.put(
     GetRecurringConnectionController(),
   );
@@ -77,11 +85,12 @@ class _SettingsPageState extends State<SettingsPage> {
     if (widget.isRecurring) {
       // Fetch recurring connections if on recurring settings page
       getRecurringConnectionController.fetchRecurringConnection();
+      paymentMethodController.fetchPaymentMethods();
     }
     if (!widget.isRecurring) {
-      getRoundUpConnectionController.fetchRoundUpBankConnection();
+      getRoundupController.fetchRoundupConfig();
+      // getRoundUpConnectionController.fetchRoundUpBankConnection();
     }
-    paymentMethodController.fetchPaymentMethods();
   }
 
   @override
@@ -101,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 16.rh),
         child: Obx(() {
-          if (getRoundUpConnectionController.isLoading.value ||
+          if (getRoundupController.isLoading.value ||
               getRecurringConnectionController.isLoading.value) {
             return Center(
               child: CircularProgressIndicator(
@@ -114,7 +123,7 @@ class _SettingsPageState extends State<SettingsPage> {
             int recurringIndex =
                 settingsCtrl.selectedRecurringConnectionIndex.value;
 
-            if (!getRoundUpConnectionController.isLoading.value &&
+            if (!getRecurringConnectionController.isLoading.value &&
                 getRecurringConnectionController
                     .recurringConnectionList
                     .isNotEmpty) {
@@ -151,6 +160,34 @@ class _SettingsPageState extends State<SettingsPage> {
 
                 _initializedFromResponse = true;
               }
+            }
+          }
+
+          /// =========If Round Up Settings===========
+          if (!widget.isRecurring &&
+              !getRoundupController.isLoading.value &&
+              getRoundupController.roundupConfig.value != null) {
+            final roundupConfig = getRoundupController.roundupConfig.value!;
+            if (!_initializedFromResponse) {
+              // Special message
+              settingsCtrl.specialMessageController.text =
+                  roundupConfig.specialMessage;
+
+              // Threshold amount mapping
+              final thresholds = settingsCtrl.thresholdAmounts;
+              final customIndex = thresholds.length - 1;
+              int matchIndex = thresholds.indexWhere(
+                (item) => item.values.first == roundupConfig.monthlyThreshold,
+              );
+              if (matchIndex == -1) {
+                matchIndex = customIndex;
+                settingsCtrl.customAmountController.text = roundupConfig
+                    .monthlyThreshold
+                    .toString();
+              }
+              settingsCtrl.selectedAmountIndex.value = matchIndex;
+
+              _initializedFromResponse = true;
             }
           }
 
@@ -211,83 +248,96 @@ class _SettingsPageState extends State<SettingsPage> {
               if (!widget.isRecurring)
                 _buildDropDownField(
                   label: "Organization",
-                  items: getRoundUpConnectionController
-                      .roundUpBankConnectionModel
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e.id,
-                          child: Text(e.roundUpDetails?.organizationName ?? ""),
-                        ),
-                      )
-                      .toList(),
+                  items: [
+                    DropdownMenuItem(
+                      value: getRoundupController.organizationName,
+                      child: Text(getRoundupController.organizationName),
+                    ),
+                  ],
+
+                  // getRoundupController
+                  //     .roundupConfig.value
+                  //     .map(
+                  //       (e) => DropdownMenuItem(
+                  //         value: e.id,
+                  //         child: Text(e.roundUpDetails?.organizationName ?? ""),
+                  //       ),
+                  //     )
+                  //     .toList(),
                   onChanged: (value) {
-                    int index = getRoundUpConnectionController
-                        .roundUpBankConnectionModel
-                        .indexWhere((e) => e.id == value);
-                    if (index >= 0) {
-                      setState(() {
-                        settingsCtrl.selectedOrganizationIndex.value = index;
-                      });
-                    }
+                    // int index = getRoundUpConnectionController
+                    //     .roundUpBankConnectionModel
+                    //     .indexWhere((e) => e.id == value);
+                    // if (index >= 0) {
+                    //   setState(() {
+                    //     settingsCtrl.selectedOrganizationIndex.value = index;
+                    //   });
+                    // }
                   },
-                  selectedItemName:
-                      getRoundUpConnectionController
-                          .roundUpBankConnectionModel
-                          .isNotEmpty
-                      ? getRoundUpConnectionController
-                            .roundUpBankConnectionModel[(settingsCtrl
-                                            .selectedOrganizationIndex
-                                            .value >=
-                                        0 &&
-                                    settingsCtrl
-                                            .selectedOrganizationIndex
-                                            .value <
-                                        getRoundUpConnectionController
-                                            .roundUpBankConnectionModel
-                                            .length)
-                                ? settingsCtrl.selectedOrganizationIndex.value
-                                : 0]
-                            .roundUpDetails
-                            ?.organizationName
-                      : null,
+                  selectedItemName: getRoundupController.organizationName,
+                  // getRoundUpConnectionController
+                  //     .roundUpBankConnectionModel
+                  //     .isNotEmpty
+                  // ? getRoundUpConnectionController
+                  //       .roundUpBankConnectionModel[(settingsCtrl
+                  //                       .selectedOrganizationIndex
+                  //                       .value >=
+                  //                   0 &&
+                  //               settingsCtrl
+                  //                       .selectedOrganizationIndex
+                  //                       .value <
+                  //                   getRoundUpConnectionController
+                  //                       .roundUpBankConnectionModel
+                  //                       .length)
+                  //           ? settingsCtrl.selectedOrganizationIndex.value
+                  //           : 0]
+                  //       .roundUpDetails
+                  //       ?.organizationName
+                  // : null,
                 ),
               SizedBox(height: 16.rh),
 
-              /// Round Up Bank Account Field
+              /// ========> Round Up Bank Account Field <========
               if (!widget.isRecurring)
                 _buildDropDownField(
                   label: 'Bank Account',
-                  items: getRoundUpConnectionController
-                      .roundUpBankConnectionModel
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e.id,
-                          child: Text(e.institutionName),
-                        ),
-                      )
-                      .toList(),
+                  items: [
+                    DropdownMenuItem(
+                      value: getRoundupController.formattedCardNumber,
+                      child: Text(getRoundupController.formattedCardNumber),
+                    ),
+                  ],
+                  // getRoundUpConnectionController
+                  //     .roundUpBankConnectionModel
+                  //     .map(
+                  //       (e) => DropdownMenuItem(
+                  //         value: e.id,
+                  //         child: Text(e.institutionName),
+                  //       ),
+                  //     )
+                  //     .toList(),
                   onChanged: (value) {
-                    int index = getRoundUpConnectionController
-                        .roundUpBankConnectionModel
-                        .indexWhere((e) => e.id == value);
-                    if (index >= 0) {
-                      setState(() {
-                        settingsCtrl.selectedOrganizationIndex.value = index;
-                      });
-                    }
+                    // int index = getRoundUpConnectionController
+                    //     .roundUpBankConnectionModel
+                    //     .indexWhere((e) => e.id == value);
+                    // if (index >= 0) {
+                    //   setState(() {
+                    //     settingsCtrl.selectedOrganizationIndex.value = index;
+                    //   });
+                    // }
                   },
-                  selectedItemName:
-                      getRoundUpConnectionController
-                          .roundUpBankConnectionModel
-                          .isNotEmpty
-                      ? getRoundUpConnectionController
-                            .roundUpBankConnectionModel[0]
-                            .institutionName
-                      : null,
+                  selectedItemName: getRoundupController.formattedCardNumber,
+                  // getRoundUpConnectionController
+                  //     .roundUpBankConnectionModel
+                  //     .isNotEmpty
+                  // ? getRoundUpConnectionController
+                  //       .roundUpBankConnectionModel[0]
+                  //       .institutionName
+                  // : null,
                 ),
               if (!widget.isRecurring) SizedBox(height: 16.rh),
 
-              /// If Recurring, Payment Method Field
+              /// ========> Recurring Payment Method <========
               if (widget.isRecurring)
                 _buildDropDownField(
                   label: 'Payment Method',
@@ -406,7 +456,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
       title: Text(
-        'Recurring Settings',
+        widget.isRecurring ? 'Recurring Settings' : 'Round Up Settings',
         style: TextStyle(
           fontFamily: DonationFonts.familjenGrotesk,
           fontSize: 20.rfs,
@@ -744,7 +794,9 @@ class _SettingsPageState extends State<SettingsPage> {
   /// Build cancel donation button
   Widget _buildCancelDonationButton(SettingsController controller) {
     return Obx(() {
-      final isLoading = cancelRecurringDonationController.isLoading.value;
+      final isLoading =
+          cancelRecurringDonationController.isLoading.value ||
+          cancelRoundupController.isLoading.value;
 
       return GestureDetector(
         onTap: isLoading ? null : () => _handleCancelDonation(),
@@ -786,7 +838,9 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           // Save Button
           ElevatedButton(
-            onPressed: () => _handleUpdateSettings(),
+            onPressed: () => widget.isRecurring
+                ? _handleRecurringUpdateSettings()
+                : _handleRoundupUpdateSettings(),
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(double.maxFinite, 52),
               backgroundColor: DonationConstants.secondaryLime,
@@ -828,15 +882,38 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _handleCancelDonation() async {
-    if (getRecurringConnectionController.recurringConnectionList.isEmpty) {
+    if (widget.isRecurring &&
+        getRecurringConnectionController.recurringConnectionList.isEmpty) {
       ToastMsg.error('No recurring donation found');
       return;
     }
 
-    final recurringIndex = settingsCtrl.selectedRecurringConnectionIndex.value;
-    final recurringDonationId = getRecurringConnectionController
-        .recurringConnectionList[recurringIndex]
-        .id;
+    if (!widget.isRecurring &&
+        getRoundupController.roundupConfig.value == null) {
+      ToastMsg.error('No round-up donation found');
+      return;
+    }
+
+    // Get the appropriate donation ID based on type
+    String? donationId;
+    if (widget.isRecurring) {
+      final recurringIndex =
+          settingsCtrl.selectedRecurringConnectionIndex.value;
+      if (recurringIndex >= 0 &&
+          recurringIndex <
+              getRecurringConnectionController.recurringConnectionList.length) {
+        donationId = getRecurringConnectionController
+            .recurringConnectionList[recurringIndex]
+            .id;
+      }
+    } else {
+      donationId = getRoundupController.roundupConfig.value?.id;
+    }
+
+    if (donationId == null) {
+      ToastMsg.error('Unable to find donation ID');
+      return;
+    }
 
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
@@ -844,7 +921,7 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Cancel Recurring Donation',
+            'Cancel ${widget.isRecurring ? "Recurring" : "Round-up"} Donation',
             style: TextStyle(
               fontFamily: DonationFonts.familjenGrotesk,
               fontSize: 18.rfs,
@@ -852,7 +929,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           content: Text(
-            'Are you sure you want to cancel this recurring donation? This action cannot be undone.',
+            'Are you sure you want to cancel this ${widget.isRecurring ? "recurring" : "round-up"} donation? This action cannot be undone.',
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
               fontSize: 14.rfs,
@@ -891,19 +968,31 @@ class _SettingsPageState extends State<SettingsPage> {
     if (confirmed != true) return;
 
     // Call the cancel method
-    final success = await cancelRecurringDonationController
-        .cancelRecurringDonation(recurringDonationId);
+    final success = widget.isRecurring
+        ? await cancelRecurringDonationController.cancelRecurringDonation(
+            donationId,
+          )
+        : await cancelRoundupController.cancelRoundupConfig(
+            roundupId: donationId,
+            reason: "Cancelled by user",
+          );
 
     if (success && mounted) {
-      ToastMsg.success('Recurring donation cancelled successfully');
+      ToastMsg.success(
+        '${widget.isRecurring ? "Recurring" : "Round-up"} donation cancelled successfully',
+      );
       // Refresh the list
-      await getRecurringConnectionController.fetchRecurringConnection();
+      if (widget.isRecurring) {
+        await getRecurringConnectionController.fetchRecurringConnection();
+      } else {
+        await getRoundupController.fetchRoundupConfig();
+      }
       // Go back
       context.pop();
     }
   }
 
-  Future<void> _handleUpdateSettings() async {
+  Future<void> _handleRecurringUpdateSettings() async {
     final thresholds = settingsCtrl.thresholdAmounts;
     if (thresholds.isEmpty) {
       ToastMsg.error('Please select a threshold amount');
@@ -971,359 +1060,396 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _handleRoundupUpdateSettings() async {
+    final thresholds = settingsCtrl.thresholdAmounts;
+    if (thresholds.isEmpty) {
+      ToastMsg.error('Please select a threshold amount');
+      return;
+    }
+
+    final customIndex = thresholds.length - 1;
+    final selectedIdx = settingsCtrl.selectedAmountIndex.value;
+    final bool isCustomSelected = selectedIdx == customIndex;
+
+    double? amount;
+    if (isCustomSelected) {
+      final custom = settingsCtrl.customAmountController.text.trim();
+      amount = double.tryParse(custom);
+    } else if (selectedIdx >= 0 && selectedIdx < thresholds.length) {
+      amount = thresholds[selectedIdx].values.first;
+    }
+
+    if (amount == null || amount <= 0) {
+      ToastMsg.error('Please enter a valid amount');
+      return;
+    }
+
+    final specialMessage = settingsCtrl.specialMessageController.text.trim();
+
+    final success = await updateRoundupController.updateRoundupConfig(
+      roundupId: getRoundupController.roundupConfig.value?.id ?? '',
+      specialMessage: specialMessage,
+      monthlyThreshold: amount,
+    );
+
+    if (success && mounted) {
+      context.pop();
+    }
+  }
+
   /// ===================> Unused Methods <==================
 
   ///
-  Widget _buildOrganizationField(SettingsController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Organization',
-          style: TextStyle(
-            fontFamily: DonationFonts.interDisplay,
-            fontSize: 14.rfs,
-            fontWeight: FontWeight.w500,
-            color: DonationConstants.offBlack,
-          ),
-        ),
+  // Widget _buildOrganizationField(SettingsController controller) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         'Organization',
+  //         style: TextStyle(
+  //           fontFamily: DonationFonts.interDisplay,
+  //           fontSize: 14.rfs,
+  //           fontWeight: FontWeight.w500,
+  //           color: DonationConstants.offBlack,
+  //         ),
+  //       ),
 
-        SizedBox(height: 8.rh),
+  //       SizedBox(height: 8.rh),
 
-        // TextField(
-        //   controller: TextEditingController(),
-        //   decoration: InputDecoration(
-        //     hintText: 'Search Organization',
-        //     contentPadding: EdgeInsets.symmetric(
-        //       horizontal: 16.rw,
-        //       vertical: 16.rh,
-        //     ),
-        //   ),
-        //   onChanged: (value) async {
-        //     await organizationController.fetchAllOrganizations(
-        //       searchTerm: value,
-        //     );
-        //   },
-        // ),
-        // GetX<OrganizationController>(
-        //   builder: (orgCtrl) {
-        //     final orgs = orgCtrl.organizationsList;
-        //     if (orgs.isEmpty) {
-        //       return SizedBox(
-        //         height: 64.rh,
-        //         child: Center(
-        //           child: Text(
-        //             'No organizations found',
-        //             style: TextStyle(color: DonationConstants.offBlack),
-        //           ),
-        //         ),
-        //       );
-        //     }
+  //       // TextField(
+  //       //   controller: TextEditingController(),
+  //       //   decoration: InputDecoration(
+  //       //     hintText: 'Search Organization',
+  //       //     contentPadding: EdgeInsets.symmetric(
+  //       //       horizontal: 16.rw,
+  //       //       vertical: 16.rh,
+  //       //     ),
+  //       //   ),
+  //       //   onChanged: (value) async {
+  //       //     await organizationController.fetchAllOrganizations(
+  //       //       searchTerm: value,
+  //       //     );
+  //       //   },
+  //       // ),
+  //       // GetX<OrganizationController>(
+  //       //   builder: (orgCtrl) {
+  //       //     final orgs = orgCtrl.organizationsList;
+  //       //     if (orgs.isEmpty) {
+  //       //       return SizedBox(
+  //       //         height: 64.rh,
+  //       //         child: Center(
+  //       //           child: Text(
+  //       //             'No organizations found',
+  //       //             style: TextStyle(color: DonationConstants.offBlack),
+  //       //           ),
+  //       //         ),
+  //       //       );
+  //       //     }
 
-        //     return ListView.builder(
-        //       shrinkWrap: true,
-        //       physics: const NeverScrollableScrollPhysics(),
-        //       itemCount: orgs.length,
-        //       itemBuilder: (context, index) {
-        //         final organization = orgs[index];
-        //         return ListTile(title: Text(organization.name), onTap: () {});
-        //       },
-        //     );
-        //   },
-        // ),
-        // SizedBox(height: 8.rh),
-        DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            items: organizationController.organizationsList
-                .map(
-                  (e) => DropdownMenuItem(value: e.name, child: Text(e.name)),
-                )
-                .toList(),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _orgSearchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Container(
-                height: 50,
-                padding: EdgeInsets.only(top: 8, bottom: 4, right: 8, left: 8),
-                child: TextFormField(
-                  controller: _orgSearchController,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: 'Search organization...',
-                    hintStyle: TextStyle(fontSize: 12),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    if (_debounce?.isActive ?? false) _debounce!.cancel();
-                    _debounce = Timer(
-                      const Duration(milliseconds: 500),
-                      () async {
-                        await organizationController.fetchAllOrganizations(
-                          searchTerm: value,
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value.toString().toLowerCase().contains(
-                  searchValue.toLowerCase(),
-                );
-              },
-            ),
-            onChanged: (value) {
-              if (value == null) return;
+  //       //     return ListView.builder(
+  //       //       shrinkWrap: true,
+  //       //       physics: const NeverScrollableScrollPhysics(),
+  //       //       itemCount: orgs.length,
+  //       //       itemBuilder: (context, index) {
+  //       //         final organization = orgs[index];
+  //       //         return ListTile(title: Text(organization.name), onTap: () {});
+  //       //       },
+  //       //     );
+  //       //   },
+  //       // ),
+  //       // SizedBox(height: 8.rh),
+  //       DropdownButtonHideUnderline(
+  //         child: DropdownButton2(
+  //           isExpanded: true,
+  //           items: organizationController.organizationsList
+  //               .map(
+  //                 (e) => DropdownMenuItem(value: e.name, child: Text(e.name)),
+  //               )
+  //               .toList(),
+  //           dropdownSearchData: DropdownSearchData(
+  //             searchController: _orgSearchController,
+  //             searchInnerWidgetHeight: 50,
+  //             searchInnerWidget: Container(
+  //               height: 50,
+  //               padding: EdgeInsets.only(top: 8, bottom: 4, right: 8, left: 8),
+  //               child: TextFormField(
+  //                 controller: _orgSearchController,
+  //                 decoration: InputDecoration(
+  //                   isDense: true,
+  //                   contentPadding: EdgeInsets.symmetric(
+  //                     horizontal: 10,
+  //                     vertical: 8,
+  //                   ),
+  //                   hintText: 'Search organization...',
+  //                   hintStyle: TextStyle(fontSize: 12),
+  //                   border: OutlineInputBorder(
+  //                     borderRadius: BorderRadius.circular(8),
+  //                   ),
+  //                 ),
+  //                 onChanged: (value) {
+  //                   if (_debounce?.isActive ?? false) _debounce!.cancel();
+  //                   _debounce = Timer(
+  //                     const Duration(milliseconds: 500),
+  //                     () async {
+  //                       await organizationController.fetchAllOrganizations(
+  //                         searchTerm: value,
+  //                       );
+  //                     },
+  //                   );
+  //                 },
+  //               ),
+  //             ),
+  //             searchMatchFn: (item, searchValue) {
+  //               return item.value.toString().toLowerCase().contains(
+  //                 searchValue.toLowerCase(),
+  //               );
+  //             },
+  //           ),
+  //           onChanged: (value) {
+  //             if (value == null) return;
 
-              int index = organizationController.organizationsList.indexWhere(
-                (e) => e.name == value,
-              );
+  //             int index = organizationController.organizationsList.indexWhere(
+  //               (e) => e.name == value,
+  //             );
 
-              if (index >= 0) {
-                controller.changeOrganization(index);
-              }
-              _orgSearchController.clear();
-            },
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _orgSearchController.clear();
-              }
-            },
-            customButton: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 16.rh),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.rw),
-                border: Border.all(color: const Color(0xFFE4E4E4), width: 1),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Obx(() {
-                      final orgs = organizationController.organizationsList;
-                      final selIdx = controller.selectedOrganizationIndex.value;
+  //             if (index >= 0) {
+  //               controller.changeOrganization(index);
+  //             }
+  //             _orgSearchController.clear();
+  //           },
+  //           onMenuStateChange: (isOpen) {
+  //             if (!isOpen) {
+  //               _orgSearchController.clear();
+  //             }
+  //           },
+  //           customButton: Container(
+  //             width: double.infinity,
+  //             padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 16.rh),
+  //             decoration: BoxDecoration(
+  //               color: Colors.white,
+  //               borderRadius: BorderRadius.circular(12.rw),
+  //               border: Border.all(color: const Color(0xFFE4E4E4), width: 1),
+  //             ),
+  //             child: Row(
+  //               children: [
+  //                 Expanded(
+  //                   child: Obx(() {
+  //                     final orgs = organizationController.organizationsList;
+  //                     final selIdx = controller.selectedOrganizationIndex.value;
 
-                      final name =
-                          (orgs.isNotEmpty &&
-                              selIdx >= 0 &&
-                              selIdx < orgs.length)
-                          ? orgs[selIdx].name
-                          : 'Select organization';
+  //                     final name =
+  //                         (orgs.isNotEmpty &&
+  //                             selIdx >= 0 &&
+  //                             selIdx < orgs.length)
+  //                         ? orgs[selIdx].name
+  //                         : 'Select organization';
 
-                      return Text(
-                        name,
-                        style: TextStyle(
-                          fontFamily: DonationFonts.interDisplay,
-                          fontSize: 14.rfs,
-                          fontWeight: FontWeight.w500,
-                          color: DonationConstants.offBlack,
-                        ),
-                      );
-                    }),
-                  ),
+  //                     return Text(
+  //                       name,
+  //                       style: TextStyle(
+  //                         fontFamily: DonationFonts.interDisplay,
+  //                         fontSize: 14.rfs,
+  //                         fontWeight: FontWeight.w500,
+  //                         color: DonationConstants.offBlack,
+  //                       ),
+  //                     );
+  //                   }),
+  //                 ),
 
-                  Text(
-                    'Change',
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      color: const Color(
-                        0xFFC08FFF,
-                      ) /* Colors-Primary-Purple */,
-                      fontSize: 14,
-                      fontFamily: 'Inter Display',
-                      fontWeight: FontWeight.w500,
-                      height: 1.43,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  //                 Text(
+  //                   'Change',
+  //                   textAlign: TextAlign.right,
+  //                   style: TextStyle(
+  //                     color: const Color(
+  //                       0xFFC08FFF,
+  //                     ) /* Colors-Primary-Purple */,
+  //                     fontSize: 14,
+  //                     fontFamily: 'Inter Display',
+  //                     fontWeight: FontWeight.w500,
+  //                     height: 1.43,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   /// Build organization and bank account field
-  Widget _buildRoundUpFieldField({
-    required GetRoundUpBankConnection controller,
-    required String label,
-    bool isOrg = false,
-  }) {
-    List<DropdownMenuItem<String>>? items() {
-      if (controller.roundUpBankConnectionModel.isEmpty) {
-        return [
-          DropdownMenuItem<String>(
-            value: null,
-            child: Text(
-              isOrg ? 'No linked organizations' : 'No linked accounts',
-            ),
-          ),
-        ];
-      } else {
-        if (isOrg) {
-          // Filter for accounts with active round-up organization details
-          final orgsWithRoundUp = controller.roundUpBankConnectionModel
-              .where(
-                (e) =>
-                    e.isLinkedToActiveRoundUp &&
-                    e.roundUpDetails?.organizationName != null,
-              )
-              .toList();
+  // Widget _buildRoundUpFieldField({
+  //   required GetRoundupController controller,
+  //   required String label,
+  //   bool isOrg = false,
+  // }) {
+  //   List<DropdownMenuItem<String>>? items() {
+  //     if (controller.roundupConfig.) {
+  //       return [
+  //         DropdownMenuItem<String>(
+  //           value: null,
+  //           child: Text(
+  //             isOrg ? 'No linked organizations' : 'No linked accounts',
+  //           ),
+  //         ),
+  //       ];
+  //     } else {
+  //       if (isOrg) {
+  //         // Filter for accounts with active round-up organization details
+  //         final orgsWithRoundUp = controller.roundUpBankConnectionModel
+  //             .where(
+  //               (e) =>
+  //                   e.isLinkedToActiveRoundUp &&
+  //                   e.roundUpDetails?.organizationName != null,
+  //             )
+  //             .toList();
 
-          if (orgsWithRoundUp.isEmpty) {
-            return [
-              DropdownMenuItem<String>(
-                value: null,
-                child: Text('No linked organizations'),
-              ),
-            ];
-          }
+  //         if (orgsWithRoundUp.isEmpty) {
+  //           return [
+  //             DropdownMenuItem<String>(
+  //               value: null,
+  //               child: Text('No linked organizations'),
+  //             ),
+  //           ];
+  //         }
 
-          return orgsWithRoundUp
-              .map(
-                (e) => DropdownMenuItem(
-                  value: e.roundUpDetails!.organizationName,
-                  child: Text(e.roundUpDetails!.organizationName),
-                ),
-              )
-              .toList();
-        } else {
-          return controller.roundUpBankConnectionModel
-              .map(
-                (e) => DropdownMenuItem(
-                  value: e.institutionName,
-                  child: Text(e.institutionName),
-                ),
-              )
-              .toList();
-        }
-      }
-    }
+  //         return orgsWithRoundUp
+  //             .map(
+  //               (e) => DropdownMenuItem(
+  //                 value: e.roundUpDetails!.organizationName,
+  //                 child: Text(e.roundUpDetails!.organizationName),
+  //               ),
+  //             )
+  //             .toList();
+  //       } else {
+  //         return controller.roundUpBankConnectionModel
+  //             .map(
+  //               (e) => DropdownMenuItem(
+  //                 value: e.institutionName,
+  //                 child: Text(e.institutionName),
+  //               ),
+  //             )
+  //             .toList();
+  //       }
+  //     }
+  //   }
 
-    return GetX<SettingsController>(
-      builder: (roundUpSettingsCtrl) {
-        final roundUpModelList = controller.roundUpBankConnectionModel;
-        final selectedIndex =
-            roundUpSettingsCtrl.selectedRoundUpModelIndex.value;
+  //   return GetX<SettingsController>(
+  //     builder: (roundUpSettingsCtrl) {
+  //       final roundUpModelList = controller.roundUpBankConnectionModel;
+  //       final selectedIndex =
+  //           roundUpSettingsCtrl.selectedRoundUpModelIndex.value;
 
-        String displayText;
-        if (roundUpModelList.isEmpty) {
-          displayText = isOrg
-              ? 'No linked organizations'
-              : 'No linked accounts';
-        } else if (selectedIndex >= 0 &&
-            selectedIndex < roundUpModelList.length) {
-          if (isOrg) {
-            displayText =
-                roundUpModelList[selectedIndex]
-                    .roundUpDetails
-                    ?.organizationName ??
-                'Select organization';
-          } else {
-            displayText = roundUpModelList[selectedIndex].institutionName;
-          }
-        } else {
-          displayText = isOrg ? 'Select organization' : 'Select account';
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontFamily: DonationFonts.interDisplay,
-                fontSize: 14.rfs,
-                fontWeight: FontWeight.w500,
-                color: DonationConstants.offBlack,
-              ),
-            ),
+  //       String displayText;
+  //       if (roundUpModelList.isEmpty) {
+  //         displayText = isOrg
+  //             ? 'No linked organizations'
+  //             : 'No linked accounts';
+  //       } else if (selectedIndex >= 0 &&
+  //           selectedIndex < roundUpModelList.length) {
+  //         if (isOrg) {
+  //           displayText =
+  //               roundUpModelList[selectedIndex]
+  //                   .roundUpDetails
+  //                   ?.organizationName ??
+  //               'Select organization';
+  //         } else {
+  //           displayText = roundUpModelList[selectedIndex].institutionName;
+  //         }
+  //       } else {
+  //         displayText = isOrg ? 'Select organization' : 'Select account';
+  //       }
+  //       return Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             label,
+  //             style: TextStyle(
+  //               fontFamily: DonationFonts.interDisplay,
+  //               fontSize: 14.rfs,
+  //               fontWeight: FontWeight.w500,
+  //               color: DonationConstants.offBlack,
+  //             ),
+  //           ),
 
-            SizedBox(height: 8.rh),
+  //           SizedBox(height: 8.rh),
 
-            DropdownButtonHideUnderline(
-              child: DropdownButton2(
-                items: items() as List<DropdownMenuItem<Object>>?,
-                onChanged: (value) {
-                  if (controller.roundUpBankConnectionModel.isEmpty ||
-                      value == null) {
-                    return;
-                  }
-                  int index;
-                  if (isOrg) {
-                    // Find by organization name in roundUpDetails
-                    index = controller.roundUpBankConnectionModel.indexWhere(
-                      (e) => e.roundUpDetails?.organizationName == value,
-                    );
-                  } else {
-                    // Find by institution name
-                    index = controller.roundUpBankConnectionModel.indexWhere(
-                      (e) => e.institutionName == value,
-                    );
-                  }
+  //           DropdownButtonHideUnderline(
+  //             child: DropdownButton2(
+  //               items: items() as List<DropdownMenuItem<Object>>?,
+  //               onChanged: (value) {
+  //                 if (controller.roundUpBankConnectionModel.isEmpty ||
+  //                     value == null) {
+  //                   return;
+  //                 }
+  //                 int index;
+  //                 if (isOrg) {
+  //                   // Find by organization name in roundUpDetails
+  //                   index = controller.roundUpBankConnectionModel.indexWhere(
+  //                     (e) => e.roundUpDetails?.organizationName == value,
+  //                   );
+  //                 } else {
+  //                   // Find by institution name
+  //                   index = controller.roundUpBankConnectionModel.indexWhere(
+  //                     (e) => e.institutionName == value,
+  //                   );
+  //                 }
 
-                  // Only change if a valid index is found
-                  if (index >= 0) {
-                    roundUpSettingsCtrl.changeRoundUpModelIndex(index);
-                  }
-                },
-                customButton: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.rw,
-                    vertical: 16.rh,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.rw),
-                    border: Border.all(
-                      color: const Color(0xFFE4E4E4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          displayText,
-                          style: TextStyle(
-                            fontFamily: DonationFonts.interDisplay,
-                            fontSize: 14.rfs,
-                            fontWeight: FontWeight.w500,
-                            color: DonationConstants.offBlack,
-                          ),
-                        ),
-                      ),
+  //                 // Only change if a valid index is found
+  //                 if (index >= 0) {
+  //                   roundUpSettingsCtrl.changeRoundUpModelIndex(index);
+  //                 }
+  //               },
+  //               customButton: Container(
+  //                 width: double.infinity,
+  //                 padding: EdgeInsets.symmetric(
+  //                   horizontal: 16.rw,
+  //                   vertical: 16.rh,
+  //                 ),
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.white,
+  //                   borderRadius: BorderRadius.circular(12.rw),
+  //                   border: Border.all(
+  //                     color: const Color(0xFFE4E4E4),
+  //                     width: 1,
+  //                   ),
+  //                 ),
+  //                 child: Row(
+  //                   children: [
+  //                     Expanded(
+  //                       child: Text(
+  //                         displayText,
+  //                         style: TextStyle(
+  //                           fontFamily: DonationFonts.interDisplay,
+  //                           fontSize: 14.rfs,
+  //                           fontWeight: FontWeight.w500,
+  //                           color: DonationConstants.offBlack,
+  //                         ),
+  //                       ),
+  //                     ),
 
-                      Text(
-                        'Change',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                          color: const Color(
-                            0xFFC08FFF,
-                          ) /* Colors-Primary-Purple */,
-                          fontSize: 14,
-                          fontFamily: 'Inter Display',
-                          fontWeight: FontWeight.w500,
-                          height: 1.43,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  //                     Text(
+  //                       'Change',
+  //                       textAlign: TextAlign.right,
+  //                       style: TextStyle(
+  //                         color: const Color(
+  //                           0xFFC08FFF,
+  //                         ) /* Colors-Primary-Purple */,
+  //                         fontSize: 14,
+  //                         fontFamily: 'Inter Display',
+  //                         fontWeight: FontWeight.w500,
+  //                         height: 1.43,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }

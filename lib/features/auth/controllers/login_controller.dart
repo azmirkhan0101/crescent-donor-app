@@ -4,6 +4,7 @@ import 'package:cresent_charge_user_app/features/auth/models/signin_response_mod
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
+import 'package:cresent_charge_user_app/service/firebase_notification_service.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -136,10 +137,22 @@ class LoginController extends GetxController {
 
       isLoading.value = true;
 
-      // Create request model
+      // Get FCM token
+      String? fcmToken;
+      try {
+        fcmToken = await FirebaseNotificationService.instance.getToken();
+        debugPrint(
+          '🔔 FCM Token obtained for login: ${fcmToken?.substring(0, 20)}...',
+        );
+      } catch (e) {
+        debugPrint('⚠️ Failed to get FCM token for login: $e');
+      }
+
+      // Create request model with FCM token
       final requestModel = SigninRequestModel(
         email: emailController.text.trim(),
         password: passwordController.text,
+        fcmToken: fcmToken,
       );
 
       // Call signin API

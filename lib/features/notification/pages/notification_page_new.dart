@@ -21,8 +21,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     GetNotificationsController(),
   );
 
-  final ScrollController _scrollController = ScrollController();
-
   final categories = [
     'All',
     'Impact',
@@ -38,30 +36,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   void initState() {
     super.initState();
     // Fetch notifications on page load
-    debugPrint('🔔 NotificationsPage: Fetching notifications...');
     notificationController.fetchNotifications(refresh: true);
-    // Add scroll listener for pagination
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  /// Handle scroll events for pagination
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      // Load more when user is 200px from bottom
-      if (notificationController.hasMore &&
-          !notificationController.isLoadingMore.value) {
-        debugPrint('📄 Loading more notifications...');
-        notificationController.loadMore();
-      }
-    }
   }
 
   @override
@@ -134,20 +109,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Widget _buildNotificationList() {
     return Obx(() {
-      debugPrint(
-        '🔄 Building notification list - Total: ${notificationController.notifications.length}, Loading: ${notificationController.isLoading.value}',
-      );
-
       if (notificationController.isLoading.value &&
           notificationController.notifications.isEmpty) {
         return const Center(child: CircularProgressIndicator());
       }
 
       final filteredNotifications = _getFilteredNotifications();
-      debugPrint('📊 Filtered notifications: ${filteredNotifications.length}');
-
       final groups = _groupNotificationsByTime(filteredNotifications);
-      debugPrint('📦 Groups created: ${groups.length}');
 
       if (groups.isEmpty) {
         return _buildEmptyState();
@@ -156,23 +124,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
       return RefreshIndicator(
         onRefresh: () => notificationController.refreshNotifications(),
         child: ListView.builder(
-          controller: _scrollController,
           padding: EdgeInsets.symmetric(horizontal: 16.rw),
-          itemCount: groups.length + 1,
+          itemCount: groups.length,
           itemBuilder: (context, groupIndex) {
-            // Show loading indicator at the bottom
-            if (groupIndex == groups.length) {
-              return Obx(() {
-                if (notificationController.isLoadingMore.value) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.rh),
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                }
-                return const SizedBox.shrink();
-              });
-            }
-
             final group = groups[groupIndex];
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,31 +276,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
         notification.type.contains('failed') ||
         notification.type.contains('alert');
 
-    return GestureDetector(
-      onTap: () async {
-        // Mark notification as read when tapped
-        if (!notification.isSeen) {
-          debugPrint('🖱️ Notification tapped: ${notification.id}');
-          await notificationController.markNotificationAsRead(notification.id);
-        }
-        // TODO: Handle navigation based on notification type/redirectId
-        // Example: if (notification.redirectId != null) { navigate to detail }
-      },
-      child: Container(
-        padding: EdgeInsets.all(16.rw),
-        decoration: BoxDecoration(
-          color: isAlert ? const Color(0xFFFFF5F5) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFEDEDED), width: 1),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildNotificationIcon(notifType, isAlert),
-            SizedBox(width: 12.rw),
-            Expanded(child: _buildNotificationContent(notification)),
-          ],
-        ),
+    return Container(
+      padding: EdgeInsets.all(16.rw),
+      decoration: BoxDecoration(
+        color: isAlert ? const Color(0xFFFFF5F5) : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFEDEDED), width: 1),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildNotificationIcon(notifType, isAlert),
+          SizedBox(width: 12.rw),
+          Expanded(child: _buildNotificationContent(notification)),
+        ],
       ),
     );
   }
