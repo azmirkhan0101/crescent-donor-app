@@ -95,29 +95,32 @@ class ProfilePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        profile?.name ?? 'N/A',
-                        style: TextStyle(
-                          fontFamily: DonationFonts.interDisplay,
-                          fontSize: 24.rfs,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF000C0B),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          profile?.name ?? 'N/A',
+                          style: TextStyle(
+                            fontFamily: DonationFonts.interDisplay,
+                            fontSize: 24.rfs,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF000C0B),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 4.rh),
-                      Text(
-                        profile?.auth.email ?? 'N/A',
-                        style: TextStyle(
-                          fontFamily: DonationFonts.interDisplay,
-                          fontSize: 12.rfs,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey,
+                        SizedBox(height: 4.rh),
+                        Text(
+                          profile?.auth.email ?? 'N/A',
+                          style: TextStyle(
+                            fontFamily: DonationFonts.interDisplay,
+                            fontSize: 12.rfs,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () => context.pushNamed(RoutePath.editProfile),

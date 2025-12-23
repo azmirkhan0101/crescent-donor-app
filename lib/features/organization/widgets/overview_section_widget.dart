@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/features/organization/models/organization_details_model.dart';
 import 'package:cresent_charge_user_app/features/organization/models/organization_model.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/cause_item_widget.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class OverviewSectionWidget extends StatelessWidget {
   final String mission;
-  final List<CauseModel> causes;
+  final List<Cause> causes;
 
   const OverviewSectionWidget({
     super.key,

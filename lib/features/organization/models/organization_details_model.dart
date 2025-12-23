@@ -3,35 +3,52 @@
     "success": true,
     "message": "Organization details retrieved successfully!",
     "data": {
-        "_id": "693d3498c139b728a8d734d7",
+        "_id": "6942d3bfaf3e0d14a9fdf599",
         "auth": {
-            "_id": "693d3498c139b728a8d734bb",
-            "email": "gohomen778@alexida.com",
+            "_id": "6942d3bfaf3e0d14a9fdf597",
+            "email": "org1@yopmail.com",
             "role": "ORGANIZATION",
             "isActive": true,
             "status": "verified"
         },
-        "name": "Copeland and Merrill Inc",
-        "serviceType": "Charity",
-        "address": "Walters and Castaneda Traders",
-        "state": "California",
-        "postalCode": "Ipsum doloribus sun",
-        "website": "Bonner Casey Traders",
-        "phoneNumber": "+1 (481) 897-3611",
-        "coverImage": null,
-        "logoImage": null,
+        "name": "ALFALAH CATIRY",
+        "serviceType": "non-profit",
+        "address": "42 Charity Lane, Sydney",
+        "state": "NSW",
+        "postalCode": "2000",
+        "website": "https://specialorg.example.com",
+        "phoneNumber": "+61412345678",
+        "coverImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/organizations/6942d3bfaf3e0d14a9fdf597-1766481601782",
+        "logoImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/organizations/6942d3bfaf3e0d14a9fdf597-1766481606700",
         "aboutUs": "",
         "registeredCharityName": "",
-        "totalDonation": 5,
-        "totalDonationAmount": 405,
+        "id": "6942d3bfaf3e0d14a9fdf599",
+        "totalDonation": 9,
+        "totalDonationAmount": 32.91,
         "recentDonors": [
             {
-                "lastDonationDate": "2025-12-14T05:15:52.988Z",
-                "lastDonationAmount": 5,
-                "donorId": "69301feaddbf3fdf987e86e8",
-                "donorName": "Mostafizur",
-                "donorImage": "/images/scaled_18-1765684240320.jpg",
+                "lastDonationDate": "2025-12-23T09:56:22.553Z",
+                "lastDonationAmount": 10.5,
+                "donorId": "6942d397af3e0d14a9fdf58f",
+                "donorName": "Mostafizur Rahaman",
+                "donorImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/clients/client-6942d044af3e0d14a9fdf55d-1766463151419",
                 "donorAddress": "Dhaka, Mohakhai"
+            }
+        ],
+        "causes": [
+            {
+                "_id": "6943892a2f333b75a39823bb",
+                "name": "Zakats Fund",
+                "description": "Providing quality education to underprivileged children around the world",
+                "category": "zakat",
+                "status": "verified"
+            },
+            {
+                "_id": "6943896c2f333b75a39823c3",
+                "name": "Backpack and Education",
+                "description": "Providing quality education to underprivileged children around the world",
+                "category": "education",
+                "status": "verified"
             }
         ]
     }
@@ -55,6 +72,7 @@ class OrganizationDetailsModel {
   final int totalDonation;
   final double totalDonationAmount;
   final List<RecentDonor> recentDonors;
+  
 
   OrganizationDetailsModel({
     required this.id,
@@ -194,6 +212,42 @@ class RecentDonor {
       'donorName': donorName,
       'donorImage': donorImage,
       'donorAddress': donorAddress,
+    };
+  }
+}
+
+class Cause {
+  final String id;
+  final String name;
+  final String description;
+  final String category;
+  final String status;
+
+  Cause({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.category,
+    required this.status,
+  });
+
+  factory Cause.fromJson(Map<String, dynamic> json) {
+    return Cause(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      category: json['category'] ?? '',
+      status: json['status'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'category': category,
+      'status': status,
     };
   }
 }

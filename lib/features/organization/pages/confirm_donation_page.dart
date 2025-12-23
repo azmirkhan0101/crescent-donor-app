@@ -280,7 +280,7 @@ class ConfirmDonationPage extends StatelessWidget {
     final paymentMethod = paymentMethodCtrl.paymentMethods.firstWhere(
       (method) => method.id == paymentMethodId,
     );
-    final stripeFees = donateNowCtrl.amount.value * 0.0475; // 4.75%
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -297,6 +297,12 @@ class ConfirmDonationPage extends StatelessWidget {
         ],
       ),
       child: Obx(() {
+        // Calculate fees reactively based on checkbox state
+        final calculatedAmounts = calculateAustralianFees(
+          baseAmount: donateNowCtrl.amount.value.toDouble(),
+          coverFees: donateNowCtrl.contributeToAdminFees,
+        );
+
         return Column(
           children: [
             // Header
@@ -328,12 +334,18 @@ class ConfirmDonationPage extends StatelessWidget {
               "**** **** **** ${paymentMethod.cardLast4}",
             ),
             // Stripe fees : 4.75%
-            _buildTransactionItem('Stripe fees:', "\$$stripeFees"),
+            // _buildTransactionItem('Stripe fees:', "\$$stripeFees"),
+            _buildTransactionItem(
+              'Stripe fees:',
+              "\$${calculatedAmounts['stripeFee'].toStringAsFixed(2)}",
+            ),
 
             // _buildTransactionItem('Taxes & Fees:', controller.taxesAndFees),
             _buildTransactionItem(
               'Taxes & Admin Fees:',
-              "\$${donateNowCtrl.contributionAmount.value.toStringAsFixed(2)}",
+              donateNowCtrl.contributeToAdminFees
+                  ? "\$${calculatedAmounts['platformFee'].toStringAsFixed(2)}"
+                  : "\$0.00",
             ),
 
             // Divider
@@ -346,7 +358,7 @@ class ConfirmDonationPage extends StatelessWidget {
 
             _buildTransactionItem(
               "Total",
-              "\$${(donateNowCtrl.amount.value + stripeFees + donateNowCtrl.contributionAmount.value).toStringAsFixed(3)}",
+              "\$${(donateNowCtrl.amount.value + calculatedAmounts['stripeFee'] + (donateNowCtrl.contributeToAdminFees ? calculatedAmounts['platformFee'] : 0.0)).toStringAsFixed(2)}",
             ),
 
             // Divider
@@ -536,5 +548,53 @@ class ConfirmDonationPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// calculate
+  Map<String, dynamic> calculateAustralianFees({
+    required double baseAmount,
+    required bool coverFees,
+    double platformFeePercent = 0.05,
+    double gstRate = 0.10,
+    double stripeFeePercent = 0.029, // AU default
+    double stripeFixedFee = 0.30,
+  }) {
+    double round2(double value) => (value * 100).roundToDouble() / 100;
+
+    // Calculate stripe fee always based on base amount (fixed)
+    final double stripeFee = round2(
+      baseAmount * stripeFeePercent + stripeFixedFee,
+    );
+
+    // Platform Revenue + GST
+    final double platformFee = round2(baseAmount * platformFeePercent);
+    final double gstOnFee = round2(platformFee * gstRate);
+    final double applicationFee = platformFee + gstOnFee;
+
+    double totalCharge = 0;
+    double netToOrg = 0;
+
+    if (coverFees) {
+      // Scenario A: Donor pays everything
+      totalCharge = round2(baseAmount + stripeFee + applicationFee);
+      netToOrg = baseAmount;
+    } else {
+      // Scenario B: Donor pays base only, org absorbs fees
+      totalCharge = baseAmount;
+      netToOrg = round2(baseAmount - stripeFee - applicationFee);
+    }
+
+    final double platformFeeWithStripe = stripeFee + applicationFee;
+    return {
+      'baseAmount': baseAmount, // Tax deductible
+      'platformFee': platformFee, // Platform revenue
+      'gstOnFee': gstOnFee, // GST liability
+      'stripeFee': stripeFee, // Stripe cost (fixed)
+      'totalCharge': totalCharge, // Charge to card
+      'applicationFee': applicationFee, // Stripe application_fee_amount
+      'netToOrg': netToOrg, // Credited to org
+      'coverFees': coverFees,
+      'platformFeeWithStripe': platformFeeWithStripe,
+    };
   }
 }
