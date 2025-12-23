@@ -1,9 +1,10 @@
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/badges_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
-import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart'
+    as badge_widget;
 import 'package:cresent_charge_user_app/features/donation/widgets/custom_calendar.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_cards.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/section_header.dart';
@@ -187,9 +188,11 @@ class BadgesSection extends StatelessWidget {
       initState: (state) {
         state.controller!.fetchBadgesProgress();
       },
-      builder: (controller) {
+      builder: (getBadgeController) {
+        final RxList<BadgeDataModel> badgeDataList =
+            getBadgeController.badgesProgressData;
         return Skeletonizer(
-          enabled: controller.isLoading.value,
+          enabled: getBadgeController.isLoading.value,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -203,8 +206,7 @@ class BadgesSection extends StatelessWidget {
               SizedBox(height: DonationConstants.sectionSpacing.rh),
 
               // Show empty state or badges list
-              controller.badgesProgressData.isEmpty &&
-                      !controller.isLoading.value
+              badgeDataList.isEmpty && !getBadgeController.isLoading.value
                   ? Container(
                       height: 230.rh,
                       margin: EdgeInsets.symmetric(
@@ -262,26 +264,33 @@ class BadgesSection extends StatelessWidget {
                           horizontal: DonationConstants.paddingHorizontal.rw,
                         ),
                         scrollDirection: Axis.horizontal,
-                        itemCount: controller.badgesProgressData.length,
+                        itemCount: getBadgeController.badgesProgressData.length,
                         separatorBuilder: (context, index) =>
                             SizedBox(width: DonationConstants.cardSpacing.rw),
                         itemBuilder: (context, index) {
-                          final badgeData =
-                              controller.badgesProgressData[index];
-                          final badgesController = Get.put(BadgesController());
+                          final badgeData = badgeDataList[index];
 
-                          // Find matching badge from local badges list
-                          final badge = badgesController.badges
-                              .firstWhereOrNull(
-                                (b) => b.name == badgeData.badge?.name,
-                              );
+                          // // Return empty if no badge data
+                          // if (badgeData.badge == null) {
+                          //   return const SizedBox.shrink();
+                          // }
 
-                          if (badge == null) return const SizedBox.shrink();
+                          // Create Badge object from API data
+                          // final badge = badge_widget.Badge(
+                          //   id: badgeData.badge!.id ?? '',
+                          //   name: badgeData.badge!.name ?? '',
+                          //   description: badgeData.badge!.description ?? '',
+                          //   iconPath: badgeData.badge!.icon ?? '',
+                          //   currentProgress: badgeData.progressPercentage ?? 0,
+                          //   totalProgress: 100,
+                          //   isCompleted: badgeData.isUnlocked ?? false,
+                          //   backgroundColor: _getBadgeColor(index),
+                          // );
 
                           return SizedBox(
                             width: 180.rw, // Fixed width for each badge card
-                            child: BadgeCard(
-                              badge: badge,
+                            child: badge_widget.BadgeCard(
+                              // badge: badge,
                               badgeDataModel: badgeData,
                             ),
                           );
@@ -293,5 +302,17 @@ class BadgesSection extends StatelessWidget {
         );
       },
     );
+  }
+
+  /// Get badge background color based on index
+  Color _getBadgeColor(int index) {
+    final colors = [
+      const Color(0xFFFFE5E5), // Light red
+      const Color(0xFFE5F5FF), // Light blue
+      const Color(0xFFFFF5E5), // Light orange
+      const Color(0xFFE5FFE5), // Light green
+      const Color(0xFFF5E5FF), // Light purple
+    ];
+    return colors[index % colors.length];
   }
 }

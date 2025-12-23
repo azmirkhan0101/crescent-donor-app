@@ -110,7 +110,7 @@ class GetAllRewardsController extends GetxController {
         if (rewards.isNotEmpty) {
           final first = rewards.first;
           debugPrint(
-            'First reward: userStatus=${first.userStatus}, claimStatus=${first.claimStatus}, isAlreadyClaimed=${first.isAlreadyClaimed}, isAlreadyRedeemed=${first.isAlreadyRedeemed}',
+            'First reward: userStatus=${first.userStatus}, isAlreadyClaimed=${first.isAlreadyClaimed}, isAlreadyRedeemed=${first.isAlreadyRedeemed}',
           );
         }
         debugPrint('Rewards fetched successfully: ${rewards.length} items');

@@ -80,7 +80,8 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                   OrganizationHeaderWidget(organization: organizationDetails),
                   SizedBox(height: 16.rh),
                   ImpactCardWidget(
-                    impactText: 'Supported over 3,25,000 students since 2021',
+                    // impactText: 'Supported over 3,25,000 students since 2021',
+                    impactText: organizationDetails.aboutUs,
                   ),
                   SizedBox(height: 16.rh),
                   TotalDonationsCard2(

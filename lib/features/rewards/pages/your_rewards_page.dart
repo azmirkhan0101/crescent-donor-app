@@ -17,7 +17,6 @@ const Color _lightGray = Color(0xFFEBE9EC);
 const Color _backgroundGray = Color(0xFFF7F7F7);
 const Color _textGray = Color(0xFF515A59);
 const Color _borderGray = Color(0xFFEDEDED);
-const Color _progressGray = Color(0xFF848484);
 const Color _progressStart = Color(0xFFC08FFF);
 const Color _progressEnd = Color(0xFF735699);
 
@@ -61,9 +60,7 @@ class YourRewardsPage extends StatelessWidget {
                   child: Column(
                     children: [
                       // Badge Section
-                      _buildBadgeProgressSection(
-                        controller,
-                      ).paddingXY(X: 16.rw),
+                      _buildBadgeProgressSection().paddingXY(X: 16.rw),
 
                       // Tabs
                       _buildTabs(controller),
@@ -83,7 +80,11 @@ class YourRewardsPage extends StatelessWidget {
     );
   }
 
-  Container _buildBadgeProgressSection(YourRewardsController controller) {
+  Container _buildBadgeProgressSection() {
+    final controller = Get.find<GetPointBalanceController>();
+    int currentTierIndex = controller.availableTiersOld.indexOf(
+      controller.balance.value?.currentTier,
+    );
     return Container(
       // height: 136.rh,
       decoration: BoxDecoration(
@@ -105,33 +106,48 @@ class YourRewardsPage extends StatelessWidget {
               spacing: 8.rh,
               children: [
                 // Progress text and percentage
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Obx(
+                //       () => Text(
+                //         controller.nextBadgeText,
+                //         style: AppTextStyles.f14W400().copyWith(
+                //           color: _offBlack,
+                //         ),
+                //       ),
+                //     ),
+                //     Obx(
+                //       () => Text(
+                //         '${controller.progressPercentage.toInt()}%',
+                //         style: AppTextStyles.f14W400().copyWith(
+                //           color: _progressGray,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                4.rh.heightWidth,
+
+                /// Tiers labels
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Obx(
-                      () => Text(
-                        controller.nextBadgeText,
+                    ...controller.availableTiers.map((tier) {
+                      return Text(
+                        tier.tierName.toUpperCase(),
                         style: AppTextStyles.f14W400().copyWith(
-                          color: _offBlack,
+                          color: _textGray,
                         ),
-                      ),
-                    ),
-                    Obx(
-                      () => Text(
-                        '${controller.progressPercentage.toInt()}%',
-                        style: AppTextStyles.f14W400().copyWith(
-                          color: _progressGray,
-                        ),
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
-                4.rh.heightWidth,
 
                 // Progress Bar
                 Stack(
                   children: [
-                    // Background progress bar
+                    // => Background progress bar <=
                     Container(
                       height: 10.rh,
                       decoration: BoxDecoration(
@@ -141,77 +157,54 @@ class YourRewardsPage extends StatelessWidget {
                     ),
 
                     // Active progress bar with gradient
-                    Obx(
-                      () => FractionallySizedBox(
-                        alignment: Alignment.centerLeft,
-                        widthFactor: controller.progressPercentage / 100,
-                        child: Container(
-                          height: 10.rh,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [_progressStart, _progressEnd],
-                              stops: [0.75, 1.0],
-                            ),
-                            borderRadius: BorderRadius.circular(24),
+                    FractionallySizedBox(
+                      alignment: Alignment.centerLeft,
+                      // widthFactor: controller.progressPercentage / 100,
+                      widthFactor: currentTierIndex / 3,
+                      child: Container(
+                        height: 10.rh,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [_progressStart, _progressEnd],
+                            stops: [0.75, 1.0],
                           ),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                       ),
                     ),
+
+                    /// ===> Progress Points Badges <= ///
                     Transform.translate(
                       offset: Offset(0, -7.rh),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildProgressPoint(
-                            100,
-                            controller.currentProgress >= 100,
-                          ),
-                          _buildProgressPoint(
-                            1000,
-                            controller.currentProgress >= 1000,
-                          ),
-                          _buildProgressPoint(
-                            1500,
-                            controller.currentProgress >= 1500,
-                          ),
-                          _buildProgressPoint(
-                            2000,
-                            controller.currentProgress >= 2000,
-                          ),
-                          _buildProgressPoint(
-                            3000,
-                            controller.currentProgress >= 3000,
-                          ),
+                          ...controller.availableTiers.map((tiere) {
+                            final index = controller.availableTiers.indexOf(
+                              tiere,
+                            );
+                            return _buildProgressPoint(
+                              index,
+                              currentTierIndex >= index,
+                            );
+                          }),
                         ],
                       ),
                     ),
                   ],
                 ),
 
-                // Progress Numbers
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '100',
-                      style: AppTextStyles.f14W400().copyWith(color: _textGray),
-                    ),
-                    Text(
-                      '1000',
-                      style: AppTextStyles.f14W400().copyWith(color: _textGray),
-                    ),
-                    Text(
-                      '1500',
-                      style: AppTextStyles.f14W400().copyWith(color: _textGray),
-                    ),
-                    Text(
-                      '2000',
-                      style: AppTextStyles.f14W400().copyWith(color: _textGray),
-                    ),
-                    Text(
-                      '3000',
-                      style: AppTextStyles.f14W400().copyWith(color: _textGray),
-                    ),
+                    ...controller.availableTiers.map((tier) {
+                      return Text(
+                        tier.requiredPoints.toString(),
+                        style: AppTextStyles.f14W400().copyWith(
+                          color: _textGray,
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ],

@@ -3,7 +3,6 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badge_history_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
-import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/recent_donation.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -20,13 +19,13 @@ const Color _progressEnd = Color(0xFF735699);
 /// Badge Modal Bottom Sheet
 ///
 /// Shows detailed badge information with progress bar and recent donations
-class BadgeModal extends StatelessWidget {
-  final Badge selectedBadge;
+class BadgeDetailsBottomSheet extends StatelessWidget {
+  // final Badge selectedBadge;
   final BadgeDataModel badgeDataModel;
 
-  const BadgeModal({
+  const BadgeDetailsBottomSheet({
     super.key,
-    required this.selectedBadge,
+    // required this.selectedBadge,
     required this.badgeDataModel,
   });
 
@@ -132,8 +131,8 @@ class BadgeModal extends StatelessWidget {
         children: [
           // Badge Icon
           Center(
-            child: Image.asset(
-              selectedBadge.iconPath,
+            child: Image.network(
+              badgeDataModel.badge?.icon ?? '',
               width: 120.rw,
               height: 120.rh,
             ),

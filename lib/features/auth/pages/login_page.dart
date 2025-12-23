@@ -14,7 +14,6 @@ import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -125,27 +124,26 @@ class _LoginPageState extends State<LoginPage> {
 
           16.rh.heightWidth,
 
-          "OR"
-              .centerText(
-                controller.isLoading.value
-                    ? TextStyle(color: AppColors.grayColor)
-                    : const TextStyle(),
-              )
-              .fontFamily(GoogleFonts.inter().fontFamily),
+          // "OR"
+          //     .centerText(
+          //       controller.isLoading.value
+          //           ? TextStyle(color: AppColors.grayColor)
+          //           : const TextStyle(),
+          //     )
+          //     .fontFamily(GoogleFonts.inter().fontFamily),
 
-          16.rh.heightWidth,
+          // 16.rh.heightWidth,
 
-          // Login as guest button
-          CustomFilledButton(
-            title: controller.isLoading.value
-                ? "Please wait..."
-                : "Login as a Guest",
-            fillColor: Colors.transparent,
-            onTap: controller.isLoading.value
-                ? null
-                : () => _handleGuestLogin(context, controller),
-          ),
-
+          // // Login as guest button
+          // CustomFilledButton(
+          //   title: controller.isLoading.value
+          //       ? "Please wait..."
+          //       : "Login as a Guest",
+          //   fillColor: Colors.transparent,
+          //   onTap: controller.isLoading.value
+          //       ? null
+          //       : () => _handleGuestLogin(context, controller),
+          // ),
           24.heightWidth,
         ],
       ).paddingXY(X: 56.rw);
@@ -153,25 +151,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   /// Handle guest login button press
-  Future<void> _handleGuestLogin(
-    BuildContext context,
-    LoginController controller,
-  ) async {
-    final success = await controller.loginAsGuest();
+  // Future<void> _handleGuestLogin(
+  //   BuildContext context,
+  //   LoginController controller,
+  // ) async {
+  //   final success = await controller.loginAsGuest();
 
-    if (success && context.mounted) {
-      // Show guest mode message before navigation
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('You are now browsing as a guest'),
-          backgroundColor: AppColors.grayColor.withValues(alpha: 0.9),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+  //   if (success && context.mounted) {
+  //     // Show guest mode message before navigation
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('You are now browsing as a guest'),
+  //         backgroundColor: AppColors.grayColor.withValues(alpha: 0.9),
+  //         duration: const Duration(seconds: 2),
+  //         behavior: SnackBarBehavior.floating,
+  //       ),
+  //     );
 
-      // Navigate to home on successful guest login (replace current route)
-      context.goNamed(RoutePath.home);
-    }
-  }
+  //     // Navigate to home on successful guest login (replace current route)
+  //     context.goNamed(RoutePath.home);
+  //   }
+  // }
+
 }

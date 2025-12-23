@@ -123,6 +123,21 @@ class TotalDonationsCard2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> donorsProfilePhotos = [
+      Positioned(
+        right: 0,
+        child: _DonatedPeoplePhoto(imagePath: Assets.home.user4.path),
+      ),
+      Positioned(
+        right: 8,
+        child: _DonatedPeoplePhoto(imagePath: Assets.home.user3.path),
+      ),
+      Positioned(
+        right: 16,
+        child: _DonatedPeoplePhoto(imagePath: Assets.home.user2.path),
+      ),
+      _DonatedPeoplePhoto(imagePath: Assets.home.user1.path),
+    ];
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(8),
@@ -162,39 +177,38 @@ class TotalDonationsCard2 extends StatelessWidget {
                     width: 40.rw,
                     height: 16.rh,
                     child: Stack(
-                      children: [
-                        Positioned(
-                          right: 0,
-                          child: _DonatedPeoplePhoto(
-                            imagePath: Assets.home.user4.path,
-                          ),
-                        ),
-                        Positioned(
-                          right: 8,
-                          child: _DonatedPeoplePhoto(
-                            imagePath: Assets.home.user3.path,
-                          ),
-                        ),
-                        Positioned(
-                          right: 16,
-                          child: _DonatedPeoplePhoto(
-                            imagePath: Assets.home.user2.path,
-                          ),
-                        ),
-                        _DonatedPeoplePhoto(imagePath: Assets.home.user1.path),
-                      ],
+                      children: totalDonors > 4
+                          ? donorsProfilePhotos
+                          // : donorsProfilePhotos.sublist(0, totalDonors),
+                          : [
+                              ...List.generate(totalDonors, (index) {
+                                return donorsProfilePhotos[index];
+                              }),
+                            ],
                     ),
                   ),
-                  Text(
-                    '+$totalDonors People have already donated',
-                    style: TextStyle(
-                      color: const Color(0xFF647270),
-                      fontSize: 12,
-                      fontFamily: 'Inter Display',
-                      fontWeight: FontWeight.w400,
-                      height: 1.33,
+                  if (totalDonors > 4)
+                    Text(
+                      '+${totalDonors - 4} People have already donated',
+                      style: TextStyle(
+                        color: const Color(0xFF647270),
+                        fontSize: 12,
+                        fontFamily: 'Inter Display',
+                        fontWeight: FontWeight.w400,
+                        height: 1.33,
+                      ),
                     ),
-                  ),
+                  if (totalDonors <= 4)
+                    Text(
+                      '$totalDonors People have already donated',
+                      style: TextStyle(
+                        color: const Color(0xFF647270),
+                        fontSize: 12,
+                        fontFamily: 'Inter Display',
+                        fontWeight: FontWeight.w400,
+                        height: 1.33,
+                      ),
+                    ),
                 ],
               ),
             ],

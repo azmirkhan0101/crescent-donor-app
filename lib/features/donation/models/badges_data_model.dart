@@ -52,6 +52,8 @@ class BadgeModel {
   final int? priority;
   final bool? featured;
   final String? seasonalPeriod;
+  final String? createdAt;
+  final String? updatedAt;
 
   BadgeModel({
     this.id,
@@ -67,6 +69,8 @@ class BadgeModel {
     this.priority,
     this.featured,
     this.seasonalPeriod,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory BadgeModel.fromJson(Map<String, dynamic> json) => BadgeModel(
@@ -87,6 +91,8 @@ class BadgeModel {
     priority: json["priority"],
     featured: json["featured"],
     seasonalPeriod: json["seasonalPeriod"],
+    createdAt: json["createdAt"],
+    updatedAt: json["updatedAt"],
   );
 }
 
@@ -116,6 +122,10 @@ class UserBadge {
   final double? progressAmount;
   final int? progressCount;
   final List<TierUnlocked>? tiersUnlocked;
+  final String? createdAt;
+  final String? lastDonationDate;
+  final List<dynamic>? uniqueCategoryNames;
+  final String? updatedAt;
 
   UserBadge({
     this.id,
@@ -127,6 +137,10 @@ class UserBadge {
     this.progressAmount,
     this.progressCount,
     this.tiersUnlocked,
+    this.createdAt,
+    this.lastDonationDate,
+    this.uniqueCategoryNames,
+    this.updatedAt,
   });
 
   factory UserBadge.fromJson(Map<String, dynamic> json) => UserBadge(
@@ -143,6 +157,12 @@ class UserBadge {
         : List<TierUnlocked>.from(
             json["tiersUnlocked"].map((x) => TierUnlocked.fromJson(x)),
           ),
+    createdAt: json["createdAt"],
+    lastDonationDate: json["lastDonationDate"],
+    uniqueCategoryNames: json["uniqueCategoryNames"] == null
+        ? []
+        : List<dynamic>.from(json["uniqueCategoryNames"].map((x) => x)),
+    updatedAt: json["updatedAt"],
   );
 }
 

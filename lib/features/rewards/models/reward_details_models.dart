@@ -60,11 +60,13 @@ class RewardDetailsModel {
   final int redemptionLimit;
   final int redeemedCount;
   final int remainingCount;
-  final String startDate;
-  final String expiryDate;
+  final String? startDate;
+  final String? expiryDate;
   final String status;
   final bool isActive;
-  final InStoreRedemptionMethods inStoreRedemptionMethods;
+  final String? image;
+  final InStoreRedemptionMethods? inStoreRedemptionMethods;
+  final OnlineRedemptionMethods? onlineRedemptionMethods;
   final String codePrefix;
   final bool featured;
   final int priority;
@@ -88,11 +90,13 @@ class RewardDetailsModel {
     required this.redemptionLimit,
     required this.redeemedCount,
     required this.remainingCount,
-    required this.startDate,
-    required this.expiryDate,
+    this.startDate,
+    this.expiryDate,
     required this.status,
     required this.isActive,
-    required this.inStoreRedemptionMethods,
+    this.image,
+    this.inStoreRedemptionMethods,
+    this.onlineRedemptionMethods,
     required this.codePrefix,
     required this.featured,
     required this.priority,
@@ -119,13 +123,17 @@ class RewardDetailsModel {
       redemptionLimit: json['redemptionLimit'] ?? 0,
       redeemedCount: json['redeemedCount'] ?? 0,
       remainingCount: json['remainingCount'] ?? 0,
-      startDate: json['startDate'] ?? '',
-      expiryDate: json['expiryDate'] ?? '',
+      startDate: json['startDate'],
+      expiryDate: json['expiryDate'],
       status: json['status'] ?? '',
       isActive: json['isActive'] ?? false,
-      inStoreRedemptionMethods: InStoreRedemptionMethods.fromJson(
-        json['inStoreRedemptionMethods'],
-      ),
+      image: json['image'],
+      inStoreRedemptionMethods: json['inStoreRedemptionMethods'] != null
+          ? InStoreRedemptionMethods.fromJson(json['inStoreRedemptionMethods'])
+          : null,
+      onlineRedemptionMethods: json['onlineRedemptionMethods'] != null
+          ? OnlineRedemptionMethods.fromJson(json['onlineRedemptionMethods'])
+          : null,
       codePrefix: json['codePrefix'] ?? '',
       featured: json['featured'] ?? false,
       priority: json['priority'] ?? 0,
@@ -158,6 +166,20 @@ class InStoreRedemptionMethods {
       qrCode: json['qrCode'] ?? false,
       staticCode: json['staticCode'] ?? false,
       nfcTap: json['nfcTap'] ?? false,
+    );
+  }
+}
+
+class OnlineRedemptionMethods {
+  final bool discountCode;
+  final bool giftCard;
+
+  OnlineRedemptionMethods({required this.discountCode, required this.giftCard});
+
+  factory OnlineRedemptionMethods.fromJson(Map<String, dynamic> json) {
+    return OnlineRedemptionMethods(
+      discountCode: json['discountCode'] ?? false,
+      giftCard: json['giftCard'] ?? false,
     );
   }
 }

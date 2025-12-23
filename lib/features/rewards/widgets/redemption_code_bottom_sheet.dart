@@ -1,6 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -357,7 +357,7 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                   backgroundColor: const Color(0xFFD1FF43),
                   text: 'Copy Code',
                 ),
-              ).paddingB(24.rh),
+              ).onTap(() => _copyCodeToClipboard()).paddingB(24.rh),
             ],
           );
         },

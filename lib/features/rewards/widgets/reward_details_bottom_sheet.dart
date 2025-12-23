@@ -116,9 +116,9 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
         final bool isStoreReward =
             controller.rewardDetail.value?.type == 'in-store';
 
-        print(
-          "is redeemed ====> ${controller.rewardDetail.value?.redeemedCount}",
-        );
+        // print(
+        //   "is redeemed ====> ${controller.rewardDetail.value?.redeemedCount}",
+        // );
 
         final expiryDate = controller.rewardDetail.value?.expiryDate;
         if (isStoreReward && expiryDate != null) {
@@ -364,14 +364,21 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
                               ),
                               children: [
                                 TextSpan(
-                                  text:
-                                      controller
-                                              .rewardDetail
-                                              .value
-                                              ?.expiryDate !=
-                                          null
-                                      ? ' ${DateConverter.estimatedDate(DateTime.parse(controller.rewardDetail.value!.expiryDate))}'
-                                      : ' N/A',
+                                  text: () {
+                                    final expiryDate = controller
+                                        .rewardDetail
+                                        .value
+                                        ?.expiryDate;
+                                    if (expiryDate == null ||
+                                        expiryDate.isEmpty) {
+                                      return ' N/A';
+                                    }
+                                    try {
+                                      return ' ${DateConverter.estimatedDate(DateTime.parse(expiryDate))}';
+                                    } catch (e) {
+                                      return ' N/A';
+                                    }
+                                  }(),
                                   style: TextStyle(fontWeight: FontWeight.w400),
                                 ),
                               ],
@@ -567,12 +574,19 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
     BuildContext context,
     GetRewardDetailController controller,
   ) {
+    final inStoreMethod =
+        controller.rewardDetail.value?.inStoreRedemptionMethods;
+
+    if (inStoreMethod == null) {
+      debugPrint('Cannot open redemption bottom sheet: not an in-store reward');
+      return;
+    }
+
     showRewardsBottomSheet(
       context,
       TabbedRedemptionBottomSheet(
         redemptionCode: controller.rewardDetail.value?.codePrefix ?? '',
-        availableMethods:
-            controller.rewardDetail.value!.inStoreRedemptionMethods,
+        availableMethods: inStoreMethod,
       ),
     );
   }

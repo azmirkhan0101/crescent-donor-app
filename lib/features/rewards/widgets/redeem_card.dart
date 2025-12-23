@@ -152,9 +152,17 @@ class RedeemCard extends StatelessWidget {
                   ),
                   children: [
                     TextSpan(
-                      text: reward.expiryDate != null
-                          ? ' ${DateConverter.estimatedDate(DateTime.parse(reward.expiryDate!))}'
-                          : ' N/A',
+                      text: () {
+                        final expiryDate = reward.expiryDate;
+                        if (expiryDate == null || expiryDate.isEmpty) {
+                          return ' N/A';
+                        }
+                        try {
+                          return ' ${DateConverter.estimatedDate(DateTime.parse(expiryDate))}';
+                        } catch (e) {
+                          return ' N/A';
+                        }
+                      }(),
                       style: TextStyle(fontWeight: FontWeight.w400),
                     ),
                   ],
@@ -243,29 +251,31 @@ class RedeemCard extends StatelessWidget {
       bool success = await controller.claimReward(reward.id);
       if (success) {
         if (!context.mounted) return;
-        showRewardsBottomSheet(
-          context,
-          TabbedRedemptionBottomSheet(
-            redemptionCode: controller.claimResult.value?.code ?? '',
-            availableMethods: InStoreRedemptionMethods(
-              qrCode:
-                  controller.claimResult.value?.availableMethods.contains(
-                    'qr',
-                  ) ??
-                  false,
-              staticCode:
-                  controller.claimResult.value?.availableMethods.contains(
-                    'static',
-                  ) ??
-                  false,
-              nfcTap:
-                  controller.claimResult.value?.availableMethods.contains(
-                    'nfc',
-                  ) ??
-                  false,
+        if (reward.type != "online") {
+          showRewardsBottomSheet(
+            context,
+            TabbedRedemptionBottomSheet(
+              redemptionCode: controller.claimResult.value?.code ?? '',
+              availableMethods: InStoreRedemptionMethods(
+                qrCode:
+                    controller.claimResult.value?.availableMethods.contains(
+                      'qr',
+                    ) ??
+                    false,
+                staticCode:
+                    controller.claimResult.value?.availableMethods.contains(
+                      'static',
+                    ) ??
+                    false,
+                nfcTap:
+                    controller.claimResult.value?.availableMethods.contains(
+                      'nfc',
+                    ) ??
+                    false,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
 
@@ -277,10 +287,18 @@ class RedeemCard extends StatelessWidget {
         RedemptionCodeBottomSheet(
           rewardTitle: reward.title,
           rewardDescription: reward.description,
-          redemptionCode: '9842736590',
-          expiryDate: reward.expiryDate != null
-              ? DateConverter.estimatedDate(DateTime.parse(reward.expiryDate!))
-              : 'N/A',
+          redemptionCode: reward.codePrefix,
+          expiryDate: () {
+            final expiryDate = reward.expiryDate;
+            if (expiryDate == null || expiryDate.isEmpty) {
+              return 'N/A';
+            }
+            try {
+              return DateConverter.estimatedDate(DateTime.parse(expiryDate));
+            } catch (e) {
+              return 'N/A';
+            }
+          }(),
           brandIcon: Container(
             width: 24.rw,
             height: 24.rh,
