@@ -1,14 +1,27 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
-import 'package:cresent_charge_user_app/features/organization/models/organization_details_model.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 
 class OrganizationHeaderWidget extends StatelessWidget {
-  final OrganizationDetailsModel organization;
+  // final OrganizationDetailsModel organization;
+  final String? coverImage;
+  final String? logoImage;
+  final String? name;
+  final String? address;
+  final String? state;
+  final String? aboutUs;
 
-  const OrganizationHeaderWidget({super.key, required this.organization});
+  const OrganizationHeaderWidget({
+    super.key,
+    this.coverImage,
+    this.logoImage,
+    this.name,
+    this.address,
+    this.state,
+    this.aboutUs,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +43,9 @@ class OrganizationHeaderWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(12.rw)),
                   color: const Color(0xFFF5F5F5), // Fallback background
-                  image: organization.coverImage?.isNotEmpty ?? false
+                  image: coverImage?.isNotEmpty ?? false
                       ? DecorationImage(
-                          image: NetworkImage(
-                            parseImageUrl(organization.coverImage!),
-                          ),
+                          image: NetworkImage(parseImageUrl(coverImage!)),
                           fit: BoxFit.cover,
                           onError: (exception, stackTrace) {
                             // Silent error handling - background color will show
@@ -54,14 +65,12 @@ class OrganizationHeaderWidget extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(
                     color: const Color(0xFFE5E5E5), // Fallback background
-                    image: organization.logoImage?.isNotEmpty ?? false
+                    image: logoImage?.isNotEmpty ?? false
                         ? DecorationImage(
-                            image: NetworkImage(
-                              parseImageUrl(organization.logoImage!),
-                            ),
+                            image: NetworkImage(parseImageUrl(logoImage!)),
                             fit: BoxFit.cover,
                             onError: (exception, stackTrace) {
-                              // Silent error handling - background color will show
+                              // Silent error handling - fallback color will show
                             },
                           )
                         : null,
@@ -73,7 +82,7 @@ class OrganizationHeaderWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(99),
                     ),
                   ),
-                  child: organization.logoImage?.isEmpty ?? true
+                  child: logoImage?.isEmpty ?? true
                       ? Icon(Icons.business, size: 40.rw, color: Colors.grey)
                       : null,
                 ),
@@ -108,13 +117,33 @@ class OrganizationHeaderWidget extends StatelessWidget {
                 // Title with Verification
                 Row(
                   children: [
-                    Expanded(
-                      child: Text(
-                        organization.name,
-                        style: AppTextStyles.f18W600(),
-                      ),
+                    Text(name ?? '', style: AppTextStyles.f18W600()),
+                    SizedBox(width: 4.rw),
+                    Stack(
+                      children: [
+                        Container(
+                          width: 18,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 1,
+                                spreadRadius: 1,
+                                offset: Offset(2, 3),
+                              ),
+                            ],
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          // padding: EdgeInsets.all(0.rw),
+                          // child: Assets.common.verified.svg(
+                          //   width: 24,
+                          // ),
+                        ),
+                        Assets.common.verified.svg(width: 20, height: 20),
+                      ],
                     ),
-                    Assets.common.verified.svg(), // All organizations verified
                   ],
                 ),
 
@@ -137,7 +166,7 @@ class OrganizationHeaderWidget extends StatelessWidget {
                       Text('🌍', style: TextStyle(fontSize: 10.rfs)),
                       SizedBox(width: 4.rw),
                       Text(
-                        '${organization.address}, ${organization.state}',
+                        '$state',
                         style: TextStyle(
                           fontFamily: 'Inter Display',
                           fontSize: 12.rfs,
@@ -152,7 +181,7 @@ class OrganizationHeaderWidget extends StatelessWidget {
 
                 // Description
                 Text(
-                  organization.aboutUs,
+                  aboutUs ?? '',
                   style: TextStyle(
                     fontFamily: 'Inter Display',
                     fontSize: 12.rfs,

@@ -1,6 +1,6 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/features/home/widgets/total_donations_card.dart';
+import 'package:cresent_charge_user_app/features/home/widgets/org_details_total_donate_card.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/impact_card_widget.dart';
@@ -23,13 +23,7 @@ class OrganizationDetailsPage extends StatefulWidget {
 }
 
 class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
-  final orgController = Get.find<OrganizationController>();
-
-  @override
-  void initState() {
-    super.initState();
-    orgController.fetchOrganizationDetails(widget.organizationId);
-  }
+  // final orgController = Get.find<OrganizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -39,122 +33,104 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
         title: 'Organization Details',
         backgroundColor: const Color(0xFFF7F7F7),
       ),
-      body: Obx(() {
-        final organizationDetails = orgController.organizationDetails.value;
-        // if (orgController.isOrgDetailsFetching.value) {
-        //   return const Center(child: CircularProgressIndicator());
-        // }
+      body: GetX<OrganizationController>(
+        initState: (state) {
+          state.controller!.fetchOrganizationDetails(widget.organizationId);
+        },
+        builder: (controller) {
+          final organizationDetails = controller.organizationDetails.value;
 
-        if (orgController.error.value.isNotEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(orgController.error.value),
-                ElevatedButton(
-                  onPressed: () => orgController.fetchOrganizationDetails(
-                    widget.organizationId,
-                  ),
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          );
-        }
-
-        if (organizationDetails == null) {
-          return const Center(child: Text('Organization not found'));
-        }
-
-        return RefreshIndicator(
-          onRefresh: () =>
-              orgController.fetchOrganizationDetails(widget.organizationId),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(16.rw),
-            child: Skeletonizer(
-              enabled: orgController.isOrgDetailsFetching.value,
+          if (controller.error.value.isNotEmpty) {
+            return Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  OrganizationHeaderWidget(organization: organizationDetails),
-                  SizedBox(height: 16.rh),
-                  ImpactCardWidget(
-                    impactText: 'Supported over 3,25,000 students since 2021',
-                    // impactText: organizationDetails.aboutUs,
+                  Text(controller.error.value),
+                  ElevatedButton(
+                    onPressed: () => controller.fetchOrganizationDetails(
+                      widget.organizationId,
+                    ),
+                    child: const Text('Retry'),
                   ),
-                  SizedBox(height: 16.rh),
-                  TotalDonationsCard2(
-                    color: const Color(0xFFEAF7EB),
-                    totalAmount: organizationDetails.totalDonationAmount
-                        .toDouble(),
-                    totalDonors: organizationDetails.totalDonation,
-                  ),
-                  SizedBox(height: 16.rh),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Overview', style: AppTextStyles.f16W500())
-                        .fontFamily(AppStrings.familjenGrotesk)
-                        .fontWeight(FontWeight.w600),
-                  ),
-                  SizedBox(height: 12.rh),
-
-                  /// Overview Section
-                  OverviewSectionWidget(
-                    mission:
-                        orgController.organizationDetails.value?.aboutUs ?? '',
-                    causes: [],
-                  ),
-                  SizedBox(height: 100.rh), // Space for bottom button
                 ],
               ),
+            );
+          }
+
+          if (!controller.isLoadingOrgById.value &&
+              organizationDetails == null) {
+            return const Center(child: Text('Organization not found'));
+          }
+
+          return RefreshIndicator(
+            onRefresh: () =>
+                controller.fetchOrganizationDetails(widget.organizationId),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16.rw),
+              child: Skeletonizer(
+                enabled: controller.isLoadingOrgById.value,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    OrganizationHeaderWidget(
+                      // organization: organizationDetails!,
+                      coverImage: organizationDetails?.coverImage,
+                      logoImage: organizationDetails?.logoImage,
+                      name: organizationDetails?.name,
+                      address: organizationDetails?.address,
+                      state: organizationDetails?.state,
+                      aboutUs:
+                          "Turning hope into opportunity through education.",
+                    ),
+                    SizedBox(height: 16.rh),
+                    ImpactCardWidget(
+                      impactText: 'Supported over 3,25,000 students since 2021',
+                      // impactText: organizationDetails.aboutUs,
+                    ),
+                    SizedBox(height: 16.rh),
+                    OrgDetailTotalDonationsCard(
+                      color: const Color(0xFFEAF7EB),
+                      totalDonatedAmount:
+                          organizationDetails?.totalDonationAmount.toDouble() ??
+                          0.0,
+                      totalDonors: organizationDetails?.totalDonation ?? 0,
+                      recentDonors: organizationDetails?.recentDonors ?? [],
+                    ),
+                    SizedBox(height: 16.rh),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Overview', style: AppTextStyles.f16W500())
+                          .fontFamily(AppStrings.familjenGrotesk)
+                          .fontWeight(FontWeight.w600),
+                    ),
+                    SizedBox(height: 12.rh),
+
+                    /// Overview Section
+                    OverviewSectionWidget(
+                      mission:
+                          controller.organizationDetails.value?.aboutUs ?? '',
+                      causes:
+                          controller.organizationDetails.value?.causes ?? [],
+                    ),
+                    SizedBox(height: 100.rh), // Space for bottom button
+                  ],
+                ),
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
       floatingActionButton: Builder(
-        builder: (context) => _buildBottomDonateButton(
-          orgController,
-          context,
-        ).paddingXY(X: 56.rw),
+        builder: (context) =>
+            _buildBottomDonateButton(context).paddingXY(X: 56.rw),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  /// Build view donations history button
-  // Widget _buildViewHistoryButton(BuildContext context) {
-  //   return Container(
-  //     width: double.infinity,
-  //     child: OutlinedButton.icon(
-  //       onPressed: () {
-  //         context.pushNamed(RoutePath.organizationDonations);
-  //       },
-  //       icon: Icon(Icons.history, size: 18.rw, color: const Color(0xFF000C0B)),
-  //       label: Text(
-  //         'View Donations History',
-  //         style: TextStyle(
-  //           fontFamily: 'Familjen Grotesk',
-  //           fontSize: 16.rfs,
-  //           fontWeight: FontWeight.w600,
-  //           color: const Color(0xFF000C0B),
-  //         ),
-  //       ),
-  //       style: OutlinedButton.styleFrom(
-  //         padding: EdgeInsets.symmetric(vertical: 14.rh),
-  //         side: const BorderSide(color: Color(0xFF000C0B), width: 1.5),
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(12.rw),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _buildBottomDonateButton(
-    OrganizationController controller,
-    BuildContext context,
-  ) {
+  Widget _buildBottomDonateButton(BuildContext context) {
+    OrganizationController controller = Get.find<OrganizationController>();
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(

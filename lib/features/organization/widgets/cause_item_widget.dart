@@ -3,7 +3,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 class CauseItemWidget extends StatelessWidget {
-  final Cause cause;
+  final OrgDetailsCause cause;
 
   const CauseItemWidget({super.key, required this.cause});
 
@@ -16,8 +16,8 @@ class CauseItemWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Text(cause.emoji, style: TextStyle(fontSize: 14.rfs)),
-              SizedBox(width: 8.rw),
+              // Text("🤝", style: TextStyle(fontSize: 14.rfs)),
+              // SizedBox(width: 8.rw),
               Text(
                 cause.name,
                 style: TextStyle(
@@ -30,16 +30,13 @@ class CauseItemWidget extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4.rh),
-          Padding(
-            padding: EdgeInsets.only(left: 22.rw),
-            child: Text(
-              cause.description,
-              style: TextStyle(
-                fontFamily: 'Inter Display',
-                fontSize: 12.rfs,
-                color: const Color(0xFF000C0B),
-                height: 1.33,
-              ),
+          Text(
+            cause.description,
+            style: TextStyle(
+              fontFamily: 'Inter Display',
+              fontSize: 12.rfs,
+              color: const Color(0xFF000C0B),
+              height: 1.33,
             ),
           ),
         ],

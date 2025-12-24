@@ -141,14 +141,14 @@ class OrganizationController extends GetxController {
   ///==============================================
   /// fetch Organization details by ID
   ///==============================================
-  final RxBool isOrgDetailsFetching = false.obs;
+  final RxBool isLoadingOrgById = false.obs;
   final RxString error = ''.obs;
 
   final Rx<OrganizationDetailsModel?> organizationDetails =
       Rx<OrganizationDetailsModel?>(null);
 
   Future<void> fetchOrganizationDetails(String orgId) async {
-    isOrgDetailsFetching.value = true;
+    isLoadingOrgById.value = true;
     error.value = '';
 
     final result = await _networkHelper.request(
@@ -157,7 +157,7 @@ class OrganizationController extends GetxController {
       parser: (data) => OrganizationDetailsModel.fromJson(data['data']),
     );
 
-    isOrgDetailsFetching.value = false;
+    isLoadingOrgById.value = false;
 
     result.fold(
       (failure) {
