@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/badges/controllers/badges_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badge_history_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
@@ -31,7 +32,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<YourRewardsController>();
+    final yourRewardController = Get.find<YourRewardsController>();
     return Container(
       height: MediaQuery.of(context).size.height * 0.95,
       decoration: const BoxDecoration(
@@ -72,48 +73,81 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 24.rw),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 4.rh),
+              child: GetX<GetBadgeHistoryController>(
+                initState: (state) {
+                  state.controller!.fetchBadgeHistory(
+                    badgeDataModel.badge?.id ?? '',
+                  );
+                },
+                builder: (controller) {
+                  return Skeletonizer(
+                    enabled: controller.isLoading.value,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 4.rh),
 
-                  // Selected Badge Display
-                  _buildSelectedBadge(controller, badgeDataModel),
-
-                  SizedBox(height: 32.rh),
-
-                  // Progress Bar with Tiers
-                  _buildProgressSection(controller),
-
-                  SizedBox(height: 24.rh),
-
-                  /// Title
-                  Text('Recent Donations', style: AppTextStyles.f16W500()),
-                  SizedBox(height: 12.rh),
-
-                  /// === Recent Donations List === ///
-                  GetX<GetBadgeHistoryController>(
-                    initState: (state) {
-                      state.controller!.fetchBadgeHistory(
-                        badgeDataModel.badge?.id ?? '',
-                      );
-                    },
-                    builder: (controller) {
-                      return Skeletonizer(
-                        enabled: controller.isLoading.value,
-                        child: RecentDonation(
-                          recentDonations:
-                              controller
-                                  .badgeHistoryModel
-                                  .value
-                                  ?.data
-                                  .recentDonations ??
-                              [],
+                        // Selected Badge Display
+                        _buildSelectedBadge(
+                          badgeUrl: badgeDataModel.badge?.icon,
+                          badgeName: badgeDataModel.badge?.name,
+                          badgeDescription: badgeDataModel.badge?.description,
                         ),
-                      );
-                    },
-                  ),
-                ],
+
+                        SizedBox(height: 32.rh),
+
+                        // Progress Bar with Tiers
+                        _buildProgressSection(
+                          yourRewardController,
+                          currentTier: controller
+                              .badgeHistoryModel
+                              .value
+                              ?.data
+                              .progress
+                              .currentTier,
+                          percent: controller
+                              .badgeHistoryModel
+                              .value
+                              ?.data
+                              .progress
+                              .percentage,
+                        ),
+
+                        SizedBox(height: 24.rh),
+
+                        /// Title
+                        Text(
+                          'Recent Donations',
+                          style: AppTextStyles.f16W500(),
+                        ),
+                        SizedBox(height: 12.rh),
+
+                        /// === Recent Donations List === ///
+                        // GetX<GetBadgeHistoryController>(
+                        //   initState: (state) {
+                        //     state.controller!.fetchBadgeHistory(
+                        //       badgeDataModel.badge?.id ?? '',
+                        //     );
+                        //   },
+                        //   builder: (controller) {
+                        Skeletonizer(
+                          enabled: controller.isLoading.value,
+                          child: RecentDonation(
+                            recentDonations:
+                                controller
+                                    .badgeHistoryModel
+                                    .value
+                                    ?.data
+                                    .recentDonations ??
+                                [],
+                          ),
+                        ),
+                        // },
+                        // )
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -122,19 +156,28 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildSelectedBadge(
-    YourRewardsController controller,
-    BadgeDataModel badgeDataModel,
-  ) {
+  Widget _buildSelectedBadge({
+    String? badgeUrl,
+    String? badgeName,
+    String? badgeDescription,
+  }) {
     return Center(
       child: Column(
         children: [
           // Badge Icon
           Center(
             child: Image.network(
-              badgeDataModel.badge?.icon ?? '',
+              // badgeDataModel.badge?.icon ?? '',
+              badgeUrl ?? '',
               width: 120.rw,
               height: 120.rh,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(
+                  Icons.image_not_supported,
+                  size: 80.rw,
+                  color: Colors.grey,
+                );
+              },
             ),
           ),
 
@@ -144,7 +187,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
             width: 327,
             height: 22,
             child: Text(
-              badgeDataModel.badge?.name ?? '',
+              badgeName ?? 'N/A',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: const Color(0xFF0C0B0D),
@@ -163,7 +206,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
             width: 215,
             child: Text(
               // 'You’ve turned small change into real change — literally.',
-              badgeDataModel.badge?.description ?? '',
+              badgeDescription ?? 'N/A',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: const Color(0xFF6D6D6D),
@@ -179,7 +222,17 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressSection(YourRewardsController controller) {
+  Widget _buildProgressSection(
+    YourRewardsController controller, {
+    String? currentTier,
+    int? percent,
+  }) {
+    final badgesController = Get.find<BadgesController>();
+    print('Current Tier: $currentTier, Percent: $percent');
+    print(
+      'Calculated Progress: ${badgesController.getTierProgress(currentTier ?? '', percent?.toDouble() ?? 0)}',
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -198,7 +251,13 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
             // Active progress bar with gradient
             FractionallySizedBox(
               alignment: Alignment.centerLeft,
-              widthFactor: (badgeDataModel.progressPercentage ?? 0) / 100,
+              widthFactor: currentTier == 'one-tier'
+                  ? 1
+                  : badgesController.getTierProgress(
+                          currentTier ?? '',
+                          percent?.toDouble() ?? 0,
+                        ) /
+                        3,
               child: Container(
                 height: 10.rh,
                 decoration: BoxDecoration(
@@ -216,26 +275,39 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildProgressPoint(
-                    100,
-                    controller.currentProgress >= 100,
-                    _buildImage(Assets.donation.badge00.path),
-                  ),
-                  _buildProgressPoint(
-                    1000,
-                    controller.currentProgress >= 1000,
-                    _buildImage(Assets.donation.badgeNo1.path),
-                  ),
-                  _buildProgressPoint(
-                    1500,
-                    controller.currentProgress >= 1500,
-                    _buildImage(Assets.common.lock.path),
-                  ),
-                  _buildProgressPoint(
-                    2000,
-                    controller.currentProgress >= 2000,
-                    _buildImage(Assets.common.lock.path),
-                  ),
+                  if (currentTier != 'one-tier')
+                    _buildProgressPoint(
+                      0,
+                      badgesController.getTierIndex(currentTier ?? '') >= 0,
+                      badgesController.getTierIndex(currentTier ?? '') >= 0
+                          ? _buildImage(Assets.donation.badge00.path)
+                          : _buildImage(Assets.common.lock.path),
+                    ),
+
+                  if (currentTier != 'one-tier')
+                    _buildProgressPoint(
+                      1,
+                      badgesController.getTierIndex(currentTier ?? '') >= 1,
+                      badgesController.getTierIndex(currentTier ?? '') >= 1
+                          ? _buildImage(Assets.donation.badgeNo1.path)
+                          : _buildImage(Assets.common.lock.path),
+                    ),
+                  if (currentTier != 'one-tier')
+                    _buildProgressPoint(
+                      2,
+                      badgesController.getTierIndex(currentTier ?? '') >= 2,
+                      badgesController.getTierIndex(currentTier ?? '') >= 2
+                          ? _buildImage(Assets.donation.badgeNo2.path)
+                          : _buildImage(Assets.common.lock.path),
+                    ),
+                  if (currentTier != 'one-tier')
+                    _buildProgressPoint(
+                      3,
+                      badgesController.getTierIndex(currentTier ?? '') >= 3,
+                      badgesController.getTierIndex(currentTier ?? '') >= 3
+                          ? _buildImage(Assets.donation.badgeNo3.path)
+                          : _buildImage(Assets.common.lock.path),
+                    ),
                 ],
               ),
             ),

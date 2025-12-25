@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/core/theme/theme_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/profile_controller.dart';
+import 'package:cresent_charge_user_app/features/badges/controllers/badges_controller.dart';
 import 'package:cresent_charge_user_app/features/common/controllers/roundup-management/save_roundup_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badge_history_controller.dart';
@@ -81,4 +82,7 @@ void initGetx() {
   Get.lazyPut(() => GetDonationFullStatusController(), fenix: true);
   Get.lazyPut(() => DonateNowController(), fenix: true);
   Get.lazyPut(() => GetOrgCausesController(), fenix: true);
+
+  // =================== Badges Controllers ==================
+  Get.lazyPut(() => BadgesController(), fenix: true);
 }
