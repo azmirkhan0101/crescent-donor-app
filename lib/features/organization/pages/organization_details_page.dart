@@ -96,7 +96,13 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                           organizationDetails?.totalDonationAmount.toDouble() ??
                           0.0,
                       totalDonors: organizationDetails?.totalDonation ?? 0,
-                      recentDonors: organizationDetails?.recentDonors ?? [],
+                      recentDonorsImageUrl: [
+                        ...organizationDetails?.recentDonors
+                                .map((donor) => donor.donorImage)
+                                .toList() ??
+                            [],
+                      ],
+                      // organizationDetails?.recentDonors ?? [],
                     ),
                     SizedBox(height: 16.rh),
                     Align(

@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/features/organization/models/organization_details_model.dart';
 import 'package:flutter/material.dart';
 
 class OrgDetailTotalDonationsCard extends StatelessWidget {
@@ -7,12 +6,13 @@ class OrgDetailTotalDonationsCard extends StatelessWidget {
     required this.color,
     required this.totalDonatedAmount,
     required this.totalDonors,
-    required this.recentDonors,
+    required this.recentDonorsImageUrl,
   });
   final Color? color;
   final double totalDonatedAmount;
   final int totalDonors;
-  final List<RecentDonor> recentDonors;
+  // final List<RecentDonor> recentDonors;
+  final List<String> recentDonorsImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -52,26 +52,24 @@ class OrgDetailTotalDonationsCard extends StatelessWidget {
                 spacing: 4,
                 children: [
                   SizedBox(
-                    width: 16 + (8 * (recentDonors.length - 1)),
+                    width: 16 + (8 * (recentDonorsImageUrl.length - 1)),
                     height: 16,
                     child: Stack(
                       children: [
-                        ...recentDonors.map((donor) {
-                          int index = recentDonors.indexOf(donor);
+                        ...recentDonorsImageUrl.map((imageUrl) {
+                          int index = recentDonorsImageUrl.indexOf(imageUrl);
                           return Positioned(
                             left: index * 8,
-                            child: _DonatedPeoplePhoto(
-                              imagePath: donor.donorImage,
-                            ),
+                            child: _DonatedPeoplePhoto(imagePath: imageUrl),
                           );
                         }),
                       ],
                     ),
                   ),
 
-                  if (totalDonors > recentDonors.length)
+                  if (totalDonors > recentDonorsImageUrl.length)
                     Text(
-                      '+${totalDonors - recentDonors.length} People have already donated',
+                      '+${totalDonors - recentDonorsImageUrl.length} People have already donated',
                       style: TextStyle(
                         color: const Color(0xFF647270),
                         fontSize: 12,
@@ -80,7 +78,7 @@ class OrgDetailTotalDonationsCard extends StatelessWidget {
                         height: 1.33,
                       ),
                     ),
-                  if (totalDonors <= recentDonors.length)
+                  if (totalDonors <= recentDonorsImageUrl.length)
                     Text(
                       '$totalDonors People have already donated',
                       style: TextStyle(
