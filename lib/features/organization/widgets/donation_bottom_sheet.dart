@@ -33,10 +33,11 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
   @override
   void initState() {
     super.initState();
-    causesController.fetchCausesByOrgId(
-      donateNowController.organizationId.value,
-      // orgDetailsController.organizationDetails.value!.id,
-    );
+    // Fetch causes for the current organization
+    final orgId = donateNowController.organizationId.value;
+    if (orgId.isNotEmpty) {
+      causesController.fetchCausesByOrgId(orgId);
+    }
   }
 
   @override

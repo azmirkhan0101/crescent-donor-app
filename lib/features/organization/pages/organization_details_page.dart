@@ -1,6 +1,7 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/org_details_total_donate_card.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/impact_card_widget.dart';
@@ -131,8 +132,16 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
 
   Widget _buildBottomDonateButton(BuildContext context) {
     OrganizationController controller = Get.find<OrganizationController>();
+    DonateNowController donateNowController = Get.find<DonateNowController>();
+
     return GestureDetector(
       onTap: () {
+        // Update organizationId before opening bottom sheet
+        final currentOrgId = controller.organizationDetails.value?.id;
+        if (currentOrgId != null) {
+          donateNowController.organizationId.value = currentOrgId;
+        }
+
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
