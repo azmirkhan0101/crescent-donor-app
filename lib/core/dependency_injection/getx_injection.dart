@@ -10,7 +10,6 @@ import 'package:cresent_charge_user_app/features/donation/controllers/get_round_
 import 'package:cresent_charge_user_app/features/donation/controllers/one_time_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/recurring_states_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/search_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/create_recurring_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
@@ -45,7 +44,7 @@ void initGetx() {
 
   // ================== Home Controllers ==================
   Get.lazyPut(() => SearchController(), fenix: true);
-  Get.lazyPut(() => CharitiesController(), fenix: true);
+  // Get.lazyPut(() => CharitiesController(), fenix: true);
 
   // =================== Profile Controllers ==================
   Get.lazyPut(() => ProfileController(), fenix: true);

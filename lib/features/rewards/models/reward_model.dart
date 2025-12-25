@@ -14,6 +14,9 @@ class RewardModel {
   final String? expiryDate;
   final String status;
   final bool isActive;
+  final bool? featured;
+  final int? priority;
+  final int? redemptions;
   final InStoreRedemptionMethods? inStoreRedemptionMethods;
   final OnlineRedemptionMethods? onlineRedemptionMethods;
   final String codePrefix;
@@ -21,6 +24,11 @@ class RewardModel {
   final String createdAt;
   final String updatedAt;
   final String? lastLimitUpdate;
+  final int? availableCodesCount;
+  final bool? isAvailable;
+  final bool? userCanAfford;
+  final int? userBalance;
+  final bool? hasAlreadyClaimed;
   final String userStatus;
   final bool isAlreadyClaimed;
   final bool isAlreadyRedeemed;
@@ -41,6 +49,9 @@ class RewardModel {
     this.expiryDate,
     required this.status,
     required this.isActive,
+    this.featured,
+    this.priority,
+    this.redemptions,
     this.inStoreRedemptionMethods,
     this.onlineRedemptionMethods,
     required this.codePrefix,
@@ -48,6 +59,11 @@ class RewardModel {
     required this.createdAt,
     required this.updatedAt,
     this.lastLimitUpdate,
+    this.availableCodesCount,
+    this.isAvailable,
+    this.userCanAfford,
+    this.userBalance,
+    this.hasAlreadyClaimed,
     required this.userStatus,
     required this.isAlreadyClaimed,
     required this.isAlreadyRedeemed,
@@ -72,6 +88,9 @@ class RewardModel {
       expiryDate: json['expiryDate'],
       status: json['status'] ?? '',
       isActive: json['isActive'] ?? false,
+      featured: json['featured'],
+      priority: json['priority'],
+      redemptions: json['redemptions'],
       inStoreRedemptionMethods: json['inStoreRedemptionMethods'] != null
           ? InStoreRedemptionMethods.fromJson(json['inStoreRedemptionMethods'])
           : null,
@@ -83,6 +102,11 @@ class RewardModel {
       createdAt: json['createdAt'] ?? '',
       updatedAt: json['updatedAt'] ?? '',
       lastLimitUpdate: json['lastLimitUpdate'],
+      availableCodesCount: json['availableCodesCount'],
+      isAvailable: json['isAvailable'],
+      userCanAfford: json['userCanAfford'],
+      userBalance: json['userBalance'],
+      hasAlreadyClaimed: json['hasAlreadyClaimed'],
       userStatus: json['userStatus'] ?? '',
       isAlreadyClaimed: json['isAlreadyClaimed'] ?? false,
       isAlreadyRedeemed: json['isAlreadyRedeemed'] ?? false,
@@ -104,15 +128,11 @@ class PopulatedBusiness {
   });
 
   factory PopulatedBusiness.fromJson(Map<String, dynamic> json) {
-    final rawCover = json['coverImage'] as String? ?? '';
-    final resolvedCover = rawCover.isNotEmpty ? rawCover : null;
-    final rawLogo = json['logoImage'] as String? ?? '';
-    final resolvedLogo = rawLogo.isNotEmpty ? rawLogo : null;
     return PopulatedBusiness(
       id: json['_id'] ?? '',
       name: json['name'] ?? '',
-      logoImage: resolvedLogo,
-      coverImage: resolvedCover,
+      logoImage: json['logoImage'],
+      coverImage: json['coverImage'],
     );
   }
 }
@@ -132,7 +152,8 @@ class InStoreRedemptionMethods {
     return InStoreRedemptionMethods(
       qrCode: json['qrCode'] ?? false,
       staticCode: json['staticCode'] ?? false,
-      nfcTap: json['nfcTap'] ?? false,
+      nfcTap:
+          false, // todo: I made it false because this feature is not available yet
     );
   }
 }

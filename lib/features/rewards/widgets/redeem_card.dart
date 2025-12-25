@@ -37,57 +37,66 @@ class RedeemCard extends StatelessWidget {
               // Image and brand logo
               Stack(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 12.rh),
-                    width: double.infinity,
-                    height: 100.rh, // Reduced height
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.rw),
-                      color: Colors.grey[200],
-                      image:
-                          reward.business?.coverImage != null &&
-                              reward.business!.coverImage!.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(reward.business!.coverImage!),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 12.rh),
+                      width: double.infinity,
+                      height: 100.rh,
+                      // padding: EdgeInsets.all(8.rw),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.rw),
+                        color: Colors.grey[200],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.rw),
+                        child: Image.network(
+                          reward.business?.coverImage ?? '',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Icon(
+                                Icons.image_outlined,
+                                size: 40.rw,
+                                color: Colors.grey[400],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                    child:
-                        reward.business?.coverImage == null ||
-                            reward.business!.coverImage!.isEmpty
-                        ? Center(
-                            child: Icon(
-                              Icons.image_outlined,
-                              size: 40.rw,
-                              color: Colors.grey[400],
-                            ),
-                          )
-                        : null,
                   ),
                   Positioned(
                     bottom: 0.rh,
                     left: 10.rw,
                     child: Container(
-                      width: 32.rw,
-                      height: 32.rh,
-                      // padding: EdgeInsets.all(8.rh),
+                      width: 44.rw,
+                      height: 44.rh,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(999.rw),
                         color: Colors.black,
                       ),
-                      child: Center(
-                        child: Text(
-                          reward.business?.name != null &&
-                                  reward.business!.name.isNotEmpty
-                              ? reward.business!.name[0].toUpperCase()
-                              : 'B',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter Display',
-                          ),
+                      child: ClipOval(
+                        child: Image.network(
+                          reward.business?.logoImage ?? '',
+
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Text(
+                                reward.business?.name != null &&
+                                        reward.business!.name.isNotEmpty
+                                    ? reward.business!.name[0].toUpperCase()
+                                    : 'B',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'Inter Display',
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -306,20 +315,42 @@ class RedeemCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(999.rw),
               color: Colors.black,
             ),
-            child: Center(
-              child: Text(
-                reward.business?.name != null &&
-                        reward.business!.name.isNotEmpty
-                    ? reward.business!.name[0].toUpperCase()
-                    : 'B',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter Display',
-                ),
+            child: ClipOval(
+              child: Image.network(
+                reward.business?.logoImage ?? '',
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Center(
+                    child: Text(
+                      reward.business?.name != null &&
+                              reward.business!.name.isNotEmpty
+                          ? reward.business!.name[0].toUpperCase()
+                          : 'B',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter Display',
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
+            // child: Center(
+            //   child: Text(
+            //     reward.business?.name != null &&
+            //             reward.business!.name.isNotEmpty
+            //         ? reward.business!.name[0].toUpperCase()
+            //         : 'B',
+            //     style: const TextStyle(
+            //       color: Colors.white,
+            //       fontSize: 12,
+            //       fontWeight: FontWeight.w600,
+            //       fontFamily: 'Inter Display',
+            //     ),
+            //   ),
+            // ),
           ),
         ),
       );

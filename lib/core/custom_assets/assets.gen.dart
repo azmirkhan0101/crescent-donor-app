@@ -257,31 +257,12 @@ class $AssetsHomeGen {
   /// File path: assets/home/calendar.svg
   SvgGenImage get calendar => const SvgGenImage('assets/home/calendar.svg');
 
-  /// File path: assets/home/chase-icon.svg
-  SvgGenImage get chaseIcon => const SvgGenImage('assets/home/chase-icon.svg');
-
   /// File path: assets/home/coins.svg
   SvgGenImage get coins => const SvgGenImage('assets/home/coins.svg');
 
   /// File path: assets/home/cresent-light.svg
   SvgGenImage get cresentLight =>
       const SvgGenImage('assets/home/cresent-light.svg');
-
-  /// File path: assets/home/donate-cause-banner-1.png
-  AssetGenImage get donateCauseBanner1 =>
-      const AssetGenImage('assets/home/donate-cause-banner-1.png');
-
-  /// File path: assets/home/donate-cause-banner-2.png
-  AssetGenImage get donateCauseBanner2 =>
-      const AssetGenImage('assets/home/donate-cause-banner-2.png');
-
-  /// File path: assets/home/donate-cause-profile-2.png
-  AssetGenImage get donateCauseProfile2 =>
-      const AssetGenImage('assets/home/donate-cause-profile-2.png');
-
-  /// File path: assets/home/donatie-cause-profile-1.png
-  AssetGenImage get donatieCauseProfile1 =>
-      const AssetGenImage('assets/home/donatie-cause-profile-1.png');
 
   /// File path: assets/home/gift.svg
   SvgGenImage get gift => const SvgGenImage('assets/home/gift.svg');
@@ -326,14 +307,6 @@ class $AssetsHomeGen {
   /// File path: assets/home/user-4.png
   AssetGenImage get user4 => const AssetGenImage('assets/home/user-4.png');
 
-  /// File path: assets/home/varified-charities-blog-1.png
-  AssetGenImage get varifiedCharitiesBlog1 =>
-      const AssetGenImage('assets/home/varified-charities-blog-1.png');
-
-  /// File path: assets/home/varified-charities-blog-2.png
-  AssetGenImage get varifiedCharitiesBlog2 =>
-      const AssetGenImage('assets/home/varified-charities-blog-2.png');
-
   /// File path: assets/home/zakat.svg
   SvgGenImage get zakat => const SvgGenImage('assets/home/zakat.svg');
 
@@ -345,13 +318,8 @@ class $AssetsHomeGen {
     applePay,
     atmCard,
     calendar,
-    chaseIcon,
     coins,
     cresentLight,
-    donateCauseBanner1,
-    donateCauseBanner2,
-    donateCauseProfile2,
-    donatieCauseProfile1,
     gift,
     gpay,
     notification,
@@ -365,8 +333,6 @@ class $AssetsHomeGen {
     user2,
     user3,
     user4,
-    varifiedCharitiesBlog1,
-    varifiedCharitiesBlog2,
     zakat,
   ];
 }
@@ -449,10 +415,6 @@ class $AssetsOnboardingGen {
 class $AssetsProfileGen {
   const $AssetsProfileGen();
 
-  /// File path: assets/profile/background-image.png
-  AssetGenImage get backgroundImage =>
-      const AssetGenImage('assets/profile/background-image.png');
-
   /// File path: assets/profile/exclusive-brand-reward.svg
   SvgGenImage get exclusiveBrandReward =>
       const SvgGenImage('assets/profile/exclusive-brand-reward.svg');
@@ -462,11 +424,7 @@ class $AssetsProfileGen {
       const SvgGenImage('assets/profile/profile-image.svg');
 
   /// List of all assets
-  List<dynamic> get values => [
-    backgroundImage,
-    exclusiveBrandReward,
-    profileImage,
-  ];
+  List<SvgGenImage> get values => [exclusiveBrandReward, profileImage];
 }
 
 class $AssetsRewardsGen {
@@ -476,25 +434,9 @@ class $AssetsRewardsGen {
   SvgGenImage get errorCircle =>
       const SvgGenImage('assets/rewards/Error Circle.svg');
 
-  /// File path: assets/rewards/HM Logo.svg
-  SvgGenImage get hMLogo => const SvgGenImage('assets/rewards/HM Logo.svg');
-
-  /// File path: assets/rewards/adidas.svg
-  SvgGenImage get adidas => const SvgGenImage('assets/rewards/adidas.svg');
-
-  /// File path: assets/rewards/amazon-a.svg
-  SvgGenImage get amazonA => const SvgGenImage('assets/rewards/amazon-a.svg');
-
-  /// File path: assets/rewards/amazon.svg
-  SvgGenImage get amazon => const SvgGenImage('assets/rewards/amazon.svg');
-
   /// File path: assets/rewards/checkmark.svg
   SvgGenImage get checkmark =>
       const SvgGenImage('assets/rewards/checkmark.svg');
-
-  /// File path: assets/rewards/groceries.png
-  AssetGenImage get groceries =>
-      const AssetGenImage('assets/rewards/groceries.png');
 
   /// File path: assets/rewards/mobile-on-hand.svg
   SvgGenImage get mobileOnHand =>
@@ -528,19 +470,10 @@ class $AssetsRewardsGen {
   /// File path: assets/rewards/shop-icon.svg
   SvgGenImage get shopIcon => const SvgGenImage('assets/rewards/shop-icon.svg');
 
-  /// File path: assets/rewards/store-profile-banner-image.png
-  AssetGenImage get storeProfileBannerImage =>
-      const AssetGenImage('assets/rewards/store-profile-banner-image.png');
-
   /// List of all assets
   List<dynamic> get values => [
     errorCircle,
-    hMLogo,
-    adidas,
-    amazonA,
-    amazon,
     checkmark,
-    groceries,
     mobileOnHand,
     progressPointSvg,
     redeemCompleted,
@@ -549,7 +482,6 @@ class $AssetsRewardsGen {
     rewardProgressPointImage,
     rewardProgressPointer,
     shopIcon,
-    storeProfileBannerImage,
   ];
 }
 

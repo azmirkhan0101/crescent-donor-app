@@ -107,14 +107,14 @@ class RoundUpPage extends StatelessWidget {
                         SizedBox(height: 12.rh),
 
                         // Organizations horizontal list
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            spacing: 8.rw,
-                            children: Get.find<CharitiesController>()
-                                .verifiedCharities,
-                          ),
-                        ),
+                        // SingleChildScrollView(
+                        //   scrollDirection: Axis.horizontal,
+                        //   child: Row(
+                        //     spacing: 8.rw,
+                        //     children: Get.find<CharitiesController>()
+                        //         .verifiedCharities,
+                        //   ),
+                        // ),
                         // SizedBox(
                         //   height: 220.rh,
                         //   child: ListView.separated(

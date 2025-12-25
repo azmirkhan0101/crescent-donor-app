@@ -5,16 +5,16 @@
     "data": {
         "_id": "69465f9ce44cbeb3cdce05d2",
         "business": {
-            "_id": "69465d27db997dd46e7d5ff2",
-            "category": "Electronics",
-            "name": "TechMart BD",
-            "businessPhoneNumber": "+8801712345678",
-            "businessEmail": "contact@techmartbd.com",
+            "_id": "694a16423e3178c766051440",
+            "category": "Restaurant",
+            "name": "Azmir Bakery",
+            "businessPhoneNumber": "01909352429",
+            "businessEmail": "bakery@mail.com",
             "locations": [
-                "Dhaka",
-                "Chattogram",
-                "Sylhet"
-            ]
+                "Sparktech Agency, Aqua Tower 43, Dhaka, Bangladesh",
+                "New York, NY, USA"
+            ],
+            "coverImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/businesses/cover-694a16413e3178c76605143e-1766485085187"
         },
         "title": "Free Tea",
         "description": "Get a free coffee with any purchase above $10",
@@ -188,13 +188,19 @@ class Business {
   final String id;
   final String category;
   final String name;
-  final List<dynamic> locations;
+  final List<String>? locations;
+  final String? businessPhoneNumber;
+  final String? businessEmail;
+  final String? coverImage;
 
   Business({
     required this.id,
     required this.category,
     required this.name,
-    required this.locations,
+    this.locations,
+    this.businessPhoneNumber,
+    this.businessEmail,
+    this.coverImage,
   });
 
   factory Business.fromJson(Map<String, dynamic> json) {
@@ -202,7 +208,12 @@ class Business {
       id: json['_id'] ?? '',
       category: json['category'] ?? '',
       name: json['name'] ?? '',
-      locations: json['locations'] ?? [],
+      locations: json['locations'] != null
+          ? List<String>.from(json['locations'])
+          : null,
+      businessPhoneNumber: json['businessPhoneNumber'],
+      businessEmail: json['businessEmail'],
+      coverImage: json['coverImage'],
     );
   }
 }

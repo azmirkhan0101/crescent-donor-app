@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
@@ -157,12 +156,7 @@ class RedemptionCodeBottomSheet extends StatelessWidget {
                                             874.125.rw,
                                           ),
                                         ),
-                                        child:
-                                            brandIcon ??
-                                            Assets.rewards.amazonA.svg(
-                                              width: 14.rw,
-                                              height: 14.rh,
-                                            ),
+                                        child: brandIcon,
                                       ),
 
                                       8.rw.heightWidth,

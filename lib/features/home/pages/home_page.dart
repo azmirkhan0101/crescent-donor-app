@@ -4,7 +4,6 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
 import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
@@ -23,20 +22,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(SecureRoundupDashboardController()).fetchDashboard();
     final getProfileController = Get.find<GetProfileController>();
-    // ignore: unused_local_variable
     final getOrgsController = Get.put(OrganizationController());
     final causesController = Get.put(CausesController());
-    // ignore: unused_local_variable
-    final charitiesController = Get.put(CharitiesController());
 
     // Initialize FCM token controller and send token to backend
     final fcmTokenController = Get.put(FcmTokenController());
     fcmTokenController.sendFcmTokenToBackend();
-    // final getNotificationsController = Get.put(GetNotificationsController());
-    // getNotificationsController.fetchNotifications(refresh: true);
-    // Initialize unseen notification count controller
+
     Get.put(UnseenNotificationCountController());
 
     return Scaffold(
@@ -281,11 +274,7 @@ class HomePage extends StatelessWidget {
   }
 
   /// Build the verified charities section
-  Widget _buildVerifiedCharities(
-    BuildContext context,
-    // CharitiesController charitiesController,
-    // GetOrgsController getOrgsController,
-  ) {
+  Widget _buildVerifiedCharities(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -305,22 +294,7 @@ class HomePage extends StatelessWidget {
           ],
         ).paddingR(16.rw),
         12.rh.heightWidth,
-        // SingleChildScrollView(
-        //   scrollDirection: Axis.horizontal,
-        //   child: Row(
-        //     spacing: 8.rw,
-        //     // children: charitiesController.verifiedCharities,
-        //     children: getOrgsController.organizations
-        //         .map(
-        //           (org) => VerifiedCharityCard(
-        //             charityLogo: org.logoImage,
-        //             charityName: org.name,
-        //             charityDescription: org.description,
-        //           ),
-        //         )
-        //         .toList(),
-        //   ),
-        // ),
+
         SizedBox(
           height: 226.rh,
           child: GetBuilder<OrganizationController>(
@@ -380,11 +354,6 @@ class HomePage extends StatelessWidget {
         ),
         16.rh.heightWidth,
         Column(
-          // children: [
-          //   charitiesController.charities[0],
-          //   16.rh.heightWidth,
-          //   charitiesController.charities[1],
-          // ],
           children: getAllCausesController.causes
               .map(
                 (cause) => DonationCauseCard(

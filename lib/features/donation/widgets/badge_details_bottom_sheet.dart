@@ -17,18 +17,10 @@ const Color _lightGray = Color(0xFFEBE9EC);
 const Color _progressStart = Color(0xFFC08FFF);
 const Color _progressEnd = Color(0xFF735699);
 
-/// Badge Modal Bottom Sheet
-///
-/// Shows detailed badge information with progress bar and recent donations
 class BadgeDetailsBottomSheet extends StatelessWidget {
-  // final Badge selectedBadge;
   final BadgeDataModel badgeDataModel;
 
-  const BadgeDetailsBottomSheet({
-    super.key,
-    // required this.selectedBadge,
-    required this.badgeDataModel,
-  });
+  const BadgeDetailsBottomSheet({super.key, required this.badgeDataModel});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +43,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
               width: 32,
               height: 4,
               decoration: ShapeDecoration(
-                color: const Color(0xFF000C0B) /* Colors-Off-Black */,
+                color: const Color(0xFF000C0B),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -123,13 +115,6 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
                         SizedBox(height: 12.rh),
 
                         /// === Recent Donations List === ///
-                        // GetX<GetBadgeHistoryController>(
-                        //   initState: (state) {
-                        //     state.controller!.fetchBadgeHistory(
-                        //       badgeDataModel.badge?.id ?? '',
-                        //     );
-                        //   },
-                        //   builder: (controller) {
                         Skeletonizer(
                           enabled: controller.isLoading.value,
                           child: RecentDonation(
@@ -142,8 +127,6 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
                                 [],
                           ),
                         ),
-                        // },
-                        // )
                       ],
                     ),
                   );
@@ -167,7 +150,6 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
           // Badge Icon
           Center(
             child: Image.network(
-              // badgeDataModel.badge?.icon ?? '',
               badgeUrl ?? '',
               width: 120.rw,
               height: 120.rh,
@@ -205,7 +187,6 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
           SizedBox(
             width: 215,
             child: Text(
-              // 'You’ve turned small change into real change — literally.',
               badgeDescription ?? 'N/A',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -228,10 +209,6 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
     int? percent,
   }) {
     final badgesController = Get.find<BadgesController>();
-    print('Current Tier: $currentTier, Percent: $percent');
-    print(
-      'Calculated Progress: ${badgesController.getTierProgress(currentTier ?? '', percent?.toDouble() ?? 0)}',
-    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,

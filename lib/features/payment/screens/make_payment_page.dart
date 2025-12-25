@@ -1,7 +1,7 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/make_payment_controller.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/make_payment_controller.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
@@ -65,12 +65,12 @@ class MakePaymentPage extends StatelessWidget {
                   height: 56.rh,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(60),
-                    image: DecorationImage(
-                      image: AssetImage(
-                        Assets.home.varifiedCharitiesBlog1.path,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
+                    // image: DecorationImage(
+                    //   image: AssetImage(
+                    //     Assets.home.varifiedCharitiesBlog1.path,
+                    //   ),
+                    //   fit: BoxFit.cover,
+                    // ),
                   ),
                 ),
               ),

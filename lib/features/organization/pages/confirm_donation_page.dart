@@ -1,5 +1,4 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
@@ -118,8 +117,10 @@ class ConfirmDonationPage extends StatelessWidget {
                 parseImageUrl(orgLogoUrl),
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Assets.home.varifiedCharitiesBlog1.image(
-                    fit: BoxFit.cover,
+                  return Icon(
+                    Icons.broken_image,
+                    size: 40.rw,
+                    color: _grayText,
                   );
                 },
               ),
