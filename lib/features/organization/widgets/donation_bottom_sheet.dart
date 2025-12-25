@@ -3,8 +3,8 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/core/theme/theme.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/get_org_causes_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/date_time_selection_bottom_sheet.dart';
@@ -28,7 +28,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
   final donateNowController = Get.put(DonateNowController());
 
   final orgDetailsController = Get.find<OrganizationController>();
-  final causesController = Get.find<CausesController>();
+  final getOrgcausesController = Get.find<GetOrgCausesController>();
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
     // Fetch causes for the current organization
     final orgId = donateNowController.organizationId.value;
     if (orgId.isNotEmpty) {
-      causesController.fetchCausesByOrgId(orgId);
+      getOrgcausesController.fetchCausesByOrgId(orgId);
     }
   }
 
@@ -70,7 +70,10 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
                   16.rh.heightWidth,
 
                   // Causes Section
-                  _buildCausesSection(donateNowController, causesController),
+                  _buildCausesSection(
+                    donateNowController,
+                    getOrgcausesController,
+                  ),
 
                   SizedBox(height: 24.rh),
 
@@ -234,7 +237,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
   Widget _buildCausesSection(
     DonateNowController controller,
-    CausesController causesController,
+    GetOrgCausesController causesController,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

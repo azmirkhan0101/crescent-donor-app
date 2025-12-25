@@ -200,6 +200,16 @@ class DonateNowController extends GetxController {
     );
   }
 
+  void resetDonationData() {
+    selectedAmountIndex.value = -1;
+    amount.value = 0;
+    specialMsgController.clear();
+    selectedCause.value = null;
+    isPaymentProcessing.value = false;
+    errorMessage.value = '';
+    donationResponse.value = null;
+  }
+
   @override
   void onClose() {
     specialMsgController.dispose();

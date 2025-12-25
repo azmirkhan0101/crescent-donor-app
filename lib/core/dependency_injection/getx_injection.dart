@@ -12,7 +12,9 @@ import 'package:cresent_charge_user_app/features/donation/controllers/round_up_c
 import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/search_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/create_recurring_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/get_donation_full_status_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/get_org_causes_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/business_website_count_update_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/cancel_redemption_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
@@ -77,4 +79,6 @@ void initGetx() {
   Get.lazyPut(() => GetBadgeHistoryController(), fenix: true);
   Get.lazyPut(() => GetRecurringOrgStateController(), fenix: true);
   Get.lazyPut(() => GetDonationFullStatusController(), fenix: true);
+  Get.lazyPut(() => DonateNowController(), fenix: true);
+  Get.lazyPut(() => GetOrgCausesController(), fenix: true);
 }
