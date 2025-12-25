@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -42,19 +41,6 @@ class DonationCompleteController extends GetxController {
     final now = DateTime.now();
     final formatter = DateFormat('MMMM d, yyyy · h:mm a');
     _timestamp.value = formatter.format(now);
-  }
-
-  void onSaveReceipt() {
-    // Handle save receipt functionality
-    // TODO: Implement PDF generation or screenshot saving
-    Get.snackbar(
-      'Success',
-      'Receipt saved successfully!',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Get.theme.primaryColor,
-      colorText: Get.theme.colorScheme.onPrimary,
-      icon: const Icon(Icons.download_done, color: Colors.white),
-    );
   }
 
   void onDonePressed() {

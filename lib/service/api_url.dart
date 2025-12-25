@@ -57,6 +57,8 @@ class ApiUrl {
       '$baseUrl/donation/one-time/create';
   static const String clientStats = '$baseUrl/donation/analytics/client-stats';
   static const String roundupStats = '$baseUrl/client/roundup-stats';
+  static String getDonationFullStatus(String donationId) =>
+      '$baseUrl/donation/$donationId/status';
 
   /// ======= Payment Methods =======
   static const String getPaymentMethods = '$baseUrl/payment-method';
@@ -152,4 +154,8 @@ class ApiUrl {
   static const String getBadgesProgress = '$baseUrl/badges/user/progress';
   static String getBadgeHistory(String badgeId) =>
       '$baseUrl/badges/$badgeId/history';
+
+  /// ======= Receipt =======
+  static String getReceipt(String receiptId) => '$baseUrl/receipt/$receiptId';
+  static const String generateReceipt = '$baseUrl/api/receipts/generate';
 }
