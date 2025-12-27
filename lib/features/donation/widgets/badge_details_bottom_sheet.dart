@@ -9,6 +9,7 @@ import 'package:cresent_charge_user_app/features/rewards/controllers/your_reward
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart' hide Badge;
+import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -147,19 +148,15 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          // Badge Icon
+          // Badge Icon (3D Model)
           Center(
-            child: Image.network(
-              badgeUrl ?? '',
+            child: SizedBox(
               width: 120.rw,
               height: 120.rh,
-              errorBuilder: (context, error, stackTrace) {
-                return Icon(
-                  Icons.image_not_supported,
-                  size: 80.rw,
-                  color: Colors.grey,
-                );
-              },
+              child: Flutter3DViewer(
+                src: 'assets/3d/001_gold.glb',
+                progressBarColor: const Color(0xFFC08FFF),
+              ),
             ),
           ),
 

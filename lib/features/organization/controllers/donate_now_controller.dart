@@ -17,6 +17,9 @@ class DonateNowController extends GetxController {
 
   final TextEditingController specialMsgController = TextEditingController();
 
+  var isRecurringAvailable = false.obs;
+  var isRoundUpAvailable = false.obs;
+
   var isRoundUp = false.obs;
   var isRecurring = false.obs;
   var isOneTime = false.obs;

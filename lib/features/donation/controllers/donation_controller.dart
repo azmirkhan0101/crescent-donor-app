@@ -6,12 +6,45 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class DonationController extends GetxController {
-  final RxString selectedFilter = 'Last 30 Days'.obs;
+  final RxString selectedFilter = 'This Month'.obs;
   final RxString pointsEarned = '16000'.obs;
 
   var clientStats = Rx<ClientStats?>(null);
   var isLoadingClientStats = false.obs;
   var errorMessageClientStats = ''.obs;
+
+  // Filter options
+  final List<String> filterOptions = [
+    'Today',
+    'Yesterday',
+    'This Week',
+    'Last Week',
+    'This Month',
+    'Last Month',
+    'This Year',
+    'Last Year',
+  ];
+
+  // Map display text to API parameter value
+  String _getFilterValue(String displayText) {
+    final Map<String, String> filterMap = {
+      'Today': 'today',
+      'Yesterday': 'yesterday',
+      'This Week': 'this_week',
+      'Last Week': 'last_week',
+      'This Month': 'this_month',
+      'Last Month': 'last_month',
+      'This Year': 'this_year',
+      'Last Year': 'last_year',
+    };
+    return filterMap[displayText] ?? 'this_month';
+  }
+
+  // Update selected filter and fetch new data
+  void updateFilter(String filter) {
+    selectedFilter.value = filter;
+    fetchClientStats();
+  }
 
   List<DonationChartPoint> get donationChartPoints {
     final stats = clientStats.value;
@@ -50,9 +83,12 @@ class DonationController extends GetxController {
     isLoadingClientStats.value = true;
     errorMessageClientStats.value = '';
 
+    final timeFilter = _getFilterValue(selectedFilter.value);
+    final url = '${ApiUrl.clientStats}?timeFilter=$timeFilter';
+
     final response = await Get.find<NetworkHelper>().request(
       'GET',
-      ApiUrl.clientStats,
+      url,
       withAuth: true,
     );
     isLoadingClientStats.value = false;
@@ -65,7 +101,9 @@ class DonationController extends GetxController {
       (data) {
         final clientStatsResponse = ClientStatsResponse.fromJson(data);
         clientStats.value = clientStatsResponse.data;
-        debugPrint('Client stats fetched successfully');
+        debugPrint(
+          'Client stats fetched successfully with filter: $timeFilter',
+        );
       },
     );
   }

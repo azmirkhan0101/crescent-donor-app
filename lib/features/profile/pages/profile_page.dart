@@ -218,7 +218,9 @@ class ProfilePage extends StatelessWidget {
       MenuItemData(
         icon: Assets.common.globe.path, // Using globe for terms & conditions
         title: 'Terms & Conditions',
-        onTap: () {},
+        onTap: () {
+          context.pushNamed(RoutePath.termsAndConditions);
+        },
       ),
     ];
 

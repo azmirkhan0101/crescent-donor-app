@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_business_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_point_balance_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
@@ -26,15 +27,9 @@ class YourRewardsPage extends StatelessWidget {
   Future<void> _refreshData() async {
     // final controller = Get.find<YourRewardsController>();
     await Future.wait([
-      Get.find<GetAllRewardsController>().fetchRewards(
-        // search: controller.searchQuery.isEmpty ? null : controller.searchQuery,
-        // category: controller.selectedCategoryIndex != 0
-        //     ? controller.categories[controller.selectedCategoryIndex]
-        //           .toLowerCase()
-        //     : null,
-        status: 'all',
-      ),
       Get.find<GetPointBalanceController>().fetchUserPoints(),
+      Get.find<GetAllBusinessController>().fetchBusinessList(),
+      Get.find<GetAllRewardsController>().fetchRewards(status: 'all'),
     ]);
   }
 

@@ -16,6 +16,9 @@ class OrganizationDetailsModel {
   final double totalDonationAmount;
   final List<RecentDonor> recentDonors;
   final List<OrgDetailsCause> causes;
+  final bool isOnetime;
+  final bool isRecurring;
+  final bool isRoundup;
 
   OrganizationDetailsModel({
     required this.id,
@@ -35,6 +38,9 @@ class OrganizationDetailsModel {
     required this.totalDonationAmount,
     required this.recentDonors,
     this.causes = const [],
+    required this.isOnetime,
+    required this.isRecurring,
+    required this.isRoundup,
   });
 
   factory OrganizationDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -64,6 +70,9 @@ class OrganizationDetailsModel {
               ?.map((e) => OrgDetailsCause.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      isOnetime: json['isOnetime'] ?? false,
+      isRecurring: json['isRecurring'] ?? false,
+      isRoundup: json['isRoundup'] ?? false,
     );
   }
 }
@@ -99,7 +108,7 @@ class RecentDonor {
   final double lastDonationAmount;
   final String donorId;
   final String donorName;
-  final String donorImage;
+  final String? donorImage;
   final String donorAddress;
 
   RecentDonor({
@@ -107,7 +116,7 @@ class RecentDonor {
     required this.lastDonationAmount,
     required this.donorId,
     required this.donorName,
-    required this.donorImage,
+    this.donorImage,
     required this.donorAddress,
   });
 
@@ -117,7 +126,7 @@ class RecentDonor {
       lastDonationAmount: (json['lastDonationAmount'] ?? 0).toDouble(),
       donorId: json['donorId'] ?? '',
       donorName: json['donorName'] ?? '',
-      donorImage: json['donorImage'] ?? '',
+      donorImage: json['donorImage'],
       donorAddress: json['donorAddress'] ?? '',
     );
   }
@@ -140,7 +149,7 @@ class OrgDetailsCause {
 
   factory OrgDetailsCause.fromJson(Map<String, dynamic> json) {
     return OrgDetailsCause(
-      id: json['id'] ?? '',
+      id: json['_id'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       category: json['category'] ?? '',

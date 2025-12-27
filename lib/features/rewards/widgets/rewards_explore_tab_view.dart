@@ -101,6 +101,7 @@ class RewardsExploreTabView extends StatelessWidget {
 
   Widget _buildBrandLogos(BuildContext context) {
     return GetX<GetAllBusinessController>(
+      init: Get.find<GetAllBusinessController>(),
       initState: (state) {
         state.controller!.fetchBusinessList();
       },

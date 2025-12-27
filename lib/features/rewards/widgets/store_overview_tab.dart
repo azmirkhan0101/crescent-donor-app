@@ -31,11 +31,11 @@ class StoreOverviewTab extends StatelessWidget {
                   iconBg: const Color(0xFFE5D2FB),
                   backgroundColor: const Color(0xFFEBDFFA),
                   title: 'Website',
-                  subtitle: storeProfile.businessWebsite,
+                  subtitle: storeProfile.businessWebsite ?? 'No website',
                   onTap: () async {
                     await Get.find<BusinessWebsiteCountUpdateController>()
                         .updateWebsiteVisitCount(storeProfile.id);
-                    await _openWebsite(storeProfile.businessWebsite);
+                    await _openWebsite(storeProfile.businessWebsite ?? '');
                   },
                 ),
               ),
@@ -61,7 +61,7 @@ class StoreOverviewTab extends StatelessWidget {
             iconBg: const Color(0xFFFFF8CC),
             backgroundColor: const Color(0xFFF9F3CB),
             title: 'Email',
-            subtitle: storeProfile.businessEmail,
+            subtitle: storeProfile.businessEmail ?? 'No email provided',
           ),
           24.rh.heightWidth,
 

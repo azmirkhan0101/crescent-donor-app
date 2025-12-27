@@ -88,39 +88,74 @@ class DonationHeader extends StatelessWidget {
             ),
           ),
           // Filter Dropdown
-          GestureDetector(
-            onTap: onFilterTap,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.rw, vertical: 10.rh),
-              decoration: BoxDecoration(
+          GetX<DonationController>(
+            builder: (controller) {
+              return PopupMenuButton<String>(
+                onSelected: (String value) {
+                  controller.updateFilter(value);
+                },
                 color: DonationConstants.cardWhite,
-                borderRadius: BorderRadius.circular(
-                  DonationConstants.smallCardBorderRadius.rw,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    DonationConstants.smallCardBorderRadius.rw,
+                  ),
+                  side: const BorderSide(color: Color(0x1A000000), width: 1),
                 ),
-                border: Border.all(color: const Color(0x1A000000), width: 1),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    filterText,
-                    style: TextStyle(
-                      fontFamily: DonationFonts.interDisplay,
-                      fontSize: DonationConstants.fontSize14.rfs,
-                      fontWeight: FontWeight.w500,
-                      color: DonationConstants.offBlack,
-                      height: 16 / 14,
+                itemBuilder: (BuildContext context) {
+                  return controller.filterOptions.map((String option) {
+                    return PopupMenuItem<String>(
+                      value: option,
+                      child: Text(
+                        option,
+                        style: TextStyle(
+                          fontFamily: DonationFonts.interDisplay,
+                          fontSize: DonationConstants.fontSize14.rfs,
+                          fontWeight: FontWeight.w500,
+                          color: DonationConstants.offBlack,
+                        ),
+                      ),
+                    );
+                  }).toList();
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.rw,
+                    vertical: 10.rh,
+                  ),
+                  decoration: BoxDecoration(
+                    color: DonationConstants.cardWhite,
+                    borderRadius: BorderRadius.circular(
+                      DonationConstants.smallCardBorderRadius.rw,
+                    ),
+                    border: Border.all(
+                      color: const Color(0x1A000000),
+                      width: 1,
                     ),
                   ),
-                  SizedBox(width: 8.rw),
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: DonationConstants.fontSize14.rfs,
-                    color: DonationConstants.offBlack,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        controller.selectedFilter.value,
+                        style: TextStyle(
+                          fontFamily: DonationFonts.interDisplay,
+                          fontSize: DonationConstants.fontSize14.rfs,
+                          fontWeight: FontWeight.w500,
+                          color: DonationConstants.offBlack,
+                          height: 16 / 14,
+                        ),
+                      ),
+                      SizedBox(width: 8.rw),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        size: DonationConstants.fontSize14.rfs,
+                        color: DonationConstants.offBlack,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ],
       ),

@@ -99,6 +99,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
                       recentDonorsImageUrl: [
                         ...organizationDetails?.recentDonors
                                 .map((donor) => donor.donorImage)
+                                .whereType<String>()
                                 .toList() ??
                             [],
                       ],
@@ -146,6 +147,10 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
         final currentOrgId = controller.organizationDetails.value?.id;
         if (currentOrgId != null) {
           donateNowController.organizationId.value = currentOrgId;
+          donateNowController.isRecurringAvailable.value =
+              controller.organizationDetails.value?.isRecurring ?? false;
+          donateNowController.isRoundUpAvailable.value =
+              controller.organizationDetails.value?.isRoundup ?? false;
         }
 
         showModalBottomSheet(

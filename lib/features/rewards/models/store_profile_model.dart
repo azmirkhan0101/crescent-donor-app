@@ -1,27 +1,28 @@
-import 'package:cresent_charge_user_app/service/api_url.dart';
 /*
 {
     "success": true,
     "message": "Business profile retrived successfully!",
     "data": {
-        "_id": "69413330eaa7c8a7c9ca05ea",
-        "auth": "69413330eaa7c8a7c9ca05e8",
-        "category": "Electronics",
-        "name": "TechMart BD",
-        "tagLine": "Quality products guaranteed",
-        "description": "We sell high-quality electronic gadgets and accessories.",
-        "businessPhoneNumber": "+8801712345678",
-        "businessEmail": "contact@techmartbd.com",
-        "businessWebsite": "https://www.techmartbd.com",
+        "_id": "694796c1b750f35edef22ce5",
+        "auth": "694796c0b750f35edef22ce3",
+        "category": "Automotive",
+        "name": "AutoZone BD",
+        "tagLine": "Drive with confidence",
+        "description": "We supply high-quality automotive parts, car accessories, and maintenance products.",
+        "logoImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/businesses/logo-1766299328233",
+        "businessPhoneNumber": "+8801855667788",
+        "businessEmail": "support@autozonebd.com",
+        "businessWebsite": "https://www.autozonebd.com",
         "locations": [
             "Dhaka",
-            "Chattogram",
-            "Sylhet"
+            "Gazipur",
+            "Cumilla"
         ],
         "websiteViews": 0,
         "views": 0,
-        "createdAt": "2025-12-16T10:23:44.614Z",
-        "updatedAt": "2025-12-16T10:23:44.614Z"
+        "createdAt": "2025-12-21T06:42:09.307Z",
+        "updatedAt": "2025-12-21T09:17:02.744Z",
+        "coverImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/businesses/cover-694796c0b750f35edef22ce3-1766308622194"
     }
 }
 */
@@ -31,59 +32,56 @@ class StoreProfileModel {
   final String auth;
   final String category;
   final String name;
-  final String tagLine;
-  final String description;
-  final String coverImage;
-  final String businessPhoneNumber;
-  final String businessEmail;
-  final String businessWebsite;
+  final String? tagLine;
+  final String? description;
+  final String? logoImage;
+  final String? businessPhoneNumber;
+  final String? businessEmail;
+  final String? businessWebsite;
   final List<String> locations;
   final int websiteViews;
   final int views;
   final String createdAt;
   final String updatedAt;
+  final String? coverImage;
 
   StoreProfileModel({
     required this.id,
     required this.auth,
     required this.category,
     required this.name,
-    required this.tagLine,
-    required this.description,
-    required this.coverImage,
-    required this.businessPhoneNumber,
-    required this.businessEmail,
-    required this.businessWebsite,
+    this.tagLine,
+    this.description,
+    this.logoImage,
+    this.businessPhoneNumber,
+    this.businessEmail,
+    this.businessWebsite,
     required this.locations,
     required this.websiteViews,
     required this.views,
     required this.createdAt,
     required this.updatedAt,
+    this.coverImage,
   });
 
   factory StoreProfileModel.fromJson(Map<String, dynamic> json) {
-    String rawCover = json['coverImage'] ?? json['logoImage'] ?? '';
-    String resolvedCover = rawCover.isEmpty
-        ? ''
-        : (rawCover.startsWith('http')
-              ? rawCover
-              : '${ApiUrl.imageBaseUrl}/$rawCover');
     return StoreProfileModel(
-      id: json['_id'] ?? '',
-      auth: json['auth'] ?? '',
-      category: json['category'] ?? '',
-      name: json['name'] ?? '',
-      tagLine: json['tagLine'] ?? '',
-      description: json['description'] ?? '',
-      coverImage: resolvedCover,
-      businessPhoneNumber: json['businessPhoneNumber'] ?? '',
-      businessEmail: json['businessEmail'] ?? '',
-      businessWebsite: json['businessWebsite'] ?? '',
+      id: json['_id'],
+      auth: json['auth'],
+      category: json['category'],
+      name: json['name'],
+      tagLine: json['tagLine'],
+      description: json['description'],
+      logoImage: json['logoImage'],
+      businessPhoneNumber: json['businessPhoneNumber'],
+      businessEmail: json['businessEmail'],
+      businessWebsite: json['businessWebsite'],
       locations: List<String>.from(json['locations'] ?? []),
       websiteViews: json['websiteViews'] ?? 0,
       views: json['views'] ?? 0,
-      createdAt: json['createdAt'] ?? '',
-      updatedAt: json['updatedAt'] ?? '',
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      coverImage: json['coverImage'],
     );
   }
 }

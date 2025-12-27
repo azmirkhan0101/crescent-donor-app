@@ -58,6 +58,8 @@ dependencies:
   firebase_messaging: ^16.1.0
   flutter_local_notifications: ^19.5.0
   open_filex: ^4.5.0
+  flutter_html: ^3.0.0
+  flutter_3d_controller: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -93,6 +95,7 @@ flutter:
     - assets/rewards/
     - assets/donation/
     - assets/profile/
+    - assets/3d/
   
   # fonts:
   #   - family: Schyler

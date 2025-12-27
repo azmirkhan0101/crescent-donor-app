@@ -60,27 +60,59 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.rw),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              controller.storeProfile.value?.coverImage ??
-                                  'https://cdn.pixabay.com/photo/2020/04/12/10/57/store-5033746_1280.png',
-                            ),
-                            fit: BoxFit.fitWidth,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.rw),
+                          child: Image.network(
+                            controller.storeProfile.value?.coverImage ?? '',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.store,
+                                    size: 50,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
                       Positioned(
                         bottom: 0.rh,
-                        right: 0.rw,
-                        left: 0.rw,
-                        child: Container(
-                          width: 80.rw,
-                          height: 80.rh,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF000C0B),
-                            shape: BoxShape.circle,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ClipOval(
+                                child: Image.network(
+                                  controller.storeProfile.value?.logoImage ??
+                                      '',
+                                  width: 80.rw,
+                                  height: 80.rh,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[300],
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.store,
+                                          size: 40,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                          child: Center(child: Text("Logo")),
                         ),
                       ),
                     ],

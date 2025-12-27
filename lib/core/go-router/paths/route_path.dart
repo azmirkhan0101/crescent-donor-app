@@ -54,4 +54,5 @@ class RoutePath {
   static const String transactionHistory = 'transactionHistory';
   static const String changePassword = 'changePassword';
   static const String subscription = 'subscription';
+  static const String termsAndConditions = 'termsAndConditions';
 }

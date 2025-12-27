@@ -42,6 +42,12 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    // print(
+    //   'isRecurringAvailable: ${donateNowController.isRecurringAvailable.value}, is Recurring: ${donateNowController.isRecurring.value}',
+    // );
+    // print(
+    //   'isRoundUpAvailable: ${donateNowController.isRoundUpAvailable.value}, is RoundUp: ${donateNowController.isRoundUp.value}',
+    // );
     return Container(
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
@@ -51,66 +57,127 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
         ),
         border: Border.all(color: const Color(0xFFEBE9EC)),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Handle bar and header
-          _buildHeader(),
+      child: Obx(() {
+        bool isDonateTypeAvailable =
+            (donateNowController.isOneTime.value ||
+            (donateNowController.isRecurring.value &&
+                donateNowController.isRecurringAvailable.value) ||
+            (donateNowController.isRoundUp.value &&
+                donateNowController.isRoundUpAvailable.value));
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar and header
+            _buildHeader(),
 
-          // --- Donation type, causes, amount, message ---
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.rw),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Donation Type Section
-                  _buildDonationTypeSection(controller: donateNowController),
+            // --- Donation type, causes, amount, message ---
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24.rw),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Donation Type Section
+                    _buildDonationTypeSection(controller: donateNowController),
 
-                  16.rh.heightWidth,
+                    16.rh.heightWidth,
+                    if ((donateNowController.isRecurring.value &&
+                            !donateNowController.isRecurringAvailable.value) ||
+                        (donateNowController.isRoundUp.value &&
+                            !donateNowController.isRoundUpAvailable.value))
+                      _buildUnAvailableMessage(),
 
-                  // Causes Section
-                  _buildCausesSection(
-                    donateNowController,
-                    getOrgcausesController,
-                  ),
+                    /// ============ Options Section ============
+                    if (isDonateTypeAvailable)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          /// Causes Section
+                          _buildCausesSection(
+                            donateNowController,
+                            getOrgcausesController,
+                          ),
 
-                  SizedBox(height: 24.rh),
+                          SizedBox(height: 24.rh),
 
-                  // Obx(() {
-                  //   return donateNowController.selectedDonationType.value !=
-                  //           DonationType.recurring
-                  //       ? Column(
-                  //           children: [
-                  //             _selectAmountSection(donateNowController),
-                  //             24.rh.heightWidth,
-                  //           ],
-                  //         )
-                  //       : SizedBox.shrink();
-                  // }),
-                  _selectAmountSection(donateNowController),
-                  24.rh.heightWidth,
+                          // Obx(() {
+                          //   return donateNowController.selectedDonationType.value !=
+                          //           DonationType.recurring
+                          //       ? Column(
+                          //           children: [
+                          //             _selectAmountSection(donateNowController),
+                          //             24.rh.heightWidth,
+                          //           ],
+                          //         )
+                          //       : SizedBox.shrink();
+                          // }),
+                          _selectAmountSection(donateNowController),
+                          24.rh.heightWidth,
 
-                  // Message Section
-                  _buildMessageSection(),
+                          // Message Section
+                          _buildMessageSection(),
 
-                  SizedBox(height: 200.rh),
-                ],
+                          SizedBox(height: 200.rh),
+                        ],
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          /// Continue Button
-          ElevatedButton(
-            onPressed: () => _onClickContinueButton(),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(double.maxFinite, 56.rh),
-              backgroundColor: const Color(0xFF000C0B),
-              foregroundColor: Colors.white,
+            if (isDonateTypeAvailable)
+              /// Continue Button
+              ElevatedButton(
+                onPressed: () => _onClickContinueButton(),
+                style: ElevatedButton.styleFrom(
+                  fixedSize: Size(double.maxFinite, 56.rh),
+                  backgroundColor: const Color(0xFF000C0B),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Continue'),
+              ).paddingXY(X: 56.rw),
+            24.rh.heightWidth,
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _buildUnAvailableMessage() {
+    return Container(
+      padding: EdgeInsets.all(20.rw),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF9E6),
+        borderRadius: BorderRadius.circular(12.rw),
+        border: Border.all(color: const Color(0xFFFFE8A3), width: 1),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.info_outline, size: 48.rw, color: const Color(0xFFD97706)),
+          12.rh.heightWidth,
+          Text(
+            donateNowController.isRecurring.value
+                ? 'Recurring Donations Not Available'
+                : 'Round Up Donations Not Available',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Inter Display',
+              fontSize: 16.rfs,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF000C0B),
             ),
-            child: Text('Continue'),
-          ).paddingXY(X: 56.rw),
-          24.rh.heightWidth,
+          ),
+          8.rh.heightWidth,
+          Text(
+            '${widget.organizationName} not eligible for ${donateNowController.isRecurring.value ? 'recurring' : 'round up'} donations yet. Please try another donation type.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Inter Display',
+              fontSize: 14.rfs,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF6E6E6E),
+            ),
+          ),
         ],
       ),
     );

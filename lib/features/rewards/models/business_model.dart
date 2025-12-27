@@ -76,17 +76,12 @@ class BusinessModel {
 }
 
 class Auth {
-  final String id;
-  final String email;
-  final String status;
-  final bool isActive;
+  final String? id;
+  final String? email;
+  final String? status;
+  final bool? isActive;
 
-  Auth({
-    required this.id,
-    required this.email,
-    required this.status,
-    required this.isActive,
-  });
+  Auth({this.id, this.email, this.status, this.isActive});
 
   factory Auth.fromJson(Map<String, dynamic> json) {
     return Auth(
