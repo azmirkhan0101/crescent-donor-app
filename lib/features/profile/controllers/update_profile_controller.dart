@@ -119,4 +119,19 @@ class UpdateProfileController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  void saveProfileData() {
+    final profileCtrl = Get.find<GetProfileController>();
+    final profile = profileCtrl.profile.value;
+    if (profile != null) {
+      nameController.text = profile.name;
+      emailController.text = profile.auth.email;
+      addressController.text = profile.address;
+      stateController.text = profile.state;
+      postalCodeController.text = profile.postalCode;
+      phoneController.text = profile.phoneNumber ?? '';
+      imageFile.value = null;
+      errorMessage.value = '';
+    }
+  }
 }

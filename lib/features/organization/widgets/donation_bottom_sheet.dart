@@ -9,6 +9,7 @@ import 'package:cresent_charge_user_app/features/organization/controllers/organi
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/date_time_selection_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_type_card.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -481,6 +482,12 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
   }
 
   void _onClickContinueButton() {
+    // If guest user, show error
+    bool isGuestUser = Get.find<GetProfileController>().isGuestUser.value;
+    if (isGuestUser) {
+      ToastMsg.error('Guest users cannot proceed with donations.');
+      return;
+    }
     // If no cause selected, show Error
     if (donateNowController.selectedCause.value == null) {
       ToastMsg.error('Please select a cause to proceed.');

@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/core/go-router/app_router.dart';
-import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_time_converter.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
@@ -38,6 +36,8 @@ class RewardDetailsBottomSheet extends StatefulWidget {
 }
 
 class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
+  final ClaimRewardController claimRewardController =
+      Get.find<ClaimRewardController>();
   Timer? _timer;
   Duration _timeRemaining = Duration.zero;
   DateTime? _expiryDateTime;
@@ -619,14 +619,40 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
                       ).paddingX(24.rw),
 
                     if (!isStoreReward && widget.userStatus != 'redeemed')
-                      BottomSheetButtonWidget(
-                        text: "Claim Reward",
-                        backgroundColor: const Color(0xFFD1FF43),
-                        onTap: () {
-                          Navigator.pop(context);
-                          context.safeNavigateToRoute(RoutePath.redeemFailure);
-                        },
-                      ).paddingX(24.rw),
+                      Obx(() {
+                        return BottomSheetButtonWidget(
+                          text: claimRewardController.isLoading.value
+                              ? "Claiming..."
+                              : "Claim Reward",
+                          backgroundColor: const Color(0xFFD1FF43),
+                          onTap: () {
+                            // Navigator.pop(context);
+                            // context.safeNavigateToRoute(RoutePath.redeemFailure);
+                            // if (widget.userStatus == 'not_claimed') {
+                            //   ToastMsg.error(
+                            //     'This is an online reward and has already been claimed.',
+                            //   );
+                            //   return;
+                            // }
+                            claimRewardController
+                                .claimReward(widget.rewardId)
+                                .then((success) {
+                                  if (success) {
+                                    Navigator.pop(context);
+                                    Get.find<GetAllRewardsController>()
+                                        .fetchRewards();
+                                    ToastMsg.success(
+                                      'Reward Claimed Successfully!',
+                                    );
+                                  } else {
+                                    ToastMsg.error(
+                                      'Failed to claim reward. Please try again.',
+                                    );
+                                  }
+                                });
+                          },
+                        ).paddingX(24.rw);
+                      }),
 
                     16.rh.heightWidth,
                   ],

@@ -2,7 +2,9 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/features/home/controllers/cause_categories_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
@@ -11,6 +13,7 @@ import 'package:cresent_charge_user_app/features/notification/controllers/fcm_to
 import 'package:cresent_charge_user_app/features/notification/controllers/unseen_notification_count_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
+import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +55,8 @@ class HomePage extends StatelessWidget {
                 20.rh.heightWidth,
                 _buildCauseCategories(),
                 20.rh.heightWidth,
+                // _buildCauseCategories2(),
+                // 20.rh.heightWidth,
                 _buildVerifiedCharities(context),
                 20.rh.heightWidth,
                 _buildDonateForCause(context, causesController).paddingR(16.rw),
@@ -61,6 +66,49 @@ class HomePage extends StatelessWidget {
           }),
         ),
       ),
+    );
+  }
+
+  GetX<CauseCategoriesController> _buildCauseCategories2() {
+    return GetX<CauseCategoriesController>(
+      init: CauseCategoriesController(),
+      initState: (state) {
+        state.controller!.fetchCategories();
+      },
+      builder: (controller) {
+        return SizedBox(
+          height: 48.rh,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              final category = controller.categories[index];
+              return Container(
+                padding: EdgeInsets.all(12.rw),
+                decoration: BoxDecoration(
+                  color: controller.colors[index % controller.colors.length],
+                  // Cycle colors
+                  borderRadius: BorderRadius.circular(20.rw),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      category.label,
+                      style: AppTextStyles.f14W400().copyWith(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => 8.rw.heightWidth,
+            itemCount: controller.categories.length,
+          ),
+        );
+      },
     );
   }
 
@@ -152,7 +200,14 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ).onTap(() {
+                  ).onTap(() async {
+                    if (await AppStorageService.getIsGuestUser()) {
+                      ToastMsg.info(
+                        'Guest users cannot access this section. Please log in.',
+                      );
+                      return;
+                    }
+
                     context.pushNamed(RoutePath.notifications);
                   });
                 },

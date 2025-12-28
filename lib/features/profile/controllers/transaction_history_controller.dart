@@ -1,6 +1,4 @@
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/common/mixins/activity_expansion_mixin.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/models/transaction_history_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
@@ -137,12 +135,12 @@ class TransactionHistoryController extends GetxController
   //   ),
   // ].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Fetch initial transactions
-    fetchTransactionHistory();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   // Fetch initial transactions
+  //   fetchTransactionHistory();
+  // }
 
   /// Fetch transaction history from API
   Future<void> fetchTransactionHistory({bool refresh = false}) async {

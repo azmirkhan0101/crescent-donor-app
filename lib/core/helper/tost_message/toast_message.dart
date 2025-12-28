@@ -23,4 +23,26 @@ class ToastMsg {
       fontSize: 16.0,
     );
   }
+
+  static void info(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 2,
+      backgroundColor: Colors.blue,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
+  static void warning(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 3,
+      backgroundColor: Colors.orange,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
 }

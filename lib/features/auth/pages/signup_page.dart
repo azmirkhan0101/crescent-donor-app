@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_load
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/signup_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
@@ -40,7 +41,22 @@ class SignupPage extends StatelessWidget {
           },
         );
       } else if (controller.errorMessage.value.isNotEmpty) {
-        SnackbarMsg.error(context, controller.errorMessage.value);
+        final err = controller.errorMessage.value;
+        if (err.toLowerCase().contains('unverified account')) {
+          // If account exists but unverified, take user to OTP verification
+          ToastMsg.info(
+            'You already have an account. Please verify with the OTP sent to your email.',
+          );
+          context.pushNamed(
+            RoutePath.verifyOtp,
+            extra: {
+              'email': controller.emailController.text.trim(),
+              'isForSignup': true,
+            },
+          );
+        } else {
+          ToastMsg.error(err);
+        }
       }
     }
 

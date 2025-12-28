@@ -621,35 +621,43 @@ class ActivityItem extends StatelessWidget {
                     Container(
                       width: 44.rw,
                       height: 44.rh,
-                      padding: EdgeInsets.all(11.rw),
+                      // padding: EdgeInsets.all(11.rw),
                       decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(22.rw),
+                        border: Border.all(
+                          color: Colors.grey.withValues(alpha: 0.3),
+                          width: 0.5,
+                        ),
                       ),
-                      child: Center(
-                        child: Text(
-                          activity.brandName.isNotEmpty
-                              ? activity.brandName[0].toUpperCase()
-                              : '',
-                          style: TextStyle(
-                            fontSize: 18.rfs,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(22.rw),
+                        child: Image.network(
+                          activity.brandLogo,
+                          width: 44.rw,
+                          height: 44.rh,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey.withValues(alpha: 0.3),
+                              child: Center(
+                                child: Text(
+                                  activity.brandName.isNotEmpty
+                                      ? activity.brandName[0].toUpperCase()
+                                      : '',
+                                  style: TextStyle(
+                                    fontSize: 18.rfs,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
 
-                    // Container(
-                    //   width: 44.rw,
-                    //   height: 44.rh,
-                    //   padding: EdgeInsets.all(11.rw),
-                    //   decoration: BoxDecoration(
-                    //     color: activity.brandColor,
-                    //     borderRadius: BorderRadius.circular(22.rw),
-                    //   ),
-                    //   child: SvgPicture.asset(activity.brandLogo),
-                    // ),
                     SizedBox(width: 8.rw),
 
                     // Activity details

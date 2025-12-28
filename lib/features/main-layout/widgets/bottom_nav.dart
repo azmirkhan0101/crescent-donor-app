@@ -122,7 +122,9 @@ class BottomNav extends StatelessWidget {
         bool isGuest = await AppStorageService.getIsGuestUser();
         if (isGuest && (index == 1 || index == 2)) {
           // If user is a guest and tries to access restricted tabs, do nothing
-          ToastMsg.error('Please log in to access this section.');
+          ToastMsg.info(
+            'Guest users cannot access this section. Please log in.',
+          );
           return;
         }
         // Get the route for this tab index

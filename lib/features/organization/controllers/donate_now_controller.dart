@@ -154,7 +154,7 @@ class DonateNowController extends GetxController {
 
     // Create donation request
     final request = {
-      "amount": amount.value + (amount.value * 0.05), // Including 5% tax/fees
+      "amount": amount.value,
       "currency": 'usd',
       "organizationId": organizationId.value,
       "causeId": selectedCause.value?.id,

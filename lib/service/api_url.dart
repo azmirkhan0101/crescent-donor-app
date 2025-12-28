@@ -47,6 +47,7 @@ class ApiUrl {
   static const String getAllCauses = '$baseUrl/cause';
   static String getAllCausesByOrgId(String orgId) =>
       '$baseUrl/cause/organization/$orgId';
+  static const String getCauseCategories = '$baseUrl/cause/categories';
 
   /// ======= charities =======
   static const String getAllOrganizations = '$baseUrl/organization/get-all';
