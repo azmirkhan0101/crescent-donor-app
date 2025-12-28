@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/auth/models/signin_request_model.dart';
 import 'package:cresent_charge_user_app/features/auth/models/signin_response_model.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
@@ -185,6 +186,9 @@ class LoginController extends GetxController {
               response.data.refreshToken,
             );
 
+            // save is guest user
+            await AppStorageService.saveIsGuestUser(false);
+
             // Save user data
             await AppStorageService.saveUserEmail(emailController.text);
             await AppStorageService.saveUserId(
@@ -224,24 +228,74 @@ class LoginController extends GetxController {
     }
   }
 
-  /// Login as guest
+  ///  ==========> Login as guest <==========
+  var isLoadingGuest = false.obs;
+  var guestErrorMessage = ''.obs;
+
   Future<bool> loginAsGuest() async {
-    try {
-      isLoading.value = true;
-      clearErrors();
+    isLoadingGuest.value = true;
+    guestErrorMessage.value = '';
 
-      // Set guest mode
-      await AuthGuard.setGuestMode(true);
+    final response = await Get.find<NetworkHelper>()
+        .request<Map<String, dynamic>>(
+          'POST',
+          ApiUrl.guestLogin,
+          withAuth: false,
+          parser: (data) => data as Map<String, dynamic>,
+        );
 
-      debugPrint('👤 Guest login successful');
-      return true;
-    } catch (e) {
-      errorMessage.value = 'Failed to login as guest. Please try again.';
-      debugPrint('❌ Guest login error: $e');
-      return false;
-    } finally {
-      isLoading.value = false;
-    }
+    isLoadingGuest.value = false;
+
+    return response.fold(
+      (error) {
+        guestErrorMessage.value =
+            error.message ?? 'Guest login failed. Please try again.';
+        ToastMsg.error(guestErrorMessage.value);
+        debugPrint('❌ Guest login error: ${error.message}');
+        return false;
+      },
+      (response) async {
+        // Handle success
+        if (response['success'] == true) {
+          // Clear previous auth tokens
+          await AppStorageService.clearAll();
+
+          // Save access token
+          await AppStorageService.saveAuthToken(
+            response['data']?['accessToken'] ?? '',
+          );
+
+          // Save refresh token
+          await AppStorageService.writeSecure(
+            'refresh_token',
+            response['data']?['refreshToken'] ?? '',
+          );
+
+          // Save is guest user
+          await AppStorageService.saveIsGuestUser(true);
+
+          // Set guest mode to true
+          await AuthGuard.setGuestMode(true);
+
+          // Save last login time
+          await AppStorageService.saveLastLogin(DateTime.now());
+
+          debugPrint('✅ Login successful for guest user');
+
+          // Fetch profile after successful login
+          final profileCtrl = Get.isRegistered<GetProfileController>()
+              ? Get.find<GetProfileController>()
+              : Get.put(GetProfileController());
+          profileCtrl.fetchProfile();
+          return true;
+        } else {
+          guestErrorMessage.value =
+              response['message'] ?? 'Guest login failed.';
+          debugPrint('❌ Guest login failed: ${response['message']}');
+          return false;
+        }
+      },
+    );
   }
 
   /// Check if form is valid for enabling login button

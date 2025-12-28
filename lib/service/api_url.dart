@@ -19,6 +19,8 @@ class ApiUrl {
 
   /// ======= Auth =======
   static const String login = '$baseUrl/auth/signin';
+  static const String guestLogin = '$baseUrl/auth/guest-login';
+  static const String guestLogOut = '$baseUrl/auth/guest-remove';
   static const String signup = '$baseUrl/auth/signup';
   static const String createProfile = '$baseUrl/auth/create-Profile';
   static const String verifySignupOtp = '$baseUrl/auth/verify-signup-otp';

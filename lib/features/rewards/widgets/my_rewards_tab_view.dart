@@ -265,19 +265,25 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                 ),
 
                 child: ClipOval(
-                  child: Image.network(
-                    brandIconUrl ?? '',
-                    width: 16.rw,
-                    height: 16.rh,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.image_not_supported,
-                        size: 16.rw,
-                        color: Colors.white,
-                      );
-                    },
-                  ),
+                  child: (brandIconUrl?.isNotEmpty ?? false)
+                      ? Image.network(
+                          brandIconUrl!,
+                          width: 16.rw,
+                          height: 16.rh,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.image_not_supported,
+                              size: 16.rw,
+                              color: Colors.white,
+                            );
+                          },
+                        )
+                      : Icon(
+                          Icons.image_not_supported,
+                          size: 16.rw,
+                          color: Colors.white,
+                        ),
                 ),
               ),
 

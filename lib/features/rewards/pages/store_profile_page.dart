@@ -63,22 +63,39 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12.rw),
-                          child: Image.network(
-                            controller.storeProfile.value?.coverImage ?? '',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Colors.grey[300],
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.store,
-                                    size: 50,
-                                    color: Colors.white,
+                          child:
+                              (controller
+                                      .storeProfile
+                                      .value
+                                      ?.coverImage
+                                      ?.isNotEmpty ??
+                                  false)
+                              ? Image.network(
+                                  controller.storeProfile.value!.coverImage!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[300],
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.store,
+                                          size: 50,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Container(
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.store,
+                                      size: 50,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
-                          ),
                         ),
                       ),
                       Positioned(
@@ -91,25 +108,49 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               ClipOval(
-                                child: Image.network(
-                                  controller.storeProfile.value?.logoImage ??
-                                      '',
-                                  width: 80.rw,
-                                  height: 80.rh,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      color: Colors.grey[300],
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.store,
-                                          size: 40,
-                                          color: Colors.white,
+                                child:
+                                    (controller
+                                            .storeProfile
+                                            .value
+                                            ?.logoImage
+                                            ?.isNotEmpty ??
+                                        false)
+                                    ? Image.network(
+                                        controller
+                                            .storeProfile
+                                            .value!
+                                            .logoImage!,
+                                        width: 80.rw,
+                                        height: 80.rh,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Container(
+                                                width: 80.rw,
+                                                height: 80.rh,
+                                                color: Colors.grey[300],
+                                                child: const Center(
+                                                  child: Icon(
+                                                    Icons.store,
+                                                    size: 40,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                      )
+                                    : Container(
+                                        width: 80.rw,
+                                        height: 80.rh,
+                                        color: Colors.grey[300],
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.store,
+                                            size: 40,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  },
-                                ),
                               ),
                             ],
                           ),

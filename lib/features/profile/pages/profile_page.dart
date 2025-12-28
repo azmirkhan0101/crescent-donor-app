@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/core/helper/network_image/network_image.
 import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/log_out_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/models/profile_model.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -58,7 +59,7 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(height: 24.rh),
 
                   // Logout Button
-                  _buildLogoutButton(context),
+                  _buildLogoutButton(context, profile?.auth.id ?? ''),
 
                   SizedBox(height: 80.rh),
                 ],
@@ -296,7 +297,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   /// Build logout button
-  Widget _buildLogoutButton(BuildContext context) {
+  Widget _buildLogoutButton(BuildContext context, String profileId) {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 56.rw),
@@ -318,9 +319,16 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
       ),
-    ).onTap(() {
-      AppStorageService.clearAll();
-      context.goNamed(RoutePath.login);
+    ).onTap(() async {
+      if (await AppStorageService.getIsGuestUser()) {
+        // Call guest logout API
+        await Get.put(LogOutController()).logOut(profileId);
+        context.goNamed(RoutePath.login);
+      } else {
+        // Clear auth token for regular users
+        await AppStorageService.clearAll();
+        context.goNamed(RoutePath.login);
+      }
     });
   }
 }

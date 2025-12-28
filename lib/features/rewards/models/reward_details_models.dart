@@ -51,7 +51,7 @@
 
 class RewardDetailsModel {
   final String id;
-  final Business business;
+  final Business? business;
   final String title;
   final String description;
   final String type;
@@ -114,7 +114,9 @@ class RewardDetailsModel {
   factory RewardDetailsModel.fromJson(Map<String, dynamic> json) {
     return RewardDetailsModel(
       id: json['_id'] ?? '',
-      business: Business.fromJson(json['business']),
+      business: json['business'] != null
+          ? Business.fromJson(json['business'] as Map<String, dynamic>)
+          : null,
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       type: json['type'] ?? '',

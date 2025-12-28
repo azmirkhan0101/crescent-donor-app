@@ -1,6 +1,8 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/main-layout/controllers/main_layout_controller.dart';
+import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -116,7 +118,13 @@ class BottomNav extends StatelessWidget {
     bool isSelected = controller.isTabSelected(index);
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        bool isGuest = await AppStorageService.getIsGuestUser();
+        if (isGuest && (index == 1 || index == 2)) {
+          // If user is a guest and tries to access restricted tabs, do nothing
+          ToastMsg.error('Please log in to access this section.');
+          return;
+        }
         // Get the route for this tab index
         String routePath = controller.getRouteForIndex(index);
         // Navigate to the route

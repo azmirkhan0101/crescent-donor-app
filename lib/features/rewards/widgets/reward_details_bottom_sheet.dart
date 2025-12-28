@@ -218,25 +218,37 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.rw),
-                                  child: Image.network(
-                                    _getFullImageUrl(
+                                  child: () {
+                                    final imageUrl = _getFullImageUrl(
                                       controller
                                           .rewardDetail
                                           .value
                                           ?.business
-                                          .coverImage,
-                                    ),
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Center(
-                                        child: Icon(
-                                          Icons.store,
-                                          size: 48.rfs,
-                                          color: Colors.grey[400],
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                          ?.coverImage,
+                                    );
+                                    return imageUrl.isNotEmpty
+                                        ? Image.network(
+                                            imageUrl,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Center(
+                                                    child: Icon(
+                                                      Icons.store,
+                                                      size: 48.rfs,
+                                                      color: Colors.grey[400],
+                                                    ),
+                                                  );
+                                                },
+                                          )
+                                        : Center(
+                                            child: Icon(
+                                              Icons.store,
+                                              size: 48.rfs,
+                                              color: Colors.grey[400],
+                                            ),
+                                          );
+                                  }(),
                                 ),
                               ),
                               // Brand logo positioned at bottom left
@@ -254,20 +266,23 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
                                     ),
                                   ),
                                   child: ClipOval(
-                                    child: Image.network(
-                                      _getFullImageUrl(
+                                    child: () {
+                                      final imageUrl = _getFullImageUrl(
                                         controller.rewardDetail.value?.image,
-                                      ),
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                            return Icon(
-                                              Icons.store,
-                                              size: 24.rfs,
-                                              color: Colors.grey[400],
-                                            );
-                                          },
-                                    ),
+                                      );
+                                      return Image.network(
+                                        imageUrl,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Icon(
+                                                Icons.store,
+                                                size: 24.rfs,
+                                                color: Colors.grey[400],
+                                              );
+                                            },
+                                      );
+                                    }(),
                                   ),
                                 ),
                               ),

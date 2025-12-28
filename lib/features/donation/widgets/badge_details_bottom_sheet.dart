@@ -154,7 +154,8 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
               width: 120.rw,
               height: 120.rh,
               child: Flutter3DViewer(
-                src: 'assets/3d/001_gold.glb',
+                // src: 'assets/3d/001_gold.glb',
+                src: badgeUrl ?? '',
                 progressBarColor: const Color(0xFFC08FFF),
               ),
             ),

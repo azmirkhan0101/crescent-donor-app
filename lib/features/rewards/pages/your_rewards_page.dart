@@ -80,6 +80,8 @@ class YourRewardsPage extends StatelessWidget {
     int currentTierIndex = controller.availableTiersOld.indexOf(
       controller.balance.value?.currentTier,
     );
+    // Ensure currentTierIndex is never negative to prevent widthFactor assertion error
+    currentTierIndex = currentTierIndex < 0 ? 0 : currentTierIndex;
     return Container(
       // height: 136.rh,
       decoration: BoxDecoration(

@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/features/donation/models/badges_data_mod
 import 'package:cresent_charge_user_app/features/donation/widgets/badge_details_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 
 // class Badge {
 //   final String id;
@@ -37,6 +38,22 @@ class BadgeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get badge data directly from the model
+    String badgeIcon = badgeDataModel.icon ?? '';
+    bool hasValidIcon =
+        badgeIcon.isNotEmpty &&
+        (badgeIcon.startsWith('http://') || badgeIcon.startsWith('https://'));
+
+    // Calculate progress safely from rawProgress
+    int progressCount = badgeDataModel.rawProgress?.count ?? 0;
+    int requiredCount = badgeDataModel.rawProgress?.requiredCount ?? 0;
+    int progressPercent = badgeDataModel.progress?.percentage ?? 0;
+
+    // Get display values
+    String displayName = badgeDataModel.name ?? 'Badge';
+    String description =
+        badgeDataModel.description ?? 'No description available';
+
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -81,15 +98,23 @@ class BadgeCard extends StatelessWidget {
                       height: 72.rh,
 
                       /// ===> Badge Icon <===
-                      child: Image.network(
-                        badgeDataModel.badge?.icon ?? '', // <== Badge Icon URL
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => Icon(
-                          Icons.image_not_supported_rounded,
-                          size: 48.rw,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: hasValidIcon
+                          // ? Image.network(
+                          //     badgeIcon,
+                          //     fit: BoxFit.contain,
+                          //     errorBuilder: (context, error, stackTrace) =>
+                          //         Icon(
+                          //           Icons.star,
+                          //           size: 48.rw,
+                          //           color: Colors.grey,
+                          //         ),
+                          //   )
+                          ? Flutter3DViewer(
+                              // src: 'assets/3d/001_gold.glb',
+                              src: badgeIcon,
+                              progressBarColor: const Color(0xFFC08FFF),
+                            )
+                          : Icon(Icons.star, size: 48.rw, color: Colors.grey),
                     ),
                   ),
                 ),
@@ -111,8 +136,7 @@ class BadgeCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              badgeDataModel.badge?.name ??
-                                  '', // <== Badge Name
+                              displayName, // <== Badge Name with fallback
                               style: TextStyle(
                                 color: const Color(0xFF000C0B),
                                 fontSize: 14.rfs,
@@ -124,7 +148,7 @@ class BadgeCard extends StatelessWidget {
                           ),
                           // if (!badge.isCompleted)
                           Text(
-                            '${badgeDataModel.progressCount}/${badgeDataModel.nextTier?.requiredCount ?? badgeDataModel.badge?.tiers?[0].requiredCount ?? 0}', // <== Progress Count
+                            '$progressCount/$requiredCount', // <== Progress Count with safe values
                             style: TextStyle(
                               color: const Color(0xFF818F8D),
                               fontSize: 12.rfs,
@@ -151,7 +175,9 @@ class BadgeCard extends StatelessWidget {
                           children: [
                             FractionallySizedBox(
                               alignment: Alignment.centerLeft,
-                              widthFactor: 100 / 100,
+                              widthFactor:
+                                  progressPercent /
+                                  100, // Use calculated safe percentage
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFEBE9EC),
@@ -161,13 +187,9 @@ class BadgeCard extends StatelessWidget {
                             ),
                             FractionallySizedBox(
                               alignment: Alignment.centerLeft,
-                              // widthFactor: badge.isCompleted
-                              //     ? 1.0
-                              //     : (badgeDataModel.progressPercentage ?? 0) /
-                              //           100, // <== Progress Percentage
                               widthFactor:
-                                  (badgeDataModel.progressPercentage ?? 0) /
-                                  100,
+                                  progressPercent /
+                                  100, // Use calculated safe percentage
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF000C0B),
@@ -185,8 +207,7 @@ class BadgeCard extends StatelessWidget {
                       // <== Description ==>
                       Expanded(
                         child: Text(
-                          badgeDataModel.badge?.description ??
-                              '', // <== Badge Description
+                          description, // <== Badge Description with fallback
                           style: TextStyle(
                             color: const Color(0xFF818F8D),
                             fontSize: 12.rfs,
