@@ -78,44 +78,44 @@ class DonationCompleteController extends GetxController {
     Get.offAllNamed('/home');
   }
 
-  /// Start auto-refresh timer if receiptId is not available
-  void startAutoRefreshIfNeeded(
-    GetDonationFullStatusController controller,
-    String donationId,
-  ) {
-    // Cancel any existing timer
-    _refreshTimer?.cancel();
+  // /// Start auto-refresh timer if receiptId is not available
+  // void startAutoRefreshIfNeeded(
+  //   GetDonationFullStatusController controller,
+  //   String donationId,
+  // ) {
+  //   // Cancel any existing timer
+  //   _refreshTimer?.cancel();
 
-    // Check if receiptId is available
-    final receiptId =
-        controller.donationFullStatus.value?.donation.receiptId?.id;
+  //   // Check if receiptId is available
+  //   final receiptId =
+  //       controller.donationFullStatus.value?.donation.receiptId?.id;
 
-    if (receiptId == null || receiptId.isEmpty) {
-      debugPrint('Receipt ID not available, starting auto-refresh timer...');
+  //   if (receiptId == null || receiptId.isEmpty) {
+  //     debugPrint('Receipt ID not available, starting auto-refresh timer...');
 
-      // Start a periodic timer that runs every 5 seconds
-      _refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-        debugPrint('Auto-refreshing donation status...');
+  //     // Start a periodic timer that runs every 5 seconds
+  //     _refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+  //       debugPrint('Auto-refreshing donation status...');
 
-        final success = await controller.fetchDonationFullStatus(donationId);
+  //       final success = await controller.fetchDonationFullStatus(donationId);
 
-        if (success) {
-          final newReceiptId =
-              controller.donationFullStatus.value?.donation.receiptId?.id;
+  //       if (success) {
+  //         final newReceiptId =
+  //             controller.donationFullStatus.value?.donation.receiptId?.id;
 
-          if (newReceiptId != null && newReceiptId.isNotEmpty) {
-            debugPrint(
-              'Receipt ID received: $newReceiptId, stopping auto-refresh',
-            );
-            timer.cancel();
-            _refreshTimer = null;
-          }
-        }
-      });
-    } else {
-      debugPrint('Receipt ID already available: $receiptId');
-    }
-  }
+  //         if (newReceiptId != null && newReceiptId.isNotEmpty) {
+  //           debugPrint(
+  //             'Receipt ID received: $newReceiptId, stopping auto-refresh',
+  //           );
+  //           timer.cancel();
+  //           _refreshTimer = null;
+  //         }
+  //       }
+  //     });
+  //   } else {
+  //     debugPrint('Receipt ID already available: $receiptId');
+  //   }
+  // }
 
   /// Initialize notification channel for downloads
   Future<void> initializeNotifications() async {

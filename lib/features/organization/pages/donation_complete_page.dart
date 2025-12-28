@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_time_converter.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donation_complete_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/get_donation_full_status_controller.dart';
@@ -32,30 +33,11 @@ class DonationCompletePage extends StatelessWidget {
       backgroundColor: AppColors.lightPageBackground,
       appBar: _buildAppBar(donationCompleteController, context),
       body: GetX<GetDonationFullStatusController>(
-        initState: (state) {
+        initState: (state) async {
           final donationId =
               donateNowCtrl.donationResponse.value?.donation?.id ?? '';
           if (donationId.isNotEmpty) {
-            state.controller?.fetchDonationFullStatus(donationId).then((
-              success,
-            ) {
-              if (success) {
-                debugPrint(
-                  'Fetched donation status for ID: $donationId successfully.',
-                );
-                // Start auto-refresh timer if receiptId is null
-                donationCompleteController.startAutoRefreshIfNeeded(
-                  state.controller!,
-                  donationId,
-                );
-              } else {
-                debugPrint(
-                  'Failed to fetch donation status for ID: $donationId.',
-                );
-              }
-            });
-          } else {
-            debugPrint('Donation ID is empty, cannot fetch status.');
+            state.controller?.fetchDonationFullStatus(donationId);
           }
         },
 
@@ -117,6 +99,8 @@ class DonationCompletePage extends StatelessWidget {
 
                     // Save Receipt Button
                     _buildSaveReceiptButton(
+                      donationId:
+                          donateNowCtrl.donationResponse.value?.donation?.id,
                       pdfUrl: donationDetails?.receiptId?.pdfUrl,
                       controller: donationCompleteController,
                     ),
@@ -281,6 +265,7 @@ class DonationCompletePage extends StatelessWidget {
   }
 
   Widget _buildSaveReceiptButton({
+    required String? donationId,
     required String? pdfUrl,
     required DonationCompleteController controller,
   }) {
@@ -296,7 +281,29 @@ class DonationCompletePage extends StatelessWidget {
           // Also open in browser for viewing
           await controller.openReceiptInBrowser(pdfUrl);
         } else {
-          // ToastMsg removed as per instructions - controller handles this
+          if (donationId != null && donationId.isNotEmpty) {
+            final getDonateCtrl = Get.find<GetDonationFullStatusController>();
+            await getDonateCtrl.fetchDonationFullStatus(donationId);
+            final updatedPdfUrl = getDonateCtrl
+                .donationFullStatus
+                .value
+                ?.donation
+                .receiptId
+                ?.pdfUrl;
+            if (updatedPdfUrl != null && updatedPdfUrl.isNotEmpty) {
+              // Download the receipt
+              await controller.downloadReceipt(
+                updatedPdfUrl,
+                'CrescentCharge_Receipt_${DateTime.now().millisecondsSinceEpoch}',
+              );
+              // Also open in browser for viewing
+              await controller.openReceiptInBrowser(updatedPdfUrl);
+            } else {
+              ToastMsg.error('Receipt not available.');
+            }
+          } else {
+            ToastMsg.error('Receipt not available.');
+          }
         }
       },
       child: Row(

@@ -18,6 +18,9 @@ class GetDonationFullStatusController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
+    // await for 3 seconds to ensure donation is processed
+    await Future.delayed(const Duration(seconds: 3));
+
     final response = await Get.find<NetworkHelper>().request(
       'GET',
       ApiUrl.getDonationFullStatus(donationId),
