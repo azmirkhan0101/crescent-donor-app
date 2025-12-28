@@ -2,13 +2,12 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_time_converter.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
-import 'package:cresent_charge_user_app/features/rewards/models/reward_details_models.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/models/reward_model.dart'
     hide InStoreRedemptionMethods;
 import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/redemption_code_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/reward_details_bottom_sheet.dart';
-import 'package:cresent_charge_user_app/features/rewards/widgets/tabbed_redemption_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
@@ -284,31 +283,34 @@ class RedeemCard extends StatelessWidget {
       bool success = await controller.claimReward(reward.id);
       if (success) {
         if (!context.mounted) return;
-        if (reward.type != "online") {
-          showRewardsBottomSheet(
-            context,
-            TabbedRedemptionBottomSheet(
-              redemptionCode: controller.claimResult.value?.code ?? '',
-              availableMethods: InStoreRedemptionMethods(
-                qrCode:
-                    controller.claimResult.value?.availableMethods.contains(
-                      'qr',
-                    ) ??
-                    false,
-                staticCode:
-                    controller.claimResult.value?.availableMethods.contains(
-                      'static',
-                    ) ??
-                    false,
-                nfcTap:
-                    controller.claimResult.value?.availableMethods.contains(
-                      'nfc',
-                    ) ??
-                    false,
-              ),
-            ),
-          );
-        }
+
+        /// refresh rewords list after claiming
+        Get.find<GetAllRewardsController>().fetchRewards();
+        // if (reward.type != "online") {
+        //   showRewardsBottomSheet(
+        //     context,
+        //     TabbedRedemptionBottomSheet(
+        //       redemptionCode: controller.claimResult.value?.code ?? '',
+        //       availableMethods: InStoreRedemptionMethods(
+        //         qrCode:
+        //             controller.claimResult.value?.availableMethods.contains(
+        //               'qr',
+        //             ) ??
+        //             false,
+        //         staticCode:
+        //             controller.claimResult.value?.availableMethods.contains(
+        //               'static',
+        //             ) ??
+        //             false,
+        //         nfcTap:
+        //             controller.claimResult.value?.availableMethods.contains(
+        //               'nfc',
+        //             ) ??
+        //             false,
+        //       ),
+        //     ),
+        //   );
+        // }
       }
     }
 

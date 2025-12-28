@@ -79,6 +79,7 @@ class RewardDetailsModel {
   final bool userCanAfford;
   final int userBalance;
   final bool hasAlreadyClaimed;
+  final ClaimDetails? claimDetails;
   RewardDetailsModel({
     required this.id,
     required this.business,
@@ -109,6 +110,7 @@ class RewardDetailsModel {
     required this.userCanAfford,
     required this.userBalance,
     required this.hasAlreadyClaimed,
+    this.claimDetails,
   });
 
   factory RewardDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -148,6 +150,9 @@ class RewardDetailsModel {
       userCanAfford: json['userCanAfford'] ?? false,
       userBalance: json['userBalance'] ?? 0,
       hasAlreadyClaimed: json['hasAlreadyClaimed'] ?? false,
+      claimDetails: json['claimDetails'] != null
+          ? ClaimDetails.fromJson(json['claimDetails'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
@@ -216,6 +221,58 @@ class Business {
       businessPhoneNumber: json['businessPhoneNumber'],
       businessEmail: json['businessEmail'],
       coverImage: json['coverImage'],
+    );
+  }
+}
+
+class ClaimDetails {
+  final String id;
+  final String? user;
+  final String? reward;
+  final String? business;
+  final int? pointsSpent;
+  final String? status;
+  final String? assignedCode;
+  final List<String>? availableRedemptionMethods;
+  final String? expiresAt;
+  final bool? isHidden;
+  final String? claimedAt;
+  final String? createdAt;
+  final String? updatedAt;
+
+  ClaimDetails({
+    required this.id,
+    this.user,
+    this.reward,
+    this.business,
+    this.pointsSpent,
+    this.status,
+    this.assignedCode,
+    this.availableRedemptionMethods,
+    this.expiresAt,
+    this.isHidden,
+    this.claimedAt,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory ClaimDetails.fromJson(Map<String, dynamic> json) {
+    return ClaimDetails(
+      id: json['_id'] ?? '',
+      user: json['user'],
+      reward: json['reward'],
+      business: json['business'],
+      pointsSpent: json['pointsSpent'],
+      status: json['status'],
+      assignedCode: json['assignedCode'],
+      availableRedemptionMethods: json['availableRedemptionMethods'] != null
+          ? List<String>.from(json['availableRedemptionMethods'])
+          : null,
+      expiresAt: json['expiresAt'],
+      isHidden: json['isHidden'],
+      claimedAt: json['claimedAt'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
   }
 }

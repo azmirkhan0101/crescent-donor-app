@@ -680,7 +680,8 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
     showRewardsBottomSheet(
       context,
       TabbedRedemptionBottomSheet(
-        redemptionCode: controller.rewardDetail.value?.codePrefix ?? '',
+        redemptionCode:
+            controller.rewardDetail.value?.claimDetails?.assignedCode ?? '',
         availableMethods: inStoreMethod,
       ),
     );
