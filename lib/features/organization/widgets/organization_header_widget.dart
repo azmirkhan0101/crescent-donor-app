@@ -1,5 +1,4 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,7 @@ class OrganizationHeaderWidget extends StatelessWidget {
                   color: const Color(0xFFF5F5F5), // Fallback background
                   image: coverImage?.isNotEmpty ?? false
                       ? DecorationImage(
-                          image: NetworkImage(parseImageUrl(coverImage!)),
+                          image: NetworkImage(coverImage!),
                           fit: BoxFit.cover,
                           onError: (exception, stackTrace) {
                             // Silent error handling - background color will show
@@ -67,7 +66,7 @@ class OrganizationHeaderWidget extends StatelessWidget {
                     color: const Color(0xFFE5E5E5), // Fallback background
                     image: logoImage?.isNotEmpty ?? false
                         ? DecorationImage(
-                            image: NetworkImage(parseImageUrl(logoImage!)),
+                            image: NetworkImage(logoImage!),
                             fit: BoxFit.cover,
                             onError: (exception, stackTrace) {
                               // Silent error handling - fallback color will show

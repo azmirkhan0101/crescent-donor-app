@@ -1,6 +1,5 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_chart.dart';
@@ -452,7 +451,7 @@ class UpcomingDonationCard extends StatelessWidget {
                     if (organizationImage != null)
                       ClipOval(
                         child: Image.network(
-                          parseImageUrl(organizationImage!),
+                          organizationImage!,
                           width: 48.rw,
                           height: 48.rh,
                           errorBuilder: (context, error, stackTrace) =>

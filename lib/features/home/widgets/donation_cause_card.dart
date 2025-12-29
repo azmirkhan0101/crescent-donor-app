@@ -1,5 +1,4 @@
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/home/models/donor_model.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/org_details_total_donate_card.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -53,7 +52,7 @@ class DonationCauseCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12.rw),
                 child: Image.network(
-                  parseImageUrl(causeBanner),
+                  causeBanner,
                   width: double.infinity,
                   height: 144.rh,
                   fit: BoxFit.cover,
@@ -87,7 +86,7 @@ class DonationCauseCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(99),
                     child: Image.network(
-                      parseImageUrl(orgLogo),
+                      orgLogo,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Icon(

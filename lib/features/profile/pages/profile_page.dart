@@ -3,7 +3,6 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/log_out_controller.dart';
@@ -79,7 +78,7 @@ class ProfilePage extends StatelessWidget {
         // Profile Avatar
         Center(
           child: CustomNetworkImage(
-            imageUrl: parseImageUrl('${profile?.image}'),
+            imageUrl: profile?.image ?? '',
             height: 120.rw,
             width: 120.rw,
             borderRadius: BorderRadius.circular(60.rw),

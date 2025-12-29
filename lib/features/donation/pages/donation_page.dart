@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
@@ -54,9 +53,8 @@ class _DonationPageState extends State<DonationPage> {
                     SizedBox(height: 8.rh),
                     Obx(() {
                       return DonationHeader(
-                        profileImageUrl: parseImageUrl(
-                          '${getBalanceController.balance.value?.user?.image}',
-                        ),
+                        profileImageUrl:
+                            getBalanceController.balance.value?.user?.image,
                         pointsEarned:
                             getBalanceController.balance.value?.currentBalance
                                 .toString() ??

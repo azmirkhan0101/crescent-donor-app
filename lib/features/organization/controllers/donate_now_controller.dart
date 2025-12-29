@@ -156,6 +156,7 @@ class DonateNowController extends GetxController {
     final request = {
       "amount": amount.value,
       "currency": 'usd',
+      "coverFees": contributeToAdminFees,
       "organizationId": organizationId.value,
       "causeId": selectedCause.value?.id,
       "paymentMethodId": paymentMethodId,
@@ -164,7 +165,7 @@ class DonateNowController extends GetxController {
 
     if (kDebugMode) {
       print(
-        'Creating donation: amount:${amount.value}, currency:usd, organizationId:${organizationId.value}, causeId:${selectedCause.value?.id}, paymentMethodId:$paymentMethodId, specialMessage:${specialMsgController.text}',
+        'Creating donation: amount:${amount.value}, currency:usd,  isFeeCovered:$contributeToAdminFees, organizationId:${organizationId.value},  causeId:${selectedCause.value?.id}, paymentMethodId:$paymentMethodId, specialMessage:${specialMsgController.text}',
       );
       print('Raw request map: $request');
     }

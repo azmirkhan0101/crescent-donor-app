@@ -65,15 +65,15 @@ class RoundupConfigModel {
 
   factory RoundupConfigModel.fromJson(Map<String, dynamic> json) {
     return RoundupConfigModel(
-      id: json['_id'] as String,
-      user: json['user'] as String,
+      id: json['_id'] ?? '',
+      user: json['user'] ?? '',
       coverFees: json['coverFees'] as bool,
       monthlyThreshold: (json['monthlyThreshold'] as num).toDouble(),
-      specialMessage: json['specialMessage'] as String,
-      status: json['status'] as String,
+      specialMessage: json['specialMessage'] ?? '',
+      status: json['status'] ?? '',
       isActive: json['isActive'] as bool,
-      organizationId: json['organizationId'] as String,
-      organizationName: json['organizationName'] as String,
+      organizationId: json['organizationId'] ?? '',
+      organizationName: json['organizationName'] ?? '',
       organizationLogo: json['organizationLogo'] as String?,
       organizationCover: json['organizationCover'] as String?,
       registeredCharityName: json['registeredCharityName'] as String,

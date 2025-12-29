@@ -3,7 +3,6 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/cause_categories_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
@@ -127,7 +126,7 @@ class HomePage extends StatelessWidget {
             onTap: () => _goToProfilePage(context),
             child: Center(
               child: CustomNetworkImage(
-                imageUrl: parseImageUrl(profile.value?.image ?? ''),
+                imageUrl: profile.value?.image ?? '',
                 height: 44.rh,
                 width: 44.rw,
                 borderRadius: BorderRadius.circular(22.rw),

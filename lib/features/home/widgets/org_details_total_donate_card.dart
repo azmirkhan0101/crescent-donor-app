@@ -121,10 +121,10 @@ class _DonatedPeoplePhoto extends StatelessWidget {
       height: 16,
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        image: DecorationImage(
-          image: NetworkImage(imagePath),
-          fit: BoxFit.cover,
-        ),
+        image: imagePath.isNotEmpty
+            ? DecorationImage(image: NetworkImage(imagePath), fit: BoxFit.cover)
+            : null,
+        color: imagePath.isEmpty ? Colors.grey.withValues(alpha: 0.3) : null,
         shape: RoundedRectangleBorder(
           side: BorderSide(
             width: 1,
