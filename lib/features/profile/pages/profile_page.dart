@@ -80,7 +80,7 @@ class ProfilePage extends StatelessWidget {
         Center(
           child: CustomNetworkImage(
             imageUrl: parseImageUrl('${profile?.image}'),
-            height: 120.rh,
+            height: 120.rw,
             width: 120.rw,
             borderRadius: BorderRadius.circular(60.rw),
           ),

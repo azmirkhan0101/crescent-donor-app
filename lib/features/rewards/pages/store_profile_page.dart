@@ -121,13 +121,13 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                                             .value!
                                             .logoImage!,
                                         width: 80.rw,
-                                        height: 80.rh,
+                                        height: 80.rw,
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                               return Container(
                                                 width: 80.rw,
-                                                height: 80.rh,
+                                                height: 80.rw,
                                                 color: Colors.grey[300],
                                                 child: const Center(
                                                   child: Icon(
@@ -141,7 +141,7 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                                       )
                                     : Container(
                                         width: 80.rw,
-                                        height: 80.rh,
+                                        height: 80.rw,
                                         color: Colors.grey[300],
                                         child: const Center(
                                           child: Icon(

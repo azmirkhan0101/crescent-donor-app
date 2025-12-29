@@ -171,6 +171,7 @@ class LoginController extends GetxController {
           // Handle error
           errorMessage.value =
               error.message ?? 'Login failed. Please try again.';
+          ToastMsg.error(errorMessage.value);
           debugPrint('❌ Login error: ${error.message}');
           return false;
         },

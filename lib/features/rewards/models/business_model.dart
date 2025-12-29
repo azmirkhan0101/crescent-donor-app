@@ -53,6 +53,7 @@ class BusinessModel {
   final String id;
   final Auth auth;
   final String name;
+  final String logoImage;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -60,6 +61,7 @@ class BusinessModel {
     required this.id,
     required this.auth,
     required this.name,
+    required this.logoImage,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -68,7 +70,8 @@ class BusinessModel {
     return BusinessModel(
       id: json['_id'],
       auth: Auth.fromJson(json['auth']),
-      name: json['name'],
+      name: json['name'] ?? '',
+      logoImage: json['logoImage'] ?? '',
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );

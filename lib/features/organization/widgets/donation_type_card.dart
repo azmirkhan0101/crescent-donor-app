@@ -81,7 +81,7 @@ class DonationTypeCard extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 16.rh),
+                SizedBox(height: 12.rh),
 
                 Text(
                   title,

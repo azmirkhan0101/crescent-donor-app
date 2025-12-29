@@ -1,6 +1,7 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_business_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
@@ -126,26 +127,9 @@ class RewardsExploreTabView extends StatelessWidget {
             itemBuilder: (context, index) {
               return _buildBrandLogo(
                 businessName: controller.businessList[index].name,
-                // backgroundColor: Colors.black,
-                // child: Assets.rewards.adidas.svg(width: 88.rw),
-                // onTap: () => _navigateToStoreProfile(
-                //   context: context,
-                //   storeName: controller.businessList[index].name,
-                //   storeDescription: 'Sports & lifestyle store',
-                //   storeImage: Assets.rewards.adidas.path,
-                //   storeLogo: Assets.rewards.adidas.svg(
-                //     width: 40.rw,
-                //     height: 40.rh,
-                //     colorFilter: const ColorFilter.mode(
-                //       Colors.white,
-                //       BlendMode.srcIn,
-                //     ),
-                //   ),
-                // ),
+                logoUrl: controller.businessList[index].logoImage,
+
                 onTap: () {
-                  // print(
-                  //   'Navigating to store profile of ${controller.businessList[index].id}',
-                  // );
                   context.pushNamed(
                     RoutePath.storeProfile,
                     extra: controller.businessList[index].id,
@@ -249,24 +233,40 @@ class RewardsExploreTabView extends StatelessWidget {
 
   Widget _buildBrandLogo({
     required String businessName,
-    // required Color backgroundColor,
-    // required Widget child,
+    required String logoUrl,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 8.rh),
         decoration: BoxDecoration(
-          color: Colors.black,
+          borderRadius: BorderRadius.circular(8.rw),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.5),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+          // image: DecorationImage(
+          //   image: NetworkImage(
+          //     'https://picsum.photos/seed/${businessName.hashCode}/200/100',
+          //   ),
+          //   fit: BoxFit.cover,
+          // ),
+        ),
+        child: CustomNetworkImage(
+          imageUrl: logoUrl,
+          height: 120.rh,
+          width: 120.rw,
           borderRadius: BorderRadius.circular(8.rw),
         ),
-        child: Center(
-          child: Text(
-            businessName,
-            style: AppTextStyles.f18W600().copyWith(color: Colors.white),
-          ),
-        ),
+        // child: Center(
+        //   child: Text(
+        //     businessName,
+        //     style: AppTextStyles.f18W600().copyWith(color: Colors.white),
+        //   ),
+        // ),
       ),
     );
   }

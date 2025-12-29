@@ -214,7 +214,14 @@ class VerifyOtpPage extends StatelessWidget {
                         )
                         .fontSize(14.rfs)
                         .onTap(
-                          c.isResendLoading.value ? () {} : () => c.resendOtp(),
+                          c.isResendLoading.value
+                              ? () {
+                                  debugPrint("Resend OTP tapped but loading");
+                                }
+                              : () {
+                                  debugPrint("Resend OTP tapped");
+                                  c.resendOtp();
+                                },
                         );
                   } else {
                     final c = Get.find<ForgotPasswordOtpController>();

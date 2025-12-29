@@ -255,34 +255,40 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
           return Row(
             children: [
               Expanded(
-                child: DonationTypeCard(
-                  icon: Assets.home.coins.path,
-                  title: 'Round Up',
-                  type: DonationType.roundUp,
-                  isSelected: controller.isRoundUp.value,
+                child: FittedBox(
+                  child: DonationTypeCard(
+                    icon: Assets.home.coins.path,
+                    title: 'Round Up',
+                    type: DonationType.roundUp,
+                    isSelected: controller.isRoundUp.value,
+                  ),
                 ),
               ),
 
               SizedBox(width: 8.rw),
 
               Expanded(
-                child: DonationTypeCard(
-                  icon: Assets.home.calendar.path,
-                  title: 'Recurring',
-                  type: DonationType.recurring,
-                  isSelected: controller.isRecurring.value,
-                  isHighlighted: true,
+                child: FittedBox(
+                  child: DonationTypeCard(
+                    icon: Assets.home.calendar.path,
+                    title: 'Recurring',
+                    type: DonationType.recurring,
+                    isSelected: controller.isRecurring.value,
+                    isHighlighted: true,
+                  ),
                 ),
               ),
 
               SizedBox(width: 8.rw),
 
               Expanded(
-                child: DonationTypeCard(
-                  icon: Assets.home.gift.path,
-                  title: 'One Time',
-                  type: DonationType.oneTime,
-                  isSelected: controller.isOneTime.value,
+                child: FittedBox(
+                  child: DonationTypeCard(
+                    icon: Assets.home.gift.path,
+                    title: 'One Time',
+                    type: DonationType.oneTime,
+                    isSelected: controller.isOneTime.value,
+                  ),
                 ),
               ),
             ],
