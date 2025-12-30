@@ -29,7 +29,7 @@ class RedeemCard extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(8.rw),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -39,9 +39,9 @@ class RedeemCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 12.rh),
+                      margin: EdgeInsets.only(bottom: 8.rh),
                       width: double.infinity,
-                      height: 100.rh,
+                      height: 85.rh,
                       // padding: EdgeInsets.all(8.rw),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.rw),
@@ -134,9 +134,14 @@ class RedeemCard extends StatelessWidget {
                 children: [
                   Expanded(
                     // child: "10% off on Groceries".text(AppTextStyles.f16W500()),
-                    child: reward.title
-                        .text(AppTextStyles.f16W500())
-                        .fontWeight(FontWeight.w500),
+                    child: Text(
+                      reward.title,
+                      style: AppTextStyles.f16W500().copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   Row(
                     children: [
@@ -156,11 +161,13 @@ class RedeemCard extends StatelessWidget {
                   ),
                 ],
               ),
-              4.rh.heightWidth,
+              2.rh.height,
 
               /// ===> Description <===
               Text(
                 reward.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: const Color(0xFF808E8D),
                   fontSize: 12,
@@ -169,7 +176,7 @@ class RedeemCard extends StatelessWidget {
                   height: 1.33,
                 ),
               ),
-              4.rh.heightWidth,
+              2.rh.height,
 
               /// ===> Expiry Date <===
               RichText(

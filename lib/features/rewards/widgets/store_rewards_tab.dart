@@ -12,14 +12,14 @@ class StoreRewardsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final cardHeight = screenHeight < 700
-        ? 250
-              .rh // Smaller devices
-        : screenHeight < 900
-        ? 270
-              .rh // Medium devices
-        : 280.rh; // Large devices
+    // final screenHeight = MediaQuery.of(context).size.height;
+    // final cardHeight = screenHeight < 700
+    //     ? 280
+    //           .rh // Smaller devices
+    //     : screenHeight < 900
+    //     ? 300
+    //           .rh // Medium devices
+    //     : 310.rh; // Large devices
     return GetX<GetAllRewardsController>(
       init: Get.find<GetAllRewardsController>(),
       initState: (state) {
@@ -77,7 +77,7 @@ class StoreRewardsTab extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 12.rw,
             mainAxisSpacing: 12.rh,
-            mainAxisExtent: cardHeight, // Responsive height
+            mainAxisExtent: 250.rfs, // Responsive height
           ),
           itemCount: controller.rewards.length,
           itemBuilder: (context, index) =>

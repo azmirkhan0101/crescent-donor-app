@@ -505,7 +505,10 @@ class ConfirmDonationPage extends StatelessWidget {
           ),
           disabledBackgroundColor: _grayText,
         ),
-        child: donateNowController.isPaymentProcessing.value
+        child:
+            donateNowController.isPaymentProcessing.value ||
+                Get.find<SaveRoundupController>().isSaving.value ||
+                Get.find<CreateRecurringController>().isSaving.value
             ? const SizedBox(
                 width: 20,
                 height: 20,
