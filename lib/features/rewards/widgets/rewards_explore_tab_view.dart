@@ -143,90 +143,6 @@ class RewardsExploreTabView extends StatelessWidget {
             itemCount: controller.businessList.length,
           ),
         );
-
-        // return SingleChildScrollView(
-        //   scrollDirection: Axis.horizontal,
-        //   child: Row(
-        //     children: [
-        //       _buildBrandLogo(
-        //         backgroundColor: Colors.white,
-        //         child: Assets.rewards.amazon.svg(width: 88.rw),
-        //         onTap: () => _navigateToStoreProfile(
-        //           context: context,
-        //           storeName: 'Amazon',
-        //           storeDescription: 'E-commerce store',
-        //           storeImage: Assets.rewards.amazon.path,
-        //           storeLogo: Assets.rewards.amazonA.svg(
-        //             width: 40.rw,
-        //             height: 40.rh,
-        //           ),
-        //         ),
-        //       ),
-
-        //       8.rw.heightWidth,
-
-        //       _buildBrandLogo(
-        //         backgroundColor: Colors.black,
-        //         child: Assets.rewards.adidas.svg(width: 88.rw),
-        //         onTap: () => _navigateToStoreProfile(
-        //           context: context,
-        //           storeName: 'Adidas',
-        //           storeDescription: 'Sports & lifestyle store',
-        //           storeImage: Assets.rewards.adidas.path,
-        //           storeLogo: Assets.rewards.adidas.svg(
-        //             width: 40.rw,
-        //             height: 40.rh,
-        //             colorFilter: const ColorFilter.mode(
-        //               Colors.white,
-        //               BlendMode.srcIn,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-
-        //       8.rw.heightWidth,
-
-        //       _buildBrandLogo(
-        //         backgroundColor: const Color(0xFFCD2026),
-        //         child: Assets.rewards.hMLogo.svg(width: 80.rw),
-        //         onTap: () => _navigateToStoreProfile(
-        //           context: context,
-        //           storeName: 'H&M',
-        //           storeDescription: 'Fashion & clothing store',
-        //           storeImage: Assets.rewards.hMLogo.path,
-        //           storeLogo: Assets.rewards.hMLogo.svg(
-        //             width: 40.rw,
-        //             height: 40.rh,
-        //             colorFilter: const ColorFilter.mode(
-        //               Colors.white,
-        //               BlendMode.srcIn,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       8.rw.heightWidth,
-
-        //       _buildBrandLogo(
-        //         backgroundColor: Colors.white,
-        //         child: Assets.rewards.amazon.svg(width: 88.rw),
-        //         onTap: () => _navigateToStoreProfile(
-        //           context: context,
-        //           storeName: 'Amazon',
-        //           storeDescription: 'E-commerce store',
-        //           storeImage: Assets.rewards.amazon.path,
-        //           storeLogo: Assets.rewards.amazonA.svg(
-        //             width: 40.rw,
-        //             height: 40.rh,
-        //             colorFilter: const ColorFilter.mode(
-        //               Colors.white,
-        //               BlendMode.srcIn,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // );
       },
     );
   }
@@ -241,32 +157,54 @@ class RewardsExploreTabView extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.rw),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black.withValues(alpha: 0.5),
+          //     blurRadius: 4,
+          //     offset: const Offset(0, 2),
+          //   ),
+          // ],
+        ),
+        child: Stack(
+          children: [
+            CustomNetworkImage(
+              imageUrl: logoUrl,
+              height: 120.rh,
+              width: 120.rw,
+              borderRadius: BorderRadius.circular(8.rw),
+            ),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.rw),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.5),
+                      Colors.black.withValues(alpha: 0.5),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    businessName,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.f20w600().copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
-          // image: DecorationImage(
-          //   image: NetworkImage(
-          //     'https://picsum.photos/seed/${businessName.hashCode}/200/100',
-          //   ),
-          //   fit: BoxFit.cover,
-          // ),
         ),
-        child: CustomNetworkImage(
-          imageUrl: logoUrl,
-          height: 120.rh,
-          width: 120.rw,
-          borderRadius: BorderRadius.circular(8.rw),
-        ),
-        // child: Center(
-        //   child: Text(
-        //     businessName,
-        //     style: AppTextStyles.f18W600().copyWith(color: Colors.white),
-        //   ),
-        // ),
       ),
     );
   }
@@ -330,14 +268,16 @@ class RewardsExploreTabView extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Calculate responsive card height based on screen dimensions
-        final screenHeight = MediaQuery.of(context).size.height;
-        final cardHeight = screenHeight < 700
-            ? 250
-                  .rh // Smaller devices
-            : screenHeight < 900
-            ? 270
-                  .rh // Medium devices
-            : 280.rh; // Large devices
+        // final screenHeight = MediaQuery.of(context).size.height;
+        // final cardHeight = 250.0;
+        // screenHeight < 700
+        //     ? 280.rh // Smaller devices
+        //     : screenHeight < 900
+        //     ? 300.rh // Medium devices
+        //     : 310.rh; // Large devices
+
+        // print("screenHeight:===> $screenHeight");
+        // print("cardHeight:===> $cardHeight");
 
         return GetX<GetAllRewardsController>(
           init: Get.find<GetAllRewardsController>(),
@@ -374,7 +314,7 @@ class RewardsExploreTabView extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 12.rw,
                 mainAxisSpacing: 12.rh,
-                mainAxisExtent: cardHeight, // Responsive height
+                mainAxisExtent: 250.rfs, // Responsive height
               ),
               itemCount: controller.rewards.length,
               itemBuilder: (context, index) =>
