@@ -37,6 +37,11 @@ class _VerifiedCharitiesPageState extends State<VerifiedCharitiesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final smallPhone = size.shortestSide < 390;
+    final isTablet = size.shortestSide >= 600;
+    final itemAspectRatio = isTablet ? 3 / 2 : (smallPhone ? 0.90 : 0.72);
+
     return Scaffold(
       appBar: CustomAppBar(title: 'Verified Charities'),
       body: GetBuilder<OrganizationController>(
@@ -49,7 +54,7 @@ class _VerifiedCharitiesPageState extends State<VerifiedCharitiesPage> {
                 padding: EdgeInsets.all(16.0.rw),
                 crossAxisSpacing: 8.0.rw,
                 mainAxisSpacing: 8.0.rh,
-                childAspectRatio: 2 / 3,
+                childAspectRatio: itemAspectRatio,
                 children: controller.organizationsList.map((org) {
                   return VerifiedCharityCard(
                     id: org.id,

@@ -16,6 +16,7 @@ class AppStorageService {
   static const String _userNameKey = 'user_name';
   static const String _userEmailKey = 'user_email';
   static const String _lastLoginKey = 'last_login_time';
+  static const String _isGuestKey = 'is_guest_user';
 
   // Preference keys
   // static const String _themeKey = 'app_theme';
@@ -68,6 +69,18 @@ class AppStorageService {
   static Future<void> deleteRefreshToken() async {
     _checkInitialization();
     await _secureStorage.delete(key: _refreshTokenKey);
+  }
+
+  // Is Guest User
+  static Future<void> saveIsGuestUser(bool isGuest) async {
+    _checkInitialization();
+    await _secureStorage.write(key: _isGuestKey, value: isGuest.toString());
+  }
+
+  static Future<bool> getIsGuestUser() async {
+    _checkInitialization();
+    String? value = await _secureStorage.read(key: _isGuestKey);
+    return value == 'true';
   }
 
   // User Data

@@ -10,6 +10,17 @@ class GetPointBalanceController extends GetxController {
   var errorMessagePoints = ''.obs;
   var balance = Rx<PointBalanceModel?>(null);
   var userId = Get.find<GetProfileController>().profile.value?.id ?? '';
+  var availableTiersOld = <String>["colour", "bronze", "silver", "gold"].obs;
+  RxList<TireModel> availableTiers = [
+    TireModel(tierName: "bronze", requiredPoints: 0),
+    TireModel(tierName: "silver", requiredPoints: 10000), // $100 donated
+    TireModel(tierName: "gold", requiredPoints: 50000), // $500 donated
+    TireModel(tierName: "platinum", requiredPoints: 100000), // $1000 donated
+  ].obs;
+  // BRONZE: 0,
+  // SILVER: 10000, // $100 donated
+  // GOLD: 50000, // $500 donated
+  // PLATINUM: 100000, // $1000 donated
 
   Future<bool> fetchUserPoints() async {
     // print('Fetching points for userId: $userId');
@@ -36,4 +47,11 @@ class GetPointBalanceController extends GetxController {
       },
     );
   }
+}
+
+class TireModel {
+  final String tierName;
+  final int requiredPoints;
+
+  TireModel({required this.tierName, required this.requiredPoints});
 }

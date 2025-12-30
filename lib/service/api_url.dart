@@ -19,6 +19,8 @@ class ApiUrl {
 
   /// ======= Auth =======
   static const String login = '$baseUrl/auth/signin';
+  static const String guestLogin = '$baseUrl/auth/guest-login';
+  static const String guestLogOut = '$baseUrl/auth/guest-remove';
   static const String signup = '$baseUrl/auth/signup';
   static const String createProfile = '$baseUrl/auth/create-Profile';
   static const String verifySignupOtp = '$baseUrl/auth/verify-signup-otp';
@@ -45,6 +47,7 @@ class ApiUrl {
   static const String getAllCauses = '$baseUrl/cause';
   static String getAllCausesByOrgId(String orgId) =>
       '$baseUrl/cause/organization/$orgId';
+  static const String getCauseCategories = '$baseUrl/cause/categories';
 
   /// ======= charities =======
   static const String getAllOrganizations = '$baseUrl/organization/get-all';
@@ -57,6 +60,8 @@ class ApiUrl {
       '$baseUrl/donation/one-time/create';
   static const String clientStats = '$baseUrl/donation/analytics/client-stats';
   static const String roundupStats = '$baseUrl/client/roundup-stats';
+  static String getDonationFullStatus(String donationId) =>
+      '$baseUrl/donation/$donationId/status';
 
   /// ======= Payment Methods =======
   static const String getPaymentMethods = '$baseUrl/payment-method';
@@ -79,6 +84,11 @@ class ApiUrl {
   static const String getConnectedAccounts =
       '$baseUrl/bank-connection/accounts';
   static const String getBankConnection = '$baseUrl/bank-connection/me';
+  static const String connectBasiq = '$baseUrl/bank-connection/connect-basiq';
+  static const String getBasiqConnections =
+      '$baseUrl/bank-connection/basiq/accounts';
+  static const String saveBasiqConnection =
+      '$baseUrl/bank-connection/basiq/save-account';
 
   /// ======= Secure RoundUp =======
   static const String saveRoundupConsent =
@@ -152,4 +162,8 @@ class ApiUrl {
   static const String getBadgesProgress = '$baseUrl/badges/user/progress';
   static String getBadgeHistory(String badgeId) =>
       '$baseUrl/badges/$badgeId/history';
+
+  /// ======= Receipt =======
+  static String getReceipt(String receiptId) => '$baseUrl/receipt/$receiptId';
+  static const String generateReceipt = '$baseUrl/api/receipts/generate';
 }

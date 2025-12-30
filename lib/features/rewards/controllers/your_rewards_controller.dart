@@ -106,6 +106,8 @@ class YourRewardsController extends GetxController {
     ToastMsg.success('Reward claimed successfully!');
   }
 
+  
+
   @override
   void onClose() {
     _debounceTimer?.cancel();

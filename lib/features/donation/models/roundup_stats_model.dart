@@ -11,9 +11,9 @@ class RoundupStatsResponse {
 
   factory RoundupStatsResponse.fromJson(Map<String, dynamic> json) {
     return RoundupStatsResponse(
-      success: json['success'],
-      message: json['message'],
-      data: RoundupStats.fromJson(json['data']),
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      data: json['data'] != null ? RoundupStats.fromJson(json['data']) : throw ArgumentError('data is required'),
     );
   }
 }
@@ -24,7 +24,7 @@ class RoundupStats {
   final double monthlyThreshold;
   final double lastTransactionAmount;
   final double roundupPercentage;
-  final int daysLeft;
+  int? daysLeft;
   final List<RecentTransactionGroup> recentTransactions;
 
   RoundupStats({
@@ -33,21 +33,21 @@ class RoundupStats {
     required this.monthlyThreshold,
     required this.lastTransactionAmount,
     required this.roundupPercentage,
-    required this.daysLeft,
+    this.daysLeft,
     required this.recentTransactions,
   });
 
   factory RoundupStats.fromJson(Map<String, dynamic> json) {
     return RoundupStats(
-      currentRoundupBalance: json['currentRoundupBalance'].toDouble(),
-      todaysRoundupAmount: json['todaysRoundupAmount'].toDouble(),
-      monthlyThreshold: json['monthlyThreshold'].toDouble(),
-      lastTransactionAmount: json['lastTransactionAmount'].toDouble(),
-      roundupPercentage: json['roundupPercentage'].toDouble(),
-      daysLeft: json['daysLeft'],
-      recentTransactions: (json['recentTransactions'] as List)
-          .map((e) => RecentTransactionGroup.fromJson(e))
-          .toList(),
+      currentRoundupBalance: (json['currentRoundupBalance'] as num?)?.toDouble() ?? 0.0,
+      todaysRoundupAmount: (json['todaysRoundupAmount'] as num?)?.toDouble() ?? 0.0,
+      monthlyThreshold: (json['monthlyThreshold'] as num?)?.toDouble() ?? 0.0,
+      lastTransactionAmount: (json['lastTransactionAmount'] as num?)?.toDouble() ?? 0.0,
+      roundupPercentage: (json['roundupPercentage'] as num?)?.toDouble() ?? 0.0,
+      daysLeft: json['daysLeft'] != null ? json['daysLeft'] as int : null,
+      recentTransactions: (json['recentTransactions'] as List?)
+          ?.map((e) => RecentTransactionGroup.fromJson(e))
+          .toList() ?? [],
     );
   }
 }
@@ -60,10 +60,10 @@ class RecentTransactionGroup {
 
   factory RecentTransactionGroup.fromJson(Map<String, dynamic> json) {
     return RecentTransactionGroup(
-      transactions: (json['transactions'] as List)
-          .map((e) => RecentTransaction.fromJson(e))
-          .toList(),
-      title: json['title'],
+      transactions: (json['transactions'] as List?)
+          ?.map((e) => RecentTransaction.fromJson(e))
+          .toList() ?? [],
+      title: json['title'] as String? ?? '',
     );
   }
 }
@@ -85,11 +85,11 @@ class RecentTransaction {
 
   factory RecentTransaction.fromJson(Map<String, dynamic> json) {
     return RecentTransaction(
-      transactionId: json['transactionId'],
-      roundupAmount: json['roundupAmount'].toDouble(),
-      transactionAmount: json['transactionAmount'].toDouble(),
-      transactionName: json['transactionName'],
-      createdAt: json['createdAt'],
+      transactionId: json['transactionId'] as String? ?? '',
+      roundupAmount: (json['roundupAmount'] as num?)?.toDouble() ?? 0.0,
+      transactionAmount: (json['transactionAmount'] as num?)?.toDouble() ?? 0.0,
+      transactionName: json['transactionName'] as String? ?? '',
+      createdAt: json['createdAt'] as String? ?? '',
     );
   }
 }

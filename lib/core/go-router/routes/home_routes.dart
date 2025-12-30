@@ -12,6 +12,7 @@ import 'package:cresent_charge_user_app/features/organization/pages/confirm_dona
 import 'package:cresent_charge_user_app/features/organization/pages/donation_complete_page.dart';
 import 'package:cresent_charge_user_app/features/organization/pages/organization_details_page.dart';
 import 'package:cresent_charge_user_app/features/payment/screens/add_card_page.dart';
+import 'package:cresent_charge_user_app/features/payment/screens/basiq_webview_page.dart';
 import 'package:cresent_charge_user_app/features/payment/screens/connected_bank_acount_page.dart';
 import 'package:cresent_charge_user_app/features/payment/screens/make_payment_page.dart';
 import 'package:cresent_charge_user_app/features/payment/screens/payment_linked_account_page.dart';
@@ -76,6 +77,17 @@ class HomeRoutes extends AppRouteConfig {
       name: RoutePath.connectedBankAccount,
       path: RoutePath.connectedBankAccount.addBasePath,
       builder: (context, state) => const ConnectedBankAccountPage(),
+      redirect: AuthGuard.authRequired.redirect,
+    ),
+
+    /// Basiq WebView Page
+    GoRoute(
+      name: RoutePath.basiqWebView,
+      path: RoutePath.basiqWebView.addBasePath,
+      builder: (context, state) {
+        final String url = state.uri.queryParameters['url'] ?? '';
+        return BasiqWebViewPage(url: url);
+      },
       redirect: AuthGuard.authRequired.redirect,
     ),
 

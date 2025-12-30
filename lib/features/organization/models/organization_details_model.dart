@@ -1,43 +1,3 @@
-/*
-{
-    "success": true,
-    "message": "Organization details retrieved successfully!",
-    "data": {
-        "_id": "693d3498c139b728a8d734d7",
-        "auth": {
-            "_id": "693d3498c139b728a8d734bb",
-            "email": "gohomen778@alexida.com",
-            "role": "ORGANIZATION",
-            "isActive": true,
-            "status": "verified"
-        },
-        "name": "Copeland and Merrill Inc",
-        "serviceType": "Charity",
-        "address": "Walters and Castaneda Traders",
-        "state": "California",
-        "postalCode": "Ipsum doloribus sun",
-        "website": "Bonner Casey Traders",
-        "phoneNumber": "+1 (481) 897-3611",
-        "coverImage": null,
-        "logoImage": null,
-        "aboutUs": "",
-        "registeredCharityName": "",
-        "totalDonation": 5,
-        "totalDonationAmount": 405,
-        "recentDonors": [
-            {
-                "lastDonationDate": "2025-12-14T05:15:52.988Z",
-                "lastDonationAmount": 5,
-                "donorId": "69301feaddbf3fdf987e86e8",
-                "donorName": "Mostafizur",
-                "donorImage": "/images/scaled_18-1765684240320.jpg",
-                "donorAddress": "Dhaka, Mohakhai"
-            }
-        ]
-    }
-}
-*/
-
 class OrganizationDetailsModel {
   final String id;
   final Auth? auth;
@@ -55,6 +15,10 @@ class OrganizationDetailsModel {
   final int totalDonation;
   final double totalDonationAmount;
   final List<RecentDonor> recentDonors;
+  final List<OrgDetailsCause> causes;
+  final bool isOnetime;
+  final bool isRecurring;
+  final bool isRoundup;
 
   OrganizationDetailsModel({
     required this.id,
@@ -73,6 +37,10 @@ class OrganizationDetailsModel {
     required this.totalDonation,
     required this.totalDonationAmount,
     required this.recentDonors,
+    this.causes = const [],
+    required this.isOnetime,
+    required this.isRecurring,
+    required this.isRoundup,
   });
 
   factory OrganizationDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -97,28 +65,15 @@ class OrganizationDetailsModel {
               ?.map((e) => RecentDonor.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      causes:
+          (json['causes'] as List<dynamic>?)
+              ?.map((e) => OrgDetailsCause.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      isOnetime: json['isOnetime'] ?? false,
+      isRecurring: json['isRecurring'] ?? false,
+      isRoundup: json['isRoundup'] ?? false,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'auth': auth?.toJson(),
-      'name': name,
-      'serviceType': serviceType,
-      'address': address,
-      'state': state,
-      'postalCode': postalCode,
-      'website': website,
-      'phoneNumber': phoneNumber,
-      'coverImage': coverImage,
-      'registeredCharityName': registeredCharityName,
-      'aboutUs': aboutUs,
-      'logoImage': logoImage,
-      'totalDonation': totalDonation,
-      'totalDonationAmount': totalDonationAmount,
-      'recentDonors': recentDonors.map((e) => e.toJson()).toList(),
-    };
   }
 }
 
@@ -146,16 +101,6 @@ class Auth {
       status: json['status'] ?? '',
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'email': email,
-      'role': role,
-      'isActive': isActive,
-      'status': status,
-    };
-  }
 }
 
 class RecentDonor {
@@ -163,7 +108,7 @@ class RecentDonor {
   final double lastDonationAmount;
   final String donorId;
   final String donorName;
-  final String donorImage;
+  final String? donorImage;
   final String donorAddress;
 
   RecentDonor({
@@ -171,7 +116,7 @@ class RecentDonor {
     required this.lastDonationAmount,
     required this.donorId,
     required this.donorName,
-    required this.donorImage,
+    this.donorImage,
     required this.donorAddress,
   });
 
@@ -181,19 +126,91 @@ class RecentDonor {
       lastDonationAmount: (json['lastDonationAmount'] ?? 0).toDouble(),
       donorId: json['donorId'] ?? '',
       donorName: json['donorName'] ?? '',
-      donorImage: json['donorImage'] ?? '',
+      donorImage: json['donorImage'],
       donorAddress: json['donorAddress'] ?? '',
     );
   }
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'lastDonationDate': lastDonationDate,
-      'lastDonationAmount': lastDonationAmount,
-      'donorId': donorId,
-      'donorName': donorName,
-      'donorImage': donorImage,
-      'donorAddress': donorAddress,
-    };
+class OrgDetailsCause {
+  final String id;
+  final String name;
+  final String description;
+  final String category;
+  final String status;
+
+  OrgDetailsCause({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.category,
+    required this.status,
+  });
+
+  factory OrgDetailsCause.fromJson(Map<String, dynamic> json) {
+    return OrgDetailsCause(
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      category: json['category'] ?? '',
+      status: json['status'] ?? '',
+    );
   }
 }
+
+/*
+{
+    "success": true,
+    "message": "Organization details retrieved successfully!",
+    "data": {
+        "_id": "6942d3bfaf3e0d14a9fdf599",
+        "auth": {
+            "_id": "6942d3bfaf3e0d14a9fdf597",
+            "email": "org1@yopmail.com",
+            "role": "ORGANIZATION",
+            "isActive": true,
+            "status": "verified"
+        },
+        "name": "ALFALAH CATIRY",
+        "serviceType": "non-profit",
+        "address": "42 Charity Lane, Sydney",
+        "state": "NSW",
+        "postalCode": "2000",
+        "website": "https://specialorg.example.com",
+        "phoneNumber": "+61412345678",
+        "coverImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/organizations/6942d3bfaf3e0d14a9fdf597-1766481601782",
+        "logoImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/organizations/6942d3bfaf3e0d14a9fdf597-1766481606700",
+        "aboutUs": "",
+        "registeredCharityName": "",
+        "id": "6942d3bfaf3e0d14a9fdf599",
+        "totalDonation": 9,
+        "totalDonationAmount": 32.91,
+        "recentDonors": [
+            {
+                "lastDonationDate": "2025-12-23T09:56:22.553Z",
+                "lastDonationAmount": 10.5,
+                "donorId": "6942d397af3e0d14a9fdf58f",
+                "donorName": "Mostafizur Rahaman",
+                "donorImage": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/clients/client-6942d044af3e0d14a9fdf55d-1766463151419",
+                "donorAddress": "Dhaka, Mohakhai"
+            }
+        ],
+        "causes": [
+            {
+                "_id": "6943892a2f333b75a39823bb",
+                "name": "Zakats Fund",
+                "description": "Providing quality education to underprivileged children around the world",
+                "category": "zakat",
+                "status": "verified"
+            },
+            {
+                "_id": "6943896c2f333b75a39823c3",
+                "name": "Backpack and Education",
+                "description": "Providing quality education to underprivileged children around the world",
+                "category": "education",
+                "status": "verified"
+            }
+        ]
+    }
+}
+*/

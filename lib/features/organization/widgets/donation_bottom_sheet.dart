@@ -3,12 +3,13 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/core/theme/theme.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
+import 'package:cresent_charge_user_app/features/organization/controllers/get_org_causes_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/capsule_button_widget.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/date_time_selection_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/donation_type_card.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,19 +29,26 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
   final donateNowController = Get.put(DonateNowController());
 
   final orgDetailsController = Get.find<OrganizationController>();
-  final causesController = Get.find<CausesController>();
+  final getOrgcausesController = Get.find<GetOrgCausesController>();
 
   @override
   void initState() {
     super.initState();
-    causesController.fetchCausesByOrgId(
-      donateNowController.organizationId.value,
-      // orgDetailsController.organizationDetails.value!.id,
-    );
+    // Fetch causes for the current organization
+    final orgId = donateNowController.organizationId.value;
+    if (orgId.isNotEmpty) {
+      getOrgcausesController.fetchCausesByOrgId(orgId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // print(
+    //   'isRecurringAvailable: ${donateNowController.isRecurringAvailable.value}, is Recurring: ${donateNowController.isRecurring.value}',
+    // );
+    // print(
+    //   'isRoundUpAvailable: ${donateNowController.isRoundUpAvailable.value}, is RoundUp: ${donateNowController.isRoundUp.value}',
+    // );
     return Container(
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
@@ -50,63 +58,127 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
         ),
         border: Border.all(color: const Color(0xFFEBE9EC)),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Handle bar and header
-          _buildHeader(),
+      child: Obx(() {
+        bool isDonateTypeAvailable =
+            (donateNowController.isOneTime.value ||
+            (donateNowController.isRecurring.value &&
+                donateNowController.isRecurringAvailable.value) ||
+            (donateNowController.isRoundUp.value &&
+                donateNowController.isRoundUpAvailable.value));
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar and header
+            _buildHeader(),
 
-          // --- Donation type, causes, amount, message ---
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.rw),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Donation Type Section
-                  _buildDonationTypeSection(controller: donateNowController),
+            // --- Donation type, causes, amount, message ---
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 24.rw),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Donation Type Section
+                    _buildDonationTypeSection(controller: donateNowController),
 
-                  16.rh.heightWidth,
+                    16.rh.heightWidth,
+                    if ((donateNowController.isRecurring.value &&
+                            !donateNowController.isRecurringAvailable.value) ||
+                        (donateNowController.isRoundUp.value &&
+                            !donateNowController.isRoundUpAvailable.value))
+                      _buildUnAvailableMessage(),
 
-                  // Causes Section
-                  _buildCausesSection(donateNowController, causesController),
+                    /// ============ Options Section ============
+                    if (isDonateTypeAvailable)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          /// Causes Section
+                          _buildCausesSection(
+                            donateNowController,
+                            getOrgcausesController,
+                          ),
 
-                  SizedBox(height: 24.rh),
+                          SizedBox(height: 24.rh),
 
-                  // Obx(() {
-                  //   return donateNowController.selectedDonationType.value !=
-                  //           DonationType.recurring
-                  //       ? Column(
-                  //           children: [
-                  //             _selectAmountSection(donateNowController),
-                  //             24.rh.heightWidth,
-                  //           ],
-                  //         )
-                  //       : SizedBox.shrink();
-                  // }),
-                  _selectAmountSection(donateNowController),
-                  24.rh.heightWidth,
+                          // Obx(() {
+                          //   return donateNowController.selectedDonationType.value !=
+                          //           DonationType.recurring
+                          //       ? Column(
+                          //           children: [
+                          //             _selectAmountSection(donateNowController),
+                          //             24.rh.heightWidth,
+                          //           ],
+                          //         )
+                          //       : SizedBox.shrink();
+                          // }),
+                          _selectAmountSection(donateNowController),
+                          24.rh.heightWidth,
 
-                  // Message Section
-                  _buildMessageSection(),
+                          // Message Section
+                          _buildMessageSection(),
 
-                  SizedBox(height: 200.rh),
-                ],
+                          SizedBox(height: 200.rh),
+                        ],
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          /// Continue Button
-          ElevatedButton(
-            onPressed: () => _onClickContinueButton(),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(double.maxFinite, 56.rh),
-              backgroundColor: const Color(0xFF000C0B),
-              foregroundColor: Colors.white,
+            if (isDonateTypeAvailable)
+              /// Continue Button
+              ElevatedButton(
+                onPressed: () => _onClickContinueButton(),
+                style: ElevatedButton.styleFrom(
+                  fixedSize: Size(double.maxFinite, 56.rh),
+                  backgroundColor: const Color(0xFF000C0B),
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Continue'),
+              ).paddingXY(X: 56.rw),
+            24.rh.heightWidth,
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _buildUnAvailableMessage() {
+    return Container(
+      padding: EdgeInsets.all(20.rw),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF9E6),
+        borderRadius: BorderRadius.circular(12.rw),
+        border: Border.all(color: const Color(0xFFFFE8A3), width: 1),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.info_outline, size: 48.rw, color: const Color(0xFFD97706)),
+          12.rh.heightWidth,
+          Text(
+            donateNowController.isRecurring.value
+                ? 'Recurring Donations Not Available'
+                : 'Round Up Donations Not Available',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Inter Display',
+              fontSize: 16.rfs,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF000C0B),
             ),
-            child: Text('Continue'),
-          ).paddingXY(X: 56.rw),
-          24.rh.heightWidth,
+          ),
+          8.rh.heightWidth,
+          Text(
+            '${widget.organizationName} not eligible for ${donateNowController.isRecurring.value ? 'recurring' : 'round up'} donations yet. Please try another donation type.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Inter Display',
+              fontSize: 14.rfs,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF6E6E6E),
+            ),
+          ),
         ],
       ),
     );
@@ -183,34 +255,40 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
           return Row(
             children: [
               Expanded(
-                child: DonationTypeCard(
-                  icon: Assets.home.coins.path,
-                  title: 'Round Up',
-                  type: DonationType.roundUp,
-                  isSelected: controller.isRoundUp.value,
+                child: FittedBox(
+                  child: DonationTypeCard(
+                    icon: Assets.home.coins.path,
+                    title: 'Round Up',
+                    type: DonationType.roundUp,
+                    isSelected: controller.isRoundUp.value,
+                  ),
                 ),
               ),
 
               SizedBox(width: 8.rw),
 
               Expanded(
-                child: DonationTypeCard(
-                  icon: Assets.home.calendar.path,
-                  title: 'Recurring',
-                  type: DonationType.recurring,
-                  isSelected: controller.isRecurring.value,
-                  isHighlighted: true,
+                child: FittedBox(
+                  child: DonationTypeCard(
+                    icon: Assets.home.calendar.path,
+                    title: 'Recurring',
+                    type: DonationType.recurring,
+                    isSelected: controller.isRecurring.value,
+                    isHighlighted: true,
+                  ),
                 ),
               ),
 
               SizedBox(width: 8.rw),
 
               Expanded(
-                child: DonationTypeCard(
-                  icon: Assets.home.gift.path,
-                  title: 'One Time',
-                  type: DonationType.oneTime,
-                  isSelected: controller.isOneTime.value,
+                child: FittedBox(
+                  child: DonationTypeCard(
+                    icon: Assets.home.gift.path,
+                    title: 'One Time',
+                    type: DonationType.oneTime,
+                    isSelected: controller.isOneTime.value,
+                  ),
                 ),
               ),
             ],
@@ -233,7 +311,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
   Widget _buildCausesSection(
     DonateNowController controller,
-    CausesController causesController,
+    GetOrgCausesController causesController,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,6 +488,12 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
   }
 
   void _onClickContinueButton() {
+    // If guest user, show error
+    bool isGuestUser = Get.find<GetProfileController>().isGuestUser.value;
+    if (isGuestUser) {
+      ToastMsg.error('Guest users cannot proceed with donations.');
+      return;
+    }
     // If no cause selected, show Error
     if (donateNowController.selectedCause.value == null) {
       ToastMsg.error('Please select a cause to proceed.');

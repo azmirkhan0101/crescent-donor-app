@@ -23,11 +23,17 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   // Initialize Stripe
-  // Set publishable key from environment variable
-  Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY']!;
+  try {
+    // Set publishable key from environment variable
+    Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY']!;
 
-  // Initialize Stripe instance (required for Android)
-  await Stripe.instance.applySettings();
+    // Initialize Stripe instance (required for Android)
+    await Stripe.instance.applySettings();
+    debugPrint('Stripe initialized successfully');
+  } catch (e) {
+    debugPrint('Failed to initialize Stripe: $e');
+    // Continue app initialization even if Stripe fails
+  }
 
   try {
     await AppStorageService.init();

@@ -27,6 +27,21 @@ class CustomNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Return error widget if imageUrl is empty or invalid
+    if (imageUrl.trim().isEmpty) {
+      return Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          border: border,
+          color: backgroundColor ?? Colors.grey.withValues(alpha: 0.6),
+          borderRadius: borderRadius,
+          shape: boxShape,
+        ),
+        child: const Icon(Icons.broken_image, color: Colors.grey),
+      );
+    }
+
     return CachedNetworkImage(
       imageUrl: imageUrl,
       imageBuilder: (context, imageProvider) => Container(

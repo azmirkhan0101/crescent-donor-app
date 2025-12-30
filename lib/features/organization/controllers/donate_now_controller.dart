@@ -17,6 +17,9 @@ class DonateNowController extends GetxController {
 
   final TextEditingController specialMsgController = TextEditingController();
 
+  var isRecurringAvailable = false.obs;
+  var isRoundUpAvailable = false.obs;
+
   var isRoundUp = false.obs;
   var isRecurring = false.obs;
   var isOneTime = false.obs;
@@ -151,8 +154,9 @@ class DonateNowController extends GetxController {
 
     // Create donation request
     final request = {
-      "amount": amount.value + (amount.value * 0.05), // Including 5% tax/fees
+      "amount": amount.value,
       "currency": 'usd',
+      "coverFees": contributeToAdminFees,
       "organizationId": organizationId.value,
       "causeId": selectedCause.value?.id,
       "paymentMethodId": paymentMethodId,
@@ -161,7 +165,7 @@ class DonateNowController extends GetxController {
 
     if (kDebugMode) {
       print(
-        'Creating donation: amount:${amount.value}, currency:usd, organizationId:${organizationId.value}, causeId:${selectedCause.value?.id}, paymentMethodId:$paymentMethodId, specialMessage:${specialMsgController.text}',
+        'Creating donation: amount:${amount.value}, currency:usd,  isFeeCovered:$contributeToAdminFees, organizationId:${organizationId.value},  causeId:${selectedCause.value?.id}, paymentMethodId:$paymentMethodId, specialMessage:${specialMsgController.text}',
       );
       print('Raw request map: $request');
     }
@@ -198,6 +202,16 @@ class DonateNowController extends GetxController {
         }
       },
     );
+  }
+
+  void resetDonationData() {
+    selectedAmountIndex.value = -1;
+    amount.value = 0;
+    specialMsgController.clear();
+    selectedCause.value = null;
+    isPaymentProcessing.value = false;
+    errorMessage.value = '';
+    donationResponse.value = null;
   }
 
   @override

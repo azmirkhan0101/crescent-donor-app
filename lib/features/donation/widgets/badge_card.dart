@@ -1,42 +1,59 @@
 import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
-import 'package:cresent_charge_user_app/features/donation/widgets/badge_modal.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/badge_details_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 
-class Badge {
-  final String id;
-  final String name;
-  final String description;
-  final String iconPath;
-  final int currentProgress;
-  final int totalProgress;
-  final bool isCompleted;
-  final Color backgroundColor;
+// class Badge {
+//   final String id;
+//   final String name;
+//   final String description;
+//   final String iconPath;
+//   final int currentProgress;
+//   final int totalProgress;
+//   final bool isCompleted;
+//   final Color backgroundColor;
 
-  const Badge({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.iconPath,
-    required this.currentProgress,
-    required this.totalProgress,
-    required this.isCompleted,
-    required this.backgroundColor,
-  });
-}
+//   const Badge({
+//     required this.id,
+//     required this.name,
+//     required this.description,
+//     required this.iconPath,
+//     required this.currentProgress,
+//     required this.totalProgress,
+//     required this.isCompleted,
+//     required this.backgroundColor,
+//   });
+// }
 
 class BadgeCard extends StatelessWidget {
   const BadgeCard({
     super.key,
-    required this.badge,
+    // required this.badge,
     required this.badgeDataModel,
   });
 
-  final Badge badge;
+  // final Badge badge;
   final BadgeDataModel badgeDataModel;
 
   @override
   Widget build(BuildContext context) {
+    // Get badge data directly from the model
+    String badgeIcon = badgeDataModel.icon ?? '';
+    bool hasValidIcon =
+        badgeIcon.isNotEmpty &&
+        (badgeIcon.startsWith('http://') || badgeIcon.startsWith('https://'));
+
+    // Calculate progress safely from rawProgress
+    int progressCount = badgeDataModel.rawProgress?.count ?? 0;
+    int requiredCount = badgeDataModel.rawProgress?.requiredCount ?? 0;
+    int progressPercent = badgeDataModel.progress?.percentage ?? 0;
+
+    // Get display values
+    String displayName = badgeDataModel.name ?? 'Badge';
+    String description =
+        badgeDataModel.description ?? 'No description available';
+
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -44,7 +61,9 @@ class BadgeCard extends StatelessWidget {
           useRootNavigator: true,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => BadgeModal(selectedBadge: badge, badgeDataModel: badgeDataModel),
+          builder: (context) =>
+              /// todo: remove badge
+              BadgeDetailsBottomSheet(badgeDataModel: badgeDataModel),
         );
       },
       child: Container(
@@ -70,7 +89,7 @@ class BadgeCard extends StatelessWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: badge.backgroundColor,
+                    color: Color(0xFFF9F7F9),
                     borderRadius: BorderRadius.circular(8.rw),
                   ),
                   child: Center(
@@ -79,7 +98,23 @@ class BadgeCard extends StatelessWidget {
                       height: 72.rh,
 
                       /// ===> Badge Icon <===
-                      child: Image.asset(badge.iconPath),
+                      child: hasValidIcon
+                          // ? Image.network(
+                          //     badgeIcon,
+                          //     fit: BoxFit.contain,
+                          //     errorBuilder: (context, error, stackTrace) =>
+                          //         Icon(
+                          //           Icons.star,
+                          //           size: 48.rw,
+                          //           color: Colors.grey,
+                          //         ),
+                          //   )
+                          ? Flutter3DViewer(
+                              // src: 'assets/3d/001_gold.glb',
+                              src: badgeIcon,
+                              progressBarColor: const Color(0xFFC08FFF),
+                            )
+                          : Icon(Icons.star, size: 48.rw, color: Colors.grey),
                     ),
                   ),
                 ),
@@ -101,8 +136,7 @@ class BadgeCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              badgeDataModel.badge?.name ??
-                                  '', // <== Badge Name
+                              displayName, // <== Badge Name with fallback
                               style: TextStyle(
                                 color: const Color(0xFF000C0B),
                                 fontSize: 14.rfs,
@@ -112,15 +146,15 @@ class BadgeCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          if (!badge.isCompleted)
-                            Text(
-                              '${badge.currentProgress}/${badge.totalProgress}',
-                              style: TextStyle(
-                                color: const Color(0xFF818F8D),
-                                fontSize: 12.rfs,
-                                fontFamily: 'Inter',
-                              ),
+                          // if (!badge.isCompleted)
+                          Text(
+                            '$progressCount/$requiredCount', // <== Progress Count with safe values
+                            style: TextStyle(
+                              color: const Color(0xFF818F8D),
+                              fontSize: 12.rfs,
+                              fontFamily: 'Inter',
                             ),
+                          ),
                         ],
                       ),
 
@@ -132,19 +166,39 @@ class BadgeCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: const Color(0xFFEBE9EC),
                           borderRadius: BorderRadius.circular(24.rw),
+                          // border: Border.all(
+                          //   color: const Color.fromARGB(255, 50, 31, 106),
+                          //   width: 1,
+                          // ),
                         ),
-                        child: FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: badge.isCompleted
-                              ? 1.0
-                              : (badgeDataModel.progressPercentage ?? 0) /
-                                    100, // <== Progress Percentage
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF000C0B),
-                              borderRadius: BorderRadius.circular(24.rw),
+                        child: Stack(
+                          children: [
+                            FractionallySizedBox(
+                              alignment: Alignment.centerLeft,
+                              widthFactor:
+                                  progressPercent /
+                                  100, // Use calculated safe percentage
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEBE9EC),
+                                  borderRadius: BorderRadius.circular(24.rw),
+                                ),
+                              ),
                             ),
-                          ),
+                            FractionallySizedBox(
+                              alignment: Alignment.centerLeft,
+                              widthFactor:
+                                  progressPercent /
+                                  100, // Use calculated safe percentage
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF000C0B),
+                                  // color: Colors.red,
+                                  borderRadius: BorderRadius.circular(24.rw),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
 
@@ -153,8 +207,7 @@ class BadgeCard extends StatelessWidget {
                       // <== Description ==>
                       Expanded(
                         child: Text(
-                          badgeDataModel.badge?.description ??
-                              '', // <== Badge Description
+                          description, // <== Badge Description with fallback
                           style: TextStyle(
                             color: const Color(0xFF818F8D),
                             fontSize: 12.rfs,

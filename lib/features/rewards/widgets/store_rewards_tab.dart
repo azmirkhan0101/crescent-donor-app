@@ -33,6 +33,43 @@ class StoreRewardsTab extends StatelessWidget {
             child: CircularProgressIndicator(),
           ).paddingT(32.rh);
         }
+
+        if (controller.rewards.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.card_giftcard_outlined,
+                  size: 80.rw,
+                  color: const Color(0xFFD1D5D4),
+                ),
+                16.rh.heightWidth,
+                Text(
+                  'No Rewards Available',
+                  style: TextStyle(
+                    color: const Color(0xFF000C0B),
+                    fontSize: 18.rfs,
+                    fontFamily: 'Inter Display',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                8.rh.heightWidth,
+                Text(
+                  'This store hasn\'t added any rewards yet.\nCheck back later!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: const Color(0xFF818F8D),
+                    fontSize: 14.rfs,
+                    fontFamily: 'Inter Display',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ).paddingT(60.rh);
+        }
+
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),

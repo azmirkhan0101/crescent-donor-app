@@ -1,7 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
@@ -44,10 +43,15 @@ class VerifiedCharityCard extends StatelessWidget {
                 width: 154.rw,
                 height: 120.rh,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(parseImageUrl(imagePath)),
-                    fit: BoxFit.cover,
-                  ),
+                  image: imagePath.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(imagePath),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                  color: imagePath.isEmpty
+                      ? Colors.grey.withValues(alpha: 0.3)
+                      : null,
                   borderRadius: BorderRadius.circular(8.rw),
                 ),
                 child: Align(

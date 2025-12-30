@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/features/donation/controllers/badges_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -11,7 +10,7 @@ class BadgesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controllerTemp = Get.put(BadgesController());
+    // final controllerTemp = Get.put(BadgesController());
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: _buildAppBar(context),
@@ -78,16 +77,17 @@ class BadgesPage extends StatelessWidget {
                                 final badgeData =
                                     controller.badgesProgressData[index];
                                 // Find matching badge from local badges list
-                                final badge = controllerTemp.badges
-                                    .firstWhereOrNull(
-                                      (b) => b.name == badgeData.badge?.name,
-                                    );
+                                // final badge = controllerTemp.badges
+                                //     .firstWhereOrNull(
+                                //       (b) => b.name == badgeData.badge?.name,
+                                //     );
 
-                                if (badge == null)
-                                  return const SizedBox.shrink();
+                                // if (badge == null) {
+                                //   return const SizedBox.shrink();
+                                // }
 
                                 return BadgeCard(
-                                  badge: badge,
+                                  // badge: badge,
                                   badgeDataModel: badgeData,
                                 );
                               },

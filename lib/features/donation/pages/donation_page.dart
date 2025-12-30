@@ -1,5 +1,5 @@
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/calender_badge_sections.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_components.dart';
@@ -26,11 +26,13 @@ class DonationPage extends StatefulWidget {
 class _DonationPageState extends State<DonationPage> {
   final donationController = Get.find<DonationController>();
   final getBalanceController = Get.find<GetPointBalanceController>();
+  final getBadgesProgressController = Get.find<GetBadgesProgressController>();
 
   Future<void> _refreshData() async {
     await Future.wait([
       donationController.fetchClientStats(),
       getBalanceController.fetchUserPoints(),
+      getBadgesProgressController.fetchBadgesProgress(),
     ]);
   }
 
@@ -51,9 +53,8 @@ class _DonationPageState extends State<DonationPage> {
                     SizedBox(height: 8.rh),
                     Obx(() {
                       return DonationHeader(
-                        profileImageUrl: parseImageUrl(
-                          '${getBalanceController.balance.value?.user?.image}',
-                        ),
+                        profileImageUrl:
+                            getBalanceController.balance.value?.user?.image,
                         pointsEarned:
                             getBalanceController.balance.value?.currentBalance
                                 .toString() ??

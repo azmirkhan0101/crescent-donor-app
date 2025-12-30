@@ -2,13 +2,12 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_time_converter.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
-import 'package:cresent_charge_user_app/features/rewards/models/reward_details_models.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/models/reward_model.dart'
     hide InStoreRedemptionMethods;
 import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/redemption_code_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/reward_details_bottom_sheet.dart';
-import 'package:cresent_charge_user_app/features/rewards/widgets/tabbed_redemption_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
@@ -37,58 +36,91 @@ class RedeemCard extends StatelessWidget {
               // Image and brand logo
               Stack(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 12.rh),
-                    width: double.infinity,
-                    height: 100.rh, // Reduced height
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.rw),
-                      color: Colors.grey[200],
-                      image:
-                          reward.business?.coverImage != null &&
-                              reward.business!.coverImage!.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(reward.business!.coverImage!),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 12.rh),
+                      width: double.infinity,
+                      height: 100.rh,
+                      // padding: EdgeInsets.all(8.rw),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.rw),
+                        color: Colors.grey[200],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.rw),
+                        child:
+                            (reward.business?.coverImage?.isNotEmpty ?? false)
+                            ? Image.network(
+                                reward.business!.coverImage!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                    child: Icon(
+                                      Icons.image_outlined,
+                                      size: 40.rw,
+                                      color: Colors.grey[400],
+                                    ),
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  size: 40.rw,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                      ),
                     ),
-                    child:
-                        reward.business?.coverImage == null ||
-                            reward.business!.coverImage!.isEmpty
-                        ? Center(
-                            child: Icon(
-                              Icons.image_outlined,
-                              size: 40.rw,
-                              color: Colors.grey[400],
-                            ),
-                          )
-                        : null,
                   ),
                   Positioned(
                     bottom: 0.rh,
                     left: 10.rw,
                     child: Container(
-                      width: 32.rw,
-                      height: 32.rh,
-                      // padding: EdgeInsets.all(8.rh),
+                      width: 44.rw,
+                      height: 44.rh,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(999.rw),
                         color: Colors.black,
                       ),
-                      child: Center(
-                        child: Text(
-                          reward.business?.name != null &&
-                                  reward.business!.name.isNotEmpty
-                              ? reward.business!.name[0].toUpperCase()
-                              : 'B',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter Display',
-                          ),
-                        ),
+                      child: ClipOval(
+                        child: (reward.business?.logoImage?.isNotEmpty ?? false)
+                            ? Image.network(
+                                reward.business!.logoImage!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                    child: Text(
+                                      reward.business?.name != null &&
+                                              reward.business!.name.isNotEmpty
+                                          ? reward.business!.name[0]
+                                                .toUpperCase()
+                                          : 'B',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w900,
+                                        fontFamily: 'Inter Display',
+                                      ),
+                                    ),
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Text(
+                                  reward.business?.name != null &&
+                                          reward.business!.name.isNotEmpty
+                                      ? reward.business!.name[0].toUpperCase()
+                                      : 'B',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900,
+                                    fontFamily: 'Inter Display',
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
                   ),
@@ -152,9 +184,17 @@ class RedeemCard extends StatelessWidget {
                   ),
                   children: [
                     TextSpan(
-                      text: reward.expiryDate != null
-                          ? ' ${DateConverter.estimatedDate(DateTime.parse(reward.expiryDate!))}'
-                          : ' N/A',
+                      text: () {
+                        final expiryDate = reward.expiryDate;
+                        if (expiryDate == null || expiryDate.isEmpty) {
+                          return ' N/A';
+                        }
+                        try {
+                          return ' ${DateConverter.estimatedDate(DateTime.parse(expiryDate))}';
+                        } catch (e) {
+                          return ' N/A';
+                        }
+                      }(),
                       style: TextStyle(fontWeight: FontWeight.w400),
                     ),
                   ],
@@ -243,29 +283,34 @@ class RedeemCard extends StatelessWidget {
       bool success = await controller.claimReward(reward.id);
       if (success) {
         if (!context.mounted) return;
-        showRewardsBottomSheet(
-          context,
-          TabbedRedemptionBottomSheet(
-            redemptionCode: controller.claimResult.value?.code ?? '',
-            availableMethods: InStoreRedemptionMethods(
-              qrCode:
-                  controller.claimResult.value?.availableMethods.contains(
-                    'qr',
-                  ) ??
-                  false,
-              staticCode:
-                  controller.claimResult.value?.availableMethods.contains(
-                    'static',
-                  ) ??
-                  false,
-              nfcTap:
-                  controller.claimResult.value?.availableMethods.contains(
-                    'nfc',
-                  ) ??
-                  false,
-            ),
-          ),
-        );
+
+        /// refresh rewords list after claiming
+        Get.find<GetAllRewardsController>().fetchRewards();
+        // if (reward.type != "online") {
+        //   showRewardsBottomSheet(
+        //     context,
+        //     TabbedRedemptionBottomSheet(
+        //       redemptionCode: controller.claimResult.value?.code ?? '',
+        //       availableMethods: InStoreRedemptionMethods(
+        //         qrCode:
+        //             controller.claimResult.value?.availableMethods.contains(
+        //               'qr',
+        //             ) ??
+        //             false,
+        //         staticCode:
+        //             controller.claimResult.value?.availableMethods.contains(
+        //               'static',
+        //             ) ??
+        //             false,
+        //         nfcTap:
+        //             controller.claimResult.value?.availableMethods.contains(
+        //               'nfc',
+        //             ) ??
+        //             false,
+        //       ),
+        //     ),
+        //   );
+        // }
       }
     }
 
@@ -277,10 +322,18 @@ class RedeemCard extends StatelessWidget {
         RedemptionCodeBottomSheet(
           rewardTitle: reward.title,
           rewardDescription: reward.description,
-          redemptionCode: '9842736590',
-          expiryDate: reward.expiryDate != null
-              ? DateConverter.estimatedDate(DateTime.parse(reward.expiryDate!))
-              : 'N/A',
+          redemptionCode: reward.codePrefix,
+          expiryDate: () {
+            final expiryDate = reward.expiryDate;
+            if (expiryDate == null || expiryDate.isEmpty) {
+              return 'N/A';
+            }
+            try {
+              return DateConverter.estimatedDate(DateTime.parse(expiryDate));
+            } catch (e) {
+              return 'N/A';
+            }
+          }(),
           brandIcon: Container(
             width: 24.rw,
             height: 24.rh,
@@ -288,20 +341,57 @@ class RedeemCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(999.rw),
               color: Colors.black,
             ),
-            child: Center(
-              child: Text(
-                reward.business?.name != null &&
-                        reward.business!.name.isNotEmpty
-                    ? reward.business!.name[0].toUpperCase()
-                    : 'B',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter Display',
-                ),
-              ),
+            child: ClipOval(
+              child: (reward.business?.logoImage?.isNotEmpty ?? false)
+                  ? Image.network(
+                      reward.business!.logoImage!,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Text(
+                            reward.business?.name != null &&
+                                    reward.business!.name.isNotEmpty
+                                ? reward.business!.name[0].toUpperCase()
+                                : 'B',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Inter Display',
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : Center(
+                      child: Text(
+                        reward.business?.name != null &&
+                                reward.business!.name.isNotEmpty
+                            ? reward.business!.name[0].toUpperCase()
+                            : 'B',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter Display',
+                        ),
+                      ),
+                    ),
             ),
+            // child: Center(
+            //   child: Text(
+            //     reward.business?.name != null &&
+            //             reward.business!.name.isNotEmpty
+            //         ? reward.business!.name[0].toUpperCase()
+            //         : 'B',
+            //     style: const TextStyle(
+            //       color: Colors.white,
+            //       fontSize: 12,
+            //       fontWeight: FontWeight.w600,
+            //       fontFamily: 'Inter Display',
+            //     ),
+            //   ),
+            // ),
           ),
         ),
       );

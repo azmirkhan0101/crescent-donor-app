@@ -32,6 +32,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
     // Initialize update controller - GetX will handle disposal
     _updCtrl = Get.put(UpdateProfileController());
+    _updCtrl.saveProfileData();
   }
 
   @override

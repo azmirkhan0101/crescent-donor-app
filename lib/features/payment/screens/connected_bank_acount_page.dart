@@ -5,7 +5,9 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/plaid_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
+import 'package:cresent_charge_user_app/features/payment/controllers/connect_basiq_controller.dart';
 import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
+import 'package:cresent_charge_user_app/features/payment/widgets/bank_connection_popup_menu.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,6 +27,7 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
   final PlaidController plaidCtrl = Get.isRegistered<PlaidController>()
       ? Get.find<PlaidController>()
       : Get.put(PlaidController());
+  final basiqController = Get.find<ConnectBasiqController>();
 
   @override
   void initState() {
@@ -43,33 +46,7 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
-      appBar: CustomAppBar(
-        title: 'Bank Accounts',
-        backgroundColor: const Color(0xFFF7F7F7),
-        actions: [
-          Obx(() {
-            return IconButton(
-              onPressed:
-                  plaidCtrl.isLoadingConfiguration.value ||
-                      plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading
-                  ? null
-                  : () => plaidCtrl.createLinkTokenConfiguration(),
-              icon:
-                  plaidCtrl.isLoadingConfiguration.value ||
-                      plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading
-                  ? SizedBox(
-                      width: 20.rw,
-                      height: 20.rh,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.black,
-                      ),
-                    )
-                  : Assets.common.add.svg(),
-            );
-          }),
-        ],
-      ),
+      appBar: _buildAppBar(),
       body: SafeArea(
         child: Obx(() {
           if (connectedBankAccountsController.isLoading.value) {
@@ -104,86 +81,140 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
     );
   }
 
-  Widget _buildNoAccountsContent() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Card image
-        Container(
-          width: double.maxFinite,
-          margin: EdgeInsets.all(16.rw),
-          child: Assets.home.atmCard.svg(
-            width: double.maxFinite,
-            height: 217.rh,
-            fit: BoxFit.contain,
-          ),
-        ),
-        // Divider
-        Divider(height: 1.rh, color: const Color(0xFFEDEDED)).paddingAll(16.rw),
+  CustomAppBar _buildAppBar() {
+    return CustomAppBar(
+      title: 'Bank Accounts',
+      backgroundColor: const Color(0xFFF7F7F7),
+      actions: [
+        Obx(() {
+          return BankConnectionPopupMenu(
+            isLoading:
+                plaidCtrl.isLoadingConfiguration.value ||
+                plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
+                basiqController.isLoading.value,
+            icon: Assets.common.add.svg(),
+            onPlaidSelected: () => plaidCtrl.createLinkTokenConfiguration(),
+            onBasiqSelected: _connectBasiq,
+          );
+        }),
+      ],
+    );
+  }
 
-        // Payment options
-        Row(
+  Widget _buildNoAccountsContent() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(24.rw),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  side: const BorderSide(color: Color(0xFFEDEDED)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.rw),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 24.rh),
-                ),
-                child: Assets.home.applePay.svg(),
+            // Illustration
+            Container(
+              width: 200.rw,
+              height: 200.rh,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.account_balance_outlined,
+                size: 80.rw,
+                color: const Color(0xFF9E9E9E),
               ),
             ),
-            SizedBox(width: 8.rw),
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () {},
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  side: const BorderSide(color: Color(0xFFEDEDED)),
-                  shape: RoundedRectangleBorder(
+
+            SizedBox(height: 32.rh),
+
+            // Title
+            Text(
+              'No Connected Bank Accounts',
+              style: TextStyle(
+                fontSize: 20.rfs,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF2C2C2C),
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            SizedBox(height: 12.rh),
+
+            // Subtitle
+            Text(
+              'Please connect an account to start using round-up donations and make a difference.',
+              style: TextStyle(
+                fontSize: 14.rfs,
+                color: const Color(0xFF757575),
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            SizedBox(height: 40.rh),
+
+            // Connect Account Button
+            Obx(() {
+              return BankConnectionPopupMenu(
+                onPlaidSelected: () {
+                  if (!plaidCtrl.isLoadingConfiguration.value &&
+                      !plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading) {
+                    plaidCtrl.createLinkTokenConfiguration();
+                  }
+                },
+                onBasiqSelected: _connectBasiq,
+                isLoading:
+                    plaidCtrl.isLoadingConfiguration.value ||
+                    plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
+                    basiqController.isLoading.value,
+                icon: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.rw,
+                    vertical: 16.rh,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
                     borderRadius: BorderRadius.circular(12.rw),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 24.rh),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (plaidCtrl.isLoadingConfiguration.value ||
+                          plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading)
+                        SizedBox(
+                          width: 20.rw,
+                          height: 20.rh,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      else
+                        Text(
+                          'Connect Bank Account',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.rfs,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-                child: Assets.home.gpay.svg(),
+              );
+            }),
+
+            SizedBox(height: 16.rh),
+
+            // Help text
+            Text(
+              'Secure and encrypted connection',
+              style: TextStyle(
+                fontSize: 12.rfs,
+                color: const Color(0xFF9E9E9E),
               ),
             ),
           ],
-        ).paddingXY(X: 16.rw),
-
-        Spacer(),
-        Obx(() {
-          return ElevatedButton(
-            onPressed:
-                plaidCtrl.isLoadingConfiguration.value ||
-                    plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading
-                ? null
-                : () => plaidCtrl.createLinkTokenConfiguration(),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(double.maxFinite, 56.rh),
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
-            ),
-            child:
-                plaidCtrl.isLoadingConfiguration.value ||
-                    plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading
-                ? SizedBox(
-                    width: 20.rw,
-                    height: 20.rh,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : Text('Add Account'),
-          );
-        }).paddingXY(X: 56.rw),
-      ],
+        ),
+      ),
     );
   }
 
@@ -286,43 +317,27 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
 
             // Add another account
             Obx(() {
-              return GestureDetector(
-                onTap:
-                    plaidCtrl.isLoadingConfiguration.value ||
-                        plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading
-                    ? null
-                    : () => plaidCtrl.createLinkTokenConfiguration(),
-                child: Opacity(
-                  opacity:
-                      plaidCtrl.isLoadingConfiguration.value ||
-                          plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading
-                      ? 0.5
-                      : 1.0,
-                  child: _buildAccountItem(
-                    icon:
-                        plaidCtrl.isLoadingConfiguration.value ||
-                            plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading
-                        ? SizedBox(
-                            width: 20.rw,
-                            height: 20.rh,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.black,
-                            ),
-                          )
-                        : Assets.common.add.svg(),
-                    title: 'Add another account',
-                    subtitle:
-                        plaidCtrl.isLoadingConfiguration.value ||
-                            plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading
-                        ? 'Connecting...'
-                        : null,
-                    showChevron: true,
-                  ),
+              bool isLoading =
+                  plaidCtrl.isLoadingConfiguration.value ||
+                  plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
+                  basiqController.isLoading.value;
+              return BankConnectionPopupMenu(
+                onPlaidSelected: () {
+                  if (!isLoading) {
+                    plaidCtrl.createLinkTokenConfiguration();
+                  }
+                  // print('Plaid connection selected');
+                },
+                onBasiqSelected: _connectBasiq,
+                isLoading: isLoading,
+                icon: _buildAccountItem(
+                  icon: Assets.common.add.svg(),
+                  title: 'Add another account',
+                  subtitle: null,
+                  showChevron: false,
                 ),
               );
             }),
-
             SizedBox(height: 16.rh),
           ],
         ),
@@ -519,5 +534,22 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
         ],
       ),
     );
+  }
+
+  void _connectBasiq() async {
+    // debugPrint('Basiq connection selected');
+    // final basiqController = Get.find<ConnectBasiqController>();
+    bool success = await basiqController.connectBasiq();
+    if (success) {
+      String url = basiqController.url.value;
+      debugPrint('Basiq url: $url');
+      if (url.isNotEmpty && mounted) {
+        context.push(
+          '${RoutePath.basiqWebView.addBasePath}?url=${Uri.encodeComponent(url)}',
+        );
+      }
+    } else {
+      debugPrint('Basiq connection failed');
+    }
   }
 }

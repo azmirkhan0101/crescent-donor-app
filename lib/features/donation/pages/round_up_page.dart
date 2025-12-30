@@ -3,7 +3,6 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/round_up_widgets.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/charities_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -94,27 +93,27 @@ class RoundUpPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Donated to',
-                          style: TextStyle(
-                            fontFamily: DonationFonts.familjenGrotesk,
-                            fontSize: 20.rfs,
-                            fontWeight: FontWeight.w600,
-                            color: DonationConstants.offBlack,
-                            letterSpacing: -0.2,
-                          ),
-                        ),
-                        SizedBox(height: 12.rh),
+                        // Text(
+                        //   'Donated to',
+                        //   style: TextStyle(
+                        //     fontFamily: DonationFonts.familjenGrotesk,
+                        //     fontSize: 20.rfs,
+                        //     fontWeight: FontWeight.w600,
+                        //     color: DonationConstants.offBlack,
+                        //     letterSpacing: -0.2,
+                        //   ),
+                        // ),
+                        // SizedBox(height: 12.rh),
 
                         // Organizations horizontal list
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            spacing: 8.rw,
-                            children: Get.find<CharitiesController>()
-                                .verifiedCharities,
-                          ),
-                        ),
+                        // SingleChildScrollView(
+                        //   scrollDirection: Axis.horizontal,
+                        //   child: Row(
+                        //     spacing: 8.rw,
+                        //     children: Get.find<CharitiesController>()
+                        //         .verifiedCharities,
+                        //   ),
+                        // ),
                         // SizedBox(
                         //   height: 220.rh,
                         //   child: ListView.separated(

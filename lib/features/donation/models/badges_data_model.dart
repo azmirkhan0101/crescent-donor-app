@@ -1,40 +1,105 @@
 class BadgeDataModel {
-  final BadgeModel? badge;
-  final UserBadge? userBadge;
+  final String? badgeId;
+  final String? name;
+  final String? icon;
+  final String? description;
+  final String? type;
   final bool? isUnlocked;
+  final bool? isCompleted;
   final String? currentTier;
-  final NextTier? nextTier;
-  final int? progressCount;
-  final double? progressAmount;
-  final int? progressPercentage;
-  final int? remainingForNextTier;
+  final ProgressInfo? progress;
+  final RawProgress? rawProgress;
+
+  // Legacy fields for backward compatibility
+  BadgeModel? get badge => BadgeModel(
+    id: badgeId,
+    name: name,
+    description: description,
+    icon: icon,
+    unlockType: type,
+  );
+
+  UserBadge? get userBadge => null;
+
+  NextTier? get nextTier => progress != null
+      ? NextTier(
+          tier: currentTier,
+          name: progress!.nextTierName,
+          requiredCount: rawProgress?.requiredCount,
+          requiredAmount: rawProgress?.requiredAmount?.toDouble(),
+        )
+      : null;
+
+  int? get progressCount => rawProgress?.count;
+  double? get progressAmount => rawProgress?.amount?.toDouble();
+  int? get progressPercentage => progress?.percentage;
+  int? get remainingForNextTier => progress?.remaining;
 
   BadgeDataModel({
-    this.badge,
-    this.userBadge,
+    this.badgeId,
+    this.name,
+    this.icon,
+    this.description,
+    this.type,
     this.isUnlocked,
+    this.isCompleted,
     this.currentTier,
-    this.nextTier,
-    this.progressCount,
-    this.progressAmount,
-    this.progressPercentage,
-    this.remainingForNextTier,
+    this.progress,
+    this.rawProgress,
   });
 
   factory BadgeDataModel.fromJson(Map<String, dynamic> json) => BadgeDataModel(
-    badge: json["badge"] == null ? null : BadgeModel.fromJson(json["badge"]),
-    userBadge: json["userBadge"] == null
-        ? null
-        : UserBadge.fromJson(json["userBadge"]),
+    badgeId: json["badgeId"],
+    name: json["name"],
+    icon: json["icon"],
+    description: json["description"],
+    type: json["type"],
     isUnlocked: json["isUnlocked"],
+    isCompleted: json["isCompleted"],
     currentTier: json["currentTier"],
-    nextTier: json["nextTier"] == null
+    progress: json["progress"] == null
         ? null
-        : NextTier.fromJson(json["nextTier"]),
-    progressCount: (json["progressCount"] as num?)?.toInt(),
-    progressAmount: (json["progressAmount"] as num?)?.toDouble(),
-    progressPercentage: (json["progressPercentage"] as num?)?.toInt(),
-    remainingForNextTier: (json["remainingForNextTier"] as num?)?.toInt(),
+        : ProgressInfo.fromJson(json["progress"]),
+    rawProgress: json["rawProgress"] == null
+        ? null
+        : RawProgress.fromJson(json["rawProgress"]),
+  );
+}
+
+class ProgressInfo {
+  final int? percentage;
+  final int? remaining;
+  final String? unit;
+  final String? nextTierName;
+
+  ProgressInfo({this.percentage, this.remaining, this.unit, this.nextTierName});
+
+  factory ProgressInfo.fromJson(Map<String, dynamic> json) => ProgressInfo(
+    percentage: json["percentage"],
+    remaining: json["remaining"],
+    unit: json["unit"],
+    nextTierName: json["nextTierName"],
+  );
+}
+
+class RawProgress {
+  final int? count;
+  final num? amount;
+  final int? requiredCount;
+  final num? requiredAmount;
+
+  RawProgress({
+    this.count,
+    this.amount,
+    this.requiredCount,
+    this.requiredAmount,
+  });
+
+  factory RawProgress.fromJson(Map<String, dynamic> json) => RawProgress(
+    count: json["count"],
+    amount: json["amount"],
+    requiredCount: json["requiredCount"],
+    requiredAmount: json["requiredAmount"],
   );
 }
 
@@ -45,13 +110,18 @@ class BadgeModel {
   final String? icon;
   final String? unlockType;
   final String? conditionLogic;
-  final List<dynamic>? specificCategories;
+  final List<String>? specificCategories;
   final List<TierModel>? tiers;
   final bool? isSingleTier;
   final bool? isActive;
   final int? priority;
   final bool? featured;
   final String? seasonalPeriod;
+  final TimeRangeModel? timeRange;
+  final double? minDonationAmount;
+  final double? maxDonationAmount;
+  final String? createdAt;
+  final String? updatedAt;
 
   BadgeModel({
     this.id,
@@ -67,6 +137,11 @@ class BadgeModel {
     this.priority,
     this.featured,
     this.seasonalPeriod,
+    this.timeRange,
+    this.minDonationAmount,
+    this.maxDonationAmount,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory BadgeModel.fromJson(Map<String, dynamic> json) => BadgeModel(
@@ -78,7 +153,9 @@ class BadgeModel {
     conditionLogic: json["conditionLogic"],
     specificCategories: json["specificCategories"] == null
         ? []
-        : List<dynamic>.from(json["specificCategories"].map((x) => x)),
+        : List<String>.from(
+            json["specificCategories"].map((x) => x.toString()),
+          ),
     tiers: json["tiers"] == null
         ? []
         : List<TierModel>.from(json["tiers"].map((x) => TierModel.fromJson(x))),
@@ -87,6 +164,25 @@ class BadgeModel {
     priority: json["priority"],
     featured: json["featured"],
     seasonalPeriod: json["seasonalPeriod"],
+    timeRange: json["timeRange"] == null
+        ? null
+        : TimeRangeModel.fromJson(json["timeRange"]),
+    minDonationAmount: (json["minDonationAmount"] as num?)?.toDouble(),
+    maxDonationAmount: (json["maxDonationAmount"] as num?)?.toDouble(),
+    createdAt: json["createdAt"],
+    updatedAt: json["updatedAt"],
+  );
+}
+
+class TimeRangeModel {
+  final int? start;
+  final int? end;
+
+  TimeRangeModel({this.start, this.end});
+
+  factory TimeRangeModel.fromJson(Map<String, dynamic> json) => TimeRangeModel(
+    start: (json["start"] as num?)?.toInt(),
+    end: (json["end"] as num?)?.toInt(),
   );
 }
 
@@ -95,14 +191,22 @@ class TierModel {
   final String? name;
   final int? requiredCount;
   final double? requiredAmount;
+  final String? icon;
 
-  TierModel({this.tier, this.name, this.requiredCount, this.requiredAmount});
+  TierModel({
+    this.tier,
+    this.name,
+    this.requiredCount,
+    this.requiredAmount,
+    this.icon,
+  });
 
   factory TierModel.fromJson(Map<String, dynamic> json) => TierModel(
     tier: json["tier"],
     name: json["name"],
     requiredCount: (json["requiredCount"] as num?)?.toInt(),
     requiredAmount: (json["requiredAmount"] as num?)?.toDouble(),
+    icon: json["icon"],
   );
 }
 
@@ -116,6 +220,10 @@ class UserBadge {
   final double? progressAmount;
   final int? progressCount;
   final List<TierUnlocked>? tiersUnlocked;
+  final String? createdAt;
+  final String? lastDonationDate;
+  final List<dynamic>? uniqueCategoryNames;
+  final String? updatedAt;
 
   UserBadge({
     this.id,
@@ -127,6 +235,10 @@ class UserBadge {
     this.progressAmount,
     this.progressCount,
     this.tiersUnlocked,
+    this.createdAt,
+    this.lastDonationDate,
+    this.uniqueCategoryNames,
+    this.updatedAt,
   });
 
   factory UserBadge.fromJson(Map<String, dynamic> json) => UserBadge(
@@ -143,6 +255,12 @@ class UserBadge {
         : List<TierUnlocked>.from(
             json["tiersUnlocked"].map((x) => TierUnlocked.fromJson(x)),
           ),
+    createdAt: json["createdAt"],
+    lastDonationDate: json["lastDonationDate"],
+    uniqueCategoryNames: json["uniqueCategoryNames"] == null
+        ? []
+        : List<dynamic>.from(json["uniqueCategoryNames"].map((x) => x)),
+    updatedAt: json["updatedAt"],
   );
 }
 
@@ -167,14 +285,22 @@ class NextTier {
   final String? name;
   final int? requiredCount;
   final double? requiredAmount;
+  final String? icon;
 
-  NextTier({this.tier, this.name, this.requiredCount, this.requiredAmount});
+  NextTier({
+    this.tier,
+    this.name,
+    this.requiredCount,
+    this.requiredAmount,
+    this.icon,
+  });
 
   factory NextTier.fromJson(Map<String, dynamic> json) => NextTier(
     tier: json["tier"],
     name: json["name"],
     requiredCount: (json["requiredCount"] as num?)?.toInt(),
     requiredAmount: (json["requiredAmount"] as num?)?.toDouble(),
+    icon: json["icon"],
   );
 }
 

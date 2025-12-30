@@ -33,7 +33,7 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
       appBar: CustomAppBar(
         title: 'Linked Account',
         backgroundColor: const Color(0xFFF7F7F7),
-        actions: [IconButton(onPressed: () {}, icon: Assets.common.add.svg())],
+        // actions: [IconButton(onPressed: () {}, icon: Assets.common.add.svg())],
       ),
       body: SafeArea(
         child: Obx(() {

@@ -24,7 +24,7 @@ class SignupOtpController extends GetxController {
 
   bool get canResend => timer.value == 0 && !isResendLoading.value;
 
-  void startTimer([int seconds = 500]) {
+  void startTimer([int seconds = 20]) {
     timer.value = seconds;
     _countdown?.cancel();
     _countdown = Timer.periodic(const Duration(seconds: 1), (t) {
@@ -91,7 +91,7 @@ class SignupOtpController extends GetxController {
 
   /// Resend OTP for signup
   Future<void> resendOtp() async {
-    if (!canResend) return;
+    // if (!canResend) return;
     clearErrors();
     if (email.value.isEmpty) {
       errorMessage.value = 'Email missing';

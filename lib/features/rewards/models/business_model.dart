@@ -53,6 +53,7 @@ class BusinessModel {
   final String id;
   final Auth auth;
   final String name;
+  final String logoImage;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -60,6 +61,7 @@ class BusinessModel {
     required this.id,
     required this.auth,
     required this.name,
+    required this.logoImage,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -68,7 +70,8 @@ class BusinessModel {
     return BusinessModel(
       id: json['_id'],
       auth: Auth.fromJson(json['auth']),
-      name: json['name'],
+      name: json['name'] ?? '',
+      logoImage: json['logoImage'] ?? '',
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );
@@ -76,17 +79,12 @@ class BusinessModel {
 }
 
 class Auth {
-  final String id;
-  final String email;
-  final String status;
-  final bool isActive;
+  final String? id;
+  final String? email;
+  final String? status;
+  final bool? isActive;
 
-  Auth({
-    required this.id,
-    required this.email,
-    required this.status,
-    required this.isActive,
-  });
+  Auth({this.id, this.email, this.status, this.isActive});
 
   factory Auth.fromJson(Map<String, dynamic> json) {
     return Auth(

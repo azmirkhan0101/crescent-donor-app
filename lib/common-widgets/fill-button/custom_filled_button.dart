@@ -27,7 +27,7 @@ class CustomFilledButton extends StatelessWidget {
       onPressed: onTap ?? () {},
       style: FilledButton.styleFrom(
         backgroundColor: fillColor ?? AppColors.secondaryColor,
-        fixedSize: Size(double.maxFinite, 52.rh),
+        fixedSize: Size(double.maxFinite, 56),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         side: BorderSide(
           color:

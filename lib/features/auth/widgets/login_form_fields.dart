@@ -36,7 +36,7 @@ class LoginFormFields extends StatelessWidget {
         _buildRememberAndForgotRow(loginController, context),
 
         // Error message display
-        Obx(() => _buildErrorMessage(loginController)),
+        // Obx(() => _buildErrorMessage(loginController)),
       ],
     );
   }

@@ -12,11 +12,19 @@ class GetMyClaimedRewardsController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var meta = Rx<MetaModel?>(null);
+  var selectedStatus = 'all'.obs;
+  var statusOptions = <String>[
+    'all',
+    'claimed',
+    'redeemed',
+    'expired',
+    'cancelled',
+  ].obs;
 
   String _buildClaimedRewardsUrl({
     int? page,
     int? limit,
-    bool? includeExpired,
+    String? status,
     String? sortBy,
     String? sortOrder,
   }) {
@@ -28,8 +36,9 @@ class GetMyClaimedRewardsController extends GetxController {
     if (limit != null) {
       params.add('limit=$limit');
     }
-    if (includeExpired != null) {
-      params.add('includeExpired=$includeExpired');
+    // Only add status parameter if it's not 'all'
+    if (status != null && status.isNotEmpty && status != 'all') {
+      params.add('status=$status');
     }
     if (sortBy != null && sortBy.isNotEmpty) {
       params.add('sortBy=$sortBy');
@@ -45,7 +54,7 @@ class GetMyClaimedRewardsController extends GetxController {
   Future<void> fetchMyClaimedRewards({
     int? page,
     int? limit,
-    bool? includeExpired,
+    String? status,
     String? sortBy,
     String? sortOrder,
   }) async {
@@ -55,7 +64,7 @@ class GetMyClaimedRewardsController extends GetxController {
     final url = _buildClaimedRewardsUrl(
       page: page,
       limit: limit,
-      includeExpired: includeExpired,
+      status: status ?? selectedStatus.value,
       sortBy: sortBy,
       sortOrder: sortOrder,
     );
@@ -80,5 +89,10 @@ class GetMyClaimedRewardsController extends GetxController {
         );
       },
     );
+  }
+
+  void filterByStatus(String status) {
+    selectedStatus.value = status;
+    fetchMyClaimedRewards(status: status);
   }
 }

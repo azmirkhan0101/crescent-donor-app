@@ -1,12 +1,13 @@
 import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/change_password_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/edit_profile_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/notification_settings_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/subscription_page.dart';
+import 'package:cresent_charge_user_app/features/profile/pages/terms_and_conditions_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/transaction_history_page.dart';
-import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfileRoutes extends AppRouteConfig {
@@ -49,6 +50,14 @@ class ProfileRoutes extends AppRouteConfig {
       name: RoutePath.subscription,
       path: RoutePath.subscription.addBasePath,
       builder: (context, state) => const SubscriptionPage(),
+      redirect: AuthGuard.guestAllowed.redirect,
+    ),
+
+    // Terms and Conditions Page
+    GoRoute(
+      name: RoutePath.termsAndConditions,
+      path: RoutePath.termsAndConditions.addBasePath,
+      builder: (context, state) => const TermsAndConditionsPage(),
       redirect: AuthGuard.guestAllowed.redirect,
     ),
   ];

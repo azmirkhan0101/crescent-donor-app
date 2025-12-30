@@ -1,11 +1,11 @@
-import 'package:cresent_charge_user_app/features/organization/models/organization_model.dart';
+import 'package:cresent_charge_user_app/features/organization/models/organization_details_model.dart';
 import 'package:cresent_charge_user_app/features/organization/widgets/cause_item_widget.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
 class OverviewSectionWidget extends StatelessWidget {
   final String mission;
-  final List<CauseModel> causes;
+  final List<OrgDetailsCause> causes;
 
   const OverviewSectionWidget({
     super.key,
@@ -25,16 +25,17 @@ class OverviewSectionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 12.rh),
-          Text(
-            mission,
-            style: TextStyle(
-              fontFamily: 'Inter Display',
-              fontSize: 14.rfs,
-              color: const Color(0xFF000C0B),
-              height: 1.43,
+          if (mission.isNotEmpty) SizedBox(height: 12.rh),
+          if (mission.isNotEmpty)
+            Text(
+              mission,
+              style: TextStyle(
+                fontFamily: 'Inter Display',
+                fontSize: 14.rfs,
+                color: const Color(0xFF000C0B),
+                height: 1.43,
+              ),
             ),
-          ),
           SizedBox(height: 12.rh),
           Text(
             'Causes We Support',

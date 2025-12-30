@@ -44,36 +44,38 @@ class CausesController extends GetxController {
     );
   }
 
-  /// ------------------------------------
-  /// Fetch all Causes by organization id
-  /// ------------------------------------
-  // Observable variables
-  RxBool fetchingCausesByOrgId = false.obs;
-  RxString fetchingCausesByOrgIdErrorMessage = ''.obs;
+  // /// ------------------------------------
+  // /// Fetch all Causes by organization id
+  // /// ------------------------------------
+  // // Observable variables
+  // RxBool fetchingCausesByOrgId = false.obs;
+  // RxString fetchingCausesByOrgIdErrorMessage = ''.obs;
 
-  // Store causes data
-  RxList<CauseData> causesByOrgId = RxList<CauseData>([]);
-  // Fetch all causes from API
-  Future<bool> fetchCausesByOrgId(String orgId) async {
-    fetchingCausesByOrgIdErrorMessage.value = '';
-    fetchingCausesByOrgId.value = true;
+  // // Store causes data
+  // RxList<CauseData> causesByOrgId = RxList<CauseData>([]);
+  // // Fetch all causes from API
+  // Future<bool> fetchCausesByOrgId(String orgId) async {
+  //   fetchingCausesByOrgIdErrorMessage.value = '';
+  //   fetchingCausesByOrgId.value = true;
 
-    final result = await Get.find<NetworkHelper>().request(
-      'GET',
-      ApiUrl.getAllCausesByOrgId(orgId),
-      parser: (data) => CauseResponseModel.fromJson(data),
-      withAuth: true,
-    );
-    return result.fold(
-      (err) {
-        fetchingCausesByOrgIdErrorMessage.value =
-            err.message ?? 'Failed to load causes';
-        return false;
-      },
-      (data) {
-        causesByOrgId.value = data.data;
-        return true;
-      },
-    );
-  }
+  //   final result = await Get.find<NetworkHelper>().request(
+  //     'GET',
+  //     ApiUrl.getAllCausesByOrgId(orgId),
+  //     parser: (data) => CauseResponseModel.fromJson(data),
+  //     withAuth: true,
+  //   );
+  //   return result.fold(
+  //     (err) {
+  //       fetchingCausesByOrgIdErrorMessage.value =
+  //           err.message ?? 'Failed to load causes';
+  //       return false;
+  //     },
+  //     (data) {
+  //       causesByOrgId.value = data.data;
+  //       return true;
+  //     },
+  //   );
+  // }
+
+
 }

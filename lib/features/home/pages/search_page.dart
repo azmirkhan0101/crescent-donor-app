@@ -317,37 +317,38 @@ class SearchPage extends StatelessWidget {
                   fontFamily: 'Inter',
                 ),
               ),
-              if (controller.recentSearches.isNotEmpty)
-                TextButton(
-                  onPressed: controller.clearAllRecentSearches,
-                  child: Text(
-                    'Clear All',
-                    style: TextStyle(
-                      color: const Color(0xFF000C0B),
-                      fontSize: 14.rfs,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Inter',
-                    ),
+              // if (controller.recentSearches.isNotEmpty)
+              TextButton(
+                // onPressed: controller.clearAllRecentSearches,
+                onPressed: () => {},
+                child: Text(
+                  'Clear All',
+                  style: TextStyle(
+                    color: const Color(0xFF000C0B),
+                    fontSize: 14.rfs,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Inter',
                   ),
                 ),
+              ),
             ],
           ),
           SizedBox(height: 16.rh),
-          // Expanded(
-          //   child: Obx(
-          //     () => controller.recentSearches.isEmpty
-          //         ? _buildEmptyRecentSearches()
-          //         : ListView.separated(
-          //             itemCount: controller.recentSearches.length,
-          //             separatorBuilder: (context, index) =>
-          //                 SizedBox(height: 12.rh),
-          //             itemBuilder: (context, index) {
-          //               final item = controller.recentSearches[index];
-          //               return _buildRecentSearchItem(controller, item);
-          //             },
-          //           ),
-          //   ),
-          // ),
+          Expanded(
+            child: Obx(
+              () => controller.recentSearches.isEmpty
+                  ? _buildEmptyRecentSearches()
+                  : ListView.separated(
+                      itemCount: controller.recentSearches.length,
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 12.rh),
+                      itemBuilder: (context, index) {
+                        final item = controller.recentSearches[index];
+                        return _buildRecentSearchItem(controller, item);
+                      },
+                    ),
+            ),
+          ),
         ],
       ),
     );
@@ -388,8 +389,6 @@ class SearchPage extends StatelessWidget {
     search_ctrl.SearchController controller,
     search_ctrl.RecentSearchItem item,
   ) {
-    final bool isNetworkImage = item.logoAsset.startsWith('http');
-
     return GestureDetector(
       onTap: () => controller.onRecentSearchTap(item),
       child: Container(
@@ -410,24 +409,22 @@ class SearchPage extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: isNetworkImage
+                child: item.logoAsset.isNotEmpty
                     ? Image.network(
                         item.logoAsset,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return Assets.home.varifiedCharitiesBlog1.image(
-                            fit: BoxFit.cover,
+                          return Icon(
+                            Icons.broken_image,
+                            size: 24.rw,
+                            color: const Color(0xFF9CA3AF),
                           );
                         },
                       )
-                    : Image.asset(
-                        item.logoAsset,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Assets.home.varifiedCharitiesBlog1.image(
-                            fit: BoxFit.cover,
-                          );
-                        },
+                    : Icon(
+                        Icons.broken_image,
+                        size: 24.rw,
+                        color: const Color(0xFF9CA3AF),
                       ),
               ),
             ),
@@ -461,7 +458,7 @@ class SearchPage extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () => controller.removeRecentSearch(item),
+              // onTap: () => controller.removeRecentSearch(item),
               child: Container(
                 padding: EdgeInsets.all(4.rw),
                 child: Icon(
@@ -483,7 +480,140 @@ class SearchPage extends StatelessWidget {
   ) {
     final bool isNetworkImage = result.logoAsset.startsWith('http');
 
-    return GestureDetector(
+    // return GestureDetector(
+    //   onTap: () {
+    //     // Navigate to organization details
+    //     if (result.organization?.id != null &&
+    //         result.organization!.id.isNotEmpty) {
+    //       context.pushNamed(
+    //         RoutePath.organizationDetails,
+    //         extra: {'organizationId': result.organization!.id},
+    //       );
+    //     }
+    //   },
+    //   child: Container(
+    //     padding: EdgeInsets.all(16.rw),
+    //     decoration: BoxDecoration(
+    //       color: Colors.white,
+    //       borderRadius: BorderRadius.circular(12),
+    //       border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+    //     ),
+    //     child: Row(
+    //       children: [
+    //         Container(
+    //           width: 56.rw,
+    //           height: 56.rh,
+    //           decoration: BoxDecoration(
+    //             borderRadius: BorderRadius.circular(28),
+    //             color: const Color(0xFFF4EAE2),
+    //           ),
+    //           child: ClipRRect(
+    //             borderRadius: BorderRadius.circular(28),
+    //             child: isNetworkImage
+    //                 ? Image.network(
+    //                     result.logoAsset,
+    //                     fit: BoxFit.cover,
+    //                     errorBuilder: (context, error, stackTrace) {
+    //                       return Icon(
+    //                         Icons.broken_image,
+    //                         size: 24.rw,
+    //                         color: const Color(0xFF9CA3AF),
+    //                       );
+    //                     },
+    //                   )
+    //                 : Image.asset(
+    //                     result.logoAsset,
+    //                     fit: BoxFit.cover,
+    //                     errorBuilder: (context, error, stackTrace) {
+    //                       return Icon(
+    //                         Icons.broken_image,
+    //                         size: 24.rw,
+    //                         color: const Color(0xFF9CA3AF),
+    //                       );
+    //                     },
+    //                   ),
+    //           ),
+    //         ),
+    //         SizedBox(width: 12.rw),
+    //         Expanded(
+    //           child: Column(
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: [
+    //               Text(
+    //                 result.name,
+    //                 style: TextStyle(
+    //                   color: const Color(0xFF000C0B),
+    //                   fontSize: 16.rfs,
+    //                   fontWeight: FontWeight.w600,
+    //                   fontFamily: 'Inter',
+    //                 ),
+    //                 maxLines: 1,
+    //                 overflow: TextOverflow.ellipsis,
+    //               ),
+    //               SizedBox(height: 4.rh),
+    //               // if (result.serviceType != null) ...[
+    //               //   Text(
+    //               //     result.serviceType!,
+    //               //     style: TextStyle(
+    //               //       color: const Color(0xFF9CA3AF),
+    //               //       fontSize: 12.rfs,
+    //               //       fontWeight: FontWeight.w400,
+    //               //       fontFamily: 'Inter',
+    //               //     ),
+    //               //   ),
+    //               //   SizedBox(height: 4.rh),
+    //               // ],
+    //               // Text(
+    //               //   result.description,
+    //               //   style: TextStyle(
+    //               //     color: const Color(0xFF6B7280),
+    //               //     fontSize: 14.rfs,
+    //               //     fontWeight: FontWeight.w400,
+    //               //     fontFamily: 'Inter',
+    //               //   ),
+    //               //   maxLines: 2,
+    //               //   overflow: TextOverflow.ellipsis,
+    //               // ),
+    //               if (result.location.isNotEmpty) ...[
+    //                 SizedBox(height: 4.rh),
+    //                 Row(
+    //                   children: [
+    //                     Icon(
+    //                       Icons.location_on,
+    //                       size: 14.rw,
+    //                       color: const Color(0xFF9CA3AF),
+    //                     ),
+    //                     SizedBox(width: 4.rw),
+    //                     Expanded(
+    //                       child: Text(
+    //                         result.location,
+    //                         style: TextStyle(
+    //                           color: const Color(0xFF9CA3AF),
+    //                           fontSize: 12.rfs,
+    //                           fontWeight: FontWeight.w400,
+    //                           fontFamily: 'Inter',
+    //                         ),
+    //                         maxLines: 1,
+    //                         overflow: TextOverflow.ellipsis,
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ],
+    //             ],
+    //           ),
+    //         ),
+    //         Icon(
+    //           Icons.arrow_forward_ios,
+    //           size: 16.rw,
+    //           color: const Color(0xFF9CA3AF),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
+
+    return ListTile(
       onTap: () {
         // Navigate to organization details
         if (result.organization?.id != null &&
@@ -494,122 +624,71 @@ class SearchPage extends StatelessWidget {
           );
         }
       },
-      child: Container(
-        padding: EdgeInsets.all(16.rw),
+      leading: Container(
+        width: 56.rw,
+        height: 56.rh,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+          borderRadius: BorderRadius.circular(10),
+          color: const Color(0xFFFAF7F4),
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 56.rw,
-              height: 56.rh,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28),
-                color: const Color(0xFFF4EAE2),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(28),
-                child: isNetworkImage
-                    ? Image.network(
-                        result.logoAsset,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Assets.home.varifiedCharitiesBlog1.image(
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      )
-                    : Image.asset(
-                        result.logoAsset,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Assets.home.varifiedCharitiesBlog1.image(
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
-              ),
-            ),
-            SizedBox(width: 12.rw),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    result.name,
-                    style: TextStyle(
-                      color: const Color(0xFF000C0B),
-                      fontSize: 16.rfs,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4.rh),
-                  if (result.serviceType != null) ...[
-                    Text(
-                      result.serviceType!,
-                      style: TextStyle(
-                        color: const Color(0xFF9CA3AF),
-                        fontSize: 12.rfs,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                    SizedBox(height: 4.rh),
-                  ],
-                  Text(
-                    result.description,
-                    style: TextStyle(
-                      color: const Color(0xFF6B7280),
-                      fontSize: 14.rfs,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Inter',
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (result.location.isNotEmpty) ...[
-                    SizedBox(height: 4.rh),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          size: 14.rw,
-                          color: const Color(0xFF9CA3AF),
-                        ),
-                        SizedBox(width: 4.rw),
-                        Expanded(
-                          child: Text(
-                            result.location,
-                            style: TextStyle(
-                              color: const Color(0xFF9CA3AF),
-                              fontSize: 12.rfs,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Inter',
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16.rw,
-              color: const Color(0xFF9CA3AF),
-            ),
-          ],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: result.logoAsset.isNotEmpty
+              ? Image.network(
+                  result.logoAsset,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.broken_image,
+                      size: 24.rw,
+                      color: const Color(0xFF9CA3AF),
+                    );
+                  },
+                )
+              : Icon(
+                  Icons.broken_image,
+                  size: 24.rw,
+                  color: const Color(0xFF9CA3AF),
+                ),
         ),
       ),
+      title: Text(
+        result.name,
+        style: TextStyle(
+          color: const Color(0xFF000C0B),
+          fontSize: 16.rfs,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'Inter',
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Row(
+        children: [
+          Icon(Icons.location_on, size: 14.rw, color: const Color(0xFF9CA3AF)),
+          SizedBox(width: 4.rw),
+          Expanded(
+            child: Text(
+              result.location,
+              style: TextStyle(
+                color: const Color(0xFF9CA3AF),
+                fontSize: 12.rfs,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Inter',
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 16.rw,
+        color: const Color(0xFF9CA3AF),
+      ),
+      dense: true,
+      contentPadding: EdgeInsets.symmetric(horizontal: 8.rw, vertical: 0.rh),
     );
   }
 }

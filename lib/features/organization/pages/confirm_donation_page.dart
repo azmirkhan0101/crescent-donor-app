@@ -1,9 +1,7 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/common/controllers/roundup-management/save_roundup_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/create_recurring_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
@@ -115,11 +113,13 @@ class ConfirmDonationPage extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                parseImageUrl(orgLogoUrl),
+                orgLogoUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Assets.home.varifiedCharitiesBlog1.image(
-                    fit: BoxFit.cover,
+                  return Icon(
+                    Icons.broken_image,
+                    size: 40.rw,
+                    color: _grayText,
                   );
                 },
               ),
@@ -280,7 +280,7 @@ class ConfirmDonationPage extends StatelessWidget {
     final paymentMethod = paymentMethodCtrl.paymentMethods.firstWhere(
       (method) => method.id == paymentMethodId,
     );
-    final stripeFees = donateNowCtrl.amount.value * 0.0475; // 4.75%
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(8.rw),
@@ -297,6 +297,12 @@ class ConfirmDonationPage extends StatelessWidget {
         ],
       ),
       child: Obx(() {
+        // Calculate fees reactively based on checkbox state
+        final calculatedAmounts = calculateAustralianFees(
+          baseAmount: donateNowCtrl.amount.value.toDouble(),
+          coverFees: donateNowCtrl.contributeToAdminFees,
+        );
+
         return Column(
           children: [
             // Header
@@ -327,13 +333,18 @@ class ConfirmDonationPage extends StatelessWidget {
               'By ${paymentMethod.cardBrand.toUpperCase()} Card:',
               "**** **** **** ${paymentMethod.cardLast4}",
             ),
-            // Stripe fees : 4.75%
-            _buildTransactionItem('Stripe fees:', "\$$stripeFees"),
+
+            _buildTransactionItem(
+              'Stripe & Platform Fees:',
+              "\$${calculateFees(donateNowCtrl.amount.value.toDouble()).toStringAsFixed(2)}",
+            ),
 
             // _buildTransactionItem('Taxes & Fees:', controller.taxesAndFees),
             _buildTransactionItem(
               'Taxes & Admin Fees:',
-              "\$${donateNowCtrl.contributionAmount.value.toStringAsFixed(2)}",
+              donateNowCtrl.contributeToAdminFees
+                  ? "\$${(donateNowCtrl.amount.value.toDouble() * 0.05).toStringAsFixed(2)}"
+                  : "\$0.00",
             ),
 
             // Divider
@@ -346,7 +357,9 @@ class ConfirmDonationPage extends StatelessWidget {
 
             _buildTransactionItem(
               "Total",
-              "\$${(donateNowCtrl.amount.value + stripeFees + donateNowCtrl.contributionAmount.value).toStringAsFixed(3)}",
+              donateNowCtrl.contributeToAdminFees
+                  ? "\$${(donateNowCtrl.amount.value + calculateFees(donateNowCtrl.amount.value.toDouble()) + (donateNowCtrl.amount.value * 0.05)).toStringAsFixed(2)}"
+                  : "\$${(donateNowCtrl.amount.value + calculateFees(donateNowCtrl.amount.value.toDouble())).toStringAsFixed(2)}",
             ),
 
             // Divider
@@ -536,5 +549,64 @@ class ConfirmDonationPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// calculate
+  Map<String, dynamic> calculateAustralianFees({
+    required double baseAmount,
+    required bool coverFees,
+    double platformFeePercent = 0.05,
+    double gstRate = 0.10,
+    double stripeFeePercent = 0.029, // AU default
+    double stripeFixedFee = 0.30,
+  }) {
+    double round2(double value) => (value * 100).roundToDouble() / 100;
+
+    // Calculate stripe fee always based on base amount (fixed)
+    final double stripeFee = round2(
+      baseAmount * stripeFeePercent + stripeFixedFee,
+    );
+
+    // Platform Revenue + GST
+    final double platformFee = round2(baseAmount * platformFeePercent);
+    final double gstOnFee = round2(platformFee * gstRate);
+    final double applicationFee = platformFee + gstOnFee;
+
+    double totalCharge = 0;
+    double netToOrg = 0;
+
+    if (coverFees) {
+      // Scenario A: Donor pays everything
+      totalCharge = round2(baseAmount + stripeFee + applicationFee);
+      netToOrg = baseAmount;
+    } else {
+      // Scenario B: Donor pays base only, org absorbs fees
+      totalCharge = baseAmount;
+      netToOrg = round2(baseAmount - stripeFee - applicationFee);
+    }
+
+    final double platformFeeWithStripe = stripeFee + applicationFee;
+    return {
+      'baseAmount': baseAmount, // Tax deductible
+      'platformFee': platformFee, // Platform revenue
+      'gstOnFee': gstOnFee, // GST liability
+      'stripeFee': stripeFee, // Stripe cost (fixed)
+      'totalCharge': totalCharge, // Charge to card
+      'applicationFee': applicationFee, // Stripe application_fee_amount
+      'netToOrg': netToOrg, // Credited to org
+      'coverFees': coverFees,
+      'platformFeeWithStripe': platformFeeWithStripe,
+    };
+  }
+
+  double calculateFees(double baseAmount) {
+    double platformFee = baseAmount * 0.05; // 5% platform fee
+    double gstOnFee = platformFee * 0.10; // 10% GST on platform fee
+    double stripeFixedFee = 0.30; // AU default
+    double nominator = baseAmount + platformFee + gstOnFee + stripeFixedFee;
+    double dominator = 1 - 0.029;
+    double finalAmount = nominator / dominator;
+
+    return finalAmount - baseAmount;
   }
 }

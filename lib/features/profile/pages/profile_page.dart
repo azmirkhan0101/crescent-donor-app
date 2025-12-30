@@ -2,9 +2,10 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/log_out_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/models/profile_model.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -58,7 +59,7 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(height: 24.rh),
 
                   // Logout Button
-                  _buildLogoutButton(context),
+                  _buildLogoutButton(context, profile?.auth.id ?? ''),
 
                   SizedBox(height: 80.rh),
                 ],
@@ -77,8 +78,8 @@ class ProfilePage extends StatelessWidget {
         // Profile Avatar
         Center(
           child: CustomNetworkImage(
-            imageUrl: parseImageUrl('${profile?.image}'),
-            height: 120.rh,
+            imageUrl: profile?.image ?? '',
+            height: 120.rw,
             width: 120.rw,
             borderRadius: BorderRadius.circular(60.rw),
           ),
@@ -95,32 +96,43 @@ class ProfilePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        profile?.name ?? 'N/A',
-                        style: TextStyle(
-                          fontFamily: DonationFonts.interDisplay,
-                          fontSize: 24.rfs,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF000C0B),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          profile?.name ?? 'N/A',
+                          style: TextStyle(
+                            fontFamily: DonationFonts.interDisplay,
+                            fontSize: 24.rfs,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF000C0B),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 4.rh),
-                      Text(
-                        profile?.auth.email ?? 'N/A',
-                        style: TextStyle(
-                          fontFamily: DonationFonts.interDisplay,
-                          fontSize: 12.rfs,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey,
+                        SizedBox(height: 4.rh),
+                        Text(
+                          profile?.auth.email ?? 'N/A',
+                          style: TextStyle(
+                            fontFamily: DonationFonts.interDisplay,
+                            fontSize: 12.rfs,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   GestureDetector(
-                    onTap: () => context.pushNamed(RoutePath.editProfile),
+                    onTap: () {
+                      if (Get.find<GetProfileController>().isGuestUser.value) {
+                        ToastMsg.info(
+                          'Edit Profile is not available for guest users.',
+                        );
+                        return;
+                      }
+                      context.pushNamed(RoutePath.editProfile);
+                    },
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 16.rw,
@@ -183,11 +195,16 @@ class ProfilePage extends StatelessWidget {
 
   /// Build menu items section
   Widget _buildMenuItems(BuildContext context) {
+    final bool isGuest = Get.find<GetProfileController>().isGuestUser.value;
     final menuItems = [
       MenuItemData(
         icon: Assets.common.alert.path, // Using alert for notifications
         title: 'Notifications',
         onTap: () {
+          if (isGuest) {
+            ToastMsg.info('Notifications are not available for guest users.');
+            return;
+          }
           context.pushNamed(RoutePath.notificationSettings);
         },
       ),
@@ -195,6 +212,12 @@ class ProfilePage extends StatelessWidget {
         icon: Assets.common.timer.path, // Using timer for transaction history
         title: 'Transaction History',
         onTap: () {
+          if (isGuest) {
+            ToastMsg.info(
+              'Transaction history is not available for guest users.',
+            );
+            return;
+          }
           context.pushNamed(RoutePath.transactionHistory);
         },
       ),
@@ -202,6 +225,10 @@ class ProfilePage extends StatelessWidget {
         icon: Assets.common.gift.path, // Using gift for change password
         title: 'Change Password',
         onTap: () {
+          if (isGuest) {
+            ToastMsg.info('Change password is not available for guest users.');
+            return;
+          }
           context.pushNamed(RoutePath.changePassword);
         },
       ),
@@ -215,7 +242,15 @@ class ProfilePage extends StatelessWidget {
       MenuItemData(
         icon: Assets.common.globe.path, // Using globe for terms & conditions
         title: 'Terms & Conditions',
-        onTap: () {},
+        onTap: () {
+          if (isGuest) {
+            ToastMsg.info(
+              'Terms & Conditions are not available for guest users.',
+            );
+            return;
+          }
+          context.pushNamed(RoutePath.termsAndConditions);
+        },
       ),
     ];
 
@@ -291,31 +326,41 @@ class ProfilePage extends StatelessWidget {
   }
 
   /// Build logout button
-  Widget _buildLogoutButton(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 56.rw),
-      padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 16.rh),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0323C).withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12.rw),
-        border: Border.all(color: const Color(0xFFF0323C), width: 1),
-      ),
-      child: Center(
-        child: Text(
-          'Logout',
-          style: TextStyle(
-            fontFamily: DonationFonts.familjenGrotesk,
-            fontSize: 18.rfs,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFFF0323C),
-            letterSpacing: -0.36,
+  Widget _buildLogoutButton(BuildContext context, String profileId) {
+    final logOutController = Get.put(LogOutController());
+    return Obx(() {
+      return Container(
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 56.rw),
+        padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 16.rh),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF0323C).withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12.rw),
+          border: Border.all(color: const Color(0xFFF0323C), width: 1),
+        ),
+        child: Center(
+          child: Text(
+            logOutController.isLoading.value ? 'Logging out...' : 'Logout',
+            style: TextStyle(
+              fontFamily: DonationFonts.familjenGrotesk,
+              fontSize: 18.rfs,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFF0323C),
+              letterSpacing: -0.36,
+            ),
           ),
         ),
-      ),
-    ).onTap(() {
-      AppStorageService.clearAll();
-      context.goNamed(RoutePath.login);
+      ).onTap(() async {
+        if (await AppStorageService.getIsGuestUser()) {
+          // Call guest logout API
+          await logOutController.logOut(profileId);
+          context.goNamed(RoutePath.login);
+        } else {
+          // Clear auth token for regular users
+          await AppStorageService.clearAll();
+          context.goNamed(RoutePath.login);
+        }
+      });
     });
   }
 }

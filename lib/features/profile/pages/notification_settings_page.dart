@@ -1,8 +1,10 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
+import 'package:cresent_charge_user_app/features/profile/controllers/notification_settings_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 /// Notification Settings Page
@@ -30,64 +32,66 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.rw),
-        child: Column(
-          children: [
-            SizedBox(height: 16.rh),
+        child: GetX<NotificationSettingsController>(
+          init: Get.put(NotificationSettingsController()),
 
-            // Push Notifications Setting
-            _buildNotificationSetting(
-              icon: Assets
-                  .common
-                  .notificationBell
-                  .path, // Using alert as bell icon
-              title: 'Push Notifications',
-              description:
-                  'Manage what updates you want to hear about from Crescent Change.',
-              isEnabled: _pushNotificationsEnabled,
-              onToggle: (value) {
-                setState(() {
-                  _pushNotificationsEnabled = value;
-                });
-              },
-            ),
+          builder: (controller) {
+            return Column(
+              children: [
+                SizedBox(height: 16.rh),
 
-            SizedBox(height: 16.rh),
+                // Push Notifications Setting
+                _buildNotificationSetting(
+                  icon: Assets
+                      .common
+                      .notificationBell
+                      .path, // Using alert as bell icon
+                  title: 'Push Notifications',
+                  description:
+                      'Manage what updates you want to hear about from Crescent Change.',
+                  isEnabled: controller.pushNotificationsEnabled.value,
+                  onToggle: (value) {
+                    controller.togglePushNotifications(value);
+                  },
+                ),
 
-            // Donation Updates Setting
-            _buildNotificationSetting(
-              icon: Assets
-                  .common
-                  .donationOutlineIcon
-                  .path, // Using gift as donation icon
-              title: 'Donation Updates',
-              description:
-                  'Get notified when your donation is sent or when a recurring one is coming up.',
-              isEnabled: _donationUpdatesEnabled,
-              onToggle: (value) {
-                setState(() {
-                  _donationUpdatesEnabled = value;
-                });
-              },
-            ),
+                SizedBox(height: 16.rh),
 
-            SizedBox(height: 16.rh),
+                // Donation Updates Setting
+                _buildNotificationSetting(
+                  icon: Assets
+                      .common
+                      .donationOutlineIcon
+                      .path, // Using gift as donation icon
+                  title: 'Donation Updates',
+                  description:
+                      'Get notified when your donation is sent or when a recurring one is coming up.',
+                  isEnabled:
+                      controller.donationUpdateNNotificationEnabled.value,
+                  onToggle: (value) {
+                    controller.toggleEmailNotifications(value);
+                  },
+                ),
 
-            // Rewards & Perks Setting
-            _buildNotificationSetting(
-              icon: Assets.common.starOutline.path, // Using star for rewards
-              title: 'Rewards & Perks',
-              description:
-                  'We\'ll ping you when you earn rewards, perks, or kindness streaks!',
-              isEnabled: _rewardsAndPerksEnabled,
-              onToggle: (value) {
-                setState(() {
-                  _rewardsAndPerksEnabled = value;
-                });
-              },
-            ),
+                SizedBox(height: 16.rh),
 
-            SizedBox(height: 24.rh),
-          ],
+                // Rewards & Perks Setting
+                _buildNotificationSetting(
+                  icon:
+                      Assets.common.starOutline.path, // Using star for rewards
+                  title: 'Rewards & Perks',
+                  description:
+                      'We\'ll ping you when you earn rewards, perks, or kindness streaks!',
+                  isEnabled: controller.newsletterSubscriptionEnabled.value,
+                  onToggle: (value) {
+                    controller.toggleNewsletterSubscription(value);
+                  },
+                ),
+
+                SizedBox(height: 24.rh),
+              ],
+            );
+          },
         ),
       ),
     );

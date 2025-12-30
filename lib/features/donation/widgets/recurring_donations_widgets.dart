@@ -1,5 +1,4 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/models/recurring_states_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -138,9 +137,7 @@ class RecurringOrganizationCard extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(22.rw),
                       child: Image.network(
-                        parseImageUrl(
-                          donation.organizationDetails.logoImage ?? '',
-                        ),
+                        donation.organizationDetails.logoImage,
                         width: 44.rw,
                         height: 44.rh,
                         fit: BoxFit.cover,

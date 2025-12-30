@@ -3,6 +3,7 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
+import 'package:cresent_charge_user_app/features/auth/controllers/profile_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_header.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/auth_title_section.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
@@ -137,15 +138,14 @@ class _LoginPageState extends State<LoginPage> {
 
           // Login as guest button
           CustomFilledButton(
-            title: controller.isLoading.value
+            title: controller.isLoadingGuest.value
                 ? "Please wait..."
                 : "Login as a Guest",
             fillColor: Colors.transparent,
-            onTap: controller.isLoading.value
+            onTap: controller.isLoadingGuest.value
                 ? null
                 : () => _handleGuestLogin(context, controller),
           ),
-
           24.heightWidth,
         ],
       ).paddingXY(X: 56.rw);
@@ -160,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
     final success = await controller.loginAsGuest();
 
     if (success && context.mounted) {
+      Get.find<GetProfileController>().isGuestUser.value = true;
       // Show guest mode message before navigation
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

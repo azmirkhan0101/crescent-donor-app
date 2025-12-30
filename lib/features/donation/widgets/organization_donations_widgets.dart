@@ -1,5 +1,4 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-import 'package:cresent_charge_user_app/core/helper/url_parser/image_url_parser.dart';
 import 'package:cresent_charge_user_app/features/donation/models/recurring_org_state_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -33,11 +32,9 @@ class OrganizationDetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // print('name: $orgName, logo: $logoUrl, cover: $coverImageUrl');
     final parsedCoverUrl = (coverImageUrl?.isNotEmpty ?? false)
-        ? parseImageUrl(coverImageUrl!)
+        ? coverImageUrl!
         : null;
-    final parsedLogoUrl = (logoUrl?.isNotEmpty ?? false)
-        ? parseImageUrl(logoUrl!)
-        : null;
+    final parsedLogoUrl = (logoUrl?.isNotEmpty ?? false) ? logoUrl! : null;
     return Column(
       children: [
         Stack(
