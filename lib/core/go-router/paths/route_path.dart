@@ -24,6 +24,7 @@ class RoutePath {
   static const String organizationDetails = 'organizationDetails';
   static const String linkedPaymentAccount = 'linkedPaymentAccount';
   static const String connectedBankAccount = 'connectedBankAccount';
+  static const String basiqWebView = 'basiqWebView';
   static const String addNewCard = 'addNewCard';
   static const String makePayment = 'makePayment';
   static const String confirmDonation = 'confirmDonation';

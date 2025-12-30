@@ -632,29 +632,46 @@ class ActivityItem extends StatelessWidget {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(22.rw),
-                        child: Image.network(
-                          activity.brandLogo,
-                          width: 44.rw,
-                          height: 44.rh,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey.withValues(alpha: 0.3),
-                              child: Center(
-                                child: Text(
-                                  activity.brandName.isNotEmpty
-                                      ? activity.brandName[0].toUpperCase()
-                                      : '',
-                                  style: TextStyle(
-                                    fontSize: 18.rfs,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                        child: activity.brandLogo.isNotEmpty
+                            ? Image.network(
+                                activity.brandLogo,
+                                width: 44.rw,
+                                height: 44.rh,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey.withValues(alpha: 0.3),
+                                    child: Center(
+                                      child: Text(
+                                        activity.brandName.isNotEmpty
+                                            ? activity.brandName[0]
+                                                  .toUpperCase()
+                                            : '',
+                                        style: TextStyle(
+                                          fontSize: 18.rfs,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container(
+                                color: Colors.grey.withValues(alpha: 0.3),
+                                child: Center(
+                                  child: Text(
+                                    activity.brandName.isNotEmpty
+                                        ? activity.brandName[0].toUpperCase()
+                                        : '',
+                                    style: TextStyle(
+                                      fontSize: 18.rfs,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
-                            );
-                          },
-                        ),
                       ),
                     ),
 

@@ -270,18 +270,24 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
                                       final imageUrl = _getFullImageUrl(
                                         controller.rewardDetail.value?.image,
                                       );
-                                      return Image.network(
-                                        imageUrl,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                              return Icon(
-                                                Icons.store,
-                                                size: 24.rfs,
-                                                color: Colors.grey[400],
-                                              );
-                                            },
-                                      );
+                                      return imageUrl.isNotEmpty
+                                          ? Image.network(
+                                              imageUrl,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Icon(
+                                                      Icons.store,
+                                                      size: 24.rfs,
+                                                      color: Colors.grey[400],
+                                                    );
+                                                  },
+                                            )
+                                          : Icon(
+                                              Icons.store,
+                                              size: 24.rfs,
+                                              color: Colors.grey[400],
+                                            );
                                     }(),
                                   ),
                                 ),

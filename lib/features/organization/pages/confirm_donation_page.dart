@@ -333,18 +333,17 @@ class ConfirmDonationPage extends StatelessWidget {
               'By ${paymentMethod.cardBrand.toUpperCase()} Card:',
               "**** **** **** ${paymentMethod.cardLast4}",
             ),
-            // Stripe fees : 4.75%
-            // _buildTransactionItem('Stripe fees:', "\$$stripeFees"),
+
             _buildTransactionItem(
-              'Stripe fees:',
-              "\$${calculatedAmounts['stripeFee'].toStringAsFixed(2)}",
+              'Stripe & Platform Fees:',
+              "\$${calculateFees(donateNowCtrl.amount.value.toDouble()).toStringAsFixed(2)}",
             ),
 
             // _buildTransactionItem('Taxes & Fees:', controller.taxesAndFees),
             _buildTransactionItem(
               'Taxes & Admin Fees:',
               donateNowCtrl.contributeToAdminFees
-                  ? "\$${calculatedAmounts['platformFee'].toStringAsFixed(2)}"
+                  ? "\$${(donateNowCtrl.amount.value.toDouble() * 0.05).toStringAsFixed(2)}"
                   : "\$0.00",
             ),
 
@@ -358,7 +357,9 @@ class ConfirmDonationPage extends StatelessWidget {
 
             _buildTransactionItem(
               "Total",
-              "\$${(donateNowCtrl.amount.value + calculatedAmounts['stripeFee'] + (donateNowCtrl.contributeToAdminFees ? calculatedAmounts['platformFee'] : 0.0)).toStringAsFixed(2)}",
+              donateNowCtrl.contributeToAdminFees
+                  ? "\$${(donateNowCtrl.amount.value + calculateFees(donateNowCtrl.amount.value.toDouble()) + (donateNowCtrl.amount.value * 0.05)).toStringAsFixed(2)}"
+                  : "\$${(donateNowCtrl.amount.value + calculateFees(donateNowCtrl.amount.value.toDouble())).toStringAsFixed(2)}",
             ),
 
             // Divider
@@ -596,5 +597,16 @@ class ConfirmDonationPage extends StatelessWidget {
       'coverFees': coverFees,
       'platformFeeWithStripe': platformFeeWithStripe,
     };
+  }
+
+  double calculateFees(double baseAmount) {
+    double platformFee = baseAmount * 0.05; // 5% platform fee
+    double gstOnFee = platformFee * 0.10; // 10% GST on platform fee
+    double stripeFixedFee = 0.30; // AU default
+    double nominator = baseAmount + platformFee + gstOnFee + stripeFixedFee;
+    double dominator = 1 - 0.029;
+    double finalAmount = nominator / dominator;
+
+    return finalAmount - baseAmount;
   }
 }

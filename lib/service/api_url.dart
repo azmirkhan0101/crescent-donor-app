@@ -84,6 +84,11 @@ class ApiUrl {
   static const String getConnectedAccounts =
       '$baseUrl/bank-connection/accounts';
   static const String getBankConnection = '$baseUrl/bank-connection/me';
+  static const String connectBasiq = '$baseUrl/bank-connection/connect-basiq';
+  static const String getBasiqConnections =
+      '$baseUrl/bank-connection/basiq/accounts';
+  static const String saveBasiqConnection =
+      '$baseUrl/bank-connection/basiq/save-account';
 
   /// ======= Secure RoundUp =======
   static const String saveRoundupConsent =

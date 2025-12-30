@@ -20,6 +20,7 @@ class FcmTokenController extends GetxController {
   void onInit() {
     super.onInit();
     _setupTokenRefreshListener();
+    sendFcmTokenToBackend();
   }
 
   /// Send FCM token to backend

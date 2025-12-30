@@ -28,9 +28,8 @@ class HomePage extends StatelessWidget {
     final getOrgsController = Get.put(OrganizationController());
     final causesController = Get.put(CausesController());
 
-    // Initialize FCM token controller and send token to backend
-    final fcmTokenController = Get.put(FcmTokenController());
-    fcmTokenController.sendFcmTokenToBackend();
+    // Initialize FCM token controller
+    Get.put(FcmTokenController());
 
     Get.put(UnseenNotificationCountController());
 
@@ -127,7 +126,7 @@ class HomePage extends StatelessWidget {
             child: Center(
               child: CustomNetworkImage(
                 imageUrl: profile.value?.image ?? '',
-                height: 44.rh,
+                height: 44.rw,
                 width: 44.rw,
                 borderRadius: BorderRadius.circular(22.rw),
               ),
@@ -157,7 +156,7 @@ class HomePage extends StatelessWidget {
             children: [
               Container(
                 width: 44.rw,
-                height: 44.rh,
+                height: 44.rw,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20.rw),
@@ -175,7 +174,7 @@ class HomePage extends StatelessWidget {
                 builder: (unseenCtrl) {
                   return Container(
                     width: 40.rw,
-                    height: 40.rh,
+                    height: 40.rw,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20.rw),
@@ -185,7 +184,7 @@ class HomePage extends StatelessWidget {
                         children: [
                           Assets.home.notification.svg(
                             width: 20.rw,
-                            height: 20.rh,
+                            height: 20.rw,
                           ),
                           if (unseenCtrl.hasUnseenNotifications)
                             Positioned(
@@ -193,7 +192,7 @@ class HomePage extends StatelessWidget {
                               right: 0,
                               child: Assets.home.redDot.svg(
                                 width: 8.rw,
-                                height: 8.rh,
+                                height: 8.rw,
                               ),
                             ),
                         ],

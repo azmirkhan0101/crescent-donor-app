@@ -57,10 +57,17 @@ class DonationCauseCard extends StatelessWidget {
                   height: 144.rh,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.broken_image,
-                      size: 144.rh,
+                    return Container(
+                      width: double.infinity,
+                      height: 144.rh,
                       color: Colors.grey,
+                      child: Center(
+                        child: Icon(
+                          Icons.broken_image,
+                          size: 144.rh,
+                          color: Colors.black.withValues(alpha: 0.5),
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -74,13 +81,12 @@ class DonationCauseCard extends StatelessWidget {
                   width: 80,
                   height: 80,
                   clipBehavior: Clip.antiAlias,
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        width: 1,
-                        color: const Color(0xFFEAE9EB),
-                      ),
-                      borderRadius: BorderRadius.circular(99),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(99),
+                    border: Border.all(
+                      color: const Color(0xFFEAE9EB),
+                      width: 1,
                     ),
                   ),
                   child: ClipRRect(
@@ -92,7 +98,7 @@ class DonationCauseCard extends StatelessWidget {
                         return Icon(
                           Icons.broken_image,
                           size: 80,
-                          color: Colors.grey,
+                          color: Colors.black.withValues(alpha: 0.5),
                         );
                       },
                     ),

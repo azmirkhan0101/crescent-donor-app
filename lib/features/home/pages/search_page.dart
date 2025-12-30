@@ -409,17 +409,23 @@ class SearchPage extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  item.logoAsset,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.broken_image,
-                      size: 24.rw,
-                      color: const Color(0xFF9CA3AF),
-                    );
-                  },
-                ),
+                child: item.logoAsset.isNotEmpty
+                    ? Image.network(
+                        item.logoAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.broken_image,
+                            size: 24.rw,
+                            color: const Color(0xFF9CA3AF),
+                          );
+                        },
+                      )
+                    : Icon(
+                        Icons.broken_image,
+                        size: 24.rw,
+                        color: const Color(0xFF9CA3AF),
+                      ),
               ),
             ),
             SizedBox(width: 12.rw),
@@ -627,17 +633,23 @@ class SearchPage extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: Image.network(
-            result.logoAsset,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.broken_image,
-                size: 24.rw,
-                color: const Color(0xFF9CA3AF),
-              );
-            },
-          ),
+          child: result.logoAsset.isNotEmpty
+              ? Image.network(
+                  result.logoAsset,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.broken_image,
+                      size: 24.rw,
+                      color: const Color(0xFF9CA3AF),
+                    );
+                  },
+                )
+              : Icon(
+                  Icons.broken_image,
+                  size: 24.rw,
+                  color: const Color(0xFF9CA3AF),
+                ),
         ),
       ),
       title: Text(
