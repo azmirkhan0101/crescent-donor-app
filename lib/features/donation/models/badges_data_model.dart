@@ -7,6 +7,7 @@ class BadgeDataModel {
   final bool? isUnlocked;
   final bool? isCompleted;
   final String? currentTier;
+  final List<TierModel>? tiers;
   final ProgressInfo? progress;
   final RawProgress? rawProgress;
 
@@ -44,6 +45,7 @@ class BadgeDataModel {
     this.isUnlocked,
     this.isCompleted,
     this.currentTier,
+    this.tiers,
     this.progress,
     this.rawProgress,
   });
@@ -57,6 +59,9 @@ class BadgeDataModel {
     isUnlocked: json["isUnlocked"],
     isCompleted: json["isCompleted"],
     currentTier: json["currentTier"],
+    tiers: json["tiers"] == null
+        ? []
+        : List<TierModel>.from(json["tiers"].map((x) => TierModel.fromJson(x))),
     progress: json["progress"] == null
         ? null
         : ProgressInfo.fromJson(json["progress"]),
@@ -192,6 +197,10 @@ class TierModel {
   final int? requiredCount;
   final double? requiredAmount;
   final String? icon;
+  final String? animationUrl;
+  final String? smallIconUrl;
+  final bool? isUnlocked;
+  final bool? isPreviewed;
 
   TierModel({
     this.tier,
@@ -199,6 +208,10 @@ class TierModel {
     this.requiredCount,
     this.requiredAmount,
     this.icon,
+    this.animationUrl,
+    this.smallIconUrl,
+    this.isUnlocked,
+    this.isPreviewed,
   });
 
   factory TierModel.fromJson(Map<String, dynamic> json) => TierModel(
@@ -207,6 +220,10 @@ class TierModel {
     requiredCount: (json["requiredCount"] as num?)?.toInt(),
     requiredAmount: (json["requiredAmount"] as num?)?.toDouble(),
     icon: json["icon"],
+    animationUrl: json["animationUrl"],
+    smallIconUrl: json["smallIconUrl"],
+    isUnlocked: json["isUnlocked"],
+    isPreviewed: json["isPreviewed"],
   );
 }
 

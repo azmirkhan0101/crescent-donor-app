@@ -335,15 +335,18 @@ class ConfirmDonationPage extends StatelessWidget {
             ),
 
             _buildTransactionItem(
-              'Stripe & Platform Fees:',
-              "\$${calculateFees(donateNowCtrl.amount.value.toDouble()).toStringAsFixed(2)}",
+              'Stripe Fee:',
+              // "\$${calculateFees(donateNowCtrl.amount.value.toDouble()).toStringAsFixed(2)}",
+              "\$${feeCalculation(donateNowCtrl.amount.value.toDouble(), donateNowCtrl.contributeToAdminFees)["stripeFee"]?.toStringAsFixed(2)}",
             ),
 
             // _buildTransactionItem('Taxes & Fees:', controller.taxesAndFees),
             _buildTransactionItem(
               'Taxes & Admin Fees:',
               donateNowCtrl.contributeToAdminFees
-                  ? "\$${(donateNowCtrl.amount.value.toDouble() * 0.05).toStringAsFixed(2)}"
+                  //     ? "\$${(donateNowCtrl.amount.value.toDouble() * 0.05).toStringAsFixed(2)}"
+                  //     : "\$0.00",
+                  ? "\$${feeCalculation(donateNowCtrl.amount.value.toDouble(), donateNowCtrl.contributeToAdminFees)["applicationFee"]?.toStringAsFixed(2)}"
                   : "\$0.00",
             ),
 
@@ -357,9 +360,7 @@ class ConfirmDonationPage extends StatelessWidget {
 
             _buildTransactionItem(
               "Total",
-              donateNowCtrl.contributeToAdminFees
-                  ? "\$${(donateNowCtrl.amount.value + calculateFees(donateNowCtrl.amount.value.toDouble()) + (donateNowCtrl.amount.value * 0.05)).toStringAsFixed(2)}"
-                  : "\$${(donateNowCtrl.amount.value + calculateFees(donateNowCtrl.amount.value.toDouble())).toStringAsFixed(2)}",
+              "\$${feeCalculation(donateNowCtrl.amount.value.toDouble(), donateNowCtrl.contributeToAdminFees)["totalAmount"]?.toStringAsFixed(2)}",
             ),
 
             // Divider
@@ -611,5 +612,30 @@ class ConfirmDonationPage extends StatelessWidget {
     double finalAmount = nominator / dominator;
 
     return finalAmount - baseAmount;
+  }
+
+  Map<String, double> feeCalculation(double baseAmount, bool coverFees) {
+    double totalAmount = 0;
+    double platformFee = baseAmount * 0.05; // 5% platform fee
+    double gstOnFee = platformFee * 0.10; // 10% GST on platform fee
+    double stripeFixedFee = 0.30; // AU default
+    double stripeFee = 0;
+    if (coverFees) {
+      double nominator = baseAmount + platformFee + gstOnFee + stripeFixedFee;
+      double dominator = 1 - 0.029;
+      totalAmount = nominator / dominator;
+      stripeFee = totalAmount - baseAmount - platformFee - gstOnFee;
+    } else {
+      double nominator = baseAmount + stripeFixedFee;
+      double dominator = 1 - 0.029;
+      totalAmount = nominator / dominator;
+      stripeFee = totalAmount - baseAmount;
+    }
+
+    return {
+      'totalAmount': totalAmount,
+      'applicationFee': platformFee + gstOnFee,
+      'stripeFee': stripeFee,
+    };
   }
 }
