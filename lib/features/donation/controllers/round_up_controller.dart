@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/features/common/mixins/activity_expansion_mixin.dart';
 import 'package:cresent_charge_user_app/features/donation/models/roundup_stats_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
@@ -126,13 +125,13 @@ class RoundUpController extends GetxController with ActivityExpansionMixin {
     showDetailedProgress.value = !showDetailedProgress.value;
   }
 
-  Future<void> fetchRoundupStats() async {
+  Future<void> fetchRoundupStats(String roundupId) async {
     isLoadingRoundupStats.value = true;
     errorMessageRoundupStats.value = '';
 
     final response = await Get.find<NetworkHelper>().request(
       'GET',
-      ApiUrl.roundupStats,
+      '${ApiUrl.baseUrl}/client/roundup-stats?roundupId=$roundupId',
       withAuth: true,
     );
     isLoadingRoundupStats.value = false;

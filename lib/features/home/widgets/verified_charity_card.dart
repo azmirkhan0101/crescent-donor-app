@@ -15,6 +15,7 @@ class VerifiedCharityCard extends StatelessWidget {
     required this.category,
     required this.backgroundColor,
     required this.imagePath,
+    this.onTap,
   });
 
   final String id;
@@ -23,6 +24,7 @@ class VerifiedCharityCard extends StatelessWidget {
   final String category;
   final Color backgroundColor;
   final String imagePath;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -106,11 +108,14 @@ class VerifiedCharityCard extends StatelessWidget {
           ),
         ),
       ),
-    ).onTap(() {
-      context.pushNamed(
-        RoutePath.organizationDetails,
-        extra: {"organizationId": id},
-      );
-    });
+    ).onTap(
+      onTap ??
+          () {
+            context.pushNamed(
+              RoutePath.organizationDetails,
+              extra: {"organizationId": id},
+            );
+          },
+    );
   }
 }
