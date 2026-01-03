@@ -4,28 +4,6 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 
-// class Badge {
-//   final String id;
-//   final String name;
-//   final String description;
-//   final String iconPath;
-//   final int currentProgress;
-//   final int totalProgress;
-//   final bool isCompleted;
-//   final Color backgroundColor;
-
-//   const Badge({
-//     required this.id,
-//     required this.name,
-//     required this.description,
-//     required this.iconPath,
-//     required this.currentProgress,
-//     required this.totalProgress,
-//     required this.isCompleted,
-//     required this.backgroundColor,
-//   });
-// }
-
 class BadgeCard extends StatelessWidget {
   const BadgeCard({
     super.key,
@@ -36,10 +14,26 @@ class BadgeCard extends StatelessWidget {
   // final Badge badge;
   final BadgeDataModel badgeDataModel;
 
+  final String? badgeName = "Current Badge Name";
+  final String? glbUrl = "assets/3d/001_silver.glb";
+  final String? gifUrl = "assets/3d/002_silver.gif";
+  final String? pngUrl = "assets/3d/002_silver.png";
+
+  final String? currentTierName = "silver";
+  final String? nextTierName = "gold";
+  final double? progressPercent = 50;
+  final String? description = "description";
+
+  TierModel? get currentTier => badgeDataModel.tiers?.firstWhere(
+    (tier) => tier.name == badgeDataModel.currentTier,
+    orElse: () => TierModel(),
+  );
+
   @override
   Widget build(BuildContext context) {
     // Get badge data directly from the model
-    String badgeIcon = badgeDataModel.icon ?? '';
+    String badgeIcon = currentTier?.icon ?? '';
+    print("=====================> $badgeIcon");
     bool hasValidIcon =
         badgeIcon.isNotEmpty &&
         (badgeIcon.startsWith('http://') || badgeIcon.startsWith('https://'));
@@ -111,7 +105,7 @@ class BadgeCard extends StatelessWidget {
                           //   )
                           ? Flutter3DViewer(
                               // src: 'assets/3d/001_gold.glb',
-                              src: badgeIcon,
+                              src: glbUrl ?? '',
                               progressBarColor: const Color(0xFFC08FFF),
                             )
                           : Icon(Icons.star, size: 48.rw, color: Colors.grey),
@@ -166,21 +160,15 @@ class BadgeCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: const Color(0xFFEBE9EC),
                           borderRadius: BorderRadius.circular(24.rw),
-                          // border: Border.all(
-                          //   color: const Color.fromARGB(255, 50, 31, 106),
-                          //   width: 1,
-                          // ),
                         ),
                         child: Stack(
                           children: [
                             FractionallySizedBox(
                               alignment: Alignment.centerLeft,
-                              widthFactor:
-                                  progressPercent /
-                                  100, // Use calculated safe percentage
+                              widthFactor: 1,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFEBE9EC),
+                                  color: const Color(0xFFE7E7E7),
                                   borderRadius: BorderRadius.circular(24.rw),
                                 ),
                               ),

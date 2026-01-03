@@ -248,7 +248,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           label,
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: 14.rfs,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
             color: AppColors.secondary,
           ),
@@ -268,14 +268,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
             readOnly: readOnly,
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.rw),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: EdgeInsets.all(16.rw),
+              contentPadding: EdgeInsets.all(16),
             ),
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 14.rfs,
+              fontSize: 14,
               fontWeight: maxLines > 1 ? FontWeight.w400 : FontWeight.w500,
               color: readOnly ? Colors.grey[600] : AppColors.secondary,
             ),
@@ -294,20 +294,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
           'Phone Number',
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: 14.rfs,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
             color: AppColors.secondary,
           ),
         ),
 
-        SizedBox(height: 8.rh),
+        SizedBox(height: 8),
 
         Container(
-          height: 52.rh,
-          padding: EdgeInsets.symmetric(horizontal: 16.rw),
+          height: 52,
+          padding: EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.rw),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.outline, width: 1),
           ),
           child: TextFormField(
@@ -320,7 +320,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 14.rfs,
+              fontSize: 14,
               fontWeight: FontWeight.w400,
               color: AppColors.secondary,
             ),
@@ -343,7 +343,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 'State',
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: 14.rfs,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: AppColors.secondary,
                 ),
@@ -352,11 +352,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
               SizedBox(height: 8.rh),
 
               Container(
-                height: 52.rh,
-                padding: EdgeInsets.symmetric(horizontal: 16.rw),
+                height: 52,
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.rw),
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.outline, width: 1),
                 ),
                 child: TextFormField(
@@ -369,7 +369,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: 14.rfs,
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.secondary,
                   ),
@@ -379,7 +379,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ),
 
-        SizedBox(width: 16.rw),
+        SizedBox(width: 16),
 
         // Pin Code Field
         Expanded(
@@ -395,27 +395,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
   /// Build action buttons (Save and Discard Changes)
   Widget _buildActionButtons() {
     return SizedBox(
-      width: 263.rw,
+      width: 263,
       child: Column(
         children: [
           // Save Button
           SizedBox(
             width: double.infinity,
-            height: 52.rh,
+            height: 52,
             child: ElevatedButton(
               onPressed: _saveProfile,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.rw),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: Text(
                 'Save',
                 style: TextStyle(
                   fontFamily: DonationFonts.familjenGrotesk,
-                  fontSize: 18.rfs,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppColors.secondary,
                   letterSpacing: -0.36,
@@ -424,7 +424,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ),
 
-          SizedBox(height: 16.rh),
+          SizedBox(height: 16),
 
           // Discard Changes Button
           GestureDetector(
@@ -433,7 +433,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               'Discard Changes',
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
-                fontSize: 14.rfs,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppColors.secondary,
               ),

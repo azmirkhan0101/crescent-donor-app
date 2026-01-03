@@ -270,27 +270,9 @@ class BadgesSection extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final badgeData = badgeDataList[index];
 
-                          // // Return empty if no badge data
-                          // if (badgeData.badge == null) {
-                          //   return const SizedBox.shrink();
-                          // }
-
-                          // Create Badge object from API data
-                          // final badge = badge_widget.Badge(
-                          //   id: badgeData.badge!.id ?? '',
-                          //   name: badgeData.badge!.name ?? '',
-                          //   description: badgeData.badge!.description ?? '',
-                          //   iconPath: badgeData.badge!.icon ?? '',
-                          //   currentProgress: badgeData.progressPercentage ?? 0,
-                          //   totalProgress: 100,
-                          //   isCompleted: badgeData.isUnlocked ?? false,
-                          //   backgroundColor: _getBadgeColor(index),
-                          // );
-
                           return SizedBox(
                             width: 180.rw, // Fixed width for each badge card
                             child: badge_widget.BadgeCard(
-                              // badge: badge,
                               badgeDataModel: badgeData,
                             ),
                           );
@@ -302,17 +284,5 @@ class BadgesSection extends StatelessWidget {
         );
       },
     );
-  }
-
-  /// Get badge background color based on index
-  Color _getBadgeColor(int index) {
-    final colors = [
-      const Color(0xFFFFE5E5), // Light red
-      const Color(0xFFE5F5FF), // Light blue
-      const Color(0xFFFFF5E5), // Light orange
-      const Color(0xFFE5FFE5), // Light green
-      const Color(0xFFF5E5FF), // Light purple
-    ];
-    return colors[index % colors.length];
   }
 }
