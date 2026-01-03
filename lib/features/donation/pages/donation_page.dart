@@ -1,7 +1,8 @@
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
-import 'package:cresent_charge_user_app/features/donation/widgets/calender_badge_sections.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/badges_section.dart';
+import 'package:cresent_charge_user_app/features/donation/widgets/calender_sections.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_components.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/overview_section.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/section_header.dart';
@@ -148,14 +149,7 @@ class _DonationPageState extends State<DonationPage> {
               ),
 
               // Badges Section
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const BadgesSection(),
-                    SizedBox(height: 20.rh),
-                  ],
-                ),
-              ),
+              SliverToBoxAdapter(child: const BadgesSection()),
 
               // Bottom padding for navigation bar
               SliverToBoxAdapter(child: SizedBox(height: 100.rh)),

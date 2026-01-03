@@ -4,49 +4,58 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
 
-class BadgeCard extends StatelessWidget {
-  const BadgeCard({
-    super.key,
-    // required this.badge,
-    required this.badgeDataModel,
-  });
+class BadgeCard extends StatefulWidget {
+  const BadgeCard({super.key, required this.badgeDataModel});
 
-  // final Badge badge;
   final BadgeDataModel badgeDataModel;
 
-  final String? badgeName = "Current Badge Name";
-  final String? glbUrl = "assets/3d/001_silver.glb";
+  @override
+  State<BadgeCard> createState() => _BadgeCardState();
+}
+
+class _BadgeCardState extends State<BadgeCard> {
+  final String currentTierIcon = "";
+
   final String? gifUrl = "assets/3d/002_silver.gif";
+
   final String? pngUrl = "assets/3d/002_silver.png";
 
   final String? currentTierName = "silver";
+
   final String? nextTierName = "gold";
+
   final double? progressPercent = 50;
+
   final String? description = "description";
 
-  TierModel? get currentTier => badgeDataModel.tiers?.firstWhere(
-    (tier) => tier.name == badgeDataModel.currentTier,
+  TierModel? get currentTier => widget.badgeDataModel.tiers?.firstWhere(
+    (tier) => tier.name == widget.badgeDataModel.currentTier,
     orElse: () => TierModel(),
   );
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     // Get badge data directly from the model
     String badgeIcon = currentTier?.icon ?? '';
-    print("=====================> $badgeIcon");
+    // print("=====================> $badgeIcon");
     bool hasValidIcon =
         badgeIcon.isNotEmpty &&
         (badgeIcon.startsWith('http://') || badgeIcon.startsWith('https://'));
 
     // Calculate progress safely from rawProgress
-    int progressCount = badgeDataModel.rawProgress?.count ?? 0;
-    int requiredCount = badgeDataModel.rawProgress?.requiredCount ?? 0;
-    int progressPercent = badgeDataModel.progress?.percentage ?? 0;
+    int progressCount = widget.badgeDataModel.rawProgress?.count ?? 0;
+    int requiredCount = widget.badgeDataModel.rawProgress?.requiredCount ?? 0;
+    int progressPercent = widget.badgeDataModel.progress?.percentage ?? 0;
 
     // Get display values
-    String displayName = badgeDataModel.name ?? 'Badge';
+    String displayName = widget.badgeDataModel.name ?? 'Badge';
     String description =
-        badgeDataModel.description ?? 'No description available';
+        widget.badgeDataModel.description ?? 'No description available';
 
     return GestureDetector(
       onTap: () {
@@ -57,7 +66,7 @@ class BadgeCard extends StatelessWidget {
           backgroundColor: Colors.transparent,
           builder: (context) =>
               /// todo: remove badge
-              BadgeDetailsBottomSheet(badgeDataModel: badgeDataModel),
+              BadgeDetailsBottomSheet(badgeDataModel: widget.badgeDataModel),
         );
       },
       child: Container(
@@ -92,23 +101,25 @@ class BadgeCard extends StatelessWidget {
                       height: 72.rh,
 
                       /// ===> Badge Icon <===
-                      child: hasValidIcon
-                          // ? Image.network(
-                          //     badgeIcon,
-                          //     fit: BoxFit.contain,
-                          //     errorBuilder: (context, error, stackTrace) =>
-                          //         Icon(
-                          //           Icons.star,
-                          //           size: 48.rw,
-                          //           color: Colors.grey,
-                          //         ),
-                          //   )
-                          ? Flutter3DViewer(
-                              // src: 'assets/3d/001_gold.glb',
-                              src: glbUrl ?? '',
-                              progressBarColor: const Color(0xFFC08FFF),
-                            )
-                          : Icon(Icons.star, size: 48.rw, color: Colors.grey),
+                      child: Flutter3DViewer(
+                        src: widget.badgeDataModel.icon ?? '',
+                        progressBarColor: const Color(0xFFF9F7F9),
+                        onLoad: (modelAddress) {
+                          // print("Model Address: $modelAddress");
+                          // Show circle progress indicator
+                          return CircularProgressIndicator();
+                        },
+                        onProgress: (progressValue) {
+                          // print("Progress: $progressValue");
+                          return CircularProgressIndicator(
+                            value: progressValue,
+                          );
+                        },
+                        onError: (error) {
+                          // print("Error: $error");
+                          return Icon(Icons.error, color: Colors.red);
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -116,7 +127,7 @@ class BadgeCard extends StatelessWidget {
 
               SizedBox(height: 8.rh),
 
-              // Badge Info Container
+              /// Badge Info Container
               Expanded(
                 flex: 2,
                 child: Padding(
@@ -124,13 +135,14 @@ class BadgeCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Badge name and progress
+                      /// Badge name and progress
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: Text(
-                              displayName, // <== Badge Name with fallback
+                              widget.badgeDataModel.name ??
+                                  '', // <== Badge Name with fallback
                               style: TextStyle(
                                 color: const Color(0xFF000C0B),
                                 fontSize: 14.rfs,
@@ -142,7 +154,7 @@ class BadgeCard extends StatelessWidget {
                           ),
                           // if (!badge.isCompleted)
                           Text(
-                            '$progressCount/$requiredCount', // <== Progress Count with safe values
+                            '${widget.badgeDataModel.rawProgress?.count}/${widget.badgeDataModel.rawProgress?.requiredCount}', // <== Progress Count with safe values
                             style: TextStyle(
                               color: const Color(0xFF818F8D),
                               fontSize: 12.rfs,

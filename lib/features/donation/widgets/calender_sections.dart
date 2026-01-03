@@ -179,110 +179,110 @@ class CalendarDay {
 /// Badges Section Widget
 ///
 /// Horizontal scrolling badges with progress indicators
-class BadgesSection extends StatelessWidget {
-  const BadgesSection({super.key});
+// class BadgesSection extends StatelessWidget {
+//   const BadgesSection({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return GetX<GetBadgesProgressController>(
-      initState: (state) {
-        state.controller!.fetchBadgesProgress();
-      },
-      builder: (getBadgeController) {
-        final RxList<BadgeDataModel> badgeDataList =
-            getBadgeController.badgesProgressData;
-        return Skeletonizer(
-          enabled: getBadgeController.isLoading.value,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SectionHeader(
-                title: 'Badges',
-                actionText: 'View all',
-                onActionTap: () {
-                  context.pushNamed(RoutePath.badges);
-                },
-              ),
-              SizedBox(height: DonationConstants.sectionSpacing.rh),
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetX<GetBadgesProgressController>(
+//       initState: (state) {
+//         state.controller!.fetchBadgesProgress();
+//       },
+//       builder: (getBadgeController) {
+//         final RxList<BadgeDataModel> badgeDataList =
+//             getBadgeController.badgesProgressData;
+//         return Skeletonizer(
+//           enabled: getBadgeController.isLoading.value,
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               SectionHeader(
+//                 title: 'Badges',
+//                 actionText: 'View all',
+//                 onActionTap: () {
+//                   context.pushNamed(RoutePath.badges);
+//                 },
+//               ),
+//               SizedBox(height: DonationConstants.sectionSpacing.rh),
 
-              // Show empty state or badges list
-              badgeDataList.isEmpty && !getBadgeController.isLoading.value
-                  ? Container(
-                      height: 230.rh,
-                      margin: EdgeInsets.symmetric(
-                        horizontal: DonationConstants.paddingHorizontal.rw,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16.rw),
-                        border: Border.all(
-                          color: const Color(0xFFE4E4E4),
-                          width: 1,
-                        ),
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.emoji_events_outlined,
-                              size: 48.rw,
-                              color: const Color(0xFFB3B3B3),
-                            ),
-                            SizedBox(height: 12.rh),
-                            Text(
-                              'No badges yet',
-                              style: TextStyle(
-                                fontFamily: DonationFonts.familjenGrotesk,
-                                fontSize: 18.rfs,
-                                fontWeight: FontWeight.w600,
-                                color: DonationConstants.offBlack,
-                              ),
-                            ),
-                            SizedBox(height: 8.rh),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 32.rw),
-                              child: Text(
-                                'Keep donating to unlock amazing badges\nand track your progress!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: DonationFonts.interDisplay,
-                                  fontSize: 14.rfs,
-                                  color: const Color(0xFF515A59),
-                                  height: 1.4,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : SizedBox(
-                      height: 230.rh, // Fixed height for horizontal scroll
-                      child: ListView.separated(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: DonationConstants.paddingHorizontal.rw,
-                        ),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: getBadgeController.badgesProgressData.length,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(width: DonationConstants.cardSpacing.rw),
-                        itemBuilder: (context, index) {
-                          final badgeData = badgeDataList[index];
+//               // Show empty state or badges list
+//               badgeDataList.isEmpty && !getBadgeController.isLoading.value
+//                   ? Container(
+//                       height: 230.rh,
+//                       margin: EdgeInsets.symmetric(
+//                         horizontal: DonationConstants.paddingHorizontal.rw,
+//                       ),
+//                       decoration: BoxDecoration(
+//                         color: Colors.white,
+//                         borderRadius: BorderRadius.circular(16.rw),
+//                         border: Border.all(
+//                           color: const Color(0xFFE4E4E4),
+//                           width: 1,
+//                         ),
+//                       ),
+//                       child: Center(
+//                         child: Column(
+//                           mainAxisAlignment: MainAxisAlignment.center,
+//                           children: [
+//                             Icon(
+//                               Icons.emoji_events_outlined,
+//                               size: 48.rw,
+//                               color: const Color(0xFFB3B3B3),
+//                             ),
+//                             SizedBox(height: 12.rh),
+//                             Text(
+//                               'No badges yet',
+//                               style: TextStyle(
+//                                 fontFamily: DonationFonts.familjenGrotesk,
+//                                 fontSize: 18.rfs,
+//                                 fontWeight: FontWeight.w600,
+//                                 color: DonationConstants.offBlack,
+//                               ),
+//                             ),
+//                             SizedBox(height: 8.rh),
+//                             Padding(
+//                               padding: EdgeInsets.symmetric(horizontal: 32.rw),
+//                               child: Text(
+//                                 'Keep donating to unlock amazing badges\nand track your progress!',
+//                                 textAlign: TextAlign.center,
+//                                 style: TextStyle(
+//                                   fontFamily: DonationFonts.interDisplay,
+//                                   fontSize: 14.rfs,
+//                                   color: const Color(0xFF515A59),
+//                                   height: 1.4,
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     )
+//                   : SizedBox(
+//                       height: 230.rh, // Fixed height for horizontal scroll
+//                       child: ListView.separated(
+//                         padding: EdgeInsets.symmetric(
+//                           horizontal: DonationConstants.paddingHorizontal.rw,
+//                         ),
+//                         scrollDirection: Axis.horizontal,
+//                         itemCount: getBadgeController.badgesProgressData.length,
+//                         separatorBuilder: (context, index) =>
+//                             SizedBox(width: DonationConstants.cardSpacing.rw),
+//                         itemBuilder: (context, index) {
+//                           final badgeData = badgeDataList[index];
 
-                          return SizedBox(
-                            width: 180.rw, // Fixed width for each badge card
-                            child: badge_widget.BadgeCard(
-                              badgeDataModel: badgeData,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
+//                           return SizedBox(
+//                             width: 180.rw, // Fixed width for each badge card
+//                             child: badge_widget.BadgeCard(
+//                               badgeDataModel: badgeData,
+//                             ),
+//                           );
+//                         },
+//                       ),
+//                     ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
