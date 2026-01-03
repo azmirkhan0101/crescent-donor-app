@@ -353,8 +353,11 @@ class ProfilePage extends StatelessWidget {
       ).onTap(() async {
         if (await AppStorageService.getIsGuestUser()) {
           // Call guest logout API
-          await logOutController.logOut(profileId);
-          context.goNamed(RoutePath.login);
+          bool isSuccess = await logOutController.logOut(profileId);
+          if (isSuccess) {
+            await AppStorageService.clearAll();
+            context.goNamed(RoutePath.login);
+          }
         } else {
           // Clear auth token for regular users
           await AppStorageService.clearAll();
