@@ -1,38 +1,38 @@
-import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
-import 'package:cresent_charge_user_app/features/payment/models/basiq_accounts_model.dart';
-import 'package:cresent_charge_user_app/service/api_url.dart';
-import 'package:cresent_charge_user_app/service/network_helper.dart';
-import 'package:get/get.dart';
+// import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+// import 'package:cresent_charge_user_app/features/payment/models/basiq_accounts_model.dart';
+// import 'package:cresent_charge_user_app/service/api_url.dart';
+// import 'package:cresent_charge_user_app/service/network_helper.dart';
+// import 'package:get/get.dart';
 
-class SaveBasiqConnectionController extends GetxController {
-  final _isLoading = false.obs;
-  final _errorMessage = ''.obs;
+// class SaveBasiqConnectionController extends GetxController {
+//   final _isLoading = false.obs;
+//   final _errorMessage = ''.obs;
 
-  RxBool get isLoading => _isLoading;
-  RxString get errorMessage => _errorMessage;
+//   RxBool get isLoading => _isLoading;
+//   RxString get errorMessage => _errorMessage;
 
-  Future<bool> saveConnection(BasiqAccount connectionData) async {
-    _isLoading.value = true;
-    _errorMessage.value = '';
+//   Future<bool> saveConnection(BasiqAccount connectionData) async {
+//     _isLoading.value = true;
+//     _errorMessage.value = '';
 
-    final response = await Get.find<NetworkHelper>().request(
-      'POST',
-      ApiUrl.saveBasiqConnection,
-      body: connectionData.toJson(),
-      withAuth: true,
-    );
-    _isLoading.value = false;
+//     final response = await Get.find<NetworkHelper>().request(
+//       'POST',
+//       ApiUrl.saveBasiqConnection,
+//       body: connectionData.toJson(),
+//       withAuth: true,
+//     );
+//     _isLoading.value = false;
 
-    return response.fold(
-      (error) {
-        _errorMessage.value = error.message ?? 'Failed to save connection';
-        ToastMsg.error(_errorMessage.value);
-        return false;
-      },
-      (data) {
-        ToastMsg.success('Connection saved successfully');
-        return true;
-      },
-    );
-  }
-}
+//     return response.fold(
+//       (error) {
+//         _errorMessage.value = error.message ?? 'Failed to save connection';
+//         ToastMsg.error(_errorMessage.value);
+//         return false;
+//       },
+//       (data) {
+//         ToastMsg.success('Connection saved successfully');
+//         return true;
+//       },
+//     );
+//   }
+// }
