@@ -17,6 +17,7 @@ class UpdateProfileController extends GetxController {
   final phoneController = TextEditingController();
 
   final isLoading = false.obs;
+  final isImageLoading = false.obs;
   final errorMessage = ''.obs;
   final imageFile = Rx<File?>(null);
 
@@ -117,6 +118,60 @@ class UpdateProfileController extends GetxController {
       return false;
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<bool> updateJustImage() async {
+    final file = imageFile.value;
+    if (file == null) return false;
+
+    try {
+      isImageLoading.value = true;
+      errorMessage.value = '';
+
+      // Prepare data with current field values to satisfy backend if needed,
+      // or just send empty if it's allowed. Based on previous implementation,
+      // 'data' is required.
+      final data = {
+        'name': nameController.text.trim(),
+        'address': addressController.text.trim(),
+        'state': stateController.text.trim(),
+        'postalCode': postalCodeController.text.trim(),
+        'phoneNumber': phoneController.text.trim(),
+      };
+
+      final fields = {'data': jsonEncode(data)};
+      final files = [MultipartBody(key: 'image', file: file)];
+
+      final network = Get.find<NetworkHelper>();
+      final result = await network.multipart<Map<String, dynamic>>(
+        url: '${ApiUrl.baseUrl}/client/update-profile',
+        method: 'PATCH',
+        fields: fields,
+        files: files,
+        withAuth: true,
+        parser: (data) => data,
+      );
+
+      return result.fold(
+        (err) {
+          errorMessage.value = err.message ?? 'Failed to update image';
+          debugPrint('Image update error: ${err.message}');
+          return false;
+        },
+        (data) async {
+          // Refresh profile data after successful update
+          await Get.find<GetProfileController>().fetchProfile();
+          // After success, we can clear the local file since the server has it now
+          imageFile.value = null;
+          return true;
+        },
+      );
+    } catch (e) {
+      errorMessage.value = 'Unexpected error updating image';
+      return false;
+    } finally {
+      isImageLoading.value = false;
     }
   }
 

@@ -14,10 +14,10 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   // TextEditingControllers
   final emailController = TextEditingController(
-    text: kDebugMode ? 'developer.mukarrom@gmail.com' : '',
+    // text: kDebugMode ? 'developer.mukarrom@gmail.com' : '',
   );
   final passwordController = TextEditingController(
-    text: kDebugMode ? 'Abc@1234' : '',
+    // text: kDebugMode ? 'Abc@1234' : '',
   );
 
   // Observable variables

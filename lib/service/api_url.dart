@@ -3,11 +3,9 @@ class ApiUrl {
   // For iOS Simulator, use localhost
   // For physical device, use your machine's IP address (e.g., 192.168.x.x)
   static const String hostUrl =
-      "http://52.64.69.20:5000"; // "http://13.55.115.124:5000"; // aws server
+      "https://server.crescentchange.com"; // aws server
   // static const String hostUrl = "http://10.0.2.2:5001"; // local server
   // static const String hostUrl = "http://10.10.20.42:5000"; // Local
-  // static const String hostUrl =
-  //     "https://donation-app-server-production.up.railway.app"; // Android Emulator
   static const String baseUrl = "$hostUrl/api/v1";
 
   // Alternative URLs (uncomment as needed):

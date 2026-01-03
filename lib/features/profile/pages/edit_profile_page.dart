@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/theme/app_colors.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/update_profile_controller.dart';
+import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -100,6 +102,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget _buildProfileAvatar() {
     return Obx(() {
       final selectedImage = _updCtrl.imageFile.value;
+      final profile = Get.find<GetProfileController>().profile.value;
+      final existingImageUrl = _getFullImageUrl(profile?.image);
+      final hasImage = selectedImage != null || existingImageUrl.isNotEmpty;
+      final isImageLoading = _updCtrl.isImageLoading.value;
+
       return Stack(
         children: [
           // Main Avatar
@@ -112,7 +119,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 color: AppColors.surfaceContainerHigh,
                 width: 1.714,
               ),
-              gradient: selectedImage == null
+              gradient: !hasImage
                   ? const LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -124,17 +131,35 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       image: FileImage(selectedImage),
                       fit: BoxFit.cover,
                     )
-                  : null,
+                  : (existingImageUrl.isNotEmpty
+                        ? DecorationImage(
+                            image: CachedNetworkImageProvider(existingImageUrl),
+                            fit: BoxFit.cover,
+                          )
+                        : null),
             ),
-            child: selectedImage == null
-                ? Center(
+            child: Stack(
+              children: [
+                if (!hasImage)
+                  Center(
                     child: Icon(
                       Icons.person_outline,
                       size: 60.rfs,
                       color: Colors.white,
                     ),
-                  )
-                : null,
+                  ),
+                if (isImageLoading)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    ),
+                  ),
+              ],
+            ),
           ),
 
           // Edit Button
@@ -153,16 +178,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           leading: const Icon(Icons.photo_library),
                           title: const Text('Pick from gallery'),
                           onTap: () async {
-                            await _updCtrl.pickImageFromGallery();
                             Navigator.pop(context);
+                            await _updCtrl.pickImageFromGallery();
+                            if (_updCtrl.imageFile.value != null) {
+                              await _updCtrl.updateJustImage();
+                            }
                           },
                         ),
                         ListTile(
                           leading: const Icon(Icons.photo_camera),
                           title: const Text('Take a photo'),
                           onTap: () async {
-                            await _updCtrl.pickImageFromCamera();
                             Navigator.pop(context);
+                            await _updCtrl.pickImageFromCamera();
+                            if (_updCtrl.imageFile.value != null) {
+                              await _updCtrl.updateJustImage();
+                            }
                           },
                         ),
                       ],
@@ -248,7 +279,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           label,
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: 14.rfs,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
             color: AppColors.secondary,
           ),
@@ -268,14 +299,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
             readOnly: readOnly,
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.rw),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: EdgeInsets.all(16.rw),
+              contentPadding: EdgeInsets.all(16),
             ),
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 14.rfs,
+              fontSize: 14,
               fontWeight: maxLines > 1 ? FontWeight.w400 : FontWeight.w500,
               color: readOnly ? Colors.grey[600] : AppColors.secondary,
             ),
@@ -294,20 +325,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
           'Phone Number',
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: 14.rfs,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
             color: AppColors.secondary,
           ),
         ),
 
-        SizedBox(height: 8.rh),
+        SizedBox(height: 8),
 
         Container(
-          height: 52.rh,
-          padding: EdgeInsets.symmetric(horizontal: 16.rw),
+          height: 52,
+          padding: EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12.rw),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.outline, width: 1),
           ),
           child: TextFormField(
@@ -320,7 +351,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 14.rfs,
+              fontSize: 14,
               fontWeight: FontWeight.w400,
               color: AppColors.secondary,
             ),
@@ -343,7 +374,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 'State',
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: 14.rfs,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: AppColors.secondary,
                 ),
@@ -352,11 +383,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
               SizedBox(height: 8.rh),
 
               Container(
-                height: 52.rh,
-                padding: EdgeInsets.symmetric(horizontal: 16.rw),
+                height: 52,
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.rw),
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.outline, width: 1),
                 ),
                 child: TextFormField(
@@ -369,7 +400,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: 14.rfs,
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.secondary,
                   ),
@@ -379,7 +410,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ),
 
-        SizedBox(width: 16.rw),
+        SizedBox(width: 16),
 
         // Pin Code Field
         Expanded(
@@ -395,27 +426,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
   /// Build action buttons (Save and Discard Changes)
   Widget _buildActionButtons() {
     return SizedBox(
-      width: 263.rw,
+      width: 263,
       child: Column(
         children: [
           // Save Button
           SizedBox(
             width: double.infinity,
-            height: 52.rh,
+            height: 52,
             child: ElevatedButton(
               onPressed: _saveProfile,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.rw),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: Text(
                 'Save',
                 style: TextStyle(
                   fontFamily: DonationFonts.familjenGrotesk,
-                  fontSize: 18.rfs,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppColors.secondary,
                   letterSpacing: -0.36,
@@ -424,7 +455,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ),
 
-          SizedBox(height: 16.rh),
+          SizedBox(height: 16),
 
           // Discard Changes Button
           GestureDetector(
@@ -433,7 +464,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               'Discard Changes',
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
-                fontSize: 14.rfs,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppColors.secondary,
               ),
@@ -507,5 +538,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
         );
       },
     );
+  }
+
+  /// Construct full image URL from relative or absolute path
+  String _getFullImageUrl(String? imageUrl) {
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return '';
+    }
+
+    // If already a full URL (starts with http:// or https://), return as is
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+
+    // Remove leading slash if present
+    final cleanPath = imageUrl.startsWith('/')
+        ? imageUrl.substring(1)
+        : imageUrl;
+
+    // Construct full URL
+    return '${ApiUrl.imageBaseUrl}/$cleanPath';
   }
 }
