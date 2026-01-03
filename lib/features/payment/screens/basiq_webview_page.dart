@@ -30,7 +30,7 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
   @override
   void initState() {
     super.initState();
-    print('Basiq WebView URL: ${widget.url}');
+    // print('Basiq WebView URL: ${widget.url}');
     _initializeWebView();
   }
 
@@ -59,17 +59,17 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            // Update loading bar if needed
+            debugPrint('WebView progress===>: $progress%');
           },
           onPageStarted: (String url) {
-            debugPrint('WebView started loading: $url');
+            debugPrint('WebView started loading===>: $url');
             setState(() {
               _isLoading = true;
             });
             _handleNavigation(url);
           },
           onPageFinished: (String url) async {
-            debugPrint('WebView finished loading: $url');
+            debugPrint('WebView finished loading===>: $url');
             setState(() {
               _isLoading = false;
             });
@@ -93,12 +93,12 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
             // Initial check
             try {
               final title = await _controller.getTitle();
-              debugPrint('WebView title: $title');
+              debugPrint('WebView title===>: $title');
               if (title != null &&
                   (title.toLowerCase().contains('success') ||
                       title.toLowerCase().contains('complete') ||
                       title.toLowerCase().contains('connected'))) {
-                debugPrint('Success detected via Title: $title');
+                debugPrint('Success detected via Title===>: $title');
                 if (mounted && !_isSuccessHandled) {
                   _isSuccessHandled = true;
                   await _getBasiqConnections();
@@ -108,17 +108,17 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
                 }
               }
             } catch (e) {
-              debugPrint('Error getting title: $e');
+              debugPrint('Error getting title ===>: $e');
             }
           },
           onWebResourceError: (WebResourceError error) {
-            debugPrint('WebView error: ${error.description}');
+            debugPrint('WebView error===>: ${error.description}');
           },
           onNavigationRequest: (NavigationRequest request) {
-            debugPrint('Navigation request to: ${request.url}');
+            debugPrint('Navigation request to===>: ${request.url}');
             if (_shouldHandleSuccess(request.url)) {
               debugPrint(
-                'Success detected in navigation request: ${request.url}',
+                'Success detected in navigation request===>: ${request.url}',
               );
               if (mounted && !_isSuccessHandled) {
                 _isSuccessHandled = true;
@@ -148,7 +148,7 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
   }
 
   void _handleNavigation(String url) {
-    if (_shouldHandleSuccess(url)) {
+    if (url == "https://connect.basiq.io") {
       debugPrint('Success detected in page load: $url');
       if (mounted && !_isSuccessHandled) {
         _isSuccessHandled = true;

@@ -21,9 +21,6 @@ class NotificationSettingsPage extends StatefulWidget {
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   // Notification settings state
-  bool _pushNotificationsEnabled = true;
-  bool _donationUpdatesEnabled = false;
-  bool _rewardsAndPerksEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +31,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         padding: EdgeInsets.symmetric(horizontal: 16.rw),
         child: GetX<NotificationSettingsController>(
           init: Get.put(NotificationSettingsController()),
+          initState: (state) {
+            state.controller!.getNotificationSettings();
+          },
 
           builder: (controller) {
             return Column(
@@ -69,7 +69,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   isEnabled:
                       controller.donationUpdateNNotificationEnabled.value,
                   onToggle: (value) {
-                    controller.toggleEmailNotifications(value);
+                    controller.toggleDonationUpdateNotification(value);
                   },
                 ),
 
@@ -82,9 +82,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   title: 'Rewards & Perks',
                   description:
                       'We\'ll ping you when you earn rewards, perks, or kindness streaks!',
-                  isEnabled: controller.newsletterSubscriptionEnabled.value,
+                  isEnabled: controller.rewardsAndPerksEnabled.value,
                   onToggle: (value) {
-                    controller.toggleNewsletterSubscription(value);
+                    controller.toggleRewardsNotification(value);
                   },
                 ),
 
@@ -218,11 +218,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     return GestureDetector(
       onTap: () => onToggle(!isEnabled),
       child: Container(
-        width: 36.rw,
-        height: 18.rh,
+        width: 36,
+        height: 18,
         decoration: BoxDecoration(
           color: isEnabled ? const Color(0xFF1AC461) : const Color(0xFF000C0B),
-          borderRadius: BorderRadius.circular(100.rw),
+          borderRadius: BorderRadius.circular(100),
         ),
         child: AnimatedAlign(
           duration: const Duration(milliseconds: 200),
@@ -230,11 +230,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           alignment: isEnabled ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
             margin: EdgeInsets.symmetric(
-              horizontal: isEnabled ? 2.rw : 2.rw,
-              vertical: 2.rh,
+              horizontal: isEnabled ? 2 : 2,
+              vertical: 2,
             ),
-            width: 14.rw,
-            height: 14.rh,
+            width: 14,
+            height: 14,
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,

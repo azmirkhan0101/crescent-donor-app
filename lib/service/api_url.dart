@@ -2,7 +2,8 @@ class ApiUrl {
   // For Android Emulator, use 10.0.2.2 to access host machine's localhost
   // For iOS Simulator, use localhost
   // For physical device, use your machine's IP address (e.g., 192.168.x.x)
-  static const String hostUrl = "http://13.55.115.124:5000"; // aws server
+  static const String hostUrl =
+      "http://52.64.69.20:5000"; // "http://13.55.115.124:5000"; // aws server
   // static const String hostUrl = "http://10.0.2.2:5001"; // local server
   // static const String hostUrl = "http://10.10.20.42:5000"; // Local
   // static const String hostUrl =
@@ -42,6 +43,7 @@ class ApiUrl {
       '$baseUrl/notification/unseen-notification-count';
   static String markNotificationAsRead(String notificationId) =>
       '$baseUrl/notification/mark-notification/$notificationId';
+  static const String notificationSettings = '$baseUrl/notification-settings';
 
   /// ======= causes =======
   static const String getAllCauses = '$baseUrl/cause';
