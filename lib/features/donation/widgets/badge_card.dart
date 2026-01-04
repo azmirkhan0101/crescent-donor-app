@@ -3,6 +3,7 @@ import 'package:cresent_charge_user_app/features/donation/widgets/badge_details_
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_3d_controller/flutter_3d_controller.dart';
+import 'package:get/get_navigation/src/root/parse_route.dart';
 
 class BadgeCard extends StatefulWidget {
   const BadgeCard({super.key, required this.badgeDataModel});
@@ -14,59 +15,60 @@ class BadgeCard extends StatefulWidget {
 }
 
 class _BadgeCardState extends State<BadgeCard> {
-  final String currentTierIcon = "";
-
-  final String? gifUrl = "assets/3d/002_silver.gif";
-
-  final String? pngUrl = "assets/3d/002_silver.png";
-
-  final String? currentTierName = "silver";
-
-  final String? nextTierName = "gold";
-
-  final double? progressPercent = 50;
-
-  final String? description = "description";
-
-  TierModel? get currentTier => widget.badgeDataModel.tiers?.firstWhere(
-    (tier) => tier.name == widget.badgeDataModel.currentTier,
-    orElse: () => TierModel(),
-  );
+  TierModel? currentTier;
+  TierModel? unlockedTier;
 
   @override
   void initState() {
     super.initState();
+    currentTier = widget.badgeDataModel.tiers?.firstWhere(
+      (tier) => tier.tier == widget.badgeDataModel.currentTier,
+      orElse: () => TierModel(),
+    );
+    unlockedTier = widget.badgeDataModel.tiers?.firstWhere(
+      (tier) => tier.isUnlocked == true && tier.isPreviewed == false,
+      orElse: () => TierModel(),
+    );
+    // print("unlockedTier=====================> ${unlockedTier?.animationUrl}");
   }
 
   @override
   Widget build(BuildContext context) {
+    // print("${unlockedTier?.animationUrl}  <---> ${unlockedTier?.tier}");
+    // print(
+    //   "=====================> ${currentTier?.tier} <-> ${widget.badgeDataModel.currentTier}",
+    // );
     // Get badge data directly from the model
-    String badgeIcon = currentTier?.icon ?? '';
     // print("=====================> $badgeIcon");
-    bool hasValidIcon =
-        badgeIcon.isNotEmpty &&
-        (badgeIcon.startsWith('http://') || badgeIcon.startsWith('https://'));
-
-    // Calculate progress safely from rawProgress
-    int progressCount = widget.badgeDataModel.rawProgress?.count ?? 0;
-    int requiredCount = widget.badgeDataModel.rawProgress?.requiredCount ?? 0;
-    int progressPercent = widget.badgeDataModel.progress?.percentage ?? 0;
-
-    // Get display values
-    String displayName = widget.badgeDataModel.name ?? 'Badge';
-    String description =
-        widget.badgeDataModel.description ?? 'No description available';
+    // bool hasValidIcon =
+    //     badgeIcon.isNotEmpty &&
+    //     (badgeIcon.startsWith('http://') || badgeIcon.startsWith('https://'));
 
     return GestureDetector(
       onTap: () {
+        // print("unlockedTier=====================> ${unlockedTier?.tier}");
+        // return;
+        if (unlockedTier?.tier == null) {
+          showModalBottomSheet(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            builder: (context) {
+              return BadgeDetailsBottomSheet(
+                badgeDataModel: widget.badgeDataModel,
+              );
+            },
+          );
+          return;
+        }
         showModalBottomSheet(
           context: context,
           useRootNavigator: true,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) =>
-              /// todo: remove badge
-              BadgeDetailsBottomSheet(badgeDataModel: widget.badgeDataModel),
+          builder: (context) {
+            return _BadgeAnimationSheet(badgeDataModel: widget.badgeDataModel);
+          },
         );
       },
       child: Container(
@@ -102,7 +104,8 @@ class _BadgeCardState extends State<BadgeCard> {
 
                       /// ===> Badge Icon <===
                       child: Flutter3DViewer(
-                        src: widget.badgeDataModel.icon ?? '',
+                        // src: widget.badgeDataModel.icon ?? '',
+                        src: currentTier?.icon ?? '',
                         progressBarColor: const Color(0xFFF9F7F9),
                         onLoad: (modelAddress) {
                           // print("Model Address: $modelAddress");
@@ -188,7 +191,8 @@ class _BadgeCardState extends State<BadgeCard> {
                             FractionallySizedBox(
                               alignment: Alignment.centerLeft,
                               widthFactor:
-                                  progressPercent /
+                                  (widget.badgeDataModel.progress?.percentage ??
+                                      0) /
                                   100, // Use calculated safe percentage
                               child: Container(
                                 decoration: BoxDecoration(
@@ -207,7 +211,7 @@ class _BadgeCardState extends State<BadgeCard> {
                       // <== Description ==>
                       Expanded(
                         child: Text(
-                          description, // <== Badge Description with fallback
+                          widget.badgeDataModel.description ?? 'N/A',
                           style: TextStyle(
                             color: const Color(0xFF818F8D),
                             fontSize: 12.rfs,
@@ -224,6 +228,64 @@ class _BadgeCardState extends State<BadgeCard> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Animation sheet shown for 3 seconds before badge details
+class _BadgeAnimationSheet extends StatefulWidget {
+  const _BadgeAnimationSheet({required this.badgeDataModel});
+
+  final BadgeDataModel badgeDataModel;
+
+  @override
+  State<_BadgeAnimationSheet> createState() => _BadgeAnimationSheetState();
+}
+
+class _BadgeAnimationSheetState extends State<_BadgeAnimationSheet> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.of(context).pop();
+        showModalBottomSheet(
+          context: context,
+          useRootNavigator: true,
+          isScrollControlled: true,
+          builder: (context) {
+            return BadgeDetailsBottomSheet(
+              badgeDataModel: widget.badgeDataModel,
+            );
+          },
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 800,
+      width: double.infinity,
+      color: Colors.transparent,
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(Colors.black, BlendMode.lighten),
+        // child: Image.asset('assets/3d/022_silver.gif', fit: BoxFit.cover),
+        child: Image.network(
+          widget.badgeDataModel.tiers
+                  ?.firstWhereOrNull(
+                    (tier) =>
+                        tier.isUnlocked == true && tier.isPreviewed == false,
+                  )
+                  ?.animationUrl ??
+              '',
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Center(child: Icon(Icons.error, color: Colors.red));
+          },
         ),
       ),
     );

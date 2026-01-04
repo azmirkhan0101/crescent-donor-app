@@ -211,87 +211,180 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Progress Bar
-        Stack(
-          children: [
-            // Background progress bar
-            Container(
-              height: 10.rh,
-              decoration: BoxDecoration(
-                color: _lightGray,
-                borderRadius: BorderRadius.circular(24),
-              ),
-            ),
-
-            // Active progress bar with gradient
-            FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              widthFactor: currentTier == 'one-tier'
-                  ? 1
-                  : badgesController.getTierProgress(
-                          currentTier ?? '',
-                          percent?.toDouble() ?? 0,
-                        ) /
-                        3,
-              child: Container(
-                height: 10.rh,
+        /// --> Test progress bar -->
+        SizedBox(
+          height: 28,
+          child: Stack(
+            children: [
+              /// Background progress bar
+              Container(
+                height: 28,
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [_progressStart, _progressEnd],
-                    stops: [0.75, 1.0],
-                  ),
+                  color: _lightGray,
                   borderRadius: BorderRadius.circular(24),
                 ),
               ),
-            ),
 
-            Transform.translate(
-              offset: Offset(0, -7.rh),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (currentTier != 'one-tier')
-                    _buildProgressPoint(
-                      0,
-                      badgesController.getTierIndex(currentTier ?? '') >= 0,
-                      badgesController.getTierIndex(currentTier ?? '') >= 0
-                          ? _buildImage(Assets.donation.badge00.path)
-                          : _buildImage(Assets.common.lock.path),
+              /// Active progress bar with gradient
+              FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: currentTier == 'one-tier'
+                    ? 1
+                    : badgesController.getTierProgress(
+                            currentTier ?? '',
+                            percent?.toDouble() ?? 0,
+                          ) /
+                          3,
+                child: Container(
+                  height: 28,
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [_progressStart, _progressEnd],
+                      stops: [0.75, 1.0],
                     ),
-
-                  if (currentTier != 'one-tier')
-                    _buildProgressPoint(
-                      1,
-                      badgesController.getTierIndex(currentTier ?? '') >= 1,
-                      badgesController.getTierIndex(currentTier ?? '') >= 1
-                          ? _buildImage(Assets.donation.badgeNo1.path)
-                          : _buildImage(Assets.common.lock.path),
-                    ),
-                  if (currentTier != 'one-tier')
-                    _buildProgressPoint(
-                      2,
-                      badgesController.getTierIndex(currentTier ?? '') >= 2,
-                      badgesController.getTierIndex(currentTier ?? '') >= 2
-                          ? _buildImage(Assets.donation.badgeNo2.path)
-                          : _buildImage(Assets.common.lock.path),
-                    ),
-                  if (currentTier != 'one-tier')
-                    _buildProgressPoint(
-                      3,
-                      badgesController.getTierIndex(currentTier ?? '') >= 3,
-                      badgesController.getTierIndex(currentTier ?? '') >= 3
-                          ? _buildImage(Assets.donation.badgeNo3.path)
-                          : _buildImage(Assets.common.lock.path),
-                    ),
-                ],
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
               ),
-            ),
-          ],
+
+              /// Badge Tiers
+              Positioned(
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    badgeDataModel.tiers?.length ?? 0,
+                    (index) => Container(
+                      height: 28,
+                      width: 28,
+
+                      decoration: BoxDecoration(
+                        color: _lightGray,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: const Color(0xFFC08FFF),
+                          width: 1,
+                        ),
+                      ),
+                      child: Center(
+                        child:
+                            (badgeDataModel.tiers?[index].isUnlocked ?? false)
+                            ? Image.network(
+                                badgeDataModel.tiers?[index].smallIconUrl ?? '',
+                                // height: 20,
+                                // width: 20,
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Center(child: Icon(Icons.error)),
+                              )
+                            : _buildImage(Assets.common.lock.path),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
+        SizedBox(height: 24.rh),
 
-        SizedBox(height: 16.rh),
+        /// ==> Progress Bar ==>
+        // SizedBox(
+        //   height: 28,
+        //   child: Stack(
+        //     children: [
+        //       // Background progress bar
+        //       Container(
+        //         height: 10.rh,
+        //         decoration: BoxDecoration(
+        //           color: _lightGray,
+        //           borderRadius: BorderRadius.circular(24),
+        //         ),
+        //       ),
 
-        /// Current Tier
+        //       // Active progress bar with gradient
+        //       FractionallySizedBox(
+        //         alignment: Alignment.centerLeft,
+        //         widthFactor: currentTier == 'one-tier'
+        //             ? 1
+        //             : badgesController.getTierProgress(
+        //                     currentTier ?? '',
+        //                     percent?.toDouble() ?? 0,
+        //                   ) /
+        //                   3,
+        //         child: Container(
+        //           height: 10.rh,
+        //           decoration: BoxDecoration(
+        //             gradient: const LinearGradient(
+        //               colors: [_progressStart, _progressEnd],
+        //               stops: [0.75, 1.0],
+        //             ),
+        //             borderRadius: BorderRadius.circular(24),
+        //           ),
+        //         ),
+        //       ),
+
+        //       Transform.translate(
+        //         offset: Offset(0, -7.rh),
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             if (currentTier != 'one-tier')
+        //               _buildProgressPoint(
+        //                 0,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 0,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 0
+        //                     ? _buildImage(Assets.donation.badge00.path)
+        //                     : _buildImage(Assets.common.lock.path),
+        //               ),
+
+        //             if (currentTier != 'one-tier')
+        //               _buildProgressPoint(
+        //                 1,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 1,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 1
+        //                     ? _buildImage(Assets.donation.badgeNo1.path)
+        //                     : _buildImage(Assets.common.lock.path),
+        //               ),
+        //             if (currentTier != 'one-tier')
+        //               _buildProgressPoint(
+        //                 2,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 2,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 2
+        //                     ? _buildImage(Assets.donation.badgeNo2.path)
+        //                     : _buildImage(Assets.common.lock.path),
+        //               ),
+        //             if (currentTier != 'one-tier')
+        //               _buildProgressPoint(
+        //                 3,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 3,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 3
+        //                     ? _buildImage(Assets.donation.badgeNo3.path)
+        //                     : _buildImage(Assets.common.lock.path),
+        //               ),
+        //           ],
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // SizedBox(height: 16.rh),
+
+        /// Current Tier Text
         Text.rich(
           TextSpan(
             children: [
