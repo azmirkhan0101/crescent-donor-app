@@ -16,6 +16,9 @@ class ApiUrl {
 
   static socketUrl({String userID = ""}) => '$baseUrl?id=$userID';
 
+  /// ======= Common =======
+  static String url(String path) => '$baseUrl/$path';
+
   /// ======= Auth =======
   static const String login = '$baseUrl/auth/signin';
   static const String guestLogin = '$baseUrl/auth/guest-login';

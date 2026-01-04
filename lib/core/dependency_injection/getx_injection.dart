@@ -7,6 +7,8 @@ import 'package:cresent_charge_user_app/features/donation/controllers/get_badge_
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_recurring_org_state_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_roundup_orgs_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/mark_tier_as_previewed_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/one_time_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/recurring_states_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
@@ -16,8 +18,6 @@ import 'package:cresent_charge_user_app/features/organization/controllers/donate
 import 'package:cresent_charge_user_app/features/organization/controllers/get_donation_full_status_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/get_org_causes_controller.dart';
 import 'package:cresent_charge_user_app/features/payment/controllers/connect_basiq_controller.dart';
-import 'package:cresent_charge_user_app/features/payment/controllers/get_basiq_connections_controller.dart';
-import 'package:cresent_charge_user_app/features/payment/controllers/save_basiq_connection_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/business_website_count_update_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/cancel_redemption_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
@@ -54,8 +54,6 @@ void initGetx() {
 
   // =========== Bank Connection Controllers ==================
   Get.lazyPut(() => ConnectBasiqController(), fenix: true);
-  Get.lazyPut(() => SaveBasiqConnectionController(), fenix: true);
-  Get.lazyPut(() => GetBasiqConnectionsController(), fenix: true);
 
   // =================== Rewards Controllers ==================
   Get.lazyPut(() => GetPointBalanceController(), fenix: true);
@@ -75,6 +73,7 @@ void initGetx() {
   // =================== Donation Controllers ==================
   Get.lazyPut(() => DonationController(), fenix: true);
   Get.lazyPut(() => RoundUpController(), fenix: true);
+  Get.lazyPut(() => GetRoundupOrgsController(), fenix: true);
   Get.lazyPut(() => GetRoundUpBankConnection(), fenix: true);
   Get.lazyPut(() => SaveRoundupController(), fenix: true);
   Get.lazyPut(() => CreateRecurringController(), fenix: true);
@@ -89,4 +88,5 @@ void initGetx() {
 
   // =================== Badges Controllers ==================
   Get.lazyPut(() => BadgesController(), fenix: true);
+  Get.lazyPut(() => MarkTierAsPreviewedController(), fenix: true);
 }

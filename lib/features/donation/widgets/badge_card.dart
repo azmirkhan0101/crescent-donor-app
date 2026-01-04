@@ -1,63 +1,74 @@
+import 'package:cresent_charge_user_app/features/donation/controllers/mark_tier_as_previewed_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/badge_details_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_3d_controller/flutter_3d_controller.dart';
+import 'package:get/get.dart';
 
-class BadgeCard extends StatelessWidget {
-  const BadgeCard({
-    super.key,
-    // required this.badge,
-    required this.badgeDataModel,
-  });
+class BadgeCard extends StatefulWidget {
+  const BadgeCard({super.key, required this.badgeDataModel});
 
-  // final Badge badge;
   final BadgeDataModel badgeDataModel;
 
-  final String? badgeName = "Current Badge Name";
-  final String? glbUrl = "assets/3d/001_silver.glb";
-  final String? gifUrl = "assets/3d/002_silver.gif";
-  final String? pngUrl = "assets/3d/002_silver.png";
+  @override
+  State<BadgeCard> createState() => _BadgeCardState();
+}
 
-  final String? currentTierName = "silver";
-  final String? nextTierName = "gold";
-  final double? progressPercent = 50;
-  final String? description = "description";
+class _BadgeCardState extends State<BadgeCard> {
+  TierModel? currentTier;
+  TierModel? unlockedTier;
 
-  TierModel? get currentTier => badgeDataModel.tiers?.firstWhere(
-    (tier) => tier.name == badgeDataModel.currentTier,
-    orElse: () => TierModel(),
-  );
+  @override
+  void initState() {
+    super.initState();
+    currentTier = widget.badgeDataModel.tiers?.firstWhere(
+      (tier) => tier.tier == widget.badgeDataModel.currentTier,
+      orElse: () => TierModel(),
+    );
+    unlockedTier = widget.badgeDataModel.tiers?.firstWhere(
+      (tier) => tier.isUnlocked == true && tier.isPreviewed == false,
+      orElse: () => TierModel(),
+    );
+    // print("unlockedTier=====================> ${unlockedTier?.animationUrl}");
+  }
 
   @override
   Widget build(BuildContext context) {
+    // print("${unlockedTier?.animationUrl}  <---> ${unlockedTier?.tier}");
+    // print(
+    //   "=====================> ${currentTier?.tier} <-> ${widget.badgeDataModel.currentTier}",
+    // );
     // Get badge data directly from the model
-    String badgeIcon = currentTier?.icon ?? '';
-    print("=====================> $badgeIcon");
-    bool hasValidIcon =
-        badgeIcon.isNotEmpty &&
-        (badgeIcon.startsWith('http://') || badgeIcon.startsWith('https://'));
-
-    // Calculate progress safely from rawProgress
-    int progressCount = badgeDataModel.rawProgress?.count ?? 0;
-    int requiredCount = badgeDataModel.rawProgress?.requiredCount ?? 0;
-    int progressPercent = badgeDataModel.progress?.percentage ?? 0;
-
-    // Get display values
-    String displayName = badgeDataModel.name ?? 'Badge';
-    String description =
-        badgeDataModel.description ?? 'No description available';
+    // print("=====================> $badgeIcon");
+    // bool hasValidIcon =
+    //     badgeIcon.isNotEmpty &&
+    //     (badgeIcon.startsWith('http://') || badgeIcon.startsWith('https://'));
 
     return GestureDetector(
       onTap: () {
+        // print("unlockedTier=====================> ${unlockedTier?.tier}");
+        // return;
+        if (unlockedTier?.tier == null) {
+          showModalBottomSheet(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            builder: (context) {
+              return BadgeDetailsBottomSheet(
+                badgeDataModel: widget.badgeDataModel,
+              );
+            },
+          );
+          return;
+        }
         showModalBottomSheet(
           context: context,
           useRootNavigator: true,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) =>
-              /// todo: remove badge
-              BadgeDetailsBottomSheet(badgeDataModel: badgeDataModel),
+          builder: (context) {
+            return _BadgeAnimationSheet(badgeDataModel: widget.badgeDataModel);
+          },
         );
       },
       child: Container(
@@ -92,23 +103,33 @@ class BadgeCard extends StatelessWidget {
                       height: 72.rh,
 
                       /// ===> Badge Icon <===
-                      child: hasValidIcon
-                          // ? Image.network(
-                          //     badgeIcon,
-                          //     fit: BoxFit.contain,
-                          //     errorBuilder: (context, error, stackTrace) =>
-                          //         Icon(
-                          //           Icons.star,
-                          //           size: 48.rw,
-                          //           color: Colors.grey,
-                          //         ),
-                          //   )
-                          ? Flutter3DViewer(
-                              // src: 'assets/3d/001_gold.glb',
-                              src: glbUrl ?? '',
-                              progressBarColor: const Color(0xFFC08FFF),
-                            )
-                          : Icon(Icons.star, size: 48.rw, color: Colors.grey),
+                      // child: Flutter3DViewer(
+                      //   // src: widget.badgeDataModel.icon ?? '',
+                      //   src: currentTier?.icon ?? '',
+                      //   progressBarColor: const Color(0xFFF9F7F9),
+                      //   onLoad: (modelAddress) {
+                      //     // print("Model Address: $modelAddress");
+                      //     // Show circle progress indicator
+                      //     return CircularProgressIndicator();
+                      //   },
+                      //   onProgress: (progressValue) {
+                      //     // print("Progress: $progressValue");
+                      //     return CircularProgressIndicator(
+                      //       value: progressValue,
+                      //     );
+                      //   },
+                      //   onError: (error) {
+                      //     // print("Error: $error");
+                      //     return Icon(Icons.error, color: Colors.red);
+                      //   },
+                      // ),
+                      child: Image.network(
+                        currentTier?.smallIconUrl ?? '',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.error, color: Colors.red);
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -116,7 +137,7 @@ class BadgeCard extends StatelessWidget {
 
               SizedBox(height: 8.rh),
 
-              // Badge Info Container
+              /// Badge Info Container
               Expanded(
                 flex: 2,
                 child: Padding(
@@ -124,13 +145,14 @@ class BadgeCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Badge name and progress
+                      /// Badge name and progress
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             child: Text(
-                              displayName, // <== Badge Name with fallback
+                              widget.badgeDataModel.name ??
+                                  '', // <== Badge Name with fallback
                               style: TextStyle(
                                 color: const Color(0xFF000C0B),
                                 fontSize: 14.rfs,
@@ -142,7 +164,7 @@ class BadgeCard extends StatelessWidget {
                           ),
                           // if (!badge.isCompleted)
                           Text(
-                            '$progressCount/$requiredCount', // <== Progress Count with safe values
+                            '${widget.badgeDataModel.rawProgress?.count}/${widget.badgeDataModel.rawProgress?.requiredCount}', // <== Progress Count with safe values
                             style: TextStyle(
                               color: const Color(0xFF818F8D),
                               fontSize: 12.rfs,
@@ -176,7 +198,8 @@ class BadgeCard extends StatelessWidget {
                             FractionallySizedBox(
                               alignment: Alignment.centerLeft,
                               widthFactor:
-                                  progressPercent /
+                                  (widget.badgeDataModel.progress?.percentage ??
+                                      0) /
                                   100, // Use calculated safe percentage
                               child: Container(
                                 decoration: BoxDecoration(
@@ -195,7 +218,7 @@ class BadgeCard extends StatelessWidget {
                       // <== Description ==>
                       Expanded(
                         child: Text(
-                          description, // <== Badge Description with fallback
+                          widget.badgeDataModel.description ?? 'N/A',
                           style: TextStyle(
                             color: const Color(0xFF818F8D),
                             fontSize: 12.rfs,
@@ -213,6 +236,75 @@ class BadgeCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Animation sheet shown for 3 seconds before badge details
+class _BadgeAnimationSheet extends StatefulWidget {
+  const _BadgeAnimationSheet({required this.badgeDataModel});
+
+  final BadgeDataModel badgeDataModel;
+
+  @override
+  State<_BadgeAnimationSheet> createState() => _BadgeAnimationSheetState();
+}
+
+class _BadgeAnimationSheetState extends State<_BadgeAnimationSheet> {
+  @override
+  void initState() {
+    super.initState();
+
+    Get.find<MarkTierAsPreviewedController>().makeTierAsPreviewed(
+      badgeId: widget.badgeDataModel.badge?.id ?? '',
+      tier:
+          widget.badgeDataModel.tiers
+              ?.firstWhereOrNull(
+                (tier) => tier.isUnlocked == true && tier.isPreviewed == false,
+              )
+              ?.tier ??
+          '',
+    );
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.of(context).pop();
+        showModalBottomSheet(
+          context: context,
+          useRootNavigator: true,
+          isScrollControlled: true,
+          builder: (context) {
+            return BadgeDetailsBottomSheet(
+              badgeDataModel: widget.badgeDataModel,
+            );
+          },
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 800,
+      width: double.infinity,
+      color: Colors.transparent,
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(Colors.black, BlendMode.lighten),
+        child: Image.asset('assets/3d/022_silver.gif', fit: BoxFit.cover),
+        // child: Image.network(
+        //   widget.badgeDataModel.tiers
+        //           ?.firstWhereOrNull(
+        //             (tier) =>
+        //                 tier.isUnlocked == true && tier.isPreviewed == false,
+        //           )
+        //           ?.animationUrl ??
+        //       '',
+        //   fit: BoxFit.cover,
+        //   errorBuilder: (context, error, stackTrace) {
+        //     return const Center(child: Icon(Icons.error, color: Colors.red));
+        //   },
+        // ),
       ),
     );
   }

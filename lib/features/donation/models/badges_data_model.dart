@@ -11,6 +11,20 @@ class BadgeDataModel {
   final ProgressInfo? progress;
   final RawProgress? rawProgress;
 
+  BadgeDataModel({
+    this.badgeId,
+    this.name,
+    this.icon,
+    this.description,
+    this.type,
+    this.isUnlocked,
+    this.isCompleted,
+    this.currentTier,
+    this.tiers,
+    this.progress,
+    this.rawProgress,
+  });
+
   // Legacy fields for backward compatibility
   BadgeModel? get badge => BadgeModel(
     id: badgeId,
@@ -36,20 +50,6 @@ class BadgeDataModel {
   int? get progressPercentage => progress?.percentage;
   int? get remainingForNextTier => progress?.remaining;
 
-  BadgeDataModel({
-    this.badgeId,
-    this.name,
-    this.icon,
-    this.description,
-    this.type,
-    this.isUnlocked,
-    this.isCompleted,
-    this.currentTier,
-    this.tiers,
-    this.progress,
-    this.rawProgress,
-  });
-
   factory BadgeDataModel.fromJson(Map<String, dynamic> json) => BadgeDataModel(
     badgeId: json["badgeId"],
     name: json["name"],
@@ -69,6 +69,22 @@ class BadgeDataModel {
         ? null
         : RawProgress.fromJson(json["rawProgress"]),
   );
+
+  Map<String, dynamic> toJson() => {
+    "badgeId": badgeId,
+    "name": name,
+    "icon": icon,
+    "description": description,
+    "type": type,
+    "isUnlocked": isUnlocked,
+    "isCompleted": isCompleted,
+    "currentTier": currentTier,
+    "tiers": tiers == null
+        ? []
+        : List<dynamic>.from(tiers!.map((x) => x.toJson())),
+    "progress": progress?.toJson(),
+    "rawProgress": rawProgress?.toJson(),
+  };
 }
 
 class ProgressInfo {
@@ -85,6 +101,13 @@ class ProgressInfo {
     unit: json["unit"],
     nextTierName: json["nextTierName"],
   );
+
+  Map<String, dynamic> toJson() => {
+    "percentage": percentage,
+    "remaining": remaining,
+    "unit": unit,
+    "nextTierName": nextTierName,
+  };
 }
 
 class RawProgress {
@@ -106,6 +129,13 @@ class RawProgress {
     requiredCount: json["requiredCount"],
     requiredAmount: json["requiredAmount"],
   );
+
+  Map<String, dynamic> toJson() => {
+    "count": count,
+    "amount": amount,
+    "requiredCount": requiredCount,
+    "requiredAmount": requiredAmount,
+  };
 }
 
 class BadgeModel {
@@ -194,37 +224,49 @@ class TimeRangeModel {
 class TierModel {
   final String? tier;
   final String? name;
-  final int? requiredCount;
-  final double? requiredAmount;
   final String? icon;
   final String? animationUrl;
   final String? smallIconUrl;
   final bool? isUnlocked;
   final bool? isPreviewed;
+  final int? requiredCount;
+  final num? requiredAmount;
 
   TierModel({
     this.tier,
     this.name,
-    this.requiredCount,
-    this.requiredAmount,
     this.icon,
     this.animationUrl,
     this.smallIconUrl,
     this.isUnlocked,
     this.isPreviewed,
+    this.requiredCount,
+    this.requiredAmount,
   });
 
   factory TierModel.fromJson(Map<String, dynamic> json) => TierModel(
     tier: json["tier"],
     name: json["name"],
-    requiredCount: (json["requiredCount"] as num?)?.toInt(),
-    requiredAmount: (json["requiredAmount"] as num?)?.toDouble(),
     icon: json["icon"],
     animationUrl: json["animationUrl"],
     smallIconUrl: json["smallIconUrl"],
     isUnlocked: json["isUnlocked"],
     isPreviewed: json["isPreviewed"],
+    requiredCount: (json["requiredCount"] as num?)?.toInt(),
+    requiredAmount: (json["requiredAmount"] as num?),
   );
+
+  Map<String, dynamic> toJson() => {
+    "tier": tier,
+    "name": name,
+    "icon": icon,
+    "animationUrl": animationUrl,
+    "smallIconUrl": smallIconUrl,
+    "isUnlocked": isUnlocked,
+    "isPreviewed": isPreviewed,
+    "requiredCount": requiredCount,
+    "requiredAmount": requiredAmount,
+  };
 }
 
 class UserBadge {
@@ -328,87 +370,46 @@ class NextTier {
     "meta": {
         "page": 1,
         "limit": 10,
-        "total": 21,
-        "totalPage": 3
+        "total": 7,
+        "totalPage": 1
     },
     "data": [
         {
-            "badge": {
-                "_id": "693d27ef5dec7cea8e98213b",
-                "name": "Monthly Mover",
-                "description": "Maintain consistent monthly donations",
-                "icon": "/images/1-1765615599686.jpg",
-                "unlockType": "frequency",
-                "conditionLogic": "or",
-                "specificCategories": [],
-                "tiers": [
-                    {
-                        "tier": "colour",
-                        "name": "Monthly Starter",
-                        "requiredCount": 1,
-                        "requiredAmount": 0
-                    },
-                    {
-                        "tier": "bronze",
-                        "name": "Monthly Regular",
-                        "requiredCount": 3,
-                        "requiredAmount": 0
-                    },
-                    {
-                        "tier": "silver",
-                        "name": "Monthly Champion",
-                        "requiredCount": 6,
-                        "requiredAmount": 0
-                    },
-                    {
-                        "tier": "gold",
-                        "name": "Monthly Mover",
-                        "requiredCount": 12,
-                        "requiredAmount": 0
-                    }
-                ],
-                "isSingleTier": false,
-                "isActive": true,
-                "priority": 0,
-                "featured": false,
-                "createdAt": "2025-12-13T08:46:39.804Z",
-                "updatedAt": "2025-12-13T08:46:39.804Z"
-            },
-            "userBadge": {
-                "_id": "69411eb1e04b40ceaa3a4a3c",
-                "user": "69411932aee83632dca37e12",
-                "badge": "693d27ef5dec7cea8e98213b",
-                "consecutiveMonths": 0,
-                "createdAt": "2025-12-16T08:56:14.288Z",
-                "currentTier": "colour",
-                "isCompleted": false,
-                "lastDonationDate": "2025-12-17T06:49:58.716Z",
-                "progressAmount": 56.17,
-                "progressCount": 0,
-                "tiersUnlocked": [
-                    {
-                        "tier": "colour",
-                        "unlockedAt": "2025-12-16T08:56:14.286Z",
-                        "_id": "69411eae3429fa17bf841107"
-                    }
-                ],
-                "uniqueCategoryNames": [],
-                "updatedAt": "2025-12-17T06:50:03.334Z"
-            },
-            "isUnlocked": true,
+            "badgeId": "6956107c4671e5d80da0ffd1",
+            "name": "Marshall Lowery",
+            "icon": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/badges/main/badge-main-1767247995859",
+            "description": "bah",
+            "type": "donation_amount",
+            "isUnlocked": false,
+            "tiers": [
+                {
+                    "tier": "colour",
+                    "name": "Colour",
+                    "icon": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/badges/tiers/badge-tier-colour-1767247995946",
+                    "animationUrl": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/badges/tiers/badge-tier-colour-animation-1767247996029",
+                    "smallIconUrl": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/badges/tiers/badge-tier-colour-small-1767247996107",
+                    "isUnlocked": false,
+                    "isPreviewed": false,
+                    "requiredCount": 1,
+                    "requiredAmount": 2
+                },
+                ...
+            ],
+            "isCompleted": false,
             "currentTier": "colour",
-            "nextTier": {
-                "tier": "bronze",
-                "name": "Monthly Regular",
-                "requiredCount": 3,
-                "requiredAmount": 0
+            "progress": {
+                "percentage": 0,
+                "remaining": 1,
+                "unit": "donations",
+                "nextTierName": "Bronze"
             },
-            "progressCount": 0,
-            "progressAmount": 56.17,
-            "progressPercentage": 0,
-            "remainingForNextTier": 3
+            "rawProgress": {
+                "count": 0,
+                "amount": 0,
+                "requiredCount": 1,
+                "requiredAmount": 2
+            }
         }
-        
     ]
 }
 */

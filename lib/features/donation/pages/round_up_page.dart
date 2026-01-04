@@ -1,26 +1,37 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/get_roundup_orgs_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/round_up_widgets.dart';
+import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class RoundUpPage extends StatelessWidget {
   const RoundUpPage({super.key});
 
+  Future<void> _getRoundupStats() async {
+    final controller = Get.find<RoundUpController>();
+    final getRoundupOrgController = Get.find<GetRoundupOrgsController>();
+    bool success = await getRoundupOrgController.fetchOrgs();
+    if (success) {
+      String roundUpId = getRoundupOrgController.orgs.first.roundupId;
+      await controller.fetchRoundupStats(roundUpId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GetX<RoundUpController>(
-      init: RoundUpController(),
-      initState: (state) {
-        final controller = state.controller!;
-        controller.fetchRoundupStats();
-      },
-      builder: (controller) {
-        final roundupStats = controller.roundupStats.value;
+    final roundUpController = Get.find<RoundUpController>();
+    return GetX<GetRoundupOrgsController>(
+      init: Get.find<GetRoundupOrgsController>(),
+      initState: (state) => _getRoundupStats(),
+      builder: (getRoundupOrgController) {
+        final roundupStats = roundUpController.roundupStats.value;
         return Scaffold(
           backgroundColor: DonationConstants.backgroundColor,
           appBar: CustomAppBar(
@@ -36,7 +47,7 @@ class RoundUpPage extends StatelessWidget {
             ],
           ),
           body: RefreshIndicator(
-            onRefresh: () => controller.fetchRoundupStats(),
+            onRefresh: () async => await _getRoundupStats(),
             color: DonationConstants.primaryPurple,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -49,38 +60,46 @@ class RoundUpPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.rw),
                     child: Obx(
-                      () => controller.showDetailedProgress.value
-                          ? RoundUpProgressChart(
-                              totalAmount:
-                                  roundupStats?.currentRoundupBalance ?? 0.0,
-                              progressPercentage:
-                                  roundupStats?.roundupPercentage ?? 0,
-                              todaysRoundUp:
-                                  roundupStats?.todaysRoundupAmount ?? 0.0,
-                              daysLeft: roundupStats?.daysLeft ?? 0,
-                              controller: controller,
+                      () => roundUpController.showDetailedProgress.value
+                          ? Skeletonizer(
+                              enabled:
+                                  roundUpController.isLoadingRoundupStats.value,
+                              child: RoundUpProgressChart(
+                                totalAmount:
+                                    roundupStats?.currentRoundupBalance ?? 0.0,
+                                progressPercentage:
+                                    roundupStats?.roundupPercentage ?? 0,
+                                todaysRoundUp:
+                                    roundupStats?.todaysRoundupAmount ?? 0.0,
+                                daysLeft: roundupStats?.daysLeft ?? 0,
+                                controller: roundUpController,
+                              ),
                             )
-                          : RoundUpCard(
-                              currentAmount:
-                                  controller
-                                      .roundupStats
-                                      .value
-                                      ?.currentRoundupBalance ??
-                                  0.0,
-                              targetAmount:
-                                  controller
-                                      .roundupStats
-                                      .value
-                                      ?.monthlyThreshold
-                                      .toDouble() ??
-                                  0.0,
-                              recentlyRoundedUp:
-                                  controller
-                                      .roundupStats
-                                      .value
-                                      ?.lastTransactionAmount ??
-                                  0.0,
-                              controller: controller,
+                          : Skeletonizer(
+                              enabled:
+                                  roundUpController.isLoadingRoundupStats.value,
+                              child: RoundUpCard(
+                                currentAmount:
+                                    roundUpController
+                                        .roundupStats
+                                        .value
+                                        ?.currentRoundupBalance ??
+                                    0.0,
+                                targetAmount:
+                                    roundUpController
+                                        .roundupStats
+                                        .value
+                                        ?.monthlyThreshold
+                                        .toDouble() ??
+                                    0.0,
+                                recentlyRoundedUp:
+                                    roundUpController
+                                        .roundupStats
+                                        .value
+                                        ?.lastTransactionAmount ??
+                                    0.0,
+                                controller: roundUpController,
+                              ),
                             ),
                     ),
                   ),
@@ -88,52 +107,54 @@ class RoundUpPage extends StatelessWidget {
                   SizedBox(height: 20.rh),
 
                   // Donated To Section
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.rw),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Text(
-                        //   'Donated to',
-                        //   style: TextStyle(
-                        //     fontFamily: DonationFonts.familjenGrotesk,
-                        //     fontSize: 20.rfs,
-                        //     fontWeight: FontWeight.w600,
-                        //     color: DonationConstants.offBlack,
-                        //     letterSpacing: -0.2,
-                        //   ),
-                        // ),
-                        // SizedBox(height: 12.rh),
+                  Skeletonizer(
+                    enabled: getRoundupOrgController.isLoading.value,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.rw),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Donated to',
+                            style: TextStyle(
+                              fontFamily: DonationFonts.familjenGrotesk,
+                              fontSize: 20.rfs,
+                              fontWeight: FontWeight.w600,
+                              color: DonationConstants.offBlack,
+                              letterSpacing: -0.2,
+                            ),
+                          ),
+                          SizedBox(height: 12.rh),
 
-                        // Organizations horizontal list
-                        // SingleChildScrollView(
-                        //   scrollDirection: Axis.horizontal,
-                        //   child: Row(
-                        //     spacing: 8.rw,
-                        //     children: Get.find<CharitiesController>()
-                        //         .verifiedCharities,
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 220.rh,
-                        //   child: ListView.separated(
-                        //     scrollDirection: Axis.horizontal,
-                        //     itemCount: controller.donatedOrganizations.length,
-                        //     separatorBuilder: (context, index) =>
-                        //         SizedBox(width: 8.rw),
-                        //     itemBuilder: (context, index) {
-                        //       final org = controller.donatedOrganizations[index];
-                        //       return DonatedOrganizationCard(
-                        //         imageUrl: org.imageUrl,
-                        //         name: org.name,
-                        //         location: org.location,
-                        //         category: org.category,
-                        //         categoryColor: org.categoryColor,
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
-                      ],
+                          SizedBox(
+                            height: 220.rh,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: getRoundupOrgController.orgs.length,
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(width: 8.rw),
+                              itemBuilder: (context, index) {
+                                final org = getRoundupOrgController.orgs[index];
+                                return VerifiedCharityCard(
+                                  id: org.organizationId,
+                                  title: org.orgName,
+                                  location: org.address,
+                                  category: org.serviceType,
+                                  backgroundColor: Colors.transparent,
+                                  imagePath: org.logoImage,
+                                  onTap: () async {
+                                    // get state by roundupId
+                                    final roundupId = org.roundupId;
+                                    await roundUpController.fetchRoundupStats(
+                                      roundupId,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
 

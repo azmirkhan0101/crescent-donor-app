@@ -16,7 +16,7 @@ class GetBadgesProgressController extends GetxController {
 
     final response = await Get.find<NetworkHelper>().request(
       "GET",
-      ApiUrl.getBadgesProgress,
+      "${ApiUrl.baseUrl}/badges/user/progress",
       withAuth: true,
     );
     isLoading.value = false;

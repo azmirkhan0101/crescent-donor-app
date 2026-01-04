@@ -18,10 +18,18 @@ const Color _lightGray = Color(0xFFEBE9EC);
 const Color _progressStart = Color(0xFFC08FFF);
 const Color _progressEnd = Color(0xFF735699);
 
-class BadgeDetailsBottomSheet extends StatelessWidget {
+class BadgeDetailsBottomSheet extends StatefulWidget {
   final BadgeDataModel badgeDataModel;
 
   const BadgeDetailsBottomSheet({super.key, required this.badgeDataModel});
+
+  @override
+  State<BadgeDetailsBottomSheet> createState() =>
+      _BadgeDetailsBottomSheetState();
+}
+
+class _BadgeDetailsBottomSheetState extends State<BadgeDetailsBottomSheet> {
+  String? glbTierUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +75,20 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 24.rw),
               child: GetX<GetBadgeHistoryController>(
-                initState: (state) {
-                  state.controller!.fetchBadgeHistory(
-                    badgeDataModel.badge?.id ?? '',
+                initState: (state) async {
+                  final success = await state.controller!.fetchBadgeHistory(
+                    widget.badgeDataModel.badge?.id ?? '',
                   );
+                  if (success) {
+                    glbTierUrl = state
+                        .controller!
+                        .badgeHistoryModel
+                        .value
+                        ?.data
+                        .badge
+                        .icon;
+                    setState(() {});
+                  }
                 },
                 builder: (controller) {
                   return Skeletonizer(
@@ -82,9 +100,10 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
 
                         // Selected Badge Display
                         _buildSelectedBadge(
-                          badgeUrl: badgeDataModel.badge?.icon,
-                          badgeName: badgeDataModel.badge?.name,
-                          badgeDescription: badgeDataModel.badge?.description,
+                          badgeUrl: glbTierUrl,
+                          badgeName: widget.badgeDataModel.badge?.name,
+                          badgeDescription:
+                              widget.badgeDataModel.badge?.description,
                         ),
 
                         SizedBox(height: 32.rh),
@@ -156,7 +175,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
               child: Flutter3DViewer(
                 // src: 'assets/3d/001_gold.glb',
                 src: badgeUrl ?? '',
-                progressBarColor: const Color(0xFFC08FFF),
+                progressBarColor: Colors.white,
               ),
             ),
           ),
@@ -211,87 +230,195 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Progress Bar
-        Stack(
-          children: [
-            // Background progress bar
-            Container(
-              height: 10.rh,
-              decoration: BoxDecoration(
-                color: _lightGray,
-                borderRadius: BorderRadius.circular(24),
-              ),
-            ),
-
-            // Active progress bar with gradient
-            FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              widthFactor: currentTier == 'one-tier'
-                  ? 1
-                  : badgesController.getTierProgress(
-                          currentTier ?? '',
-                          percent?.toDouble() ?? 0,
-                        ) /
-                        3,
-              child: Container(
-                height: 10.rh,
+        /// --> Test progress bar -->
+        SizedBox(
+          height: 28,
+          child: Stack(
+            children: [
+              /// Background progress bar
+              Container(
+                height: 28,
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [_progressStart, _progressEnd],
-                    stops: [0.75, 1.0],
-                  ),
+                  color: _lightGray,
                   borderRadius: BorderRadius.circular(24),
                 ),
               ),
-            ),
 
-            Transform.translate(
-              offset: Offset(0, -7.rh),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (currentTier != 'one-tier')
-                    _buildProgressPoint(
-                      0,
-                      badgesController.getTierIndex(currentTier ?? '') >= 0,
-                      badgesController.getTierIndex(currentTier ?? '') >= 0
-                          ? _buildImage(Assets.donation.badge00.path)
-                          : _buildImage(Assets.common.lock.path),
+              /// Active progress bar with gradient
+              FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: currentTier == 'one-tier'
+                    ? 1
+                    : badgesController.getTierProgress(
+                            currentTier ?? '',
+                            percent?.toDouble() ?? 0,
+                          ) /
+                          3,
+                child: Container(
+                  height: 28,
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [_progressStart, _progressEnd],
+                      stops: [0.75, 1.0],
                     ),
-
-                  if (currentTier != 'one-tier')
-                    _buildProgressPoint(
-                      1,
-                      badgesController.getTierIndex(currentTier ?? '') >= 1,
-                      badgesController.getTierIndex(currentTier ?? '') >= 1
-                          ? _buildImage(Assets.donation.badgeNo1.path)
-                          : _buildImage(Assets.common.lock.path),
-                    ),
-                  if (currentTier != 'one-tier')
-                    _buildProgressPoint(
-                      2,
-                      badgesController.getTierIndex(currentTier ?? '') >= 2,
-                      badgesController.getTierIndex(currentTier ?? '') >= 2
-                          ? _buildImage(Assets.donation.badgeNo2.path)
-                          : _buildImage(Assets.common.lock.path),
-                    ),
-                  if (currentTier != 'one-tier')
-                    _buildProgressPoint(
-                      3,
-                      badgesController.getTierIndex(currentTier ?? '') >= 3,
-                      badgesController.getTierIndex(currentTier ?? '') >= 3
-                          ? _buildImage(Assets.donation.badgeNo3.path)
-                          : _buildImage(Assets.common.lock.path),
-                    ),
-                ],
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
               ),
-            ),
-          ],
+
+              /// Badge Tiers
+              Positioned(
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    widget.badgeDataModel.tiers?.length ?? 0,
+                    (index) => InkWell(
+                      onTap: () {
+                        if (widget.badgeDataModel.tiers?[index].isUnlocked ==
+                            true) {
+                          setState(() {
+                            glbTierUrl =
+                                widget.badgeDataModel.tiers?[index].icon;
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: 28,
+                        width: 28,
+                        decoration: BoxDecoration(
+                          color: _lightGray,
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: const Color(0xFFC08FFF),
+                            width: 1,
+                          ),
+                        ),
+                        child: Center(
+                          child:
+                              (widget.badgeDataModel.tiers?[index].isUnlocked ??
+                                  false)
+                              ? Image.network(
+                                  widget
+                                          .badgeDataModel
+                                          .tiers?[index]
+                                          .smallIconUrl ??
+                                      '',
+                                  height: 20,
+                                  width: 20,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Center(child: Icon(Icons.error)),
+                                )
+                              : _buildImage(Assets.common.lock.path),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
+        SizedBox(height: 24.rh),
 
-        SizedBox(height: 16.rh),
+        /// ==> Progress Bar ==>
+        // SizedBox(
+        //   height: 28,
+        //   child: Stack(
+        //     children: [
+        //       // Background progress bar
+        //       Container(
+        //         height: 10.rh,
+        //         decoration: BoxDecoration(
+        //           color: _lightGray,
+        //           borderRadius: BorderRadius.circular(24),
+        //         ),
+        //       ),
 
-        /// Current Tier
+        //       // Active progress bar with gradient
+        //       FractionallySizedBox(
+        //         alignment: Alignment.centerLeft,
+        //         widthFactor: currentTier == 'one-tier'
+        //             ? 1
+        //             : badgesController.getTierProgress(
+        //                     currentTier ?? '',
+        //                     percent?.toDouble() ?? 0,
+        //                   ) /
+        //                   3,
+        //         child: Container(
+        //           height: 10.rh,
+        //           decoration: BoxDecoration(
+        //             gradient: const LinearGradient(
+        //               colors: [_progressStart, _progressEnd],
+        //               stops: [0.75, 1.0],
+        //             ),
+        //             borderRadius: BorderRadius.circular(24),
+        //           ),
+        //         ),
+        //       ),
+
+        //       Transform.translate(
+        //         offset: Offset(0, -7.rh),
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             if (currentTier != 'one-tier')
+        //               _buildProgressPoint(
+        //                 0,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 0,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 0
+        //                     ? _buildImage(Assets.donation.badge00.path)
+        //                     : _buildImage(Assets.common.lock.path),
+        //               ),
+
+        //             if (currentTier != 'one-tier')
+        //               _buildProgressPoint(
+        //                 1,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 1,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 1
+        //                     ? _buildImage(Assets.donation.badgeNo1.path)
+        //                     : _buildImage(Assets.common.lock.path),
+        //               ),
+        //             if (currentTier != 'one-tier')
+        //               _buildProgressPoint(
+        //                 2,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 2,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 2
+        //                     ? _buildImage(Assets.donation.badgeNo2.path)
+        //                     : _buildImage(Assets.common.lock.path),
+        //               ),
+        //             if (currentTier != 'one-tier')
+        //               _buildProgressPoint(
+        //                 3,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 3,
+        //                 badgesController.getTierIndex(currentTier ?? '') >= 3
+        //                     ? _buildImage(Assets.donation.badgeNo3.path)
+        //                     : _buildImage(Assets.common.lock.path),
+        //               ),
+        //           ],
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // SizedBox(height: 16.rh),
+
+        /// Current Tier Text
         Text.rich(
           TextSpan(
             children: [
@@ -302,7 +429,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: ' ${badgeDataModel.currentTier ?? ''}',
+                text: ' ${widget.badgeDataModel.currentTier ?? ''}',
                 style: AppTextStyles.f14W400(),
               ),
             ],
@@ -315,7 +442,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
         SizedBox(
           width: 311,
           child: Text(
-            'Only ${badgeDataModel.nextTier?.requiredCount ?? 'N/A'} more round-up donations to reach ${badgeDataModel.nextTier?.tier ?? ''}!',
+            'Only ${widget.badgeDataModel.nextTier?.requiredCount ?? 'N/A'} more round-up donations to reach ${widget.badgeDataModel.nextTier?.tier ?? ''}!',
             textAlign: TextAlign.center,
             style: AppTextStyles.f14W400(),
           ),
@@ -343,29 +470,29 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
   }
 }
 
-Widget _buildProgressPoint(int value, bool isActive, [Widget? icon]) {
-  return Container(
-    width: 24.rw,
-    height: 24.rh,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      gradient: const RadialGradient(
-        colors: [Color(0xFFFFFFFF), Color(0xFFE8E8E8), Color(0xFFFFFFFF)],
-        stops: [0.0, 0.497, 1.0],
-      ),
-    ),
-    child: Center(
-      child:
-          icon ??
-          (isActive
-              ? Assets.rewards.rewardProgressBorderedPointer.image(
-                  width: 24.rw,
-                  height: 24.rh,
-                )
-              : Assets.rewards.rewardProgressPointer.image(
-                  width: 24.rw,
-                  height: 24.rh,
-                )),
-    ),
-  );
-}
+// Widget _buildProgressPoint(int value, bool isActive, [Widget? icon]) {
+//   return Container(
+//     width: 24.rw,
+//     height: 24.rh,
+//     decoration: BoxDecoration(
+//       shape: BoxShape.circle,
+//       gradient: const RadialGradient(
+//         colors: [Color(0xFFFFFFFF), Color(0xFFE8E8E8), Color(0xFFFFFFFF)],
+//         stops: [0.0, 0.497, 1.0],
+//       ),
+//     ),
+//     child: Center(
+//       child:
+//           icon ??
+//           (isActive
+//               ? Assets.rewards.rewardProgressBorderedPointer.image(
+//                   width: 24.rw,
+//                   height: 24.rh,
+//                 )
+//               : Assets.rewards.rewardProgressPointer.image(
+//                   width: 24.rw,
+//                   height: 24.rh,
+//                 )),
+//     ),
+//   );
+// }
