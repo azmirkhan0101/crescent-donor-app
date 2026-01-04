@@ -146,8 +146,7 @@ class _DonationPageState extends State<DonationPage> {
                               itemBuilder: (context, index) {
                                 final donation = upcomingDonations[index];
                                 return SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width - 64.rw,
+                                  width: MediaQuery.of(context).size.width - 48,
                                   child: UpcomingDonationCard(
                                     scheduledDate: DateFormat(
                                       'd MMM - hh:mm a',
