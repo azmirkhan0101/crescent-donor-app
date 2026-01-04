@@ -8,8 +8,12 @@ class GetRewardDetailController extends GetxController {
   var rewardDetail = Rx<RewardDetailsModel?>(null);
   var isLoading = false.obs;
   var errorMessage = ''.obs;
+  // var isClaimed = false.obs;
+  // var isExpired = false.obs;
+  var redeemptionCode = ''.obs;
+  var redeemptionMethods = Rx<InStoreRedemptionMethods?>(null);
 
-  Future<void> fetchRewardDetail(String rewardId) async {
+  Future<bool> fetchRewardDetail(String rewardId) async {
     isLoading.value = true;
     errorMessage.value = '';
 
@@ -21,17 +25,29 @@ class GetRewardDetailController extends GetxController {
 
     isLoading.value = false;
 
-    response.fold(
+    return response.fold(
       (error) {
         errorMessage.value = error.message ?? 'An error occurred';
+
         debugPrint('Error fetching reward detail: ${error.message}');
+        return false;
       },
       (data) {
         final rewardDetailResponse = RewardDetailsModel.fromJson(data['data']);
         rewardDetail.value = rewardDetailResponse;
+        if (rewardDetail.value?.claimDetails != null) {
+          redeemptionCode.value =
+              rewardDetail.value?.claimDetails?.assignedCode ?? '';
+          redeemptionMethods.value =
+              rewardDetail.value?.inStoreRedemptionMethods;
+        } else {
+          redeemptionCode.value = '';
+          redeemptionMethods.value = null;
+        }
         debugPrint(
           'Reward detail fetched successfully: ${rewardDetail.value?.title}',
         );
+        return true;
       },
     );
   }

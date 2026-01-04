@@ -566,63 +566,81 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
 
                     // Fixed bottom section with button
                     if (isStoreReward && widget.userStatus != 'redeemed')
-                      Row(
-                        spacing: 8.rw,
-                        children: [
-                          if (widget.userStatus == 'not_claimed')
+                      Obx(() {
+                        return Row(
+                          spacing: 8.rw,
+                          children: [
+                            if (widget.userStatus == 'not_claimed')
+                              Expanded(
+                                child: BottomSheetButtonWidget(
+                                  backgroundColor: const Color(0xFFF5F5F5),
+                                  text: 'Save',
+                                  onTap: () async {
+                                    bool success =
+                                        await Get.find<ClaimRewardController>()
+                                            .claimReward(widget.rewardId);
+                                    if (success) {
+                                      Navigator.pop(context);
+                                      Get.find<GetAllRewardsController>()
+                                          .fetchRewards();
+                                      ToastMsg.success(
+                                        'Reward Claimed Successfully!',
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
                             Expanded(
-                              child: BottomSheetButtonWidget(
-                                backgroundColor: const Color(0xFFF5F5F5),
-                                text: 'Save',
-                                onTap: () async {
-                                  bool success =
-                                      await Get.find<ClaimRewardController>()
-                                          .claimReward(widget.rewardId);
-                                  if (success) {
-                                    Navigator.pop(context);
-                                    Get.find<GetAllRewardsController>()
-                                        .fetchRewards();
-                                    ToastMsg.success(
-                                      'Reward Claimed Successfully!',
-                                    );
-                                  }
-                                },
+                              child: Skeletonizer(
+                                enabled: Get.find<ClaimRewardController>()
+                                    .isLoading
+                                    .value,
+                                child: BottomSheetButtonWidget(
+                                  backgroundColor: const Color(0xFFD1FF43),
+                                  text: widget.userStatus == 'claimed'
+                                      ? 'Redeem Reward'
+                                      : ' Claim Reward',
+                                  onTap: () async {
+                                    if (widget.userStatus == 'claimed') {
+                                      Navigator.pop(context);
+                                      _openRedemptionBottomSheet(
+                                        context,
+                                        controller,
+                                      );
+                                      return;
+                                    } else {
+                                      /// ===> Claim Reward Flow <===
+                                      bool success =
+                                          await Get.find<
+                                                ClaimRewardController
+                                              >()
+                                              .claimReward(widget.rewardId);
+                                      if (success) {
+                                        Navigator.pop(context);
+                                        Get.find<GetAllRewardsController>()
+                                            .fetchRewards();
+                                        final bool isSuccess =
+                                            await Get.find<
+                                                  GetRewardDetailController
+                                                >()
+                                                .fetchRewardDetail(
+                                                  widget.rewardId,
+                                                );
+                                        if (isSuccess) {
+                                          _openRedemptionBottomSheet(
+                                            context,
+                                            controller,
+                                          );
+                                        }
+                                      }
+                                    }
+                                  },
+                                ),
                               ),
                             ),
-                          Expanded(
-                            child: BottomSheetButtonWidget(
-                              backgroundColor: const Color(0xFFD1FF43),
-                              text: widget.userStatus == 'claimed'
-                                  ? 'Redeem Reward'
-                                  : ' Claim Reward',
-                              onTap: () async {
-                                if (widget.userStatus == 'claimed') {
-                                  Navigator.pop(context);
-                                  _openRedemptionBottomSheet(
-                                    context,
-                                    controller,
-                                  );
-                                  return;
-                                } else {
-                                  /// ===> Claim Reward Flow <===
-                                  bool success =
-                                      await Get.find<ClaimRewardController>()
-                                          .claimReward(widget.rewardId);
-                                  if (success) {
-                                    Navigator.pop(context);
-                                    Get.find<GetAllRewardsController>()
-                                        .fetchRewards();
-                                    _openRedemptionBottomSheet(
-                                      context,
-                                      controller,
-                                    );
-                                  }
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ).paddingX(24.rw),
+                          ],
+                        ).paddingX(24.rw);
+                      }),
 
                     if (!isStoreReward && widget.userStatus != 'redeemed')
                       Obx(() {
@@ -685,11 +703,15 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
 
     showRewardsBottomSheet(
       context,
-      TabbedRedemptionBottomSheet(
-        redemptionCode:
-            controller.rewardDetail.value?.claimDetails?.assignedCode ?? '',
-        availableMethods: inStoreMethod,
-      ),
+      Obx(() {
+        return Skeletonizer(
+          enabled: controller.isLoading.value,
+          child: TabbedRedemptionBottomSheet(
+            redemptionCode: controller.redeemptionCode.value,
+            availableMethods: controller.redeemptionMethods.value,
+          ),
+        );
+      }),
     );
   }
 }

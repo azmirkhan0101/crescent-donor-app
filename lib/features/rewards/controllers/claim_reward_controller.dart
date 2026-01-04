@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_reward_detail_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/models/claim_reward_models.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
@@ -47,6 +48,7 @@ class ClaimRewardController extends GetxController {
           final claimResponse = ClaimRewardModel.fromJson(data['data']);
           successMessage.value = 'Reward claimed successfully';
           claimResult.value = claimResponse;
+          Get.find<GetRewardDetailController>().fetchRewardDetail(rewardId);
           debugPrint('Reward claimed successfully: ${claimResponse.code}');
           return true;
         } catch (e) {

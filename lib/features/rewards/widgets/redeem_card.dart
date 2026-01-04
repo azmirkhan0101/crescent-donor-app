@@ -3,6 +3,7 @@ import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_tim
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_reward_detail_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/models/reward_model.dart'
     hide InStoreRedemptionMethods;
 import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
@@ -14,6 +15,7 @@ import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class RedeemCard extends StatelessWidget {
   const RedeemCard({super.key, required this.index, required this.reward});
@@ -323,83 +325,94 @@ class RedeemCard extends StatelessWidget {
 
     /// ===> Redeemed Rewards <===
     if (reward.userStatus == 'claimed') {
-      // Unclaimed rewards - show simple redemption code
       showRewardsBottomSheet(
         context,
-        RedemptionCodeBottomSheet(
-          rewardTitle: reward.title,
-          rewardDescription: reward.description,
-          redemptionCode: reward.codePrefix,
-          expiryDate: () {
-            final expiryDate = reward.expiryDate;
-            if (expiryDate == null || expiryDate.isEmpty) {
-              return 'N/A';
-            }
-            try {
-              return DateConverter.estimatedDate(DateTime.parse(expiryDate));
-            } catch (e) {
-              return 'N/A';
-            }
-          }(),
-          brandIcon: Container(
-            width: 24.rw,
-            height: 24.rh,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(999.rw),
-              color: Colors.black,
-            ),
-            child: ClipOval(
-              child: (reward.business?.logoImage?.isNotEmpty ?? false)
-                  ? Image.network(
-                      reward.business!.logoImage!,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(
-                          child: Text(
-                            reward.business?.name != null &&
-                                    reward.business!.name.isNotEmpty
-                                ? reward.business!.name[0].toUpperCase()
-                                : 'B',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Inter Display',
+        GetX<GetRewardDetailController>(
+          initState: (state) {
+            state.controller?.fetchRewardDetail(reward.id);
+          },
+          builder: (controller) {
+            return Skeletonizer(
+              enabled: controller.isLoading.value,
+              child: RedemptionCodeBottomSheet(
+                rewardTitle: controller.rewardDetail.value?.title ?? '',
+                rewardDescription:
+                    controller.rewardDetail.value?.description ?? '',
+                redemptionCode:
+                    controller.rewardDetail.value?.claimDetails?.assignedCode ??
+                    '',
+                expiryDate: () {
+                  final expiryDate = controller.rewardDetail.value?.expiryDate;
+                  if (expiryDate == null || expiryDate.isEmpty) {
+                    return 'N/A';
+                  }
+                  try {
+                    return DateConverter.estimatedDate(
+                      DateTime.parse(expiryDate),
+                    );
+                  } catch (e) {
+                    return 'N/A';
+                  }
+                }(),
+                brandIcon: Container(
+                  width: 24.rw,
+                  height: 24.rh,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(999.rw),
+                    color: Colors.black,
+                  ),
+                  child: ClipOval(
+                    child: (reward.business?.logoImage?.isNotEmpty ?? false)
+                        ? Image.network(
+                            reward.business!.logoImage!,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Center(
+                                child: Text(
+                                  reward.business?.name != null &&
+                                          reward.business!.name.isNotEmpty
+                                      ? reward.business!.name[0].toUpperCase()
+                                      : 'B',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Inter Display',
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Center(
+                            child: Text(
+                              controller.rewardDetail.value?.business?.name !=
+                                          null &&
+                                      controller
+                                          .rewardDetail
+                                          .value!
+                                          .business!
+                                          .name
+                                          .isNotEmpty
+                                  ? controller
+                                        .rewardDetail
+                                        .value!
+                                        .business!
+                                        .name[0]
+                                        .toUpperCase()
+                                  : 'B',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Inter Display',
+                              ),
                             ),
                           ),
-                        );
-                      },
-                    )
-                  : Center(
-                      child: Text(
-                        reward.business?.name != null &&
-                                reward.business!.name.isNotEmpty
-                            ? reward.business!.name[0].toUpperCase()
-                            : 'B',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter Display',
-                        ),
-                      ),
-                    ),
-            ),
-            // child: Center(
-            //   child: Text(
-            //     reward.business?.name != null &&
-            //             reward.business!.name.isNotEmpty
-            //         ? reward.business!.name[0].toUpperCase()
-            //         : 'B',
-            //     style: const TextStyle(
-            //       color: Colors.white,
-            //       fontSize: 12,
-            //       fontWeight: FontWeight.w600,
-            //       fontFamily: 'Inter Display',
-            //     ),
-            //   ),
-            // ),
-          ),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       );
     }
