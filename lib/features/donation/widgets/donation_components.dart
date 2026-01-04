@@ -367,6 +367,7 @@ class UpcomingDonationCard extends StatelessWidget {
   final String organizationLocation;
   final String donationAmount;
   final String? organizationImage;
+  final double? width;
 
   const UpcomingDonationCard({
     super.key,
@@ -375,12 +376,13 @@ class UpcomingDonationCard extends StatelessWidget {
     required this.organizationLocation,
     required this.donationAmount,
     this.organizationImage,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      width: width ?? double.infinity,
       decoration: BoxDecoration(
         color: DonationConstants.cardWhite,
         borderRadius: BorderRadius.circular(

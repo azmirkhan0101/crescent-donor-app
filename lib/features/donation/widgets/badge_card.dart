@@ -1,9 +1,9 @@
+import 'package:cresent_charge_user_app/features/donation/controllers/mark_tier_as_previewed_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/badge_details_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_3d_controller/flutter_3d_controller.dart';
-import 'package:get/get_navigation/src/root/parse_route.dart';
+import 'package:get/get.dart';
 
 class BadgeCard extends StatefulWidget {
   const BadgeCard({super.key, required this.badgeDataModel});
@@ -103,24 +103,31 @@ class _BadgeCardState extends State<BadgeCard> {
                       height: 72.rh,
 
                       /// ===> Badge Icon <===
-                      child: Flutter3DViewer(
-                        // src: widget.badgeDataModel.icon ?? '',
-                        src: currentTier?.icon ?? '',
-                        progressBarColor: const Color(0xFFF9F7F9),
-                        onLoad: (modelAddress) {
-                          // print("Model Address: $modelAddress");
-                          // Show circle progress indicator
-                          return CircularProgressIndicator();
-                        },
-                        onProgress: (progressValue) {
-                          // print("Progress: $progressValue");
-                          return CircularProgressIndicator(
-                            value: progressValue,
-                          );
-                        },
-                        onError: (error) {
-                          // print("Error: $error");
-                          return Icon(Icons.error, color: Colors.red);
+                      // child: Flutter3DViewer(
+                      //   // src: widget.badgeDataModel.icon ?? '',
+                      //   src: currentTier?.icon ?? '',
+                      //   progressBarColor: const Color(0xFFF9F7F9),
+                      //   onLoad: (modelAddress) {
+                      //     // print("Model Address: $modelAddress");
+                      //     // Show circle progress indicator
+                      //     return CircularProgressIndicator();
+                      //   },
+                      //   onProgress: (progressValue) {
+                      //     // print("Progress: $progressValue");
+                      //     return CircularProgressIndicator(
+                      //       value: progressValue,
+                      //     );
+                      //   },
+                      //   onError: (error) {
+                      //     // print("Error: $error");
+                      //     return Icon(Icons.error, color: Colors.red);
+                      //   },
+                      // ),
+                      child: Image.network(
+                        currentTier?.smallIconUrl ?? '',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.error, color: Colors.red);
                         },
                       ),
                     ),
@@ -248,6 +255,17 @@ class _BadgeAnimationSheetState extends State<_BadgeAnimationSheet> {
   @override
   void initState() {
     super.initState();
+
+    Get.find<MarkTierAsPreviewedController>().makeTierAsPreviewed(
+      badgeId: widget.badgeDataModel.badge?.id ?? '',
+      tier:
+          widget.badgeDataModel.tiers
+              ?.firstWhereOrNull(
+                (tier) => tier.isUnlocked == true && tier.isPreviewed == false,
+              )
+              ?.tier ??
+          '',
+    );
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.of(context).pop();
@@ -273,20 +291,20 @@ class _BadgeAnimationSheetState extends State<_BadgeAnimationSheet> {
       color: Colors.transparent,
       child: ColorFiltered(
         colorFilter: ColorFilter.mode(Colors.black, BlendMode.lighten),
-        // child: Image.asset('assets/3d/022_silver.gif', fit: BoxFit.cover),
-        child: Image.network(
-          widget.badgeDataModel.tiers
-                  ?.firstWhereOrNull(
-                    (tier) =>
-                        tier.isUnlocked == true && tier.isPreviewed == false,
-                  )
-                  ?.animationUrl ??
-              '',
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return const Center(child: Icon(Icons.error, color: Colors.red));
-          },
-        ),
+        child: Image.asset('assets/3d/022_silver.gif', fit: BoxFit.cover),
+        // child: Image.network(
+        //   widget.badgeDataModel.tiers
+        //           ?.firstWhereOrNull(
+        //             (tier) =>
+        //                 tier.isUnlocked == true && tier.isPreviewed == false,
+        //           )
+        //           ?.animationUrl ??
+        //       '',
+        //   fit: BoxFit.cover,
+        //   errorBuilder: (context, error, stackTrace) {
+        //     return const Center(child: Icon(Icons.error, color: Colors.red));
+        //   },
+        // ),
       ),
     );
   }

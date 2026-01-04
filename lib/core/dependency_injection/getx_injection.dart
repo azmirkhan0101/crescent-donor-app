@@ -8,6 +8,7 @@ import 'package:cresent_charge_user_app/features/donation/controllers/get_badges
 import 'package:cresent_charge_user_app/features/donation/controllers/get_recurring_org_state_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_roundup_orgs_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/mark_tier_as_previewed_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/one_time_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/recurring_states_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
@@ -87,4 +88,5 @@ void initGetx() {
 
   // =================== Badges Controllers ==================
   Get.lazyPut(() => BadgesController(), fenix: true);
+  Get.lazyPut(() => MarkTierAsPreviewedController(), fenix: true);
 }

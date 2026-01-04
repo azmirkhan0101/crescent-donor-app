@@ -18,10 +18,18 @@ const Color _lightGray = Color(0xFFEBE9EC);
 const Color _progressStart = Color(0xFFC08FFF);
 const Color _progressEnd = Color(0xFF735699);
 
-class BadgeDetailsBottomSheet extends StatelessWidget {
+class BadgeDetailsBottomSheet extends StatefulWidget {
   final BadgeDataModel badgeDataModel;
 
   const BadgeDetailsBottomSheet({super.key, required this.badgeDataModel});
+
+  @override
+  State<BadgeDetailsBottomSheet> createState() =>
+      _BadgeDetailsBottomSheetState();
+}
+
+class _BadgeDetailsBottomSheetState extends State<BadgeDetailsBottomSheet> {
+  String? glbTierUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +75,20 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 24.rw),
               child: GetX<GetBadgeHistoryController>(
-                initState: (state) {
-                  state.controller!.fetchBadgeHistory(
-                    badgeDataModel.badge?.id ?? '',
+                initState: (state) async {
+                  final success = await state.controller!.fetchBadgeHistory(
+                    widget.badgeDataModel.badge?.id ?? '',
                   );
+                  if (success) {
+                    glbTierUrl = state
+                        .controller!
+                        .badgeHistoryModel
+                        .value
+                        ?.data
+                        .badge
+                        .icon;
+                    setState(() {});
+                  }
                 },
                 builder: (controller) {
                   return Skeletonizer(
@@ -82,9 +100,10 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
 
                         // Selected Badge Display
                         _buildSelectedBadge(
-                          badgeUrl: badgeDataModel.badge?.icon,
-                          badgeName: badgeDataModel.badge?.name,
-                          badgeDescription: badgeDataModel.badge?.description,
+                          badgeUrl: glbTierUrl,
+                          badgeName: widget.badgeDataModel.badge?.name,
+                          badgeDescription:
+                              widget.badgeDataModel.badge?.description,
                         ),
 
                         SizedBox(height: 32.rh),
@@ -156,7 +175,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
               child: Flutter3DViewer(
                 // src: 'assets/3d/001_gold.glb',
                 src: badgeUrl ?? '',
-                progressBarColor: const Color(0xFFC08FFF),
+                progressBarColor: Colors.white,
               ),
             ),
           ),
@@ -258,40 +277,55 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
-                    badgeDataModel.tiers?.length ?? 0,
-                    (index) => Container(
-                      height: 28,
-                      width: 28,
-
-                      decoration: BoxDecoration(
-                        color: _lightGray,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(
-                          color: const Color(0xFFC08FFF),
-                          width: 1,
+                    widget.badgeDataModel.tiers?.length ?? 0,
+                    (index) => InkWell(
+                      onTap: () {
+                        if (widget.badgeDataModel.tiers?[index].isUnlocked ==
+                            true) {
+                          setState(() {
+                            glbTierUrl =
+                                widget.badgeDataModel.tiers?[index].icon;
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: 28,
+                        width: 28,
+                        decoration: BoxDecoration(
+                          color: _lightGray,
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: const Color(0xFFC08FFF),
+                            width: 1,
+                          ),
                         ),
-                      ),
-                      child: Center(
-                        child:
-                            (badgeDataModel.tiers?[index].isUnlocked ?? false)
-                            ? Image.network(
-                                badgeDataModel.tiers?[index].smallIconUrl ?? '',
-                                // height: 20,
-                                // width: 20,
-                                fit: BoxFit.cover,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      }
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    },
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Center(child: Icon(Icons.error)),
-                              )
-                            : _buildImage(Assets.common.lock.path),
+                        child: Center(
+                          child:
+                              (widget.badgeDataModel.tiers?[index].isUnlocked ??
+                                  false)
+                              ? Image.network(
+                                  widget
+                                          .badgeDataModel
+                                          .tiers?[index]
+                                          .smallIconUrl ??
+                                      '',
+                                  height: 20,
+                                  width: 20,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Center(child: Icon(Icons.error)),
+                                )
+                              : _buildImage(Assets.common.lock.path),
+                        ),
                       ),
                     ),
                   ),
@@ -395,7 +429,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: ' ${badgeDataModel.currentTier ?? ''}',
+                text: ' ${widget.badgeDataModel.currentTier ?? ''}',
                 style: AppTextStyles.f14W400(),
               ),
             ],
@@ -408,7 +442,7 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
         SizedBox(
           width: 311,
           child: Text(
-            'Only ${badgeDataModel.nextTier?.requiredCount ?? 'N/A'} more round-up donations to reach ${badgeDataModel.nextTier?.tier ?? ''}!',
+            'Only ${widget.badgeDataModel.nextTier?.requiredCount ?? 'N/A'} more round-up donations to reach ${widget.badgeDataModel.nextTier?.tier ?? ''}!',
             textAlign: TextAlign.center,
             style: AppTextStyles.f14W400(),
           ),
@@ -436,29 +470,29 @@ class BadgeDetailsBottomSheet extends StatelessWidget {
   }
 }
 
-Widget _buildProgressPoint(int value, bool isActive, [Widget? icon]) {
-  return Container(
-    width: 24.rw,
-    height: 24.rh,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      gradient: const RadialGradient(
-        colors: [Color(0xFFFFFFFF), Color(0xFFE8E8E8), Color(0xFFFFFFFF)],
-        stops: [0.0, 0.497, 1.0],
-      ),
-    ),
-    child: Center(
-      child:
-          icon ??
-          (isActive
-              ? Assets.rewards.rewardProgressBorderedPointer.image(
-                  width: 24.rw,
-                  height: 24.rh,
-                )
-              : Assets.rewards.rewardProgressPointer.image(
-                  width: 24.rw,
-                  height: 24.rh,
-                )),
-    ),
-  );
-}
+// Widget _buildProgressPoint(int value, bool isActive, [Widget? icon]) {
+//   return Container(
+//     width: 24.rw,
+//     height: 24.rh,
+//     decoration: BoxDecoration(
+//       shape: BoxShape.circle,
+//       gradient: const RadialGradient(
+//         colors: [Color(0xFFFFFFFF), Color(0xFFE8E8E8), Color(0xFFFFFFFF)],
+//         stops: [0.0, 0.497, 1.0],
+//       ),
+//     ),
+//     child: Center(
+//       child:
+//           icon ??
+//           (isActive
+//               ? Assets.rewards.rewardProgressBorderedPointer.image(
+//                   width: 24.rw,
+//                   height: 24.rh,
+//                 )
+//               : Assets.rewards.rewardProgressPointer.image(
+//                   width: 24.rw,
+//                   height: 24.rh,
+//                 )),
+//     ),
+//   );
+// }

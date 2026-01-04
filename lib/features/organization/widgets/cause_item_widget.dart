@@ -19,7 +19,7 @@ class CauseItemWidget extends StatelessWidget {
               // Text("🤝", style: TextStyle(fontSize: 14.rfs)),
               // SizedBox(width: 8.rw),
               Text(
-                cause.name,
+                cause.category,
                 style: TextStyle(
                   fontFamily: 'Inter Display',
                   fontSize: 14.rfs,

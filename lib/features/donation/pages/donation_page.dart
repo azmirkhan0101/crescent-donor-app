@@ -129,17 +129,51 @@ class _DonationPageState extends State<DonationPage> {
                           if (upcomingDonations.isEmpty) {
                             return const SizedBox.shrink();
                           }
-                          final donation = upcomingDonations.first;
-                          return UpcomingDonationCard(
-                            scheduledDate: DateFormat(
-                              'd MMM - hh:mm a',
-                            ).format(DateTime.parse(donation.nextDate)),
-                            organizationName: donation.organizationName,
-                            organizationLocation:
-                                '${donation.organizationAddress}, ${donation.organizationState}',
-                            donationAmount: donation.amount.toString(),
-                            organizationImage: donation.organizationLogo,
+                          return SizedBox(
+                            height: 165.rh,
+                            child: ListView.separated(
+                              padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    DonationConstants.paddingHorizontal.rw,
+                              ),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: upcomingDonations.length,
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
+                                  width: DonationConstants.cardSpacing.rw,
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final donation = upcomingDonations[index];
+                                return SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width - 64.rw,
+                                  child: UpcomingDonationCard(
+                                    scheduledDate: DateFormat(
+                                      'd MMM - hh:mm a',
+                                    ).format(DateTime.parse(donation.nextDate)),
+                                    organizationName: donation.organizationName,
+                                    organizationLocation:
+                                        '${donation.organizationAddress}, ${donation.organizationState}',
+                                    donationAmount: donation.amount.toString(),
+                                    organizationImage:
+                                        donation.organizationLogo,
+                                  ),
+                                );
+                              },
+                            ),
                           );
+                          // final donation = upcomingDonations.first;
+                          // return UpcomingDonationCard(
+                          //   scheduledDate: DateFormat(
+                          //     'd MMM - hh:mm a',
+                          //   ).format(DateTime.parse(donation.nextDate)),
+                          //   organizationName: donation.organizationName,
+                          //   organizationLocation:
+                          //       '${donation.organizationAddress}, ${donation.organizationState}',
+                          //   donationAmount: donation.amount.toString(),
+                          //   organizationImage: donation.organizationLogo,
+                          // );
                         },
                       ),
                     ),
