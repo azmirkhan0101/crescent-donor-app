@@ -7,6 +7,7 @@ import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.d
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_reward_detail_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/tabbed_redemption_bottom_sheet.dart';
@@ -36,6 +37,7 @@ class RewardDetailsBottomSheet extends StatefulWidget {
 }
 
 class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
+  final yourRewardsController = Get.find<YourRewardsController>();
   final ClaimRewardController claimRewardController =
       Get.find<ClaimRewardController>();
   Timer? _timer;
@@ -68,6 +70,7 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
     return '${ApiUrl.imageBaseUrl}/$cleanPath';
   }
 
+  /// Initialize countdown timer
   void _initializeCountdown(String expiryDateString) {
     final parsedDate = DateTime.tryParse(expiryDateString);
     if (parsedDate == null) return;
@@ -88,12 +91,13 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
       _updateTimeRemaining();
 
       _timer = Timer.periodic(
-        const Duration(seconds: 1),
+        const Duration(seconds: 60),
         (_) => _updateTimeRemaining(),
       );
     });
   }
 
+  /// Update time remaining
   void _updateTimeRemaining() {
     if (_expiryDateTime == null) return;
 
@@ -112,6 +116,7 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
     }
   }
 
+  /// Format expiry date time
   String _formattedExpiryDateTime() {
     if (_expiryDateTime == null) return 'N/A';
     return DateFormat('h:mm a, MMM d, yyyy').format(_expiryDateTime!);

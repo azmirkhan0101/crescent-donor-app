@@ -171,7 +171,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (!_initializedFromResponse) {
               // Special message
               settingsCtrl.specialMessageController.text =
-                  roundupConfig.specialMessage;
+                  roundupConfig.specialMessage ?? '';
 
               // Threshold amount mapping
               final thresholds = settingsCtrl.thresholdAmounts;

@@ -8,8 +8,6 @@ class GetRewardDetailController extends GetxController {
   var rewardDetail = Rx<RewardDetailsModel?>(null);
   var isLoading = false.obs;
   var errorMessage = ''.obs;
-  // var isClaimed = false.obs;
-  // var isExpired = false.obs;
   var redeemptionCode = ''.obs;
   var redeemptionMethods = Rx<InStoreRedemptionMethods?>(null);
 

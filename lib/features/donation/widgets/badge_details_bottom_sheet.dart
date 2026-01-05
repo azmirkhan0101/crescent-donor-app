@@ -80,14 +80,15 @@ class _BadgeDetailsBottomSheetState extends State<BadgeDetailsBottomSheet> {
                     widget.badgeDataModel.badge?.id ?? '',
                   );
                   if (success) {
-                    glbTierUrl = state
-                        .controller!
-                        .badgeHistoryModel
-                        .value
-                        ?.data
-                        .badge
-                        .icon;
-                    setState(() {});
+                    /// show last unlocked tier 3D model by default from [badgeDataModel]. and if no tier unlocked, show first tier.
+                    setState(() {
+                      glbTierUrl = widget.badgeDataModel.tiers
+                          ?.lastWhere(
+                            (tier) => tier.isUnlocked == true,
+                            orElse: () => widget.badgeDataModel.tiers!.first,
+                          )
+                          .icon;
+                    });
                   }
                 },
                 builder: (controller) {
