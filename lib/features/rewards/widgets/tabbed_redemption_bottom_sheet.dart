@@ -1,6 +1,7 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_reward_detail_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/models/reward_details_models.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
@@ -8,6 +9,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 enum RedemptionMethod { qrCode, nfc, staticCode }
@@ -20,7 +22,7 @@ class TabbedRedemptionBottomSheet extends StatefulWidget {
   });
 
   final String redemptionCode;
-  final InStoreRedemptionMethods availableMethods;
+  final InStoreRedemptionMethods? availableMethods;
 
   @override
   State<TabbedRedemptionBottomSheet> createState() =>
@@ -29,6 +31,7 @@ class TabbedRedemptionBottomSheet extends StatefulWidget {
 
 class _TabbedRedemptionBottomSheetState
     extends State<TabbedRedemptionBottomSheet> {
+  final rewardDetailsController = Get.find<GetRewardDetailController>();
   late RedemptionMethod selectedMethod;
 
   @override
@@ -40,11 +43,13 @@ class _TabbedRedemptionBottomSheetState
     //     ? RedemptionMethod.staticCode
     //     : RedemptionMethod.nfc;
     // selectedMethod = widget.initialMethod;
-    selectedMethod = widget.availableMethods.qrCode
+    selectedMethod = widget.availableMethods?.qrCode ?? false
         ? RedemptionMethod.qrCode
-        : widget.availableMethods.staticCode
+        : widget.availableMethods?.staticCode ?? false
         ? RedemptionMethod.staticCode
-        : RedemptionMethod.nfc;
+        : widget.availableMethods?.nfcTap ?? false
+        ? RedemptionMethod.nfc
+        : RedemptionMethod.qrCode;
   }
 
   void _copyCodeToClipboard() {
@@ -55,178 +60,181 @@ class _TabbedRedemptionBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+    return Obx(() {
+      String? redemptionCode = rewardDetailsController.redeemptionCode.value;
+      return Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+          border: Border(
+            top: BorderSide(color: Color(0xFFEBE9EC), width: 1),
+            left: BorderSide(color: Color(0xFFEBE9EC), width: 1),
+            right: BorderSide(color: Color(0xFFEBE9EC), width: 1),
+          ),
         ),
-        border: Border(
-          top: BorderSide(color: Color(0xFFEBE9EC), width: 1),
-          left: BorderSide(color: Color(0xFFEBE9EC), width: 1),
-          right: BorderSide(color: Color(0xFFEBE9EC), width: 1),
-        ),
-      ),
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.6,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (context, scrollController) {
-          return Column(
-            children: [
-              // Fixed top section with handle, title, and tabs
-              Container(
-                padding: EdgeInsets.fromLTRB(24.rw, 12.rh, 24.rw, 0),
-                child: Column(
-                  children: [
-                    // Handle bar
-                    Container(
-                      width: 32.rw,
-                      height: 4.rh,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF000C0B),
-                        borderRadius: BorderRadius.circular(100.rw),
-                      ),
-                    ),
-
-                    16.rh.heightWidth,
-
-                    // /===> Title and close button <====\
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Redemption Details',
-                          style: AppTextStyles.f20w600().copyWith(
-                            color: const Color(0xFF000C0B),
-                            fontSize: 20.rfs,
-                            height: 1.2,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: SizedBox(
-                            width: 20.rw,
-                            height: 20.rh,
-                            child: Icon(
-                              Icons.close,
-                              size: 14.rfs,
-                              color: const Color(0xFF000C0B),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    20.rh.heightWidth,
-
-                    // /===> Redemption method tabs <====\
-                    Container(
-                      padding: EdgeInsets.all(4.rw),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF9F7F9),
-                        borderRadius: BorderRadius.circular(16.rw),
-                        border: Border.all(
-                          color: const Color(0xFFF3F1F3),
-                          width: 1.rw,
+        child: DraggableScrollableSheet(
+          initialChildSize: 0.7,
+          minChildSize: 0.6,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (context, scrollController) {
+            return Column(
+              children: [
+                // Fixed top section with handle, title, and tabs
+                Container(
+                  padding: EdgeInsets.fromLTRB(24.rw, 12.rh, 24.rw, 0),
+                  child: Column(
+                    children: [
+                      // Handle bar
+                      Container(
+                        width: 32.rw,
+                        height: 4.rh,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF000C0B),
+                          borderRadius: BorderRadius.circular(100.rw),
                         ),
                       ),
-                      child: Row(
+
+                      16.rh.heightWidth,
+
+                      // /===> Title and close button <====\
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if (widget.availableMethods.qrCode)
-                            Expanded(
-                              child: _buildTabButton(
-                                'QR Code',
-                                RedemptionMethod.qrCode,
+                          Text(
+                            'Redemption Details',
+                            style: AppTextStyles.f20w600().copyWith(
+                              color: const Color(0xFF000C0B),
+                              fontSize: 20.rfs,
+                              height: 1.2,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: SizedBox(
+                              width: 20.rw,
+                              height: 20.rh,
+                              child: Icon(
+                                Icons.close,
+                                size: 14.rfs,
+                                color: const Color(0xFF000C0B),
                               ),
                             ),
-                          if (widget.availableMethods.nfcTap)
-                            Expanded(
-                              child: _buildTabButton(
-                                'NFC',
-                                RedemptionMethod.nfc,
-                              ),
-                            ),
-                          if (widget.availableMethods.staticCode)
-                            Expanded(
-                              child: _buildTabButton(
-                                'Static Code',
-                                RedemptionMethod.staticCode,
-                              ),
-                            ),
-
-                          /// "qr", "static-code", "nfc"
-                          // ...widget.availableMethods.map((method) {
-                          //   switch (method) {
-                          //     case 'qr':
-                          //       return Expanded(
-                          //         child: _buildTabButton(
-                          //           'QR Code',
-                          //           RedemptionMethod.qrCode,
-                          //         ),
-                          //       );
-                          //     case 'nfc':
-                          //       return Expanded(
-                          //         child: _buildTabButton(
-                          //           'NFC',
-                          //           RedemptionMethod.nfc,
-                          //         ),
-                          //       );
-                          //     case 'static-code':
-                          //       return Expanded(
-                          //         child: _buildTabButton(
-                          //           'Static Code',
-                          //           RedemptionMethod.staticCode,
-                          //         ),
-                          //       );
-                          //     default:
-                          //       return SizedBox.shrink();
-                          //   }
-                          // }),
-                          // Expanded(
-                          //   child: _buildTabButton(
-                          //     'QR Code',
-                          //     RedemptionMethod.qrCode,
-                          //   ),
-                          // ),
-                          // Expanded(
-                          //   child: _buildTabButton('NFC', RedemptionMethod.nfc),
-                          // ),
-                          // Expanded(
-                          //   child: _buildTabButton(
-                          //     'Static Code',
-                          //     RedemptionMethod.staticCode,
-                          //   ),
-                          // ),
+                          ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
 
-              // /===> Scrollable content <====\
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: EdgeInsets.fromLTRB(24.rw, 20.rh, 24.rw, 0),
-                  child: _buildMethodContent(),
-                ),
-              ),
+                      20.rh.heightWidth,
 
-              // Fixed bottom section with action button
-              BottomSheetButtonWidget(
-                text: 'Copy Code',
-                backgroundColor: AppColors.secondaryColor,
-                onTap: () => _copyCodeToClipboard(),
-              ).paddingX(24.rw).paddingB(24.rh),
-            ],
-          );
-        },
-      ),
-    );
+                      // /===> Redemption method tabs <====\
+                      Container(
+                        padding: EdgeInsets.all(4.rw),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF9F7F9),
+                          borderRadius: BorderRadius.circular(16.rw),
+                          border: Border.all(
+                            color: const Color(0xFFF3F1F3),
+                            width: 1.rw,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            if (widget.availableMethods?.qrCode ?? false)
+                              Expanded(
+                                child: _buildTabButton(
+                                  'QR Code',
+                                  RedemptionMethod.qrCode,
+                                ),
+                              ),
+                            if (widget.availableMethods?.nfcTap ?? false)
+                              Expanded(
+                                child: _buildTabButton(
+                                  'NFC',
+                                  RedemptionMethod.nfc,
+                                ),
+                              ),
+                            if (widget.availableMethods?.staticCode ?? false)
+                              Expanded(
+                                child: _buildTabButton(
+                                  'Static Code',
+                                  RedemptionMethod.staticCode,
+                                ),
+                              ),
+
+                            /// "qr", "static-code", "nfc"
+                            // ...widget.availableMethods.map((method) {
+                            //   switch (method) {
+                            //     case 'qr':
+                            //       return Expanded(
+                            //         child: _buildTabButton(
+                            //           'QR Code',
+                            //           RedemptionMethod.qrCode,
+                            //         ),
+                            //       );
+                            //     case 'nfc':
+                            //       return Expanded(
+                            //         child: _buildTabButton(
+                            //           'NFC',
+                            //           RedemptionMethod.nfc,
+                            //         ),
+                            //       );
+                            //     case 'static-code':
+                            //       return Expanded(
+                            //         child: _buildTabButton(
+                            //           'Static Code',
+                            //           RedemptionMethod.staticCode,
+                            //         ),
+                            //       );
+                            //     default:
+                            //       return SizedBox.shrink();
+                            //   }
+                            // }),
+                            // Expanded(
+                            //   child: _buildTabButton(
+                            //     'QR Code',
+                            //     RedemptionMethod.qrCode,
+                            //   ),
+                            // ),
+                            // Expanded(
+                            //   child: _buildTabButton('NFC', RedemptionMethod.nfc),
+                            // ),
+                            // Expanded(
+                            //   child: _buildTabButton(
+                            //     'Static Code',
+                            //     RedemptionMethod.staticCode,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // /===> Scrollable content <====\
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    padding: EdgeInsets.fromLTRB(24.rw, 20.rh, 24.rw, 0),
+                    child: _buildMethodContent(),
+                  ),
+                ),
+
+                // Fixed bottom section with action button
+                BottomSheetButtonWidget(
+                  text: 'Copy Code',
+                  backgroundColor: AppColors.secondaryColor,
+                  onTap: () => _copyCodeToClipboard(),
+                ).paddingX(24.rw).paddingB(24.rh),
+              ],
+            );
+          },
+        ),
+      );
+    });
   }
 
   Widget _buildTabButton(String title, RedemptionMethod method) {
@@ -266,68 +274,71 @@ class _TabbedRedemptionBottomSheetState
   }
 
   Widget _buildQRCodeContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        "Scan QR code".centerText(AppTextStyles.f20w600()).fontSize(24.rfs),
-        8.rh.heightWidth,
-        "Please point the camera at the QR Code"
-            .centerText(AppTextStyles.f14W400())
-            .color(const Color(0xFF000C0B)),
-        24.rh.heightWidth,
+    return Obx(() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          "Scan QR code".centerText(AppTextStyles.f20w600()).fontSize(24.rfs),
+          8.rh.heightWidth,
+          "Please point the camera at the QR Code"
+              .centerText(AppTextStyles.f14W400())
+              .color(const Color(0xFF000C0B)),
+          24.rh.heightWidth,
 
-        // QR Code
-        QrImageView(
-          data: widget.redemptionCode,
-          version: QrVersions.auto,
-          size: 180.rfs,
-          backgroundColor: Colors.white,
-          dataModuleStyle: QrDataModuleStyle(
-            color: const Color(0xFF000C0B),
-            dataModuleShape: QrDataModuleShape.square,
-          ),
-        ).paddingY(40.rh),
-
-        Row(
-          children: [
-            Expanded(
-              child: Divider(height: 1.rh, color: const Color(0xFF777777)),
+          // QR Code
+          QrImageView(
+            data: rewardDetailsController.redeemptionCode.value,
+            version: QrVersions.auto,
+            size: 180.rfs,
+            backgroundColor: Colors.white,
+            dataModuleStyle: QrDataModuleStyle(
+              color: const Color(0xFF000C0B),
+              dataModuleShape: QrDataModuleShape.square,
             ),
-            "QR Code"
-                .centerText(AppTextStyles.f14W400())
-                .fontSize(12.rfs)
-                .paddingX(12.rw),
-            Expanded(
-              child: Divider(height: 1.rh, color: const Color(0xFF777777)),
-            ),
-          ],
-        ).paddingX(40.rw),
+          ).paddingY(40.rh),
 
-        16.rh.heightWidth,
+          Row(
+            children: [
+              Expanded(
+                child: Divider(height: 1.rh, color: const Color(0xFF777777)),
+              ),
+              "QR Code"
+                  .centerText(AppTextStyles.f14W400())
+                  .fontSize(12.rfs)
+                  .paddingX(12.rw),
+              Expanded(
+                child: Divider(height: 1.rh, color: const Color(0xFF777777)),
+              ),
+            ],
+          ).paddingX(40.rw),
 
-        DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.rw),
-            border: Border.all(color: const Color(0xFFE4E4E4)),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(16.rw),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.redemptionCode,
-                  style: AppTextStyles.f14W400(),
-                ).color(const Color(0xFF000000)),
-                Assets.common.copy
-                    .svg(width: 20.rw, height: 20.rh)
-                    .onTap(() => _copyCodeToClipboard()),
-              ],
+          16.rh.heightWidth,
+
+          DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.rw),
+              border: Border.all(color: const Color(0xFFE4E4E4)),
             ),
-          ),
-        ).paddingX(40.rw),
-      ],
-    );
+            child: Padding(
+              padding: EdgeInsets.all(16.rw),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    // widget.redemptionCode,
+                    rewardDetailsController.redeemptionCode.value,
+                    style: AppTextStyles.f14W400(),
+                  ).color(const Color(0xFF000000)),
+                  Assets.common.copy
+                      .svg(width: 20.rw, height: 20.rh)
+                      .onTap(() => _copyCodeToClipboard()),
+                ],
+              ),
+            ),
+          ).paddingX(40.rw),
+        ],
+      );
+    });
   }
 
   Widget _buildNFCContent() {
@@ -411,7 +422,8 @@ class _TabbedRedemptionBottomSheetState
                 spacing: 20,
                 children: [
                   Text(
-                    widget.redemptionCode,
+                    // widget.redemptionCode,
+                    rewardDetailsController.redeemptionCode.value,
                     style: TextStyle(
                       color: const Color(
                         0xFF9C68DD,

@@ -7,6 +7,7 @@ import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.d
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_reward_detail_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/bottom_sheet_button_widget.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/tabbed_redemption_bottom_sheet.dart';
@@ -36,6 +37,7 @@ class RewardDetailsBottomSheet extends StatefulWidget {
 }
 
 class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
+  final yourRewardsController = Get.find<YourRewardsController>();
   final ClaimRewardController claimRewardController =
       Get.find<ClaimRewardController>();
   Timer? _timer;
@@ -68,6 +70,7 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
     return '${ApiUrl.imageBaseUrl}/$cleanPath';
   }
 
+  /// Initialize countdown timer
   void _initializeCountdown(String expiryDateString) {
     final parsedDate = DateTime.tryParse(expiryDateString);
     if (parsedDate == null) return;
@@ -88,12 +91,13 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
       _updateTimeRemaining();
 
       _timer = Timer.periodic(
-        const Duration(seconds: 1),
+        const Duration(seconds: 60),
         (_) => _updateTimeRemaining(),
       );
     });
   }
 
+  /// Update time remaining
   void _updateTimeRemaining() {
     if (_expiryDateTime == null) return;
 
@@ -112,6 +116,7 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
     }
   }
 
+  /// Format expiry date time
   String _formattedExpiryDateTime() {
     if (_expiryDateTime == null) return 'N/A';
     return DateFormat('h:mm a, MMM d, yyyy').format(_expiryDateTime!);
@@ -566,63 +571,81 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
 
                     // Fixed bottom section with button
                     if (isStoreReward && widget.userStatus != 'redeemed')
-                      Row(
-                        spacing: 8.rw,
-                        children: [
-                          if (widget.userStatus == 'not_claimed')
+                      Obx(() {
+                        return Row(
+                          spacing: 8.rw,
+                          children: [
+                            if (widget.userStatus == 'not_claimed')
+                              Expanded(
+                                child: BottomSheetButtonWidget(
+                                  backgroundColor: const Color(0xFFF5F5F5),
+                                  text: 'Save',
+                                  onTap: () async {
+                                    bool success =
+                                        await Get.find<ClaimRewardController>()
+                                            .claimReward(widget.rewardId);
+                                    if (success) {
+                                      Navigator.pop(context);
+                                      Get.find<GetAllRewardsController>()
+                                          .fetchRewards();
+                                      ToastMsg.success(
+                                        'Reward Claimed Successfully!',
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
                             Expanded(
-                              child: BottomSheetButtonWidget(
-                                backgroundColor: const Color(0xFFF5F5F5),
-                                text: 'Save',
-                                onTap: () async {
-                                  bool success =
-                                      await Get.find<ClaimRewardController>()
-                                          .claimReward(widget.rewardId);
-                                  if (success) {
-                                    Navigator.pop(context);
-                                    Get.find<GetAllRewardsController>()
-                                        .fetchRewards();
-                                    ToastMsg.success(
-                                      'Reward Claimed Successfully!',
-                                    );
-                                  }
-                                },
+                              child: Skeletonizer(
+                                enabled: Get.find<ClaimRewardController>()
+                                    .isLoading
+                                    .value,
+                                child: BottomSheetButtonWidget(
+                                  backgroundColor: const Color(0xFFD1FF43),
+                                  text: widget.userStatus == 'claimed'
+                                      ? 'Redeem Reward'
+                                      : ' Claim Reward',
+                                  onTap: () async {
+                                    if (widget.userStatus == 'claimed') {
+                                      Navigator.pop(context);
+                                      _openRedemptionBottomSheet(
+                                        context,
+                                        controller,
+                                      );
+                                      return;
+                                    } else {
+                                      /// ===> Claim Reward Flow <===
+                                      bool success =
+                                          await Get.find<
+                                                ClaimRewardController
+                                              >()
+                                              .claimReward(widget.rewardId);
+                                      if (success) {
+                                        Navigator.pop(context);
+                                        Get.find<GetAllRewardsController>()
+                                            .fetchRewards();
+                                        final bool isSuccess =
+                                            await Get.find<
+                                                  GetRewardDetailController
+                                                >()
+                                                .fetchRewardDetail(
+                                                  widget.rewardId,
+                                                );
+                                        if (isSuccess) {
+                                          _openRedemptionBottomSheet(
+                                            context,
+                                            controller,
+                                          );
+                                        }
+                                      }
+                                    }
+                                  },
+                                ),
                               ),
                             ),
-                          Expanded(
-                            child: BottomSheetButtonWidget(
-                              backgroundColor: const Color(0xFFD1FF43),
-                              text: widget.userStatus == 'claimed'
-                                  ? 'Redeem Reward'
-                                  : ' Claim Reward',
-                              onTap: () async {
-                                if (widget.userStatus == 'claimed') {
-                                  Navigator.pop(context);
-                                  _openRedemptionBottomSheet(
-                                    context,
-                                    controller,
-                                  );
-                                  return;
-                                } else {
-                                  /// ===> Claim Reward Flow <===
-                                  bool success =
-                                      await Get.find<ClaimRewardController>()
-                                          .claimReward(widget.rewardId);
-                                  if (success) {
-                                    Navigator.pop(context);
-                                    Get.find<GetAllRewardsController>()
-                                        .fetchRewards();
-                                    _openRedemptionBottomSheet(
-                                      context,
-                                      controller,
-                                    );
-                                  }
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ).paddingX(24.rw),
+                          ],
+                        ).paddingX(24.rw);
+                      }),
 
                     if (!isStoreReward && widget.userStatus != 'redeemed')
                       Obx(() {
@@ -685,11 +708,15 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
 
     showRewardsBottomSheet(
       context,
-      TabbedRedemptionBottomSheet(
-        redemptionCode:
-            controller.rewardDetail.value?.claimDetails?.assignedCode ?? '',
-        availableMethods: inStoreMethod,
-      ),
+      Obx(() {
+        return Skeletonizer(
+          enabled: controller.isLoading.value,
+          child: TabbedRedemptionBottomSheet(
+            redemptionCode: controller.redeemptionCode.value,
+            availableMethods: controller.redeemptionMethods.value,
+          ),
+        );
+      }),
     );
   }
 }

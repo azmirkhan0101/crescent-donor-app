@@ -1,16 +1,11 @@
 import 'dart:async';
 
-import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:get/get.dart';
 
 class YourRewardsController extends GetxController {
-  // Points state
-  final RxInt _totalPoints = 23382.obs;
-  final RxInt _currentProgress = 1000.obs;
-  final RxInt _nextBadgeThreshold = 2000.obs;
-  final RxString _nextBadgeText = '2 more donations to unlock next badge'.obs;
-  final RxDouble _progressPercentage = 65.0.obs;
+  /// Injecting controller
+  final getAllRewardsController = Get.find<GetAllRewardsController>();
 
   // Tab state
   final RxInt _selectedTabIndex = 0.obs;
@@ -31,27 +26,11 @@ class YourRewardsController extends GetxController {
   final RxInt _selectedCategoryIndex = 0.obs;
 
   // Getters
-  int get totalPoints => _totalPoints.value;
-  int get currentProgress => _currentProgress.value;
-  int get nextBadgeThreshold => _nextBadgeThreshold.value;
-  String get nextBadgeText => _nextBadgeText.value;
-  double get progressPercentage => _progressPercentage.value;
   int get selectedTabIndex => _selectedTabIndex.value;
   List<String> get tabs => _tabs;
   String get searchQuery => _searchQuery.value;
   List<String> get categories => _categories;
   int get selectedCategoryIndex => _selectedCategoryIndex.value;
-
-  @override
-  void onInit() {
-    super.onInit();
-    _calculateProgress();
-  }
-
-  void _calculateProgress() {
-    final progress = (_currentProgress.value / _nextBadgeThreshold.value) * 100;
-    _progressPercentage.value = progress.clamp(0.0, 100.0);
-  }
 
   void selectTab(int index) {
     _selectedTabIndex.value = index;
@@ -75,8 +54,6 @@ class YourRewardsController extends GetxController {
   }
 
   void _fetchRewardsWithFilters() {
-    final getAllRewardsController = Get.find<GetAllRewardsController>();
-
     // Determine category value (null for 'All', lowercase otherwise)
     String? categoryValue;
     if (_selectedCategoryIndex.value != 0) {
@@ -87,26 +64,9 @@ class YourRewardsController extends GetxController {
     getAllRewardsController.fetchRewards(
       search: _searchQuery.value.isEmpty ? null : _searchQuery.value,
       category: categoryValue,
-      status: 'active',
+      // status: 'active',
     );
   }
-
-  void onDonateNowPressed() {
-    // Navigate to donation flow
-    Get.toNamed('/home');
-  }
-
-  void onRedeemReward(String rewardId) {
-    // Handle reward redemption
-    ToastMsg.success('Reward redeemed successfully!');
-  }
-
-  void onClaimReward(String rewardId) {
-    // Handle reward claiming
-    ToastMsg.success('Reward claimed successfully!');
-  }
-
-  
 
   @override
   void onClose() {

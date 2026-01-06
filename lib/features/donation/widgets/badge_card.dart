@@ -66,10 +66,24 @@ class _BadgeCardState extends State<BadgeCard> {
           useRootNavigator: true,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
+          isDismissible: true,
+          enableDrag: true,
           builder: (context) {
             return _BadgeAnimationSheet(badgeDataModel: widget.badgeDataModel);
           },
-        );
+        ).then((_) {
+          // Automatically open BadgeDetailsBottomSheet after animation closes
+          showModalBottomSheet(
+            context: context,
+            useRootNavigator: true,
+            isScrollControlled: true,
+            builder: (context) {
+              return BadgeDetailsBottomSheet(
+                badgeDataModel: widget.badgeDataModel,
+              );
+            },
+          );
+        });
       },
       child: Container(
         decoration: BoxDecoration(
@@ -266,21 +280,6 @@ class _BadgeAnimationSheetState extends State<_BadgeAnimationSheet> {
               ?.tier ??
           '',
     );
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.of(context).pop();
-        showModalBottomSheet(
-          context: context,
-          useRootNavigator: true,
-          isScrollControlled: true,
-          builder: (context) {
-            return BadgeDetailsBottomSheet(
-              badgeDataModel: widget.badgeDataModel,
-            );
-          },
-        );
-      }
-    });
   }
 
   @override
@@ -289,22 +288,40 @@ class _BadgeAnimationSheetState extends State<_BadgeAnimationSheet> {
       height: 800,
       width: double.infinity,
       color: Colors.transparent,
-      child: ColorFiltered(
-        colorFilter: ColorFilter.mode(Colors.black, BlendMode.lighten),
-        child: Image.asset('assets/3d/022_silver.gif', fit: BoxFit.cover),
-        // child: Image.network(
-        //   widget.badgeDataModel.tiers
-        //           ?.firstWhereOrNull(
-        //             (tier) =>
-        //                 tier.isUnlocked == true && tier.isPreviewed == false,
-        //           )
-        //           ?.animationUrl ??
-        //       '',
-        //   fit: BoxFit.cover,
-        //   errorBuilder: (context, error, stackTrace) {
-        //     return const Center(child: Icon(Icons.error, color: Colors.red));
-        //   },
-        // ),
+      child: Stack(
+        children: [
+          ColorFiltered(
+            colorFilter: ColorFilter.mode(Colors.black, BlendMode.lighten),
+            // child: Image.asset('assets/3d/022_silver.gif', fit: BoxFit.cover),
+            child: Image.network(
+              widget.badgeDataModel.tiers
+                      ?.firstWhereOrNull(
+                        (tier) =>
+                            tier.isUnlocked == true &&
+                            tier.isPreviewed == false,
+                      )
+                      ?.animationUrl ??
+                  '',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return const Center(
+                  child: Icon(Icons.error, color: Colors.red),
+                );
+              },
+            ),
+          ),
+          // Close button
+          Positioned(
+            top: 40,
+            right: 20,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.white, size: 30),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

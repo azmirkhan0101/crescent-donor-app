@@ -17,20 +17,13 @@ class BadgesPage extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.rw),
         child: GetX<GetBadgesProgressController>(
-          // initState: (state) {
-          //   state.controller!.fetchBadgesProgress();
-          // },
           builder: (controller) {
-            // if (controller.isLoading.value) {
-            //   return const Center(
-            //     child: CircularProgressIndicator(),
-            //   ).paddingT(32.rh);
-            // }
-            // print("Total ====>. ${controller.badgesProgressData.length}");
             return RefreshIndicator(
-              onRefresh: () => controller.fetchBadgesProgress(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              onRefresh: () async {
+                await controller.fetchBadgesProgress();
+              },
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   SizedBox(height: 8.rh),
 
@@ -47,7 +40,8 @@ class BadgesPage extends StatelessWidget {
                   SizedBox(height: 8.rh),
 
                   // Badges Grid
-                  Expanded(
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height - 180.rh,
                     child: Skeletonizer(
                       enabled: controller.isLoading.value,
                       child: controller.badgesProgressData.isEmpty
@@ -63,6 +57,7 @@ class BadgesPage extends StatelessWidget {
                               ),
                             )
                           : GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,

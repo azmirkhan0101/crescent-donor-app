@@ -5,95 +5,102 @@
 class RoundupConfigModel {
   final String id;
   final String user;
-  final bool coverFees;
-  final double monthlyThreshold;
-  final String specialMessage;
-  final String status;
-  final bool isActive;
-  final String organizationId;
-  final String organizationName;
+  final bool? coverFees;
+  final double? monthlyThreshold;
+  final String? specialMessage;
+  final String? status;
+  final bool? isActive;
+  final String? organizationId;
+  final String? organizationName;
   final String? organizationLogo;
   final String? organizationCover;
-  final String registeredCharityName;
-  final String causeId;
-  final String causeName;
-  final String causeCategory;
-  final String causeStatus;
-  final String bankConnectionId;
-  final String bankAccountId;
-  final String bankAccountType;
-  final String institutionName;
-  final String institutionId;
-  final bool bankIsActive;
-  final String paymentMethodId;
-  final String stripePaymentMethodId;
-  final String cardBrand;
-  final String cardLast4;
-  final int cardExpMonth;
-  final int cardExpYear;
+  final String? registeredCharityName;
+  final String? causeId;
+  final String? causeName;
+  final String? causeCategory;
+  final String? causeStatus;
+  final String? bankConnectionId;
+  final String? bankAccountId;
+  final String? bankAccountType;
+  final String? institutionName;
+  final String? institutionId;
+  final bool? bankIsActive;
+  final String? paymentMethodId;
+  final String? stripePaymentMethodId;
+  final String? cardBrand;
+  final String? cardLast4;
+  final int? cardExpMonth;
+  final int? cardExpYear;
 
   RoundupConfigModel({
     required this.id,
     required this.user,
-    required this.coverFees,
-    required this.monthlyThreshold,
-    required this.specialMessage,
-    required this.status,
-    required this.isActive,
-    required this.organizationId,
-    required this.organizationName,
+    this.coverFees,
+    this.monthlyThreshold,
+    this.specialMessage,
+    this.status,
+    this.isActive,
+    this.organizationId,
+    this.organizationName,
     this.organizationLogo,
     this.organizationCover,
-    required this.registeredCharityName,
-    required this.causeId,
-    required this.causeName,
-    required this.causeCategory,
-    required this.causeStatus,
-    required this.bankConnectionId,
-    required this.bankAccountId,
-    required this.bankAccountType,
-    required this.institutionName,
-    required this.institutionId,
-    required this.bankIsActive,
-    required this.paymentMethodId,
-    required this.stripePaymentMethodId,
-    required this.cardBrand,
-    required this.cardLast4,
-    required this.cardExpMonth,
-    required this.cardExpYear,
+    this.registeredCharityName,
+    this.causeId,
+    this.causeName,
+    this.causeCategory,
+    this.causeStatus,
+    this.bankConnectionId,
+    this.bankAccountId,
+    this.bankAccountType,
+    this.institutionName,
+    this.institutionId,
+    this.bankIsActive,
+    this.paymentMethodId,
+    this.stripePaymentMethodId,
+    this.cardBrand,
+    this.cardLast4,
+    this.cardExpMonth,
+    this.cardExpYear,
   });
 
   factory RoundupConfigModel.fromJson(Map<String, dynamic> json) {
     return RoundupConfigModel(
-      id: json['_id'] ?? '',
-      user: json['user'] ?? '',
-      coverFees: json['coverFees'] as bool,
-      monthlyThreshold: (json['monthlyThreshold'] as num).toDouble(),
-      specialMessage: json['specialMessage'] ?? '',
-      status: json['status'] ?? '',
-      isActive: json['isActive'] as bool,
-      organizationId: json['organizationId'] ?? '',
-      organizationName: json['organizationName'] ?? '',
-      organizationLogo: json['organizationLogo'] as String?,
-      organizationCover: json['organizationCover'] as String?,
-      registeredCharityName: json['registeredCharityName'] as String,
-      causeId: json['causeId'] as String,
-      causeName: json['causeName'] as String,
-      causeCategory: json['causeCategory'] as String,
-      causeStatus: json['causeStatus'] as String,
-      bankConnectionId: json['bankConnectionId'] as String,
-      bankAccountId: json['bankAccountId'] as String,
-      bankAccountType: json['bankAccountType'] as String,
-      institutionName: json['institutionName'] as String,
-      institutionId: json['institutionId'] as String,
-      bankIsActive: json['bankIsActive'] as bool,
-      paymentMethodId: json['paymentMethodId'] as String,
-      stripePaymentMethodId: json['stripePaymentMethodId'] as String,
-      cardBrand: json['cardBrand'] as String,
-      cardLast4: json['cardLast4'] as String,
-      cardExpMonth: json['cardExpMonth'] as int,
-      cardExpYear: json['cardExpYear'] as int,
+      id: _safeString(json['_id']) ?? '',
+      user: _safeString(json['user']) ?? '',
+      coverFees: json['coverFees'] as bool?,
+      monthlyThreshold: (json['monthlyThreshold'] as num?)?.toDouble(),
+      specialMessage: _safeString(json['specialMessage']),
+      status: _safeString(json['status']),
+      isActive: json['isActive'] as bool?,
+      organizationId: _safeString(json['organizationId']),
+      organizationName: _safeString(json['organizationName']),
+      organizationLogo: _safeString(json['organizationLogo']),
+      organizationCover: _safeString(json['organizationCover']),
+      registeredCharityName: _safeString(json['registeredCharityName']),
+      causeId: _safeString(json['causeId']),
+      causeName: _safeString(json['causeName']),
+      causeCategory: _safeString(json['causeCategory']),
+      causeStatus: _safeString(json['causeStatus']),
+      bankConnectionId: _safeString(json['bankConnectionId']),
+      bankAccountId: _safeString(json['bankAccountId']),
+      bankAccountType: _safeString(json['bankAccountType']),
+      institutionName: _safeString(json['institutionName']),
+      institutionId: _safeString(json['institutionId']),
+      bankIsActive: json['bankIsActive'] as bool?,
+      paymentMethodId: _safeString(json['paymentMethodId']),
+      stripePaymentMethodId: _safeString(json['stripePaymentMethodId']),
+      cardBrand: _safeString(json['cardBrand']),
+      cardLast4: _safeString(json['cardLast4']),
+      cardExpMonth: json['cardExpMonth'] as int?,
+      cardExpYear: json['cardExpYear'] as int?,
     );
+  }
+
+  /// Safe string conversion that handles null and empty values
+  static String? _safeString(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return value.isEmpty ? null : value;
+    return value.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -130,19 +137,22 @@ class RoundupConfigModel {
   }
 
   /// Check if round-up is active and verified
-  bool get isActiveAndVerified => isActive && status == 'verified';
+  bool get isActiveAndVerified => (isActive ?? false) && status == 'verified';
 
   /// Get formatted card number (e.g., "**** 1881")
-  String get formattedCardNumber => '**** $cardLast4';
+  String get formattedCardNumber => '**** ${cardLast4 ?? ''}';
 
   /// Get formatted expiry date (e.g., "02/29")
-  String get formattedExpiry =>
-      '${cardExpMonth.toString().padLeft(2, '0')}/${cardExpYear.toString().substring(2)}';
+  String get formattedExpiry {
+    if (cardExpMonth == null || cardExpYear == null) return '';
+    return '${cardExpMonth.toString().padLeft(2, '0')}/${cardExpYear.toString().substring(2)}';
+  }
 
   /// Check if card is expired
   bool get isCardExpired {
+    if (cardExpMonth == null || cardExpYear == null) return false;
     final now = DateTime.now();
-    final expiryDate = DateTime(cardExpYear, cardExpMonth + 1, 0);
+    final expiryDate = DateTime(cardExpYear!, cardExpMonth! + 1, 0);
     return now.isAfter(expiryDate);
   }
 }

@@ -57,6 +57,8 @@ class GetRoundupOrgsController extends GetxController {
           _orgs.value = dataList
               .map((item) => RoundupOrgModel.fromJson(item))
               .toList();
+        } else {
+          _orgs.clear();
         }
         return true;
       },

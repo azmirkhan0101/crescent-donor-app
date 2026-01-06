@@ -5,8 +5,10 @@ import 'package:cresent_charge_user_app/features/profile/controllers/get_profile
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class UpdateProfileController extends GetxController {
   final nameController = TextEditingController();
@@ -56,7 +58,8 @@ class UpdateProfileController extends GetxController {
       imageQuality: 85,
     );
     if (picked != null) {
-      imageFile.value = File(picked.path);
+      final compressed = await _compressImage(File(picked.path));
+      imageFile.value = compressed;
     }
   }
 
@@ -66,7 +69,48 @@ class UpdateProfileController extends GetxController {
       imageQuality: 85,
     );
     if (picked != null) {
-      imageFile.value = File(picked.path);
+      final compressed = await _compressImage(File(picked.path));
+      imageFile.value = compressed;
+    }
+  }
+
+  /// Compress image to reduce file size for upload
+  /// Target size: max 1MB, quality: 70%
+  Future<File?> _compressImage(File file) async {
+    try {
+      final filePath = file.absolute.path;
+      final fileSize = await file.length();
+
+      // If file is already small enough (< 500KB), return as is
+      if (fileSize < 500 * 1024) {
+        return file;
+      }
+
+      final tempDir = await getTemporaryDirectory();
+      final targetPath =
+          '${tempDir.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      final result = await FlutterImageCompress.compressAndGetFile(
+        filePath,
+        targetPath,
+        quality: 70,
+        minWidth: 1024,
+        minHeight: 1024,
+      );
+
+      if (result != null) {
+        final compressedFile = File(result.path);
+        final compressedSize = await compressedFile.length();
+        debugPrint(
+          'Image compressed: ${fileSize / 1024}KB -> ${compressedSize / 1024}KB',
+        );
+        return compressedFile;
+      }
+
+      return file;
+    } catch (e) {
+      debugPrint('Image compression error: $e');
+      return file; // Return original if compression fails
     }
   }
 
