@@ -15,6 +15,7 @@ class GetRoundUpBankConnection extends GetxController {
   /// ---------------------------------------------------------------
   /// basiq states
   /// ---------------------------------------------------------------
+  var isBasiq = false.obs;
   var isBasiqConnectionLoading = false.obs;
 
   /// ---------------------------------------------------------------
@@ -69,12 +70,15 @@ class GetRoundUpBankConnection extends GetxController {
         );
         if (hasBasiqAccount) {
           debugPrint('Basiq bank connection successful!');
+          isBasiq.value = false;
           isBasiqConnectionLoading.value = false;
         } else {
           debugPrint('No Basiq bank connection found.');
           await Future.delayed(const Duration(seconds: 5));
-          isBasiqConnectionLoading.value = true;
-          fetchRoundUpBankConnection();
+          if (isBasiq.value) {
+            isBasiqConnectionLoading.value = true;
+            fetchRoundUpBankConnection();
+          }
         }
 
         return true;

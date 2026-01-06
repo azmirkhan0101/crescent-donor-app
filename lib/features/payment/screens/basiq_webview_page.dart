@@ -68,9 +68,14 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
         debugPrint('Basiq connection successful with jobId.');
 
         /// set isBasiqConnectionLoading to true
+        _roundUpBankConnectionController.isBasiq.value = true;
         _roundUpBankConnectionController.isBasiqConnectionLoading.value = true;
 
         /// GetRoundUpBankConnection
+      } else {
+        debugPrint('Basiq connection callback detected without jobId.');
+        _roundUpBankConnectionController.isBasiq.value = false;
+        _roundUpBankConnectionController.isBasiqConnectionLoading.value = false;
       }
       debugPrint('Success callback detected, closing WebView.');
       if (mounted) {
@@ -93,6 +98,9 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
           icon: const Icon(Icons.close),
           onPressed: () {
             _roundUpBankConnectionController.fetchRoundUpBankConnection();
+            _roundUpBankConnectionController.isBasiqConnectionLoading.value =
+                false;
+            _roundUpBankConnectionController.isBasiq.value = false;
             Navigator.pop(context);
           },
         ),
