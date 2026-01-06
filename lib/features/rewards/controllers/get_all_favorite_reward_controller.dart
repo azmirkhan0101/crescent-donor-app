@@ -13,13 +13,26 @@ class GetAllFavoriteRewardController extends GetxController {
   RxString get errorMessage => _errorMessage;
   RxList<FavoriteRewardModel> get favoriteRewards => _favoriteRewards;
 
-  Future<bool> fetchAllFavoriteRewards() async {
+  Future<bool> fetchAllFavoriteRewards({
+    int page = 1,
+    int limit = 10,
+    String? searchTerm,
+  }) async {
     _isLoading.value = true;
     _errorMessage.value = '';
 
+    // Build query parameters
+    final params = <String>[];
+    params.add('page=$page');
+    params.add('limit=$limit');
+    if (searchTerm != null && searchTerm.isNotEmpty) {
+      params.add('searchTerm=$searchTerm');
+    }
+    final query = params.isEmpty ? '' : '?${params.join('&')}';
+
     final response = await Get.find<NetworkHelper>().request(
       "GET",
-      ApiUrl.url('/favorite/me?searchTerm=Mostafiz&page=1&limit=10'),
+      ApiUrl.url('favorite/me$query'),
       withAuth: true,
     );
 

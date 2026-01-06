@@ -1,4 +1,5 @@
 import 'package:cresent_charge_user_app/features/common/models/meta_model.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_favorite_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/models/claimed_rewards_models.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
@@ -13,6 +14,7 @@ class GetMyClaimedRewardsController extends GetxController {
   var errorMessage = ''.obs;
   var meta = Rx<MetaModel?>(null);
   var selectedStatus = 'all'.obs;
+  var isFavoriteFilter = false.obs;
   var statusOptions = <String>[
     'all',
     'claimed',
@@ -93,6 +95,21 @@ class GetMyClaimedRewardsController extends GetxController {
 
   void filterByStatus(String status) {
     selectedStatus.value = status;
+    isFavoriteFilter.value =
+        false; // Turn off favorite filter when status filter is selected
     fetchMyClaimedRewards(status: status);
+  }
+
+  void toggleFavoriteFilter() {
+    isFavoriteFilter.value = !isFavoriteFilter.value;
+    if (isFavoriteFilter.value) {
+      // Fetch favorite rewards via GetAllFavoriteRewardController
+      selectedStatus.value = 'all'; // Reset status filter
+      final favoriteController = Get.find<GetAllFavoriteRewardController>();
+      favoriteController.fetchAllFavoriteRewards();
+    } else {
+      // Return to regular claimed rewards view
+      fetchMyClaimedRewards();
+    }
   }
 }
