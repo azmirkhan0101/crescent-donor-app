@@ -1,9 +1,12 @@
+import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_reward_detail_controller.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddFavoriteRewardController extends GetxController {
+  final _getRewardDetailController = Get.find<GetRewardDetailController>();
   final _isLoading = false.obs;
   final _errorMessage = ''.obs;
 
@@ -27,9 +30,16 @@ class AddFavoriteRewardController extends GetxController {
       (err) {
         _errorMessage.value = err.message ?? 'An unexpected error occurred.';
         debugPrint('Add Favorite Reward Error: ${err.message}');
+        ToastMsg.error(_errorMessage.value);
         return false;
       },
-      (res) {
+      (res) async {
+        debugPrint('Add Favorite Reward Success: $rewardId');
+        // Immediately update favorite state for instant UI feedback
+        _getRewardDetailController.isFavorite.value = true;
+        ToastMsg.success('Added to favorites successfully!');
+        // Refresh from server to sync full state
+        await _getRewardDetailController.fetchRewardDetail(rewardId);
         return true;
       },
     );

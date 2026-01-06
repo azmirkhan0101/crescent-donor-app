@@ -4,6 +4,7 @@ import 'package:cresent_charge_user_app/features/rewards/controllers/get_my_clai
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 // Define colors from Figma design
 const Color _offBlack = Color(0xFF000C0B);
@@ -34,9 +35,9 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
       },
       builder: (controller) {
         /// If loading, show a loading indicator
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        // if (controller.isLoading.value) {
+        //   return const Center(child: CircularProgressIndicator());
+        // }
 
         /// Main content with filters always visible
         return SingleChildScrollView(
@@ -48,45 +49,103 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
               SizedBox(
                 height: 40.rh,
                 child: Obx(
-                  () => ListView.separated(
+                  // () => ListView.separated(
+                  //   scrollDirection: Axis.horizontal,
+                  //   itemCount: controller.statusOptions.length,
+                  //   itemBuilder: (context, index) {
+                  //     final status = controller.statusOptions[index];
+                  //     final isSelected =
+                  //         controller.selectedStatus.value == status;
+                  //     return GestureDetector(
+                  //       onTap: () {
+                  //         controller.filterByStatus(status);
+                  //       },
+                  //       child: Container(
+                  //         height: 40,
+                  //         padding: const EdgeInsets.symmetric(
+                  //           horizontal: 16,
+                  //           vertical: 12,
+                  //         ),
+                  //         clipBehavior: Clip.antiAlias,
+                  //         decoration: ShapeDecoration(
+                  //           color: isSelected
+                  //               ? const Color(0xFF000C0B)
+                  //               : const Color(0xFFEAE9EB),
+                  //           shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(24),
+                  //           ),
+                  //         ),
+                  //         child: Row(
+                  //           mainAxisSize: MainAxisSize.min,
+                  //           mainAxisAlignment: MainAxisAlignment.center,
+                  //           crossAxisAlignment: CrossAxisAlignment.center,
+                  //           spacing: 4,
+                  //           children: [
+                  //             Text(
+                  //               status[0].toUpperCase() + status.substring(1),
+                  //               style: TextStyle(
+                  //                 color: isSelected
+                  //                     ? Colors.white
+                  //                     : Colors.black,
+                  //                 fontSize: 14,
+                  //                 fontFamily: 'Inter Display',
+                  //                 fontWeight: isSelected
+                  //                     ? FontWeight.w600
+                  //                     : FontWeight.w400,
+                  //                 height: 1.29,
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     );
+                  //   },
+                  //   separatorBuilder: (context, index) {
+                  //     return SizedBox(width: 8.rw);
+                  //   },
+                  // ),
+                  () => SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    itemCount: controller.statusOptions.length,
-                    itemBuilder: (context, index) {
-                      final status = controller.statusOptions[index];
-                      final isSelected =
-                          controller.selectedStatus.value == status;
-                      return GestureDetector(
-                        onTap: () {
-                          controller.filterByStatus(status);
-                        },
-                        child: Container(
-                          height: 40,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: ShapeDecoration(
-                            color: isSelected
-                                ? const Color(0xFF000C0B)
-                                : const Color(0xFFEAE9EB),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            spacing: 4,
-                            children: [
-                              Text(
+                    child: Row(
+                      children: [
+                        ...List.generate(controller.statusOptions.length, (
+                          index,
+                        ) {
+                          final status = controller.statusOptions[index];
+                          final isSelected =
+                              controller.selectedStatus.value == status;
+                          return GestureDetector(
+                            onTap: () {
+                              controller.filterByStatus(status);
+                            },
+                            child: Container(
+                              height: 40.rh,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.rw,
+                                vertical: 12.rh,
+                              ),
+                              margin: EdgeInsets.only(
+                                right:
+                                    index == controller.statusOptions.length - 1
+                                    ? 0
+                                    : 8.rw,
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              decoration: ShapeDecoration(
+                                color: isSelected
+                                    ? const Color(0xFF000C0B)
+                                    : const Color(0xFFEAE9EB),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24.rw),
+                                ),
+                              ),
+                              child: Text(
                                 status[0].toUpperCase() + status.substring(1),
                                 style: TextStyle(
                                   color: isSelected
                                       ? Colors.white
                                       : Colors.black,
-                                  fontSize: 14,
+                                  fontSize: 14.rfs,
                                   fontFamily: 'Inter Display',
                                   fontWeight: isSelected
                                       ? FontWeight.w600
@@ -94,14 +153,63 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                                   height: 1.29,
                                 ),
                               ),
-                            ],
+                            ),
+                          );
+                        }),
+
+                        // Favorite chip
+                        GestureDetector(
+                          onTap: () {
+                            controller.toggleFavoriteFilter();
+                          },
+                          child: Container(
+                            height: 40,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: controller.isFavoriteFilter.value
+                                  ? const Color(0xFF000C0B)
+                                  : const Color(0xFFEAE9EB),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              spacing: 4,
+                              children: [
+                                Icon(
+                                  Icons.favorite,
+                                  size: 16,
+                                  color: controller.isFavoriteFilter.value
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                                Text(
+                                  'Favorites',
+                                  style: TextStyle(
+                                    color: controller.isFavoriteFilter.value
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter Display',
+                                    fontWeight: controller.isFavoriteFilter.value
+                                        ? FontWeight.w600
+                                        : FontWeight.w400,
+                                    height: 1.29,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return SizedBox(width: 8.rw);
-                    },
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -149,44 +257,47 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                 )
               else
                 // Reward Cards List
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.claimedRewards.length,
-                  itemBuilder: (context, index) {
-                    final reward = controller.claimedRewards[index];
+                Skeletonizer(
+                  enabled: controller.isLoading.value,
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.claimedRewards.length,
+                    itemBuilder: (context, index) {
+                      final reward = controller.claimedRewards[index];
 
-                    // Map API status to RewardStatus enum
-                    late RewardStatus statusEnum;
-                    if (reward.status == 'expired') {
-                      statusEnum = RewardStatus.expired;
-                    } else if (reward.status == 'redeemed' &&
-                        reward.isEmailSent) {
-                      statusEnum = RewardStatus.emailSent;
-                    } else if (reward.status == 'redeemed' &&
-                        !reward.isEmailSent) {
-                      statusEnum = RewardStatus.usedInStore;
-                    } else {
-                      // For 'claimed' or 'cancelled' status
-                      statusEnum = reward.isEmailSent
-                          ? RewardStatus.emailSent
-                          : RewardStatus.usedInStore;
-                    }
+                      // Map API status to RewardStatus enum
+                      late RewardStatus statusEnum;
+                      if (reward.status == 'expired') {
+                        statusEnum = RewardStatus.expired;
+                      } else if (reward.status == 'redeemed' &&
+                          reward.isEmailSent) {
+                        statusEnum = RewardStatus.emailSent;
+                      } else if (reward.status == 'redeemed' &&
+                          !reward.isEmailSent) {
+                        statusEnum = RewardStatus.usedInStore;
+                      } else {
+                        // For 'claimed' or 'cancelled' status
+                        statusEnum = reward.isEmailSent
+                            ? RewardStatus.emailSent
+                            : RewardStatus.usedInStore;
+                      }
 
-                    return _buildRewardCard(
-                      brandIconUrl: reward.rewardImage,
-                      title: reward.title,
-                      redemptionDate:
-                          DateConverter.isoStringToFormattedDate(
-                            reward.claimedAt ?? '',
-                          ) ??
-                          'N/A',
-                      status: statusEnum,
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 12.rh);
-                  },
+                      return _buildRewardCard(
+                        brandIconUrl: reward.rewardImage,
+                        title: reward.title,
+                        redemptionDate:
+                            DateConverter.isoStringToFormattedDate(
+                              reward.claimedAt ?? '',
+                            ) ??
+                            'N/A',
+                        status: statusEnum,
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(height: 12.rh);
+                    },
+                  ),
                 ),
 
               40.rh.heightWidth,

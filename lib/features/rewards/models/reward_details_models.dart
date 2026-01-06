@@ -80,6 +80,8 @@ class RewardDetailsModel {
   final int userBalance;
   final bool hasAlreadyClaimed;
   final ClaimDetails? claimDetails;
+  final bool isAlreadySaved;
+
   RewardDetailsModel({
     required this.id,
     required this.business,
@@ -111,6 +113,7 @@ class RewardDetailsModel {
     required this.userBalance,
     required this.hasAlreadyClaimed,
     this.claimDetails,
+    required this.isAlreadySaved,
   });
 
   factory RewardDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -153,6 +156,7 @@ class RewardDetailsModel {
       claimDetails: json['claimDetails'] != null
           ? ClaimDetails.fromJson(json['claimDetails'] as Map<String, dynamic>)
           : null,
+      isAlreadySaved: json['isAlreadySaved'],
     );
   }
 }
