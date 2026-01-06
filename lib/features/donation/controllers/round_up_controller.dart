@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/features/common/mixins/activity_expansion_mixin.dart';
 import 'package:cresent_charge_user_app/features/donation/models/roundup_stats_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
@@ -8,7 +7,7 @@ import 'package:get/get.dart';
 /// Round Up Controller
 ///
 /// Manages the state and business logic for the Round Up page
-class RoundUpController extends GetxController with ActivityExpansionMixin {
+class RoundUpController extends GetxController {
   /// Activity expansion states - tracks which activities are expanded
   final RxMap<String, bool> _activityExpansionStates = <String, bool>{}.obs;
 
@@ -114,11 +113,11 @@ class RoundUpController extends GetxController with ActivityExpansionMixin {
   }
 
   /// Toggle expansion state for an activity item
-  @override
-  void toggleActivityExpansion(String activityKey) {
-    _activityExpansionStates[activityKey] = !isActivityExpanded(activityKey);
-    update(); // Trigger UI update for GetBuilder widgets
-  }
+  // @override
+  // void toggleActivityExpansion(String activityKey) {
+  //   _activityExpansionStates[activityKey] = !isActivityExpanded(activityKey);
+  //   update(); // Trigger UI update for GetBuilder widgets
+  // }
 
   /// Toggle between progress chart and detailed view
   void toggleProgressView() {
