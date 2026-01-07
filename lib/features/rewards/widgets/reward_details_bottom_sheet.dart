@@ -4,7 +4,9 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_time_converter.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/add_favorite_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/delete_favorite_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_reward_detail_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/your_rewards_controller.dart';
@@ -38,6 +40,9 @@ class RewardDetailsBottomSheet extends StatefulWidget {
 
 class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
   final yourRewardsController = Get.find<YourRewardsController>();
+  final addFavoriteRewardController = Get.find<AddFavoriteRewardController>();
+  final deleteFavoriteRewardController =
+      Get.find<DeleteFavoriteRewardController>();
   final ClaimRewardController claimRewardController =
       Get.find<ClaimRewardController>();
   Timer? _timer;
@@ -572,6 +577,8 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
                     // Fixed bottom section with button
                     if (isStoreReward && widget.userStatus != 'redeemed')
                       Obx(() {
+                        // Use controller's isFavorite observable for instant updates
+                        // final isFavorited = controller.isFavorite.value;
                         return Row(
                           spacing: 8.rw,
                           children: [
@@ -579,19 +586,28 @@ class _RewardDetailsBottomSheetState extends State<RewardDetailsBottomSheet> {
                               Expanded(
                                 child: BottomSheetButtonWidget(
                                   backgroundColor: const Color(0xFFF5F5F5),
-                                  text: 'Save',
+                                  text:
+                                      addFavoriteRewardController
+                                          .isLoading
+                                          .value
+                                      ? 'Saving...'
+                                      : deleteFavoriteRewardController
+                                            .isDeleting
+                                            .value
+                                      ? 'Removing...'
+                                      : controller.isFavorite.value
+                                      ? 'Remove From Save'
+                                      : 'Save',
                                   onTap: () async {
-                                    bool success =
-                                        await Get.find<ClaimRewardController>()
-                                            .claimReward(widget.rewardId);
-                                    if (success) {
-                                      Navigator.pop(context);
-                                      Get.find<GetAllRewardsController>()
-                                          .fetchRewards();
-                                      ToastMsg.success(
-                                        'Reward Claimed Successfully!',
-                                      );
+                                    if (controller.isFavorite.value) {
+                                      await deleteFavoriteRewardController
+                                          .deleteFavoriteReward(
+                                            widget.rewardId,
+                                          );
+                                      return;
                                     }
+                                    await addFavoriteRewardController
+                                        .addFavoriteReward(widget.rewardId);
                                   },
                                 ),
                               ),

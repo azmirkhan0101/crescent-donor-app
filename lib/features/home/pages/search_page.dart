@@ -478,7 +478,7 @@ class SearchPage extends StatelessWidget {
     BuildContext context,
     search_ctrl.SearchResultItem result,
   ) {
-    final bool isNetworkImage = result.logoAsset.startsWith('http');
+    result.logoAsset.startsWith('http');
 
     // return GestureDetector(
     //   onTap: () {

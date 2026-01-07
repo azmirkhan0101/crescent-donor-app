@@ -49,7 +49,8 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
       appBar: _buildAppBar(),
       body: SafeArea(
         child: Obx(() {
-          if (connectedBankAccountsController.isLoading.value) {
+          if (connectedBankAccountsController.isLoading.value ||
+              connectedBankAccountsController.isBasiqConnectionLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
           return RefreshIndicator(

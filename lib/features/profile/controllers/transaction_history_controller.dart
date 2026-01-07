@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/features/common/mixins/activity_expansion_mixin.dart';
 import 'package:cresent_charge_user_app/features/profile/models/transaction_history_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
@@ -8,8 +7,7 @@ import 'package:get/get.dart';
 /// Transaction History Controller
 ///
 /// Manages the state and business logic for the Transaction History page
-class TransactionHistoryController extends GetxController
-    with ActivityExpansionMixin {
+class TransactionHistoryController extends GetxController {
   /// Activity expansion states - tracks which activities are expanded
   final RxMap<String, bool> _activityExpansionStates = <String, bool>{}.obs;
 

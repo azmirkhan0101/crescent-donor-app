@@ -32,6 +32,7 @@ class RewardModel {
   final String userStatus;
   final bool isAlreadyClaimed;
   final bool isAlreadyRedeemed;
+  // final bool isAlreadySaved;
 
   RewardModel({
     required this.id,
@@ -65,8 +66,9 @@ class RewardModel {
     this.userBalance,
     this.hasAlreadyClaimed,
     required this.userStatus,
-    required this.isAlreadyClaimed,
-    required this.isAlreadyRedeemed,
+    this.isAlreadyClaimed = false,
+    this.isAlreadyRedeemed = false,
+    // this.isAlreadySaved = false,
   });
 
   factory RewardModel.fromJson(Map<String, dynamic> json) {
@@ -110,6 +112,7 @@ class RewardModel {
       userStatus: json['userStatus'] ?? '',
       isAlreadyClaimed: json['isAlreadyClaimed'] ?? false,
       isAlreadyRedeemed: json['isAlreadyRedeemed'] ?? false,
+      // isAlreadySaved: json['isAlreadySaved'] ?? false,
     );
   }
 }

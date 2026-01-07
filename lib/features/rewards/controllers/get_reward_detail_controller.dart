@@ -10,6 +10,7 @@ class GetRewardDetailController extends GetxController {
   var errorMessage = ''.obs;
   var redeemptionCode = ''.obs;
   var redeemptionMethods = Rx<InStoreRedemptionMethods?>(null);
+  var isFavorite = false.obs; // Track favorite state separately
 
   Future<bool> fetchRewardDetail(String rewardId) async {
     isLoading.value = true;
@@ -26,13 +27,18 @@ class GetRewardDetailController extends GetxController {
     return response.fold(
       (error) {
         errorMessage.value = error.message ?? 'An error occurred';
-
+        isFavorite.value = false;
         debugPrint('Error fetching reward detail: ${error.message}');
         return false;
       },
       (data) {
-        final rewardDetailResponse = RewardDetailsModel.fromJson(data['data']);
-        rewardDetail.value = rewardDetailResponse;
+        // final rewardDetailResponse = RewardDetailsModel.fromJson(data['data']);
+        rewardDetail.value = RewardDetailsModel.fromJson(data['data']);
+        print(rewardDetail.value?.isAlreadySaved);
+        // Update favorite state from API response
+        isFavorite.value = rewardDetail.value?.isAlreadySaved ?? false;
+        print(isFavorite.value);
+
         if (rewardDetail.value?.claimDetails != null) {
           redeemptionCode.value =
               rewardDetail.value?.claimDetails?.assignedCode ?? '';
@@ -45,6 +51,7 @@ class GetRewardDetailController extends GetxController {
         debugPrint(
           'Reward detail fetched successfully: ${rewardDetail.value?.title}',
         );
+        debugPrint('isFavorite: ${isFavorite.value}');
         return true;
       },
     );

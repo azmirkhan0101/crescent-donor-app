@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.d
 import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BankConnectionController extends GetxController {
@@ -23,7 +24,7 @@ class BankConnectionController extends GetxController {
 
     final result = await Get.find<NetworkHelper>().request(
       'POST',
-      ApiUrl.bankConnection,
+      ApiUrl.url('bank-connection'),
       body: {"public_token": publicToken},
       parser: (data) => data,
     );
@@ -38,7 +39,7 @@ class BankConnectionController extends GetxController {
         return false;
       },
       (response) {
-        print('Bank Connection Response:---> $response');
+        debugPrint('Bank Connection Response:---> $response');
         ToastMsg.success('Bank connected successfully');
         Get.find<GetRoundUpBankConnection>()
             .fetchRoundUpBankConnection(); // Refresh the connected accounts

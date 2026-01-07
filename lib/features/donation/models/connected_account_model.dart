@@ -10,6 +10,7 @@
     "institutionId": "ins_5",
     "consentGivenAt": "2025-12-16T11:56:08.106Z",
     "isActive": true,
+    "provider": "basiq",
     "createdAt": "2025-12-16T11:56:08.115Z",
     "updatedAt": "2025-12-20T08:00:02.351Z",
     "__v": 0,
@@ -27,6 +28,7 @@
         "causeName": "Test",
         "status": "pending",
         "enabled": true,
+        
         "isTaxable": false
     }
 }
@@ -43,6 +45,7 @@ class RoundUpBankConnectionModel {
   String institutionId;
   String consentGivenAt;
   bool isActive;
+  String provider;
   String createdAt;
   String updatedAt;
   String? lastSyncAt;
@@ -62,6 +65,7 @@ class RoundUpBankConnectionModel {
     required this.institutionId,
     required this.consentGivenAt,
     required this.isActive,
+    required this.provider,
     required this.createdAt,
     required this.updatedAt,
     this.lastSyncAt,
@@ -83,6 +87,7 @@ class RoundUpBankConnectionModel {
       institutionId: json['institutionId'] as String,
       consentGivenAt: json['consentGivenAt'] as String,
       isActive: json['isActive'] as bool,
+      provider: json['provider'] ?? '',
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       lastSyncAt: json['lastSyncAt'] as String?,

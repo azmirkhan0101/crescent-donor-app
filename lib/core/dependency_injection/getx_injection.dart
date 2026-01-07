@@ -1,7 +1,6 @@
 import 'package:cresent_charge_user_app/core/theme/theme_controller.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/profile_controller.dart';
 import 'package:cresent_charge_user_app/features/badges/controllers/badges_controller.dart';
-import 'package:cresent_charge_user_app/features/common/controllers/roundup-management/save_roundup_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badge_history_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
@@ -12,16 +11,20 @@ import 'package:cresent_charge_user_app/features/donation/controllers/mark_tier_
 import 'package:cresent_charge_user_app/features/donation/controllers/one_time_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/recurring_states_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
+import 'package:cresent_charge_user_app/features/donation/controllers/save_roundup_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/search_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/create_recurring_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/get_donation_full_status_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/get_org_causes_controller.dart';
 import 'package:cresent_charge_user_app/features/payment/controllers/connect_basiq_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/add_favorite_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/business_website_count_update_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/cancel_redemption_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/claim_reward_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/delete_favorite_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_business_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_favorite_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_business_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_my_claimed_rewards_controller.dart';
@@ -69,6 +72,9 @@ void initGetx() {
   Get.lazyPut(() => GetAllBusinessController(), fenix: true);
   Get.lazyPut(() => GetStoreProfileController(), fenix: true);
   Get.lazyPut(() => BusinessWebsiteCountUpdateController(), fenix: true);
+  Get.lazyPut(() => AddFavoriteRewardController(), fenix: true);
+  Get.lazyPut(() => DeleteFavoriteRewardController(), fenix: true);
+  Get.lazyPut(() => GetAllFavoriteRewardController(), fenix: true);
 
   // =================== Donation Controllers ==================
   Get.lazyPut(() => DonationController(), fenix: true);

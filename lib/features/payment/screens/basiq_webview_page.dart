@@ -1,4 +1,6 @@
+import 'package:cresent_charge_user_app/features/donation/controllers/get_round_up_bank_connection_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// A WebView page for Basiq bank connection.
@@ -15,6 +17,8 @@ class BasiqWebViewPage extends StatefulWidget {
 }
 
 class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
+  final _roundUpBankConnectionController = Get.find<GetRoundUpBankConnection>();
+
   late final WebViewController _controller;
   bool _isLoading = true;
 
@@ -38,6 +42,7 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
           onPageFinished: (String url) {
             setState(() {
               _isLoading = false;
+              debugPrint('Basiq WebView finished loading: $url');
             });
             _checkCallback(url);
           },
@@ -58,6 +63,20 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
 
     // Check if the URL contains the specific callback
     if (url.contains("http://localhost:3000/callback")) {
+      _roundUpBankConnectionController.fetchRoundUpBankConnection();
+      if (url.contains("http://localhost:3000/callback?jobId=")) {
+        debugPrint('Basiq connection successful with jobId.');
+
+        /// set isBasiqConnectionLoading to true
+        _roundUpBankConnectionController.isBasiq.value = true;
+        _roundUpBankConnectionController.isBasiqConnectionLoading.value = true;
+
+        /// GetRoundUpBankConnection
+      } else {
+        debugPrint('Basiq connection callback detected without jobId.');
+        _roundUpBankConnectionController.isBasiq.value = false;
+        _roundUpBankConnectionController.isBasiqConnectionLoading.value = false;
+      }
       debugPrint('Success callback detected, closing WebView.');
       if (mounted) {
         Navigator.pop(context);
@@ -77,7 +96,13 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
         elevation: 1,
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            _roundUpBankConnectionController.fetchRoundUpBankConnection();
+            _roundUpBankConnectionController.isBasiqConnectionLoading.value =
+                false;
+            _roundUpBankConnectionController.isBasiq.value = false;
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Stack(

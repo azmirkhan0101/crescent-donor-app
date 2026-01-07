@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.d
 import 'package:cresent_charge_user_app/features/donation/models/connected_account_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class GetRoundUpBankConnection extends GetxController {
@@ -10,6 +11,12 @@ class GetRoundUpBankConnection extends GetxController {
   void changeRoundUpModelIndex(int index) {
     selectedRoundUpModelIndex.value = index;
   }
+
+  /// ---------------------------------------------------------------
+  /// basiq states
+  /// ---------------------------------------------------------------
+  var isBasiq = false.obs;
+  var isBasiqConnectionLoading = false.obs;
 
   /// ---------------------------------------------------------------
   /// Get round-up bank connection
@@ -26,7 +33,7 @@ class GetRoundUpBankConnection extends GetxController {
 
     final result = await Get.find<NetworkHelper>().request(
       'GET',
-      ApiUrl.getConnectedAccounts,
+      ApiUrl.url('bank-connection/accounts'),
       withAuth: true,
     );
 
@@ -43,7 +50,7 @@ class GetRoundUpBankConnection extends GetxController {
         ToastMsg.error(errorMessage.value);
         return false;
       },
-      (response) {
+      (response) async {
         final List<dynamic> dataList = response['data'] as List<dynamic>;
         final accounts = dataList
             .map(
@@ -56,6 +63,23 @@ class GetRoundUpBankConnection extends GetxController {
         // Update both variables to keep them in sync
         // _connectedAccountList.assignAll(accounts);
         roundUpBankConnectionModel.assignAll(accounts);
+
+        // check if any account is provider 'Basiq'
+        final hasBasiqAccount = accounts.any(
+          (account) => account.provider.toLowerCase() == 'basiq',
+        );
+        if (hasBasiqAccount) {
+          debugPrint('Basiq bank connection successful!');
+          isBasiq.value = false;
+          isBasiqConnectionLoading.value = false;
+        } else {
+          debugPrint('No Basiq bank connection found.');
+          await Future.delayed(const Duration(seconds: 5));
+          if (isBasiq.value) {
+            isBasiqConnectionLoading.value = true;
+            fetchRoundUpBankConnection();
+          }
+        }
 
         return true;
       },
