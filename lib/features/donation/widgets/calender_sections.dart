@@ -1,18 +1,11 @@
-import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/donation_controller.dart';
-import 'package:cresent_charge_user_app/features/donation/controllers/get_badges_progress_controller.dart';
-import 'package:cresent_charge_user_app/features/donation/models/badges_data_model.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
-import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart'
-    as badge_widget;
 import 'package:cresent_charge_user_app/features/donation/widgets/custom_calendar.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/donation_cards.dart';
 import 'package:cresent_charge_user_app/features/donation/widgets/section_header.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class CalendarSection extends StatefulWidget {
   const CalendarSection({super.key});

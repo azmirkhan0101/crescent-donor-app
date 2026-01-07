@@ -25,7 +25,7 @@ class ResetPasswordController extends GetxController {
   RxString errorMessage = ''.obs;
   RxBool isLoading = false.obs;
 
-  String? _resetToken; // obtained from previous flow
+// obtained from previous flow
 
   bool get isPasswordValid =>
       hasMinLength.value &&

@@ -2,6 +2,8 @@ import 'package:cresent_charge_user_app/core/helper/date_time_converter/date_tim
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_favorite_reward_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_my_claimed_rewards_controller.dart';
+import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bottom_sheet.dart';
+import 'package:cresent_charge_user_app/features/rewards/widgets/reward_details_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -282,16 +284,27 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                   final favoriteReward =
                       favoriteController.favoriteRewards[index];
 
-                  return _buildRewardCard(
-                    brandIconUrl: favoriteReward.image,
-                    title: favoriteReward.title ?? 'Untitled',
-                    redemptionDate:
-                        DateConverter.isoStringToFormattedDate(
-                          favoriteReward.startDate?.toIso8601String() ?? '',
-                        ) ??
-                        'N/A',
-                    status:
-                        RewardStatus.favorite, // Default status for favorites
+                  return GestureDetector(
+                    onTap: () {
+                      showRewardsBottomSheet(
+                        context,
+                        RewardDetailsBottomSheet(
+                          rewardId: favoriteReward.reward ?? '',
+                          userStatus: favoriteReward.user,
+                        ),
+                      );
+                    },
+                    child: _buildRewardCard(
+                      brandIconUrl: favoriteReward.image,
+                      title: favoriteReward.title ?? 'Untitled',
+                      redemptionDate:
+                          DateConverter.isoStringToFormattedDate(
+                            favoriteReward.startDate?.toIso8601String() ?? '',
+                          ) ??
+                          'N/A',
+                      status:
+                          RewardStatus.favorite, // Default status for favorites
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) {

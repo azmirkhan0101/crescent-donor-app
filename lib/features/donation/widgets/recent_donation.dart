@@ -23,12 +23,12 @@ class RecentDonation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          ...List.generate(recentDonations?.length ?? 0, (groupIndex) {
+          ...List.generate(recentDonations.length, (groupIndex) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  recentDonations?[groupIndex].title ?? '',
+                  recentDonations[groupIndex].title,
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.grey,
@@ -37,26 +37,25 @@ class RecentDonation extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                ...List.generate(
-                  recentDonations?[groupIndex].donations.length ?? 0,
-                  (donationIndex) {
-                    final donation =
-                        recentDonations?[groupIndex].donations[donationIndex];
-                    return Column(
-                      children: [
-                        _buildDonationItem(
-                          donation?.orgName ?? '',
-                          donation?.amount ?? 0.0,
-                          donation?.timeAgo ?? '',
+                ...List.generate(recentDonations[groupIndex].donations.length, (
+                  donationIndex,
+                ) {
+                  final donation =
+                      recentDonations[groupIndex].donations[donationIndex];
+                  return Column(
+                    children: [
+                      _buildDonationItem(
+                        donation.orgName,
+                        donation.amount,
+                        donation.timeAgo,
 
-                          ///TODO: add network image instead of asset
-                          'assets/hope_foundation_logo.png',
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    );
-                  },
-                ),
+                        ///TODO: add network image instead of asset
+                        'assets/hope_foundation_logo.png',
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  );
+                }),
               ],
             );
           }),

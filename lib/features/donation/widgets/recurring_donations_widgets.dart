@@ -166,7 +166,7 @@ class RecurringOrganizationCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          donation.organizationDetails.name ?? 'N/A',
+                          donation.organizationDetails.name,
                           style: TextStyle(
                             fontFamily: DonationFonts.interDisplay,
                             fontSize: 12.rfs,

@@ -83,7 +83,7 @@ class ApiUrl {
   /// ======= Bank Connection =======
   static const String generatePlaidLinkToken =
       '$baseUrl/bank-connection/link-token';
-  static const String bankConnection = '$baseUrl/bank-connection';
+  // static const String bankConnection = '$baseUrl/bank-connection';
   static const String getConnectedAccounts =
       '$baseUrl/bank-connection/accounts';
   static const String getBankConnection = '$baseUrl/bank-connection/me';

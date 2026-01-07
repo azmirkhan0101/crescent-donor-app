@@ -11,7 +11,6 @@ class RoundUpController extends GetxController {
   /// Activity expansion states - tracks which activities are expanded
   final RxMap<String, bool> _activityExpansionStates = <String, bool>{}.obs;
 
-  @override
   Map<String, bool> get activityExpansionStates => _activityExpansionStates;
 
   /// Controls whether to show progress chart or detailed view

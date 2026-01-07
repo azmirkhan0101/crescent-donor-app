@@ -473,7 +473,7 @@ class RecentActivityList extends StatelessWidget {
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: recentActivities?.length ?? 0,
+            itemCount: recentActivities.length,
             itemBuilder: (context, index) {
               return Column(
                 children: [
@@ -885,7 +885,7 @@ class StepProgressSemicirclePainter extends CustomPainter {
         final gradient = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [activeColor.withOpacity(0.05), activeColor.withOpacity(0.4)],
+          colors: [activeColor.withValues(alpha: 0.05), activeColor.withValues(alpha: 0.4)],
         );
 
         final gradientPaint = Paint()

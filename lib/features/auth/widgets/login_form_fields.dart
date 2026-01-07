@@ -129,41 +129,4 @@ class LoginFormFields extends StatelessWidget {
       ],
     );
   }
-
-  /// Build general error message display
-  Widget _buildErrorMessage(LoginController controller) {
-    if (controller.errorMessage.value.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: EdgeInsets.only(top: 16.rh),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(12.rw),
-        decoration: BoxDecoration(
-          color: AppColors.redColor.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8.rw),
-          border: Border.all(
-            color: AppColors.redColor.withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.error_outline, color: AppColors.redColor, size: 16.rw),
-            8.rw.width,
-            Expanded(
-              child: Text(
-                controller.errorMessage.value,
-                style: AppTextStyles.f14W400().copyWith(
-                  color: AppColors.redColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
