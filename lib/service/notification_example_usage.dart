@@ -33,7 +33,7 @@ class NotificationExampleController extends GetxController {
       if (fcmToken != null) {
         debugPrint('FCM Token: $fcmToken');
 
-        // TODO: Send token to your backend
+        // Send token to your backend
         // await apiService.updateUserFcmToken(fcmToken);
 
         // Subscribe to general notifications
@@ -50,7 +50,6 @@ class NotificationExampleController extends GetxController {
   void _setupTokenRefreshListener() {
     _notificationService.onTokenRefresh((newToken) {
       debugPrint('FCM Token refreshed: $newToken');
-
       // TODO: Send updated token to backend
       // apiService.updateUserFcmToken(newToken);
     });

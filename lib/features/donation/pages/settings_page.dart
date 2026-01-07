@@ -27,9 +27,10 @@ import 'package:get/get.dart';
 /// Allows users to configure their round-up donation settings including
 /// organization, bank account, threshold amounts, and custom messages
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key, required this.isRecurring});
+  const SettingsPage({super.key, required this.isRecurring, this.roundUpId});
 
   final bool isRecurring;
+  final String? roundUpId;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -88,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage> {
       paymentMethodController.fetchPaymentMethods();
     }
     if (!widget.isRecurring) {
-      getRoundupController.fetchRoundupConfig();
+      getRoundupController.fetchRoundupConfig(widget.roundUpId);
       // getRoundUpConnectionController.fetchRoundUpBankConnection();
     }
   }
@@ -985,7 +986,7 @@ class _SettingsPageState extends State<SettingsPage> {
       if (widget.isRecurring) {
         await getRecurringConnectionController.fetchRecurringConnection();
       } else {
-        await getRoundupController.fetchRoundupConfig();
+        await getRoundupController.fetchRoundupConfig(widget.roundUpId);
       }
       // Go back
       context.pop();

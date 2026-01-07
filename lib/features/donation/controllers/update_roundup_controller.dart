@@ -72,7 +72,7 @@ class UpdateRoundupController extends GetxController {
 
         // Optionally refresh the GetRoundupController if it exists
         if (Get.isRegistered<GetRoundupController>()) {
-          Get.find<GetRoundupController>().fetchRoundupConfig();
+          Get.find<GetRoundupController>().fetchRoundupConfig(roundupId);
         }
 
         return true;

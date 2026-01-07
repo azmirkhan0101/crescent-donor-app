@@ -18,13 +18,14 @@ class GetRoundupController extends GetxController {
   var errorMessage = ''.obs;
 
   /// Fetch round-up configuration from API
-  Future<void> fetchRoundupConfig() async {
+  Future<void> fetchRoundupConfig(String? roundUpId) async {
     isLoading.value = true;
     errorMessage.value = '';
 
     final response = await Get.find<NetworkHelper>().request(
       'GET',
-      ApiUrl.getRoundupConfig,
+      // ApiUrl.getRoundupConfig,
+      ApiUrl.url('secure-roundup/get-by-user/$roundUpId'),
       withAuth: true,
     );
 
@@ -47,8 +48,8 @@ class GetRoundupController extends GetxController {
   }
 
   /// Refresh round-up configuration
-  Future<void> refreshConfig() async {
-    await fetchRoundupConfig();
+  Future<void> refreshConfig(String? roundUpId) async {
+    await fetchRoundupConfig(roundUpId);
   }
 
   /// Check if round-up is configured
