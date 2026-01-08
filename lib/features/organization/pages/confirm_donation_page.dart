@@ -212,7 +212,9 @@ class ConfirmDonationPage extends StatelessWidget {
             donateNowCtrl.selectedCause.value?.name ?? '',
           ),
           _buildDetailItem(
-            'Threshold amount:',
+            donateNowCtrl.selectedDonationType.value != DonationType.roundUp
+                ? 'Amount:'
+                : 'Threshold amount:',
             "\$${donateNowCtrl.amount.value.toString()}",
           ),
 
@@ -358,18 +360,21 @@ class ConfirmDonationPage extends StatelessWidget {
               margin: EdgeInsets.symmetric(vertical: 8.rh),
             ),
 
-            _buildTransactionItem(
-              "Total",
-              "\$${feeCalculation(donateNowCtrl.amount.value.toDouble(), donateNowCtrl.contributeToAdminFees)["totalAmount"]?.toStringAsFixed(2)}",
-            ),
-
-            // Divider
-            Container(
-              height: 1,
-              width: double.infinity,
-              color: _borderColor,
-              margin: EdgeInsets.symmetric(vertical: 8.rh),
-            ),
+            if (donateNowCtrl.selectedDonationType.value !=
+                DonationType.roundUp)
+              _buildTransactionItem(
+                "Total",
+                "\$${feeCalculation(donateNowCtrl.amount.value.toDouble(), donateNowCtrl.contributeToAdminFees)["totalAmount"]?.toStringAsFixed(2)}",
+              ),
+            if (donateNowCtrl.selectedDonationType.value !=
+                DonationType.roundUp)
+              // Divider
+              Container(
+                height: 1,
+                width: double.infinity,
+                color: _borderColor,
+                margin: EdgeInsets.symmetric(vertical: 8.rh),
+              ),
 
             // Admin Fees Checkbox
             Obx(

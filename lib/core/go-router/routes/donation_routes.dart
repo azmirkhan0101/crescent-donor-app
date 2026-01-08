@@ -43,8 +43,10 @@ class DonationRoutes extends AppRouteConfig {
       name: RoutePath.settings,
       path: RoutePath.settings.addBasePath,
       builder: (context, state) {
-        bool isRecurring = state.extra != null && state.extra as bool;
-        return SettingsPage(isRecurring: isRecurring);
+        final extra = state.extra as Map<String, dynamic>?;
+        final isRecurring = extra?['isRecurring'] as bool;
+        final roundUpId = extra?['roundUpId'] as String;
+        return SettingsPage(isRecurring: isRecurring, roundUpId: roundUpId);
       },
       // Only authenticated users - no guest access for round up settings
       redirect: AuthGuard.authRequired.redirect,

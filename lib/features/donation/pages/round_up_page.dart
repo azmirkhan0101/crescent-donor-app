@@ -41,7 +41,13 @@ class RoundUpPage extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () {
-                  context.pushNamed(RoutePath.settings, extra: false);
+                  context.pushNamed(
+                    RoutePath.settings,
+                    extra: {
+                      'isRecurring': false,
+                      'roundUpId': getRoundupOrgController.orgs.first.roundupId,
+                    },
+                  );
                 },
               ),
             ],

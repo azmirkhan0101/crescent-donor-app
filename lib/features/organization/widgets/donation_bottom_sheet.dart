@@ -363,7 +363,10 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Amount',
+            donateNowController.selectedDonationType.value !=
+                    DonationType.roundUp
+                ? 'Amount'
+                : 'Threshold amount',
             style: TextStyle(
               fontFamily: 'Inter Display',
               fontSize: 16.rfs,
