@@ -19,8 +19,9 @@ class OverviewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetX<DonationController>(
-      initState: (state) {
-        state.controller?.fetchClientStats();
+      initState: (state){
+        state.controller?.fetchOrgs();
+        //state.controller?.fetchClientStats(roundupId: state.controller!.organisationIds.first);
       },
       builder: (donationController) {
         final clientStats = donationController.clientStats.value;
@@ -38,20 +39,33 @@ class OverviewSection extends StatelessWidget {
                 child: Column(
                   children: [
                     // Round Up Card (full width)
-                    RoundUpCard(
-                      roundUpAmount:
-                          clientStats?.roundUpAmount.toStringAsFixed(0) ?? '0',
-                      donationOrganization: clientStats != null
-                          ? clientStats.roundUpStatusData.organizationName
-                          : 'N/A',
-                      daysUntilDonation: clientStats != null
-                          ? clientStats.roundUpStatusData.daysRemaining
-                                .toString()
-                          : '0',
-                      onTap: () {
-                        context.pushNamed(RoutePath.roundUp);
-                      },
-                    ),
+                    Obx((){
+                      return RoundUpCard(
+                        roundUpAmount:
+                        clientStats?.roundUpAmount.toStringAsFixed(0) ?? '0',
+                        donationOrganization: clientStats != null
+                            ? clientStats.roundUpStatusData.organizationName
+                            : 'N/A',
+                        daysUntilDonation: clientStats != null
+                            ? clientStats.roundUpStatusData.daysRemaining
+                            .toString()
+                            : '0',
+                        onTap: () {
+                          context.pushNamed(RoutePath.roundUp);
+                        },
+                        selectedTitle: donationController.selectedTitle.value,
+                        onItemSelected: (String? value) {
+                          if( value == null ){
+                            return;
+                          }
+                          donationController.selectedTitle.value = value;
+                          String id = donationController.roundUpIds.value[donationController.organisationNames.value.indexOf(value)];
+                          donationController.fetchClientStats(roundupId: id);
+                          print(value);
+                        },
+                        items: donationController.organisationNames.value,
+                      );
+                    }),
                     SizedBox(height: DonationConstants.cardSpacing.rh),
                     // Two small cards in a row
                     Row(

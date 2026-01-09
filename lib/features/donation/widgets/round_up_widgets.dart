@@ -125,6 +125,7 @@ class RoundUpProgressChart extends StatelessWidget {
   final double progressPercentage;
   final double todaysRoundUp;
   final int daysLeft;
+  final String orgName;
   final RoundUpController controller;
 
   const RoundUpProgressChart({
@@ -134,6 +135,7 @@ class RoundUpProgressChart extends StatelessWidget {
     required this.todaysRoundUp,
     required this.daysLeft,
     required this.controller,
+    required this.orgName,
   });
 
   @override
@@ -333,14 +335,18 @@ class RoundUpProgressChart extends StatelessWidget {
                 Row(
                   children: [
                     Text('📆 ', style: TextStyle(fontSize: 12.rfs)),
-                    Text(
-                      '$daysLeft days left to auto-donate',
-                      style: TextStyle(
-                        fontFamily: DonationFonts.interDisplay,
-                        fontSize: 12.rfs,
-                        fontWeight: FontWeight.w500,
-                        color: DonationConstants.offBlack,
-                        height: 16 / 12,
+                    Expanded(
+                      child: Text(
+                        '$daysLeft days left to auto-donate ${orgName ?? ""}',
+                        style: TextStyle(
+                          fontFamily: DonationFonts.interDisplay,
+                          fontSize: 12.rfs,
+                          fontWeight: FontWeight.w500,
+                          color: DonationConstants.offBlack,
+                          height: 16 / 12,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        maxLines: 2,
                       ),
                     ),
                   ],

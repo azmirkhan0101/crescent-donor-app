@@ -132,6 +132,7 @@ class RoundUpController extends GetxController {
       '${ApiUrl.baseUrl}/client/roundup-stats?roundupId=$roundupId',
       withAuth: true,
     );
+    print("Round up: ${response.toString()}");
     isLoadingRoundupStats.value = false;
 
     response.fold(

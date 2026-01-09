@@ -7,7 +7,7 @@ class CausesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchAllCauses();
+    fetchAllCauses(category: "");
   }
 
   /// ------------------------------------
@@ -21,13 +21,14 @@ class CausesController extends GetxController {
   RxList<CauseData> causes = RxList<CauseData>([]);
 
   // Fetch all causes from API
-  Future<bool> fetchAllCauses() async {
+  //PASS EMPTY FOR ALL CAUSES
+  Future<bool> fetchAllCauses({required String category}) async {
     fetchingAllCausesErrorMessage.value = '';
     fetchingAllCauses.value = true;
 
     final result = await Get.find<NetworkHelper>().request(
       'GET',
-      ApiUrl.getAllCauses,
+      ApiUrl.getAllCauses(category: category),
       parser: (data) => CauseResponseModel.fromJson(data),
       withAuth: true,
     );

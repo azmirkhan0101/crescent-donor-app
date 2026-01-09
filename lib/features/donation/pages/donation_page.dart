@@ -31,7 +31,7 @@ class _DonationPageState extends State<DonationPage> {
 
   Future<void> _refreshData() async {
     await Future.wait([
-      donationController.fetchClientStats(),
+      donationController.fetchClientStats(roundupId: donationController.roundUpIds.first),
       getBalanceController.fetchUserPoints(),
       getBadgesProgressController.fetchBadgesProgress(),
     ]);

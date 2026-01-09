@@ -5,6 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/helper/tost_message/toast_message.dart';
+import '../models/roundup_org_model.dart';
+import 'dart:developer' as developer;
+
 class DonationController extends GetxController {
   final RxString selectedFilter = 'This Month'.obs;
   final RxString pointsEarned = '16000'.obs;
@@ -12,6 +16,63 @@ class DonationController extends GetxController {
   var clientStats = Rx<ClientStats?>(null);
   var isLoadingClientStats = false.obs;
   var errorMessageClientStats = ''.obs;
+
+  //ROUND UP CARD DROPDOWN
+  final RxString selectedTitle = ''.obs;
+  final organisations = <RoundupOrgModel>[].obs;
+  RxList<String> organisationNames = <String>[].obs;
+  RxList<String> roundUpIds = <String>[].obs;
+
+  final _isLoading = false.obs;
+  final _errorMessage = ''.obs;
+
+  //RxBool get isLoading => _isLoading;
+  RxString get errorMessage => _errorMessage;
+
+  Future<bool> fetchOrgs() async {
+    _isLoading.value = true;
+    _errorMessage.value = '';
+
+    final response = await Get.find<NetworkHelper>().request(
+      'GET',
+      "${ApiUrl.baseUrl}/secure-roundup/get-organizations",
+      withAuth: true,
+    );
+    _isLoading.value = false;
+
+    print("Roundup org ressssss: ${response}");
+
+    return response.fold(
+          (error) {
+        _errorMessage.value = error.message ?? 'Failed to fetch orgs';
+        ToastMsg.error(_errorMessage.value);
+        return false;
+      },
+          (data) {
+        List<dynamic> dataList = data['data'] ?? [];
+
+        if (dataList.isNotEmpty) {
+          organisations.value = dataList
+              .map((item) => RoundupOrgModel.fromJson(item))
+              .toList();
+          organisationNames.value = organisations.map((org) => org.orgName).toList();
+          roundUpIds.value = organisations.map((org) => org.roundupId).toList();
+          selectedTitle.value = organisationNames.first;
+          if( roundUpIds.value.isNotEmpty ){
+            fetchClientStats(roundupId: roundUpIds.first);
+          }
+        } else {
+          selectedTitle.value = "Select";
+          organisations.clear();
+          organisationNames.clear();
+          roundUpIds.clear();
+        }
+        return true;
+      },
+    );
+  }
+
+  //GET DONATION BY ROUNDUP ID
 
   // Filter options
   final List<String> filterOptions = [
@@ -43,7 +104,7 @@ class DonationController extends GetxController {
   // Update selected filter and fetch new data
   void updateFilter(String filter) {
     selectedFilter.value = filter;
-    fetchClientStats();
+    fetchClientStats(roundupId: roundUpIds.value.first);
   }
 
   List<DonationChartPoint> get donationChartPoints {
@@ -79,18 +140,22 @@ class DonationController extends GetxController {
   List<String> get donationChartLabels =>
       donationChartPoints.map((point) => point.label).toList();
 
-  Future<void> fetchClientStats() async {
+  Future<void> fetchClientStats({required String roundupId}) async {
     isLoadingClientStats.value = true;
     errorMessageClientStats.value = '';
 
     final timeFilter = _getFilterValue(selectedFilter.value);
-    final url = '${ApiUrl.clientStats}?timeFilter=$timeFilter';
+
+    final url = '${ApiUrl.clientStats}?timeFilter=$timeFilter&roundupId=$roundupId';
 
     final response = await Get.find<NetworkHelper>().request(
       'GET',
       url,
       withAuth: true,
     );
+
+    debugPrint("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZ: ${response}");
+    developer.log( "$response", name: "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
     isLoadingClientStats.value = false;
 
     response.fold(

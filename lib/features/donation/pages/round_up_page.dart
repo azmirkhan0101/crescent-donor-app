@@ -79,6 +79,7 @@ class RoundUpPage extends StatelessWidget {
                                     roundupStats?.todaysRoundupAmount ?? 0.0,
                                 daysLeft: roundupStats?.daysLeft ?? 0,
                                 controller: roundUpController,
+                                orgName: roundupStats?.organizationName ?? "",
                               ),
                             )
                           : Skeletonizer(

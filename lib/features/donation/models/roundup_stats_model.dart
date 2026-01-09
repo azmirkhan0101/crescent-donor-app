@@ -24,6 +24,7 @@ class RoundupStats {
   final double monthlyThreshold;
   final double lastTransactionAmount;
   final double roundupPercentage;
+  final String organizationName;
   int? daysLeft;
   final List<RecentTransactionGroup> recentTransactions;
 
@@ -35,6 +36,7 @@ class RoundupStats {
     required this.roundupPercentage,
     this.daysLeft,
     required this.recentTransactions,
+    required this.organizationName,
   });
 
   factory RoundupStats.fromJson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class RoundupStats {
       recentTransactions: (json['recentTransactions'] as List?)
           ?.map((e) => RecentTransactionGroup.fromJson(e))
           .toList() ?? [],
+      organizationName: json['organizationName'] ?? "",
     );
   }
 }

@@ -47,7 +47,14 @@ class ApiUrl {
   static const String notificationSettings = '$baseUrl/notification-settings';
 
   /// ======= causes =======
-  static const String getAllCauses = '$baseUrl/cause';
+  /// //TODO===========================================================================
+  static String getAllCauses({required String category}){
+    if( category.isEmpty ){
+      return '$baseUrl/cause';
+    }else{
+      return '$baseUrl/cause?category=$category';
+    }
+  }
   static String getAllCausesByOrgId(String orgId) =>
       '$baseUrl/cause/organization/$orgId';
   static const String getCauseCategories = '$baseUrl/cause/categories';
@@ -94,6 +101,7 @@ class ApiUrl {
       '$baseUrl/bank-connection/basiq/save-account';
 
   /// ======= Secure RoundUp =======
+  static const String getOrganisations = "$baseUrl/secure-roundup/get-organizations";
   static const String saveRoundupConsent =
       '$baseUrl/secure-roundup/consent/save';
   static const String secureRoundupDashboard =

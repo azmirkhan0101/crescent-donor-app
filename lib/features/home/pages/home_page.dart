@@ -20,13 +20,13 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+
+  final causesController = Get.put(CausesController());
 
   @override
   Widget build(BuildContext context) {
     final getProfileController = Get.find<GetProfileController>();
     final getOrgsController = Get.put(OrganizationController());
-    final causesController = Get.put(CausesController());
 
     // Initialize FCM token controller
     Get.put(FcmTokenController());
@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
       body: RefreshIndicator(
         onRefresh: () async {
           await getProfileController.fetchProfile();
-          await causesController.fetchAllCauses();
+          await causesController.fetchAllCauses(category: "");
           await getOrgsController.fetchAllOrganizations();
         },
         child: SingleChildScrollView(
@@ -286,39 +286,68 @@ class HomePage extends StatelessWidget {
         "label": "Women & Families",
         "color": const Color(0xFFF7C5CC),
       },
-      {
-        "icon": "🧠",
-        "label": "Mental Health",
-        "color": const Color(0xFFFBDAFB),
-      },
+      // {
+      //   "icon": "🧠",
+      //   "label": "Mental Health",
+      //   "color": const Color(0xFFFBDAFB),
+      // },
+    ];
+
+    List<String> categoryFilters = [
+      'water',
+      'education',
+      'food',
+      'youth',
+      'orphans',
+      'quran_education',
+      'health_medical',
+      'emergency_relief',
+      'shelter_housing',
+      'mosque_utilities',
+      'zakat',
+      'sadaqah',
+      'ramadan',
+      'qurban',
+      'fitrah',
+      'admin_operational',
+      'refugees',
+      'digital_dawah',
+      'women_families',
     ];
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         spacing: 8.rw,
-        children: categories.map((category) {
-          return Container(
-            padding: EdgeInsets.all(12.rw),
-            decoration: BoxDecoration(
-              color: category["color"] as Color,
-              borderRadius: BorderRadius.circular(24.rw),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  category["icon"] as String,
-                  style: AppTextStyles.f14W400(),
-                ),
-                4.rw.heightWidth,
-                Text(
-                  category["label"] as String,
-                  style: AppTextStyles.f14W400().copyWith(color: Colors.black),
-                ),
-              ],
+        children: categories.indexed.map((entry) {
+          int index = entry.$1;
+          Map category = entry.$2;
+          return GestureDetector(
+            onTap: (){
+              causesController.fetchAllCauses(category: categoryFilters[index]);
+            },
+            child: Container(
+              padding: EdgeInsets.all(12.rw),
+              decoration: BoxDecoration(
+                color: category["color"] as Color,
+                borderRadius: BorderRadius.circular(24.rw),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    category["icon"] as String,
+                    style: AppTextStyles.f14W400(),
+                  ),
+                  4.rw.heightWidth,
+                  Text(
+                    category["label"] as String,
+                    style: AppTextStyles.f14W400().copyWith(color: Colors.black),
+                  ),
+                ],
+              ),
             ),
           );
         }).toList(),

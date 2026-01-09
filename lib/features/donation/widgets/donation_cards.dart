@@ -4,7 +4,9 @@ import 'package:cresent_charge_user_app/features/donation/utils/donation_constan
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Calendar Day State Enum
 /// Defines the different states a calendar day can have
@@ -23,6 +25,9 @@ class RoundUpCard extends StatelessWidget {
   final String donationOrganization;
   final String daysUntilDonation;
   final VoidCallback? onTap;
+  final String selectedTitle;
+  final Function(String) onItemSelected;
+  final List<String> items;
 
   const RoundUpCard({
     super.key,
@@ -30,6 +35,9 @@ class RoundUpCard extends StatelessWidget {
     required this.donationOrganization,
     required this.daysUntilDonation,
     this.onTap,
+    required this.selectedTitle,
+    required this.onItemSelected,
+    required this.items,
   });
 
   @override
@@ -76,6 +84,49 @@ class RoundUpCard extends StatelessWidget {
                     color: DonationConstants.offBlack,
                   ),
                 ),
+                Spacer(),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: selectedTitle,
+                    icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                      fontSize: 14.sp,
+                    ),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        onItemSelected(newValue);
+                      }
+                    },
+                    items: items.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF2F2F2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.0,
+                              vertical: 8,
+                            ),
+                            child: SizedBox(
+                              width: 90.rw,
+                              child: Text(
+                                value,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(width: 15.rw),
               ],
             ),
             SizedBox(height: 24.rh),
