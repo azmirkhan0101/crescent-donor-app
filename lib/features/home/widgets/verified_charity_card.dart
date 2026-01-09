@@ -95,6 +95,8 @@ class VerifiedCharityCard extends StatelessWidget {
                     ),
                     4.rh.heightWidth,
                     Text(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       location,
                       style: AppTextStyles.f14W400().copyWith(
                         color: const Color(0xFF64748B),

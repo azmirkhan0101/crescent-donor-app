@@ -22,8 +22,9 @@ const Color _grayText = Color(0xFF6E6E6E);
 const Color _borderColor = Color(0xFFEDEDED);
 
 class ConfirmDonationPage extends StatelessWidget {
-  const ConfirmDonationPage({super.key, this.paymentMethodId});
+   ConfirmDonationPage({super.key, this.paymentMethodId});
   final String? paymentMethodId;
+  final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
 
   @override
   Widget build(BuildContext context) {
@@ -379,6 +380,7 @@ class ConfirmDonationPage extends StatelessWidget {
             // Admin Fees Checkbox
             Obx(
               () => Row(
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   GestureDetector(
                     onTap: () => donateNowCtrl.toggleAdminFeesContribution(),
@@ -402,12 +404,24 @@ class ConfirmDonationPage extends StatelessWidget {
                           : null,
                     ),
                   ),
-
                   8.rw.heightWidth,
-
                   Text(
                     'Contribute to admin fees.',
                     style: AppTextStyles.f14W400().copyWith(color: _offBlack),
+                  ),
+                  Spacer(),
+                  Tooltip(
+                    //key: tooltipkey,
+                    message: "Estimate only. Final amounts are calculated at donation time.",
+                    verticalOffset: 0,
+                    preferBelow: false,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(12)
+                    ),
+                    showDuration: Duration(milliseconds: 3500),
+                    triggerMode: TooltipTriggerMode.tap,
+                    child: Icon(Icons.info_outline, color: Colors.blue,)
                   ),
                 ],
               ),

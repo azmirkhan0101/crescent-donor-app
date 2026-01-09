@@ -40,7 +40,7 @@ class _VerifiedCharitiesPageState extends State<VerifiedCharitiesPage> {
     final size = MediaQuery.of(context).size;
     final smallPhone = size.shortestSide < 390;
     final isTablet = size.shortestSide >= 600;
-    final itemAspectRatio = isTablet ? 3 / 2 : (smallPhone ? 0.90 : 0.72);
+    final itemAspectRatio = isTablet ? 3 / 2 : (smallPhone ? 0.75 : 0.65);
 
     return Scaffold(
       appBar: CustomAppBar(title: 'Verified Charities'),
