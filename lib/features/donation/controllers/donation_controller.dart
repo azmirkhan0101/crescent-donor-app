@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 
 import '../../../core/helper/tost_message/toast_message.dart';
 import '../models/roundup_org_model.dart';
-import 'dart:developer' as developer;
 
 class DonationController extends GetxController {
   final RxString selectedFilter = 'This Month'.obs;
@@ -39,8 +38,6 @@ class DonationController extends GetxController {
       withAuth: true,
     );
     _isLoading.value = false;
-
-    print("Roundup org ressssss: ${response}");
 
     return response.fold(
           (error) {
@@ -154,8 +151,6 @@ class DonationController extends GetxController {
       withAuth: true,
     );
 
-    debugPrint("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZ: ${response}");
-    developer.log( "$response", name: "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
     isLoadingClientStats.value = false;
 
     response.fold(
