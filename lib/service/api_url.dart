@@ -20,7 +20,7 @@ class ApiUrl {
   static String url(String path) => '$baseUrl/$path';
 
   /// ======= Auth =======
-  static const String login = '$baseUrl/auth/signin';
+  static const String login = '$baseUrl/auth/signin/donor';
   static const String guestLogin = '$baseUrl/auth/guest-login';
   static const String guestLogOut = '$baseUrl/auth/guest-remove';
   static const String signup = '$baseUrl/auth/signup';
