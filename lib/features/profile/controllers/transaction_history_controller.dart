@@ -4,10 +4,34 @@ import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../donation/controllers/round_up_controller.dart';
+
 /// Transaction History Controller
 ///
 /// Manages the state and business logic for the Transaction History page
 class TransactionHistoryController extends GetxController {
+
+
+  final Set<String> _expandedActivities = {};
+
+  String getActivityKey(RecentActivity activity, int index) {
+    // Pick something unique
+    return '${activity.timestamp}_$index';
+  }
+
+  bool isActivityExpanded(String key) {
+    return _expandedActivities.contains(key);
+  }
+
+  // void toggleActivityExpansion(String key) {
+  //   if (_expandedActivities.contains(key)) {
+  //     _expandedActivities.remove(key);
+  //   } else {
+  //     _expandedActivities.add(key);
+  //   }
+  //   update(); // Important for GetBuilder
+  // }
+
   /// Activity expansion states - tracks which activities are expanded
   final RxMap<String, bool> _activityExpansionStates = <String, bool>{}.obs;
 

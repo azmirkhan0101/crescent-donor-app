@@ -607,234 +607,237 @@ class ActivityItem extends StatelessWidget {
       builder: (_) {
         final bool isExpanded = controller.isActivityExpanded(activityKey);
 
-        return GestureDetector(
-          onTap: () => controller.toggleActivityExpansion(activityKey),
-          child: Container(
-            margin: EdgeInsets.only(bottom: 8.rh),
-            padding: EdgeInsets.all(8.rw),
-            decoration: BoxDecoration(
-              color: isExpanded
-                  ? const Color(0xFFF9F7F9)
-                  : DonationConstants.cardWhite,
-              borderRadius: BorderRadius.circular(12.rw),
-            ),
-            child: Column(
-              children: [
-                // Main activity row
-                Row(
-                  children: [
-                    // Brand logo
-                    Container(
-                      width: 44.rw,
-                      height: 44.rh,
-                      // padding: EdgeInsets.all(11.rw),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(22.rw),
-                        border: Border.all(
-                          color: Colors.grey.withValues(alpha: 0.3),
-                          width: 0.5,
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => controller.toggleActivityExpansion(activityKey),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 8.rh),
+              padding: EdgeInsets.all(8.rw),
+              decoration: BoxDecoration(
+                color: isExpanded
+                    ? const Color(0xFFF9F7F9)
+                    : DonationConstants.cardWhite,
+                borderRadius: BorderRadius.circular(12.rw),
+              ),
+              child: Column(
+                children: [
+                  // Main activity row
+                  Row(
+                    children: [
+                      // Brand logo
+                      Container(
+                        width: 44.rw,
+                        height: 44.rh,
+                        // padding: EdgeInsets.all(11.rw),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(22.rw),
+                          border: Border.all(
+                            color: Colors.grey.withValues(alpha: 0.3),
+                            width: 0.5,
+                          ),
                         ),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(22.rw),
-                        child: activity.brandLogo.isNotEmpty
-                            ? Image.network(
-                                activity.brandLogo,
-                                width: 44.rw,
-                                height: 44.rh,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: Colors.grey.withValues(alpha: 0.3),
-                                    child: Center(
-                                      child: Text(
-                                        activity.brandName.isNotEmpty
-                                            ? activity.brandName[0]
-                                                  .toUpperCase()
-                                            : '',
-                                        style: TextStyle(
-                                          fontSize: 18.rfs,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(22.rw),
+                          child: activity.brandLogo.isNotEmpty
+                              ? Image.network(
+                                  activity.brandLogo,
+                                  width: 44.rw,
+                                  height: 44.rh,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey.withValues(alpha: 0.3),
+                                      child: Center(
+                                        child: Text(
+                                          activity.brandName.isNotEmpty
+                                              ? activity.brandName[0]
+                                                    .toUpperCase()
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: 18.rfs,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              )
-                            : Container(
-                                color: Colors.grey.withValues(alpha: 0.3),
-                                child: Center(
-                                  child: Text(
-                                    activity.brandName.isNotEmpty
-                                        ? activity.brandName[0].toUpperCase()
-                                        : '',
-                                    style: TextStyle(
-                                      fontSize: 18.rfs,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                    );
+                                  },
+                                )
+                              : Container(
+                                  color: Colors.grey.withValues(alpha: 0.3),
+                                  child: Center(
+                                    child: Text(
+                                      activity.brandName.isNotEmpty
+                                          ? activity.brandName[0].toUpperCase()
+                                          : '',
+                                      style: TextStyle(
+                                        fontSize: 18.rfs,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                        ),
                       ),
-                    ),
 
-                    SizedBox(width: 8.rw),
+                      SizedBox(width: 8.rw),
 
-                    // Activity details
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Brand name and purchase amount
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                activity.brandName,
-                                style: TextStyle(
-                                  fontFamily: DonationFonts.interDisplay,
-                                  fontSize: 14.rfs,
-                                  fontWeight: FontWeight.w500,
-                                  color: DonationConstants.offBlack,
-                                  height: 18 / 14,
+                      // Activity details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Brand name and purchase amount
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  activity.brandName,
+                                  style: TextStyle(
+                                    fontFamily: DonationFonts.interDisplay,
+                                    fontSize: 14.rfs,
+                                    fontWeight: FontWeight.w500,
+                                    color: DonationConstants.offBlack,
+                                    height: 18 / 14,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                '\$${activity.purchaseAmount.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  fontFamily: DonationFonts.interDisplay,
-                                  fontSize: 12.rfs,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey,
-                                  height: 16 / 12,
+                                Text(
+                                  '\$${activity.purchaseAmount.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    fontFamily: DonationFonts.interDisplay,
+                                    fontSize: 12.rfs,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey,
+                                    height: 16 / 12,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
 
-                          SizedBox(height: 8.rh),
+                            SizedBox(height: 8.rh),
 
-                          // Time and round up amount
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                activity.timeAgo,
-                                style: TextStyle(
-                                  fontFamily: DonationFonts.interDisplay,
-                                  fontSize: 12.rfs,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey,
-                                  height: 16 / 12,
+                            // Time and round up amount
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  activity.timeAgo,
+                                  style: TextStyle(
+                                    fontFamily: DonationFonts.interDisplay,
+                                    fontSize: 12.rfs,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey,
+                                    height: 16 / 12,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                '+\$${activity.roundUpAmount.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  fontFamily: DonationFonts.interDisplay,
-                                  fontSize: 12.rfs,
-                                  fontWeight: FontWeight.w400,
-                                  color: const Color(0xFF1AC461),
-                                  height: 16 / 12,
+                                Text(
+                                  '+\$${activity.roundUpAmount.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    fontFamily: DonationFonts.interDisplay,
+                                    fontSize: 12.rfs,
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xFF1AC461),
+                                    height: 16 / 12,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
 
-                    SizedBox(width: 8.rw),
+                      SizedBox(width: 8.rw),
 
-                    // Chevron icon
-                    Assets.common.arrowDown.svg(
-                      width: 16.rw,
-                      height: 16.rh,
-                      colorFilter: ColorFilter.mode(
-                        Colors.grey.withValues(alpha: 0.5),
-                        BlendMode.srcIn,
+                      // Chevron icon
+                      Assets.common.arrowDown.svg(
+                        width: 16.rw,
+                        height: 16.rh,
+                        colorFilter: ColorFilter.mode(
+                          Colors.grey.withValues(alpha: 0.5),
+                          BlendMode.srcIn,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-
-                // Additional details for expanded activities
-                if (isExpanded) ...[
-                  SizedBox(height: 8.rh),
-
-                  // Divider
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: const Color(0xFFEDEDED),
+                    ],
                   ),
 
-                  SizedBox(height: 8.rh),
+                  // Additional details for expanded activities
+                  if (isExpanded) ...[
+                    SizedBox(height: 8.rh),
 
-                  // Donated to information
-                  if (activity.donatedTo != null) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Donated to:',
-                          style: TextStyle(
-                            fontFamily: DonationFonts.interDisplay,
-                            fontSize: 12.rfs,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey,
-                            height: 16 / 12,
-                          ),
-                        ),
-                        Text(
-                          activity.donatedTo!,
-                          style: TextStyle(
-                            fontFamily: DonationFonts.interDisplay,
-                            fontSize: 12.rfs,
-                            fontWeight: FontWeight.w400,
-                            color: DonationConstants.offBlack,
-                            height: 16 / 12,
-                          ),
-                        ),
-                      ],
+                    // Divider
+                    Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: const Color(0xFFEDEDED),
                     ),
 
                     SizedBox(height: 8.rh),
-                  ],
 
-                  // Timestamp information
-                  if (activity.timestamp != null) ...[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Timestamp:',
-                          style: TextStyle(
-                            fontFamily: DonationFonts.interDisplay,
-                            fontSize: 12.rfs,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey,
-                            height: 16 / 12,
+                    // Donated to information
+                    if (activity.donatedTo != null) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Donated to:',
+                            style: TextStyle(
+                              fontFamily: DonationFonts.interDisplay,
+                              fontSize: 12.rfs,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                              height: 16 / 12,
+                            ),
                           ),
-                        ),
-                        Text(
-                          activity.timestamp!,
-                          style: TextStyle(
-                            fontFamily: DonationFonts.interDisplay,
-                            fontSize: 12.rfs,
-                            fontWeight: FontWeight.w400,
-                            color: DonationConstants.offBlack,
-                            height: 16 / 12,
+                          Text(
+                            activity.donatedTo!,
+                            style: TextStyle(
+                              fontFamily: DonationFonts.interDisplay,
+                              fontSize: 12.rfs,
+                              fontWeight: FontWeight.w400,
+                              color: DonationConstants.offBlack,
+                              height: 16 / 12,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+
+                      SizedBox(height: 8.rh),
+                    ],
+
+                    // Timestamp information
+                    if (activity.timestamp != null) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Timestamp:',
+                            style: TextStyle(
+                              fontFamily: DonationFonts.interDisplay,
+                              fontSize: 12.rfs,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                              height: 16 / 12,
+                            ),
+                          ),
+                          Text(
+                            activity.timestamp!,
+                            style: TextStyle(
+                              fontFamily: DonationFonts.interDisplay,
+                              fontSize: 12.rfs,
+                              fontWeight: FontWeight.w400,
+                              color: DonationConstants.offBlack,
+                              height: 16 / 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ],
-              ],
+              ),
             ),
           ),
         );

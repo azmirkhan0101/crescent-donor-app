@@ -39,11 +39,11 @@ class BankConnectionPopupMenu extends StatelessWidget {
       itemBuilder: (BuildContext context) => [
         const PopupMenuItem<String>(
           value: 'plaid',
-          child: Text('Connect With Plaid'),
+          child: Text('Other Bank Accounts'),
         ),
         const PopupMenuItem<String>(
           value: 'basiq',
-          child: Text('Connect With Basiq'),
+          child: Text('Connect to Australian bank account'),
         ),
       ],
       enabled: !isLoading,

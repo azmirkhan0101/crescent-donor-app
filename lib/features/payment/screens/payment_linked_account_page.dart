@@ -253,31 +253,31 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
               },
               child: _buildAccountItem(
                 icon: Assets.common.add.svg(),
-                title: 'Connect to Australian bank',
+                title: 'Add bank account',
                 subtitle: null,
                 showChevron: true,
               ),
             ),
           ),
-          SizedBox( height: 15.h,),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.rw),
-            child: GestureDetector(
-              onTap: () {
-                context.pushNamed(RoutePath.addCard);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const AddCardPage()),
-                // );
-              },
-              child: _buildAccountItem(
-                icon: Assets.common.add.svg(),
-                title: 'Other Bank Accounts',
-                subtitle: null,
-                showChevron: true,
-              ),
-            ),
-          ),
+          // SizedBox( height: 15.h,),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 16.rw),
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       context.pushNamed(RoutePath.addCard);
+          //       // Navigator.push(
+          //       //   context,
+          //       //   MaterialPageRoute(builder: (context) => const AddCardPage()),
+          //       // );
+          //     },
+          //     child: _buildAccountItem(
+          //       icon: Assets.common.add.svg(),
+          //       title: 'Other Bank Accounts',
+          //       subtitle: null,
+          //       showChevron: true,
+          //     ),
+          //   ),
+          // ),
 
           SizedBox(height: 16.rh),
         ],
