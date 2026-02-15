@@ -61,7 +61,6 @@ class OverviewSection extends StatelessWidget {
                           donationController.selectedTitle.value = value;
                           String id = donationController.roundUpIds.value[donationController.organisationNames.value.indexOf(value)];
                           donationController.fetchClientStats(roundupId: id);
-                          print(value);
                         },
                         items: donationController.organisationNames.value,
                       );

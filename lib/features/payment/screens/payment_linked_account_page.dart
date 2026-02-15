@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/features/payment/controllers/payment_method_controller.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
@@ -67,6 +68,7 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
                         ),
                         child: Text('Add Account'),
                       ).paddingXY(X: 56.rw),
+                      SizedBox(height: 22.h,)
                     ],
                   ),
                 ),
@@ -251,7 +253,26 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
               },
               child: _buildAccountItem(
                 icon: Assets.common.add.svg(),
-                title: 'Add another account',
+                title: 'Connect to Australian bank',
+                subtitle: null,
+                showChevron: true,
+              ),
+            ),
+          ),
+          SizedBox( height: 15.h,),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.rw),
+            child: GestureDetector(
+              onTap: () {
+                context.pushNamed(RoutePath.addCard);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const AddCardPage()),
+                // );
+              },
+              child: _buildAccountItem(
+                icon: Assets.common.add.svg(),
+                title: 'Other Bank Accounts',
                 subtitle: null,
                 showChevron: true,
               ),

@@ -363,10 +363,11 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            donateNowController.selectedDonationType.value !=
+            donateNowController.selectedDonationType.value ==
                     DonationType.roundUp
-                ? 'Amount'
-                : 'Threshold amount',
+                ? 'Threshold for Round Ups'
+                : donateNowController.selectedDonationType.value ==
+                DonationType.oneTime ? 'Amount for One Time' : 'Amount for Recurring',
             style: TextStyle(
               fontFamily: 'Inter Display',
               fontSize: 16.rfs,

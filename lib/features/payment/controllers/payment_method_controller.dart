@@ -225,6 +225,7 @@ class PaymentMethodController extends GetxController {
       isAddingCard.value = false;
       return success;
     } catch (e) {
+      print('Setupppppppppppppppppppppppppppppppp card exception: $e');
       isAddingCard.value = false;
 
       // Better error handling for common Stripe errors

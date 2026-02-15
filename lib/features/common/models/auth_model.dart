@@ -22,4 +22,14 @@ class AuthModel {
       status: json['status'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'email': email,
+      'role': role,
+      'isActive': isActive,
+      'status': status,
+    };
+  }
 }

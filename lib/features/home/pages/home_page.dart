@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
@@ -409,6 +411,20 @@ class HomePage extends StatelessWidget {
     BuildContext context,
     CausesController getAllCausesController,
   ) {
+
+    final List<Color> pastelColors = [
+      Color(0xFFE3D7FF), // Light Violet
+      Color(0xFFC7ECFF), // Soft Lavender
+      Color(0xFFFFD6E7), // Pastel Pink
+      Color(0xFFFFE3D6), // Blush Peach
+      Color(0xFFD6F5E8), // Light Mint Green
+      Color(0xFFE4F3D9), // Soft Sage
+      Color(0xFFD9F2FF), // Pale Sky Blue
+      Color(0xFFD6F0F5), // Powder Teal
+      Color(0xFFFFF4CC), // Light Butter Yellow
+      Color(0xFFFFD9CC), // Soft Coral
+    ];
+
     return Column(
       children: [
         Row(
@@ -437,16 +453,31 @@ class HomePage extends StatelessWidget {
         16.rh.heightWidth,
         Column(
           children: getAllCausesController.causes
+          .asMap()
+          .entries
               .map(
-                (cause) => DonationCauseCard(
-                  causeBanner: cause.organization.coverImage,
-                  orgLogo: cause.organization.logoImage,
-                  description: cause.description,
-                  category: cause.category,
-                  amount: cause.totalDonationAmount,
-                  totalDonors: cause.totalDonors,
-                  recentDonors: cause.recentDonors,
-                ),
+                (entry){
+                  final index = entry.key;
+                  final cause = entry.value;
+                  return GestureDetector(
+                    onTap: (){
+                      context.pushNamed(
+                        RoutePath.organizationDetails,
+                        extra: {"organizationId": cause.organization.id},
+                      );
+                    },
+                    child: DonationCauseCard(
+                      backgroundColor: pastelColors[index % pastelColors.length],
+                      causeBanner: cause.organization.coverImage,
+                      orgLogo: cause.organization.logoImage,
+                      description: cause.description,
+                      category: cause.category,
+                      amount: cause.totalDonationAmount,
+                      totalDonors: cause.totalDonors,
+                      recentDonors: cause.recentDonors,
+                    ),
+                  );
+                },
               )
               .toList(),
         ),

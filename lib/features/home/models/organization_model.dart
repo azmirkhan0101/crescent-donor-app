@@ -189,4 +189,34 @@ class OrganizationModel {
       country: json['country'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'name': name,
+      'serviceType': serviceType,
+      'coverImage': coverImage,
+      'registeredCharityName': registeredCharityName,
+      'aboutUs': aboutUs,
+      'dateOfEstablishment': dateOfEstablishment,
+      'isProfileVisible': isProfileVisible,
+      'logoImage': logoImage,
+      'address': address,
+      'state': state,
+      'postalCode': postalCode,
+      'website': website,
+      'phoneNumber': phoneNumber,
+      'auth': auth?.toJson(),
+      'tfnOrAbnNumber': tfnOrAbnNumber,
+      'zakatLicenseHolderNumber': zakatLicenseHolderNumber,
+      'boardMemberName': boardMemberName,
+      'boardMemberEmail': boardMemberEmail,
+      'boardMemberPhoneNumber': boardMemberPhoneNumber,
+      'drivingLicenseURL': drivingLicenseURL,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'stripeConnectAccountId': stripeConnectAccountId,
+      'country': country,
+    };
+  }
 }

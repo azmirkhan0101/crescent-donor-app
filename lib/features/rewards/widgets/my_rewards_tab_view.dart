@@ -6,6 +6,7 @@ import 'package:cresent_charge_user_app/features/rewards/utils/show_rewards_bott
 import 'package:cresent_charge_user_app/features/rewards/widgets/reward_details_bottom_sheet.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -150,7 +151,7 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                         ),
                       );
                     }),
-
+                    SizedBox(width: 8.w,),
                     // Favorite chip
                     GestureDetector(
                       onTap: () {
@@ -160,7 +161,7 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                         height: 40,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
-                          vertical: 12,
+                          //vertical: 12,
                         ),
                         clipBehavior: Clip.antiAlias,
                         decoration: ShapeDecoration(
@@ -177,15 +178,15 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           spacing: 4,
                           children: [
-                            Icon(
-                              Icons.favorite,
-                              size: 16,
-                              color: controller.isFavoriteFilter.value
-                                  ? Colors.white
-                                  : Colors.black,
-                            ),
+                            // Icon(
+                            //   Icons.favorite,
+                            //   size: 16,
+                            //   color: controller.isFavoriteFilter.value
+                            //       ? Colors.white
+                            //       : Colors.black,
+                            // ),
                             Text(
-                              'Favorites',
+                              'Saved',
                               style: TextStyle(
                                 color: controller.isFavoriteFilter.value
                                     ? Colors.white

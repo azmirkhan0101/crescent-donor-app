@@ -11,6 +11,20 @@ class CharitiesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Color> pastelColors = [
+      Color(0xFFE3D7FF), // Light Violet
+      Color(0xFFC7ECFF), // Soft Lavender
+      Color(0xFFFFD6E7), // Pastel Pink
+      Color(0xFFFFE3D6), // Blush Peach
+      Color(0xFFD6F5E8), // Light Mint Green
+      Color(0xFFE4F3D9), // Soft Sage
+      Color(0xFFD9F2FF), // Pale Sky Blue
+      Color(0xFFD6F0F5), // Powder Teal
+      Color(0xFFFFF4CC), // Light Butter Yellow
+      Color(0xFFFFD9CC), // Soft Coral
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(title: "Explore Causes"),
@@ -22,6 +36,7 @@ class CharitiesPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final cause = controller.causes[index];
                 return DonationCauseCard(
+                  backgroundColor: pastelColors[index % pastelColors.length],
                   causeBanner: cause.organization.coverImage,
                   orgLogo: cause.organization.logoImage,
                   description: cause.description,

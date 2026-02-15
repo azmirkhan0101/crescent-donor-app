@@ -11,6 +11,9 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../core/go-router/paths/route_path.dart';
 
 // Define colors from Figma design
 const Color _offBlack = Color(0xFF000C0B);
@@ -55,7 +58,7 @@ class YourRewardsPage extends StatelessWidget {
                   child: Column(
                     children: [
                       // Badge Section
-                      _buildBadgeProgressSection().paddingXY(X: 16.rw),
+                      _buildBadgeProgressSection(context).paddingXY(X: 16.rw),
 
                       // Tabs
                       _buildTabs(controller),
@@ -75,7 +78,7 @@ class YourRewardsPage extends StatelessWidget {
     );
   }
 
-  Container _buildBadgeProgressSection() {
+  Container _buildBadgeProgressSection(BuildContext context) {
     final controller = Get.find<GetPointBalanceController>();
     int currentTierIndex = controller.availableTiersOld.indexOf(
       controller.balance.value?.currentTier,
@@ -207,24 +210,29 @@ class YourRewardsPage extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 4.rw,
-            children: [
-              Assets.bottomNav.donation.svg(
-                colorFilter: ColorFilter.mode(
-                  Color(0xFF40520A),
-                  BlendMode.srcIn,
+          GestureDetector(
+            onTap: (){
+              context.pushNamed(RoutePath.verifiedCharities);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 4.rw,
+              children: [
+                Assets.bottomNav.donation.svg(
+                  colorFilter: ColorFilter.mode(
+                    Color(0xFF40520A),
+                    BlendMode.srcIn,
+                  ),
                 ),
-              ),
-              "Donate Now".text().fontSize(16.rfs).color(Color(0xFF40520A)),
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: Color(0xFF40520A),
-                size: 16.rfs,
-              ),
-            ],
-          ).paddingXY(Y: 8.rh),
+                "Donate Now".text().fontSize(16.rfs).color(Color(0xFF40520A)),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Color(0xFF40520A),
+                  size: 16.rfs,
+                ),
+              ],
+            ).paddingXY(Y: 8.rh),
+          ),
         ],
       ),
     );

@@ -412,7 +412,7 @@ class ConfirmDonationPage extends StatelessWidget {
                   Spacer(),
                   Tooltip(
                     //key: tooltipkey,
-                    message: "Estimate only. Final amounts are calculated at donation time.",
+                    message: "Fees are paid upfront. Track your round-up total anytime in your dashboard.",
                     verticalOffset: 0,
                     preferBelow: false,
                     decoration: BoxDecoration(

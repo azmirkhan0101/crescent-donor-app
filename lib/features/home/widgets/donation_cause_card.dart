@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 class DonationCauseCard extends StatelessWidget {
   const DonationCauseCard({
     super.key,
+    required this.backgroundColor,
     required this.causeBanner,
     required this.orgLogo,
     required this.description,
@@ -17,6 +18,7 @@ class DonationCauseCard extends StatelessWidget {
     required this.recentDonors,
   });
 
+  final Color backgroundColor;
   final String causeBanner;
   final String orgLogo;
   final String description;
@@ -145,7 +147,7 @@ class DonationCauseCard extends StatelessWidget {
           description.text(AppTextStyles.f16W500()),
           8.rh.heightWidth,
           OrgDetailTotalDonationsCard(
-            color: const Color(0xFFC7ECFF),
+            color: backgroundColor,
             totalDonatedAmount: amount,
             totalDonors: totalDonors,
             recentDonorsImageUrl: [...recentDonors.map((donor) => donor.image)],
