@@ -62,7 +62,9 @@ class PlaidController extends GetxController {
     try {
       _configuration = null;
       update();
+      print("Opening linkkkkkkkkkkkkkkkkkkkkkkkkkkk");
       await PlaidLink.open();
+      print("Link openeddddddddddddddddddddddddddddd");
     } catch (e) {
       debugPrint("Error opening Link: $e");
     }
@@ -70,7 +72,9 @@ class PlaidController extends GetxController {
 
   /// Create Plaid Link Token Configuration and open link
   Future<void> createLinkTokenConfiguration() async {
+    print("Started plaid loading........................");
     final bool isSuccess = await createPlaidTokenCtrl.generateLinkToken();
+    print("Link token generateddddddddddddddddddddddddddd");
     if (!isSuccess) {
       debugPrint("Failed to generate link token");
       return;
@@ -81,8 +85,9 @@ class PlaidController extends GetxController {
     );
 
     isLoadingConfiguration.value = true;
-
+    print("Loading startedddddddddddddddddddddddddddd");
     await PlaidLink.create(configuration: configuration);
+    print("Loading finishhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
 
     isLoadingConfiguration.value = false;
     _configuration = configuration;
@@ -93,6 +98,7 @@ class PlaidController extends GetxController {
 
   void _onLoad(_) {
     debugPrint("LinkTokenConfiguration Loaded");
+    print("Plaid is totally loadeddddddddddddddddddddddddddddddddddddddddddddd");
   }
 
   void _onEvent(LinkEvent event) {

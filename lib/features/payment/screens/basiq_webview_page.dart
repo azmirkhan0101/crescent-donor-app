@@ -108,7 +108,14 @@ class _BasiqWebViewPageState extends State<BasiqWebViewPage> {
       body: Stack(
         children: [
           WebViewWidget(controller: _controller),
-          if (_isLoading) const Center(child: CircularProgressIndicator()),
+          if (_isLoading) Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Center(child: CircularProgressIndicator()),
+              Text("Please wait a while...", style: TextStyle(color: Colors.white),),
+              Text("Please wait a while...", style: TextStyle(color: Colors.black),),
+            ],
+          ),
         ],
       ),
     );

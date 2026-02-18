@@ -51,7 +51,13 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
         child: Obx(() {
           if (connectedBankAccountsController.isLoading.value ||
               connectedBankAccountsController.isBasiqConnectionLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Center(child: CircularProgressIndicator()),
+                Text("Please wait a while...")
+              ],
+            );
           }
           return RefreshIndicator(
             onRefresh:
@@ -109,7 +115,7 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Illustration
+            //Illustration
             Container(
               width: 200.rw,
               height: 200.rh,
@@ -185,7 +191,7 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
                           height: 20.rh,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: Colors.red,
                           ),
                         )
                       else
