@@ -39,8 +39,8 @@ class PlaidController extends GetxController {
     super.onInit();
     _streamEvent = PlaidLink.onEvent.listen(_onEvent);
     _streamExit = PlaidLink.onExit.listen(_onExit);
-    _streamSuccess = PlaidLink.onSuccess.listen(_onSuccess);
-    _streamOnLoad = PlaidLink.onLoad.listen(_onLoad);
+    _streamSuccess = PlaidLink.onSuccess.listen( _onSuccess );
+    _streamOnLoad = PlaidLink.onLoad.listen( _onLoad );
   }
 
   @override
@@ -62,9 +62,7 @@ class PlaidController extends GetxController {
     try {
       _configuration = null;
       update();
-      print("Opening linkkkkkkkkkkkkkkkkkkkkkkkkkkk");
       await PlaidLink.open();
-      print("Link openeddddddddddddddddddddddddddddd");
     } catch (e) {
       debugPrint("Error opening Link: $e");
     }
@@ -72,9 +70,7 @@ class PlaidController extends GetxController {
 
   /// Create Plaid Link Token Configuration and open link
   Future<void> createLinkTokenConfiguration() async {
-    print("Started plaid loading........................");
     final bool isSuccess = await createPlaidTokenCtrl.generateLinkToken();
-    print("Link token generateddddddddddddddddddddddddddd");
     if (!isSuccess) {
       debugPrint("Failed to generate link token");
       return;
@@ -85,9 +81,7 @@ class PlaidController extends GetxController {
     );
 
     isLoadingConfiguration.value = true;
-    print("Loading startedddddddddddddddddddddddddddd");
     await PlaidLink.create(configuration: configuration);
-    print("Loading finishhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
 
     isLoadingConfiguration.value = false;
     _configuration = configuration;
@@ -98,7 +92,6 @@ class PlaidController extends GetxController {
 
   void _onLoad(_) {
     debugPrint("LinkTokenConfiguration Loaded");
-    print("Plaid is totally loadeddddddddddddddddddddddddddddddddddddddddddddd");
   }
 
   void _onEvent(LinkEvent event) {
@@ -106,11 +99,11 @@ class PlaidController extends GetxController {
     final metadata = event.metadata.description();
     debugPrint("onEvent: $name, metadata: $metadata");
 
-    // Call custom callback if provided
     onEventCallback?.call(event);
   }
 
   void _onSuccess(LinkSuccess event) async {
+
     final token = event.publicToken;
     final metadata = event.metadata.description();
     debugPrint("onSuccess: $token, metadata: $metadata");
@@ -121,7 +114,6 @@ class PlaidController extends GetxController {
 
     // Call custom callback if provided
     onSuccessCallback?.call(event);
-
     update();
   }
 

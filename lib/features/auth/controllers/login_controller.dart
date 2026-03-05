@@ -82,10 +82,6 @@ class LoginController extends GetxController {
 
   /// Load remembered credentials if available
   Future<void> _loadRememberedCredentials() async {
-    // Skip loading saved credentials in debug mode to use debug values
-    if (kDebugMode) {
-      return;
-    }
 
     try {
       final savedEmail = await AppStorageService.readSecure('remembered_email');
@@ -95,7 +91,7 @@ class LoginController extends GetxController {
       final isRemembered =
           AppStorageService.readPreferenceBool('remember_password') ?? false;
 
-      if (isRemembered && savedEmail != null) {
+      if ( isRemembered && savedEmail != null ) {
         emailController.text = savedEmail;
         if (savedPassword != null) {
           passwordController.text = savedPassword;
@@ -121,7 +117,7 @@ class LoginController extends GetxController {
         );
         await AppStorageService.writePreferenceBool('remember_password', true);
       } else {
-        // Clear saved credentials if remember password is disabled
+        //Clear saved credentials if remember password is disabled
         await AppStorageService.deleteSecure('remembered_email');
         await AppStorageService.deleteSecure('remembered_password');
         await AppStorageService.writePreferenceBool('remember_password', false);
@@ -196,17 +192,13 @@ class LoginController extends GetxController {
               'user_${emailController.text.split('@')[0]}',
             );
 
-            // Save credentials if remember password is enabled
-            await _saveCredentialsIfRemembered();
-
             // Clear guest mode since user is now authenticated
             await AuthGuard.setGuestMode(false);
 
             // Save last login time
             await AppStorageService.saveLastLogin(DateTime.now());
-
-            debugPrint('✅ Login successful for: ${emailController.text}');
-
+            // Save credentials if remember password is enabled
+            await _saveCredentialsIfRemembered();
             // Fetch profile after successful login
             final profileCtrl = Get.isRegistered<GetProfileController>()
                 ? Get.find<GetProfileController>()

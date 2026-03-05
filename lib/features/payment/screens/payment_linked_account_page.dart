@@ -66,7 +66,7 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
                           backgroundColor: Colors.black,
                           foregroundColor: Colors.white,
                         ),
-                        child: Text('Add Account'),
+                        child: Text('Add Payment Method'),
                       ).paddingXY(X: 56.rw),
                       SizedBox(height: 22.h,)
                     ],

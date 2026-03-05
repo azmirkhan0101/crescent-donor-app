@@ -111,15 +111,18 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 4.rh),
-                        Text(
-                          profile?.auth.email ?? 'N/A',
-                          style: TextStyle(
-                            fontFamily: DonationFonts.interDisplay,
-                            fontSize: 12.rfs,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey,
-                          ),
-                        ),
+                        Obx((){
+                          return Text(
+                            !Get.find<GetProfileController>().isGuestUser.value ?
+                            profile?.auth.email ?? 'N/A' : "",
+                            style: TextStyle(
+                              fontFamily: DonationFonts.interDisplay,
+                              fontSize: 12.rfs,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                            ),
+                          );
+                        })
                       ],
                     ),
                   ),
@@ -355,12 +358,34 @@ class ProfilePage extends StatelessWidget {
           // Call guest logout API
           bool isSuccess = await logOutController.logOut(profileId);
           if (isSuccess) {
+            // 1. Grab the current values before the wipe
+            final email = await AppStorageService.readSecure('remembered_email') ?? "";
+            final pass = await AppStorageService.readSecure('remembered_password') ?? "";
+            final isRemembered = AppStorageService.readPreferenceBool('remember_password') ?? false;
+            // 2. Wipe the storage
             await AppStorageService.clearAll();
+
+            // 3. Restore the credentials if the user wanted them remembered
+            if( isRemembered ){
+              await AppStorageService.writeSecure('remembered_email', email);
+              await AppStorageService.writeSecure('remembered_password', pass);
+              await AppStorageService.writePreferenceBool('remember_password', true);
+            }
             context.goNamed(RoutePath.login);
           }
         } else {
-          // Clear auth token for regular users
+          final email = await AppStorageService.readSecure('remembered_email') ?? "";
+          final pass = await AppStorageService.readSecure('remembered_password') ?? "";
+          final isRemembered = AppStorageService.readPreferenceBool('remember_password') ?? false;
+          // 2. Wipe the storage
           await AppStorageService.clearAll();
+
+          // 3. Restore the credentials if the user wanted them remembered
+          if( isRemembered ){
+            await AppStorageService.writeSecure('remembered_email', email);
+            await AppStorageService.writeSecure('remembered_password', pass);
+            await AppStorageService.writePreferenceBool('remember_password', true);
+          }
           context.goNamed(RoutePath.login);
         }
       });

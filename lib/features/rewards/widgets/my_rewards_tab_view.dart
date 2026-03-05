@@ -158,10 +158,10 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                         controller.toggleFavoriteFilter();
                       },
                       child: Container(
-                        height: 40,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          //vertical: 12,
+                        height: 40.rh,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.rw,
+                          vertical: 12.rh,
                         ),
                         clipBehavior: Clip.antiAlias,
                         decoration: ShapeDecoration(
@@ -172,34 +172,18 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
                             borderRadius: BorderRadius.circular(24),
                           ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          spacing: 4,
-                          children: [
-                            // Icon(
-                            //   Icons.favorite,
-                            //   size: 16,
-                            //   color: controller.isFavoriteFilter.value
-                            //       ? Colors.white
-                            //       : Colors.black,
-                            // ),
-                            Text(
-                              'Saved',
-                              style: TextStyle(
-                                color: controller.isFavoriteFilter.value
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontSize: 14,
-                                fontFamily: 'Inter Display',
-                                fontWeight: controller.isFavoriteFilter.value
-                                    ? FontWeight.w600
-                                    : FontWeight.w400,
-                                height: 1.29,
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          'Saved',
+                          style: TextStyle(
+                            color: controller.isFavoriteFilter.value
+                                ? Colors.white
+                                : Colors.black,
+                            fontSize: 14.rfs,
+                            fontFamily: 'Inter Display',
+                            fontWeight: controller.isFavoriteFilter.value
+                                ? FontWeight.w600
+                                : FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),

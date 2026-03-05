@@ -5,6 +5,7 @@ import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
+import 'package:cresent_charge_user_app/core/theme/app_colors.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/cause_categories_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
@@ -237,6 +238,7 @@ class HomePage extends StatelessWidget {
   /// Build the cause categories chips
   Widget _buildCauseCategories() {
     final categories = [
+      {"icon": "🌍", "label": "View All", "color": const Color(0xFFC08FFF)},
       {"icon": "💧", "label": "Water", "color": const Color(0xFFCCEEFF)},
       {"icon": "📚", "label": "Education", "color": const Color(0xFFDAFFDB)},
       {"icon": "🍽️", "label": "Food", "color": const Color(0xFFFFE8CB)},
@@ -295,7 +297,9 @@ class HomePage extends StatelessWidget {
       // },
     ];
 
+    //FIRST FILTER EMPTY FOR VIEW ALL
     List<String> categoryFilters = [
+      '',
       'water',
       'education',
       'food',
@@ -317,44 +321,64 @@ class HomePage extends StatelessWidget {
       'women_families',
     ];
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        spacing: 8.rw,
-        children: categories.indexed.map((entry) {
-          int index = entry.$1;
-          Map category = entry.$2;
-          return GestureDetector(
-            onTap: (){
-              causesController.fetchAllCauses(category: categoryFilters[index]);
-            },
-            child: Container(
-              padding: EdgeInsets.all(12.rw),
-              decoration: BoxDecoration(
-                color: category["color"] as Color,
-                borderRadius: BorderRadius.circular(24.rw),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    category["icon"] as String,
-                    style: AppTextStyles.f14W400(),
+    return Obx(() {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          // Note: 'spacing' requires Flutter 3.24+.
+          // If on older versions, use Padding on the children instead.
+          spacing: 8.rw,
+          children: categories.indexed.map((entry) {
+            int index = entry.$1;
+            Map category = entry.$2;
+
+            // Check if this specific item is selected
+            bool isSelected = causesController.selectedIndex.value == index;
+
+            return GestureDetector(
+              onTap: () {
+                // Update the observable value to trigger UI refresh
+                causesController.selectedIndex.value = index;
+                causesController.fetchAllCauses(category: categoryFilters[index]);
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: EdgeInsets.all(2.rw), // The "gap"
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(26.rw),
+                  // Border appears only when isSelected is true
+                  border: Border.all(
+                    color: isSelected ? AppColors.primary : Colors.transparent,
+                    width: 1.5,
                   ),
-                  4.rw.heightWidth,
-                  Text(
-                    category["label"] as String,
-                    style: AppTextStyles.f14W400().copyWith(color: Colors.black),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(12.rw),
+                  decoration: BoxDecoration(
+                    color: category["color"] as Color,
+                    borderRadius: BorderRadius.circular(24.rw),
                   ),
-                ],
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        category["icon"] as String,
+                        style: AppTextStyles.f14W400(),
+                      ),
+                      4.rw.heightWidth,
+                      Text(
+                        category["label"] as String,
+                        style: AppTextStyles.f14W400().copyWith(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
+            );
+          }).toList(),
+        ),
+      );
+    });
   }
 
   /// Build the verified charities section
@@ -451,36 +475,47 @@ class HomePage extends StatelessWidget {
           ],
         ),
         16.rh.heightWidth,
-        Column(
-          children: getAllCausesController.causes
-          .asMap()
-          .entries
-              .map(
-                (entry){
-                  final index = entry.key;
-                  final cause = entry.value;
-                  return GestureDetector(
-                    onTap: (){
-                      context.pushNamed(
-                        RoutePath.organizationDetails,
-                        extra: {"organizationId": cause.organization.id},
-                      );
-                    },
-                    child: DonationCauseCard(
-                      backgroundColor: pastelColors[index % pastelColors.length],
-                      causeBanner: cause.organization.coverImage,
-                      orgLogo: cause.organization.logoImage,
-                      description: cause.description,
-                      category: cause.category,
-                      amount: cause.totalDonationAmount,
-                      totalDonors: cause.totalDonors,
-                      recentDonors: cause.recentDonors,
-                    ),
-                  );
-                },
-              )
-              .toList(),
-        ),
+        Obx((){
+          if( getAllCausesController.fetchingAllCauses.value ){
+            return Center( child: CircularProgressIndicator(color: Colors.purple,),);
+          }
+          if( getAllCausesController.causes.isEmpty ) {
+            return Center(child: Text(
+              textAlign: TextAlign.center,
+                style: TextStyle( fontStyle: FontStyle.italic),
+                "No charities found for this cause. Try another keyword or browse all organisations."),);
+          }
+          return Column(
+            children: getAllCausesController.causes
+                .asMap()
+                .entries
+                .map(
+                  (entry){
+                final index = entry.key;
+                final cause = entry.value;
+                return GestureDetector(
+                  onTap: (){
+                    context.pushNamed(
+                      RoutePath.organizationDetails,
+                      extra: {"organizationId": cause.organization.id},
+                    );
+                  },
+                  child: DonationCauseCard(
+                    backgroundColor: pastelColors[index % pastelColors.length],
+                    causeBanner: cause.organization.coverImage,
+                    orgLogo: cause.organization.logoImage,
+                    description: cause.description,
+                    category: cause.category,
+                    amount: cause.totalDonationAmount,
+                    totalDonors: cause.totalDonors,
+                    recentDonors: cause.recentDonors,
+                  ),
+                );
+              },
+            )
+                .toList(),
+          );
+        }),
       ],
     );
   }

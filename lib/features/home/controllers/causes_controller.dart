@@ -10,6 +10,8 @@ class CausesController extends GetxController {
     fetchAllCauses(category: "");
   }
 
+  RxInt selectedIndex = 0.obs;
+
   /// ------------------------------------
   /// Fetch all Causes
   /// ------------------------------------
@@ -32,6 +34,7 @@ class CausesController extends GetxController {
       parser: (data) => CauseResponseModel.fromJson(data),
       withAuth: true,
     );
+    fetchingAllCauses.value = false;
     return result.fold(
       (err) {
         fetchingAllCausesErrorMessage.value =

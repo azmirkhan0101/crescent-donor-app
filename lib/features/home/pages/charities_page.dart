@@ -32,6 +32,16 @@ class CharitiesPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: GetBuilder<CausesController>(
           builder: (controller) {
+
+            if (controller.causes.isEmpty) {
+              return const Center(
+                child: Text(
+                  "No charities found.",
+                  style: TextStyle(color: Colors.black54, fontSize: 16, fontStyle: FontStyle.italic),
+                ),
+              );
+            }
+
             return ListView.separated(
               itemBuilder: (context, index) {
                 final cause = controller.causes[index];
@@ -52,15 +62,6 @@ class CharitiesPage extends StatelessWidget {
           },
         ),
       ),
-      // body: SingleChildScrollView(
-      //   child: Column(
-      //     children: [
-      //       charitiesController.charities[0],
-      //       16.rh.heightWidth,
-      //       charitiesController.charities[1],
-      //     ],
-      //   ).paddingAll(16.rw),
-      // ),
     );
   }
 }

@@ -121,6 +121,7 @@ class OrganizationController extends GetxController {
         } else {
           organizationsList.clear();
           organizationsList.addAll(data.data);
+          update();
         }
         return true;
       },
