@@ -1,6 +1,6 @@
-// import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-// import 'package:cresent_charge_user_app/features/home/models/donor_model.dart';
-// import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
+// import 'package:donor/core/custom_assets/assets.gen.dart';
+// import 'package:donor/features/home/models/donor_model.dart';
+// import 'package:donor/utils/sizer/sizer.dart';
 // import 'package:flutter/material.dart';
 
 // class CauseTotalDonationsCard extends StatelessWidget {

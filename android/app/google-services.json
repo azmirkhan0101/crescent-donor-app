@@ -7,9 +7,28 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:899950650260:android:5edef42c7a2e65727ba581",
+        "mobilesdk_app_id": "1:899950650260:android:2d76bf9af1e85fbe7ba581",
         "android_client_info": {
-          "package_name": "com.raiyanrahmat.cresent_charge_user_app"
+          "package_name": "com.crescentchange.business"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVUg5XsVvDS4KC90iagvfvG-ASKq8-qOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899950650260:android:373bbf343ccf3b717ba581",
+        "android_client_info": {
+          "package_name": "com.crescentchange.donor"
         }
       },
       "oauth_client": [],

@@ -7,7 +7,7 @@ The `PlaidController` is now a reusable controller that handles all Plaid Link i
 ### 1. Import and Initialize
 
 ```dart
-import 'package:cresent_charge_user_app/features/donation/controllers/plaid_controller.dart';
+import 'package:donor/features/donation/controllers/plaid_controller.dart';
 import 'package:get/get.dart';
 
 class YourPage extends StatefulWidget {

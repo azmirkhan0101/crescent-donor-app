@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:get/get.dart';
-// import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
-// import 'package:cresent_charge_user_app/utils/dimensions/dimensions.dart';
+// import 'package:donor/utils/app_colors/app_colors.dart';
+// import 'package:donor/utils/dimensions/dimensions.dart';
 
 // class CustomText extends StatelessWidget {
 //   const CustomText({

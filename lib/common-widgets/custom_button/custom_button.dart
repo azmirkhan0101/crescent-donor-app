@@ -1,9 +1,9 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:get/get.dart';
-// import 'package:cresent_charge_user_app/common-widgets/custom_text/custom_text.dart';
-// import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
-// import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
+// import 'package:donor/common-widgets/custom_text/custom_text.dart';
+// import 'package:donor/utils/app_colors/app_colors.dart';
+// import 'package:donor/utils/static_strings/static_strings.dart';
 
 // class CustomButton extends StatelessWidget {
 //   const CustomButton({

@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cresent_charge_user_app/core/go-router/config/route_config.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
@@ -17,6 +18,12 @@ class OnboardingRoutes extends AppRouteConfig {
   List<RouteBase> get routes => [
     /// Get Started Page - The first screen users see
     /// This is the app's entry point for new users
+    GoRoute(
+      name: RoutePath.splashScreen,
+      path: RoutePath.splashScreen.addBasePath,
+      builder: (context, state) => SplashScreen(),
+      // No auth required for onboarding
+    ),
     GoRoute(
       name: RoutePath.getStartPage,
       path: RoutePath.getStartPage.addBasePath,

@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAVUg5XsVvDS4KC90iagvfvG-ASKq8-qOM',
-    appId: '1:899950650260:android:5edef42c7a2e65727ba581',
+    appId: '1:899950650260:android:373bbf343ccf3b717ba581',
     messagingSenderId: '899950650260',
     projectId: 'crecent-change',
     storageBucket: 'crecent-change.firebasestorage.app',
@@ -59,10 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDNVgbtSj8QcqnPqZXvZlJ_nIOvY5bAxUU',
-    appId: '1:899950650260:ios:234f106be43fa6aa7ba581',
+    appId: '1:899950650260:ios:eee110db0283e2397ba581',
     messagingSenderId: '899950650260',
     projectId: 'crecent-change',
     storageBucket: 'crecent-change.firebasestorage.app',
-    iosBundleId: 'com.raiyanrahmat.cresentChargeUserApp',
+    iosBundleId: 'com.crescentchange.donor',
   );
+
 }

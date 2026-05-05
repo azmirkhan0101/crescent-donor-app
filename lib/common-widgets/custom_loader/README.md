@@ -47,7 +47,7 @@ enum LoaderType {
 ### Simple Loader
 
 ```dart
-import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_loader.dart';
+import 'package:donor/common-widgets/custom_loader/custom_loader.dart';
 
 // Basic loader with default settings
 const CustomLoader()
@@ -102,7 +102,7 @@ LoadingIndicator.ripple()
 ### Full Screen Loading Overlay
 
 ```dart
-import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_loader.dart';
+import 'package:donor/common-widgets/custom_loader/custom_loader.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -144,7 +144,7 @@ class _MyPageState extends State<MyPage> {
 ### Loading Button
 
 ```dart
-import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_loader.dart';
+import 'package:donor/common-widgets/custom_loader/custom_loader.dart';
 
 class LoginForm extends StatefulWidget {
   @override

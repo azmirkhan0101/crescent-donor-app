@@ -21,40 +21,6 @@ class GetStartPage extends StatefulWidget {
 }
 
 class _GetStartPageState extends State<GetStartPage> {
-  _callApis() {
-    // Get.find<DonationController>().fetchClientStats();
-    Get.find<GetProfileController>().fetchProfile();
-    Get.find<GetPointBalanceController>().fetchUserPoints();
-  }
-
-  Future<void> _checkAuthAndNavigate() async {
-    final String authToken = await AppStorageService.getAuthToken() ?? '';
-    if (!mounted) return;
-
-    if (authToken.isNotEmpty) {
-      final getProfileController = Get.put(GetProfileController());
-      await getProfileController.fetchProfile();
-
-      // Make sure context is still valid after the async gap
-      if (!mounted) return;
-
-      if (getProfileController.profile.value?.id.isNotEmpty ?? false) {
-        _callApis();
-        context.replaceNamed(RoutePath.home);
-      } else if (getProfileController.errorMessage.value ==
-          'User not exists!') {
-        return;
-      } else {
-        context.replaceNamed(RoutePath.fewDetails);
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _checkAuthAndNavigate();
-  }
 
   @override
   Widget build(BuildContext context) {

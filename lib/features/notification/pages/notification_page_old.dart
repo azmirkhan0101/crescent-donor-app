@@ -1,6 +1,6 @@
-// import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
-// import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
-// import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
+// import 'package:donor/utils/app_colors/app_colors.dart';
+// import 'package:donor/utils/sizer/sizer.dart';
+// import 'package:donor/utils/text_style/text_style.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 

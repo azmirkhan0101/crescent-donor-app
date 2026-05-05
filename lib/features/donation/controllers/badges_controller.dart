@@ -1,7 +1,7 @@
 // import 'dart:ui';
 
-// import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-// import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart';
+// import 'package:donor/core/custom_assets/assets.gen.dart';
+// import 'package:donor/features/donation/widgets/badge_card.dart';
 // import 'package:get/get.dart';
 
 // class BadgesController extends GetxController {

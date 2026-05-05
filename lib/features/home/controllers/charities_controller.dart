@@ -1,5 +1,5 @@
-// import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
-// import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
+// import 'package:donor/core/custom_assets/assets.gen.dart';
+// import 'package:donor/features/home/widgets/verified_charity_card.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 

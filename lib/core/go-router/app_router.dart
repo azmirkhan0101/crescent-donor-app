@@ -43,7 +43,7 @@ class AppRouter {
   /// This is the router instance that will be used throughout the app
   static final GoRouter _router = GoRouter(
     // App starts at the onboarding screen for new users
-    initialLocation: RoutePath.getStartPage.addBasePath,
+    initialLocation: RoutePath.splashScreen.addBasePath,
 
     // Enable debug logging in development (helpful for beginners)
     debugLogDiagnostics: true,
