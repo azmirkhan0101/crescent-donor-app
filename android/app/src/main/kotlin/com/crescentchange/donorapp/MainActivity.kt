@@ -1,4 +1,4 @@
-package com.crescentchange.donor
+package com.crescentchange.donorapp
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

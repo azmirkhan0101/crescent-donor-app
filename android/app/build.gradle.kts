@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.crescentchange.donor"
+    namespace = "com.crescentchange.donorapp"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -42,7 +42,7 @@ android {
 
     defaultConfig {
         multiDexEnabled = true
-        applicationId = "com.crescentchange.donor"
+        applicationId = "com.crescentchange.donorapp"
         minSdk = maxOf(21, flutter.minSdkVersion)
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
