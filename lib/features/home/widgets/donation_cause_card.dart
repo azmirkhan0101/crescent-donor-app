@@ -4,6 +4,7 @@ import 'package:cresent_charge_user_app/features/home/widgets/org_details_total_
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DonationCauseCard extends StatelessWidget {
   const DonationCauseCard({
@@ -30,6 +31,7 @@ class DonationCauseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 6.h),
       width: double.infinity,
       // height: 322.rh,
       padding: EdgeInsets.all(8.rw),
@@ -38,7 +40,7 @@ class DonationCauseCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.rw),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: Colors.grey.shade400,
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -62,12 +64,12 @@ class DonationCauseCard extends StatelessWidget {
                     return Container(
                       width: double.infinity,
                       height: 144.rh,
-                      color: Colors.grey,
+                      color: Colors.grey.shade200,
                       child: Center(
                         child: Icon(
-                          Icons.broken_image,
-                          size: 144.rh,
-                          color: Colors.black.withValues(alpha: 0.5),
+                          Icons.image_outlined,
+                          size: 100.rh,
+                          color: Colors.grey.shade100,
                         ),
                       ),
                     );
@@ -98,9 +100,9 @@ class DonationCauseCard extends StatelessWidget {
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Icon(
-                          Icons.broken_image,
-                          size: 80,
-                          color: Colors.black.withValues(alpha: 0.5),
+                          Icons.business,
+                          size: 40,
+                          color: Colors.grey.shade200,
                         );
                       },
                     ),

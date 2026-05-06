@@ -45,24 +45,49 @@ class VerifiedCharityCard extends StatelessWidget {
                 width: 154.rw,
                 height: 120.rh,
                 decoration: BoxDecoration(
-                  image: imagePath.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(imagePath),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                  color: imagePath.isEmpty
-                      ? Colors.grey.withValues(alpha: 0.3)
-                      : null,
+                  color: Colors.grey.shade100, // Background for empty or loading states
                   borderRadius: BorderRadius.circular(8.rw),
                 ),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Assets.common.verified.svg(
-                    width: 20.rw,
-                    height: 20.rh,
-                  ),
-                ).paddingXY(X: 10.rw, Y: 8.rh),
+                child: Stack(
+                  children: [
+                    // 1. The Image Layer
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.rw),
+                        child: imagePath.isNotEmpty
+                            ? Image.network(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Icon(
+                                Icons.image_outlined,
+                                size: 40.rh, // Adjusted size to fit better
+                                color: Colors.black.withValues(alpha: 0.5),
+                              ),
+                            );
+                          },
+                        )
+                            : Center(
+                          child: Icon(
+                            Icons.image_outlined,
+                            size: 40.rh, // Adjusted size to fit better
+                            color: Colors.grey.shade200,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // 2. The Verified Badge Layer
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Assets.common.verified.svg(
+                        width: 20.rw,
+                        height: 20.rh,
+                      ),
+                    ).paddingXY(X: 10.rw, Y: 8.rh),
+                  ],
+                ),
               ),
 
               8.rh.heightWidth,
