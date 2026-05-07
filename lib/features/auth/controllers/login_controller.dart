@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/auth/models/signin_request_model.dart';
@@ -7,6 +9,7 @@ import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/service/firebase_notification_service.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -82,7 +85,6 @@ class LoginController extends GetxController {
 
   /// Load remembered credentials if available
   Future<void> _loadRememberedCredentials() async {
-
     try {
       final savedEmail = await AppStorageService.readSecure('remembered_email');
       final savedPassword = await AppStorageService.readSecure(
@@ -91,7 +93,7 @@ class LoginController extends GetxController {
       final isRemembered =
           AppStorageService.readPreferenceBool('remember_password') ?? false;
 
-      if ( isRemembered && savedEmail != null ) {
+      if (isRemembered && savedEmail != null) {
         emailController.text = savedEmail;
         if (savedPassword != null) {
           passwordController.text = savedPassword;
@@ -137,12 +139,21 @@ class LoginController extends GetxController {
       // Get FCM token
       String? fcmToken;
       try {
-        fcmToken = await FirebaseNotificationService.instance.getToken();
-        debugPrint(
-          '🔔 FCM Token obtained for login: ${fcmToken?.substring(0, 20)}...',
-        );
+        if (Platform.isAndroid) {
+          //deviceType = 'android';
+          fcmToken = await FirebaseMessaging.instance.getToken();
+        } else {
+          //deviceType = 'ios';
+          fcmToken = await FirebaseMessaging.instance.getAPNSToken();
+        }
+        //fcmToken = await FirebaseNotificationService.instance.getToken();
+        // debugPrint(
+        //   '🔔 FCM Token obtained for login: ${fcmToken?.substring(0, 20)}...',
+        // );
+        print("FCM TOKEN: $fcmToken");
       } catch (e) {
-        debugPrint('⚠️ Failed to get FCM token for login: $e');
+        print("Failed to get token!!!!!!!!");
+        //debugPrint('⚠️ Failed to get FCM token for login: $e');
       }
 
       // Create request model with FCM token
