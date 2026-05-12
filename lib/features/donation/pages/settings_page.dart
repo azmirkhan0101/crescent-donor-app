@@ -39,9 +39,9 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final settingsCtrl = Get.put(SettingsController());
   // final getBankConnectionController = Get.put(GetRoundUpBankConnection());
-  final PlaidController plaidCtrl = Get.isRegistered<PlaidController>()
-      ? Get.find<PlaidController>()
-      : Get.put(PlaidController());
+  // final PlaidController plaidCtrl = Get.isRegistered<PlaidController>()
+  //     ? Get.find<PlaidController>()
+  //     : Get.put(PlaidController());
 
   final OrganizationController organizationController =
       Get.find<OrganizationController>();
