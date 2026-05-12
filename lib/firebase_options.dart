@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAVUg5XsVvDS4KC90iagvfvG-ASKq8-qOM',
-    appId: '1:899950650260:android:f5bac42a21ae7f197ba581',
-    messagingSenderId: '899950650260',
-    projectId: 'crecent-change',
-    storageBucket: 'crecent-change.firebasestorage.app',
+    apiKey: 'AIzaSyBtYbM_8J9kYgQljNOd5ek_JPBimh4rynU',
+    appId: '1:279971282218:android:439868f63b898bfe87b253',
+    messagingSenderId: '279971282218',
+    projectId: 'crescent-change-a7f3e',
+    storageBucket: 'crescent-change-a7f3e.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDNVgbtSj8QcqnPqZXvZlJ_nIOvY5bAxUU',
-    appId: '1:899950650260:ios:d2371be6e912e3767ba581',
-    messagingSenderId: '899950650260',
-    projectId: 'crecent-change',
-    storageBucket: 'crecent-change.firebasestorage.app',
+    apiKey: 'AIzaSyDmUL43GH-r46h4Av11l1KPoBMV5l2XW-E',
+    appId: '1:279971282218:ios:2a1cbfa1dd35d91387b253',
+    messagingSenderId: '279971282218',
+    projectId: 'crescent-change-a7f3e',
+    storageBucket: 'crescent-change-a7f3e.firebasestorage.app',
     iosBundleId: 'com.crescentchange.donorapp',
   );
 
