@@ -139,21 +139,19 @@ class LoginController extends GetxController {
       // Get FCM token
       String? fcmToken;
       try {
-        if (Platform.isAndroid) {
-          //deviceType = 'android';
-          fcmToken = await FirebaseMessaging.instance.getToken();
-        } else {
-          //deviceType = 'ios';
-          fcmToken = await FirebaseMessaging.instance.getAPNSToken();
+
+        if( Platform.isIOS ){
+          String? apnsToken;
+          for( int i = 0; i < 5; i++ ){
+            apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+            if( apnsToken != null ){
+              break;
+            }
+            await Future.delayed(const Duration(seconds: 2));
+          }
         }
-        //fcmToken = await FirebaseNotificationService.instance.getToken();
-        // debugPrint(
-        //   '🔔 FCM Token obtained for login: ${fcmToken?.substring(0, 20)}...',
-        // );
-        print("FCM TOKEN: $fcmToken");
+        fcmToken = await FirebaseMessaging.instance.getToken();
       } catch (e) {
-        print("Failed to get token!!!!!!!!");
-        //debugPrint('⚠️ Failed to get FCM token for login: $e');
       }
 
       // Create request model with FCM token

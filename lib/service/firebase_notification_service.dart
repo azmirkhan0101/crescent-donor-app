@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -222,7 +223,18 @@ class FirebaseNotificationService {
   /// Use this token to send notifications from your backend
   Future<String?> getToken() async {
     try {
-      final token = await _firebaseMessaging.getToken();
+      String? token;
+      if( Platform.isIOS ){
+        String? apnsToken;
+        for( int i = 0; i < 5; i++ ){
+          apnsToken = await _firebaseMessaging.getAPNSToken();
+          if( apnsToken != null ){
+            break;
+          }
+          await Future.delayed(const Duration(seconds: 2));
+        }
+      }
+      token = await _firebaseMessaging.getToken();
       return token;
     } catch (e) {
       debugPrint('Error getting FCM token: $e');
