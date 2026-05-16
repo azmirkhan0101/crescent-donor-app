@@ -102,39 +102,39 @@ class _PaymentLinkedAccountPageState extends State<PaymentLinkedAccountPage> {
           ).paddingAll(16.rw),
 
           // Payment options
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Color(0xFFEDEDED)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.rw),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 24.rh),
-                  ),
-                  child: Assets.home.applePay.svg(),
-                ),
-              ),
-              SizedBox(width: 8.rw),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    side: const BorderSide(color: Color(0xFFEDEDED)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.rw),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 24.rh),
-                  ),
-                  child: Assets.home.gpay.svg(),
-                ),
-              ),
-            ],
-          ).paddingXY(X: 16.rw),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: OutlinedButton(
+          //         onPressed: () {},
+          //         style: OutlinedButton.styleFrom(
+          //           backgroundColor: Colors.white,
+          //           side: const BorderSide(color: Color(0xFFEDEDED)),
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(12.rw),
+          //           ),
+          //           padding: EdgeInsets.symmetric(vertical: 24.rh),
+          //         ),
+          //         child: Assets.home.applePay.svg(),
+          //       ),
+          //     ),
+          //     SizedBox(width: 8.rw),
+          //     Expanded(
+          //       child: OutlinedButton(
+          //         onPressed: () {},
+          //         style: OutlinedButton.styleFrom(
+          //           backgroundColor: Colors.white,
+          //           side: const BorderSide(color: Color(0xFFEDEDED)),
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(12.rw),
+          //           ),
+          //           padding: EdgeInsets.symmetric(vertical: 24.rh),
+          //         ),
+          //         child: Assets.home.gpay.svg(),
+          //       ),
+          //     ),
+          //   ],
+          // ).paddingXY(X: 16.rw),
         ],
       ),
     );

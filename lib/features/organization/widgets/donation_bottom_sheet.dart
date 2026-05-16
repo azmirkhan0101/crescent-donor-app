@@ -472,6 +472,10 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
         TextField(
           controller: donateNowController.specialMsgController,
           maxLines: 4,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: 'Add your message here...',
