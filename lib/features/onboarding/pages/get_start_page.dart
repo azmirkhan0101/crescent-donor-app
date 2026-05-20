@@ -2,6 +2,7 @@ import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/features/auth/widgets/have_account_widget.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_point_balance_controller.dart';
@@ -44,8 +45,8 @@ class _GetStartPageState extends State<GetStartPage> {
 
             // Turn your small change into real change
             Text(
-              AppStrings.turnYourSmallChangeIntoRealChange,
-              style: AppTextStyles.f28W700().copyWith(fontSize: 26.rw),
+               AppStrings.turnYourSmallChangeIntoRealChange,
+              style: AppTextStyles.f28W700().copyWith(fontSize: context.isTabletDevice ? 36 : 26),
               textAlign: TextAlign.center,
             ),
             12.rh.heightWidth,
@@ -55,12 +56,16 @@ class _GetStartPageState extends State<GetStartPage> {
             Spacer(),
 
             // Get Started button
-            CustomFilledButton(
-              title: "Get Started",
-              onTap: () {
-                context.pushNamed(RoutePath.howToWorkPage);
-              },
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width * 0.5,
+              child: CustomFilledButton(
+                title: "Get Started",
+                onTap: () {
+                  context.pushNamed(RoutePath.howToWorkPage);
+                },
+              ),
             ),
+
             15.rh.heightWidth,
 
             // Already have an account? Sign In
