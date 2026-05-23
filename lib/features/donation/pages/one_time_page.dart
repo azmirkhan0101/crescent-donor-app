@@ -3,8 +3,11 @@ import 'package:cresent_charge_user_app/features/donation/controllers/one_time_c
 import 'package:cresent_charge_user_app/features/donation/widgets/recent_donation.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class Donation {
   final String id;
@@ -54,6 +57,7 @@ class OneTimePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: _buildAppBar(context),
@@ -80,7 +84,7 @@ class OneTimePage extends StatelessWidget {
                   // Donation Overview Card
                   Container(
                     width: double.infinity,
-                    height: 208.rh,
+                    height: isTab ? 280 :  208.rh,
                     margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -115,19 +119,19 @@ class OneTimePage extends StatelessWidget {
                         Text(
                           // '\$${totalDonations.toStringAsFixed(2)}',
                           '\$${controller.oneTimeStates.value?.data.totalDonated.toStringAsFixed(2) ?? 0.0}',
-                          style: const TextStyle(
-                            fontSize: 24,
+                          style: TextStyle(
+                            fontSize: isTab ? 8.sp :  24,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF000C0B),
+                            color: const Color(0xFF000C0B),
                             fontFamily: 'Inter',
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           '\$${controller.oneTimeStates.value?.data.todaysTotalDonation.toStringAsFixed(2) ?? '0.00'} donated today',
-                          style: const TextStyle(
+                          style:  TextStyle(
                             color: Color(0xFF818F8D),
-                            fontSize: 14,
+                            fontSize: isTab ? 8.sp :  14,
                             fontFamily: 'Inter',
                           ),
                         ),
@@ -141,10 +145,10 @@ class OneTimePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                         Text(
                           'Recent Donations',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: isTab ? 8.sp :  20,
                             fontWeight: FontWeight.w600,
                             color: Color(0xFF171717),
                             fontFamily: 'Familjen Grotesk',
@@ -179,19 +183,20 @@ class OneTimePage extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context) {
+    bool isTab = context.isTab;
     return AppBar(
       backgroundColor: const Color(0xFFF7F7F7),
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.chevron_left, color: Colors.black, size: 24),
+        icon: Icon(Icons.chevron_left, color: Colors.black, size: isTab ? 40 :  24),
         onPressed: () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: const Text(
+      title: Text(
         'One Time',
         style: TextStyle(
           color: Colors.black,
-          fontSize: 18,
+          fontSize: isTab ? 8.sp :  18,
           fontWeight: FontWeight.w600,
           fontFamily: 'Inter',
         ),

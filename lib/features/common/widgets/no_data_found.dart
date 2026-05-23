@@ -1,6 +1,9 @@
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class NoDataFound extends StatelessWidget {
   const NoDataFound({
@@ -15,8 +18,11 @@ class NoDataFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isTab = context.isTab;
+
     return Container(
-      height: 230.rh,
+      height: isTab ? 350 : 230.rh,
       margin: EdgeInsets.symmetric(
         horizontal: DonationConstants.paddingHorizontal.rw,
       ),
@@ -31,7 +37,7 @@ class NoDataFound extends StatelessWidget {
           children: [
             Icon(
               icon ?? Icons.emoji_events_outlined,
-              size: 48.rw,
+              size: isTab ? 80 : 48.rw,
               color: const Color(0xFFB3B3B3),
             ),
             SizedBox(height: 12.rh),
@@ -39,7 +45,7 @@ class NoDataFound extends StatelessWidget {
               title,
               style: TextStyle(
                 fontFamily: DonationFonts.familjenGrotesk,
-                fontSize: 18.rfs,
+                fontSize: isTab ? 8.sp : 18.rfs,
                 fontWeight: FontWeight.w600,
                 color: DonationConstants.offBlack,
               ),
@@ -52,7 +58,7 @@ class NoDataFound extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: 14.rfs,
+                  fontSize: isTab ? 6.sp : 14.rfs,
                   color: const Color(0xFF515A59),
                   height: 1.4,
                 ),

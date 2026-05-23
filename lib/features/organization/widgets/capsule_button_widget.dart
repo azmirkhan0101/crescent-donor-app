@@ -1,5 +1,8 @@
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class CapsuleButton extends StatelessWidget {
   const CapsuleButton({
@@ -15,6 +18,7 @@ class CapsuleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -34,7 +38,7 @@ class CapsuleButton extends StatelessWidget {
           title,
           style: TextStyle(
             fontFamily: 'Inter Display',
-            fontSize: 14.rfs,
+            fontSize: isTab ? 6.sp : 14.rfs,
             fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
             color: const Color(0xFF000C0B),
           ),

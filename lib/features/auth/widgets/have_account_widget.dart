@@ -4,8 +4,11 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class HaveAccountWidget extends StatelessWidget {
   const HaveAccountWidget({super.key, this.haveAccount = false});
@@ -14,18 +17,19 @@ class HaveAccountWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         (!haveAccount
                 ? AppStrings.dontHaveAccount
                 : AppStrings.alreadyHaveAnAccount)
-            .centerText(AppTextStyles.baseStyle())
+            .centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 6.sp : null))
             .fontFamily(GoogleFonts.inter().fontFamily),
         4.rw.heightWidth,
 
         (!haveAccount ? AppStrings.signUp : AppStrings.login)
-            .centerText(AppTextStyles.baseStyle())
+            .centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 6.sp : null))
             .fontWeight(FontWeight.w700)
             .color(Colors.black)
             .fontFamily(GoogleFonts.inter().fontFamily)

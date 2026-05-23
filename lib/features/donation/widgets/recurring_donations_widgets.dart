@@ -3,6 +3,9 @@ import 'package:cresent_charge_user_app/features/donation/models/recurring_state
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 /// Recurring Summary Card Widget
 ///
@@ -21,6 +24,7 @@ class RecurringSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 25.rh),
@@ -62,7 +66,7 @@ class RecurringSummaryCard extends StatelessWidget {
             '\$${totalAmount.toStringAsFixed(2)}',
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 24.rfs,
+              fontSize: isTab ? 8.sp : 24.rfs,
               fontWeight: FontWeight.w600,
               color: DonationConstants.offBlack,
               height: 28 / 24,
@@ -76,7 +80,7 @@ class RecurringSummaryCard extends StatelessWidget {
             '\$${weeklyAmount.toInt()} per week ($organizationCount organizations)',
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 14.rfs,
+              fontSize: isTab ? 8.sp : 14.rfs,
               fontWeight: FontWeight.w400,
               color: const Color(0xFF818F8D),
               height: 18 / 14,

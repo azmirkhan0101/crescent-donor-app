@@ -2,6 +2,8 @@ import 'package:cresent_charge_user_app/common-widgets/form-fields/custom_text_f
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/helper/extension/context_extension.dart';
+
 class CustomPasswordField extends StatefulWidget {
   const CustomPasswordField({
     super.key,

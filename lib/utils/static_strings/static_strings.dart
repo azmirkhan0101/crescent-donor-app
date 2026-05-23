@@ -4,7 +4,7 @@ class AppStrings {
       "Turn your small change into real change.";
   static const String discoverRewards =
       "Discover rewards, shop smarter, and help causes — all in one tap.";
-  static const String howToWorks = "How To Works";
+  static const String howToWorks = "How It Works";
   static const String earnRewardsAtLocalAndOnlineSpots =
       "Earn rewards at local & online spots";
   static const String grabACoffeeOrShopOnline =

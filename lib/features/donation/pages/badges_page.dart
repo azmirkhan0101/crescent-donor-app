@@ -2,14 +2,18 @@ import 'package:cresent_charge_user_app/features/donation/controllers/get_badges
 import 'package:cresent_charge_user_app/features/donation/widgets/badge_card.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class BadgesPage extends StatelessWidget {
   const BadgesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     // final controllerTemp = Get.put(BadgesController());
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
@@ -32,7 +36,7 @@ class BadgesPage extends StatelessWidget {
                     'Earn your badges!',
                     style: TextStyle(
                       color: const Color(0xFF515A59),
-                      fontSize: 14.rfs,
+                      fontSize: isTab ? 8.sp : 14.rfs,
                       fontFamily: 'Inter',
                     ),
                   ),
@@ -50,7 +54,7 @@ class BadgesPage extends StatelessWidget {
                                 'No badges available yet.\nKeep donating to unlock badges!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 16.rfs,
+                                  fontSize: isTab ? 8.sp : 16.rfs,
                                   color: const Color(0xFF515A59),
                                   fontFamily: 'Inter',
                                 ),
@@ -103,15 +107,15 @@ class BadgesPage extends StatelessWidget {
       backgroundColor: const Color(0xFFF7F7F7),
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.chevron_left, color: Colors.black, size: 24),
+        icon: Icon(Icons.chevron_left, color: Colors.black, size: context.isTab ? 40 : 24),
         onPressed: () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: const Text(
+      title: Text(
         'Badges',
         style: TextStyle(
           color: Color(0xFF000C0B),
-          fontSize: 20,
+          fontSize: context.isTab ? 10.sp : 20,
           fontWeight: FontWeight.bold,
           fontFamily: 'Familjen Grotesk',
           letterSpacing: -0.2,

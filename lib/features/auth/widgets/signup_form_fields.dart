@@ -11,11 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../core/helper/extension/context_extension.dart';
+
 class SignupFormFields extends StatelessWidget {
   const SignupFormFields({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     final c = Get.isRegistered<SignupController>()
         ? Get.find<SignupController>()
         : Get.put(SignupController());
@@ -26,7 +29,7 @@ class SignupFormFields extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            "Email".text(AppTextStyles.baseStyle()).color("#000C0B".hexColor),
+            "Email".text(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 8.sp : null)).color("#000C0B".hexColor),
             8.rh.heightWidth,
             CustomInputField(
               controller: c.emailController,

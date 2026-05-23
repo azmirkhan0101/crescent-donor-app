@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/get_roundup_orgs_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/round_up_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
@@ -7,6 +8,7 @@ import 'package:cresent_charge_user_app/features/donation/widgets/round_up_widge
 import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -19,6 +21,7 @@ class RoundUpPage extends StatelessWidget {
     final getRoundupOrgController = Get.find<GetRoundupOrgsController>();
     bool success = await getRoundupOrgController.fetchOrgs();
     if (success) {
+      if( getRoundupOrgController.orgs.isEmpty ) return;
       String roundUpId = getRoundupOrgController.orgs.first.roundupId;
       await controller.fetchRoundupStats(roundUpId);
     }
@@ -26,6 +29,7 @@ class RoundUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     final roundUpController = Get.find<RoundUpController>();
     return GetX<GetRoundupOrgsController>(
       init: Get.find<GetRoundupOrgsController>(),
@@ -39,13 +43,17 @@ class RoundUpPage extends StatelessWidget {
             title: 'Round Up',
             actions: [
               IconButton(
-                icon: const Icon(Icons.settings),
+                icon: Icon(Icons.settings , size: isTab ? 40 :  null,),
                 onPressed: () {
+                  String roundUpId =
+                      getRoundupOrgController.orgs.isNotEmpty
+                  ? getRoundupOrgController.orgs.first.roundupId
+                      : "";
                   context.pushNamed(
                     RoutePath.settings,
                     extra: {
                       'isRecurring': false,
-                      'roundUpId': getRoundupOrgController.orgs.first.roundupId,
+                      'roundUpId': roundUpId
                     },
                   );
                 },
@@ -125,7 +133,7 @@ class RoundUpPage extends StatelessWidget {
                             'Donated to',
                             style: TextStyle(
                               fontFamily: DonationFonts.familjenGrotesk,
-                              fontSize: 20.rfs,
+                              fontSize: isTab ? 8.sp : 20.rfs,
                               fontWeight: FontWeight.w600,
                               color: DonationConstants.offBlack,
                               letterSpacing: -0.2,
@@ -177,7 +185,7 @@ class RoundUpPage extends StatelessWidget {
                           'Recent Activity',
                           style: TextStyle(
                             fontFamily: DonationFonts.familjenGrotesk,
-                            fontSize: 20.rfs,
+                            fontSize: isTab ? 8.sp : 20.rfs,
                             fontWeight: FontWeight.w600,
                             color: DonationConstants.offBlack,
                             letterSpacing: -0.2,

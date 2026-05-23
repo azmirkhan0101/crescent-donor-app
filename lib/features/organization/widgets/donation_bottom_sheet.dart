@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/helper/extension/context_extension.dart';
+
 /// Donation bottom sheet with donation types and options
 class DonationBottomSheet extends StatefulWidget {
   final String organizationName;
@@ -43,6 +45,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     // print(
     //   'isRecurringAvailable: ${donateNowController.isRecurringAvailable.value}, is Recurring: ${donateNowController.isRecurring.value}',
     // );
@@ -74,7 +77,7 @@ class _DonationBottomSheetState extends State<DonationBottomSheet> {
             // --- Donation type, causes, amount, message ---
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.rw),
+                padding: EdgeInsets.symmetric(horizontal:  isTab ? 20 : 24.rw),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

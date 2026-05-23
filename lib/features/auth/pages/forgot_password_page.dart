@@ -12,14 +12,18 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     final controller = Get.isRegistered<ForgotPasswordController>()
         ? Get.find<ForgotPasswordController>()
         : Get.put(ForgotPasswordController());
@@ -77,7 +81,8 @@ class ForgotPasswordPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppStrings.email
-                    .text(AppTextStyles.baseStyle())
+                    .text(AppTextStyles.baseStyle().copyWith(
+                    fontSize:  isTab ? 8.sp : null))
                     .color("#000C0B".hexColor),
                 8.rh.heightWidth,
                 CustomInputField(

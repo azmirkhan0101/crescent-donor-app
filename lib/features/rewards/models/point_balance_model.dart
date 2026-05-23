@@ -58,7 +58,7 @@ class PointBalanceModel {
   factory PointBalanceModel.fromJson(Map<String, dynamic> json) {
     return PointBalanceModel(
       id: json['_id'] ?? '',
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
+      user: (json['user'] != null && json['user'] is Map<String,dynamic>) ? User.fromJson(json['user']) : null,
       totalEarned: json['totalEarned'] ?? 0,
       totalSpent: json['totalSpent'] ?? 0,
       totalRefunded: json['totalRefunded'] ?? 0,

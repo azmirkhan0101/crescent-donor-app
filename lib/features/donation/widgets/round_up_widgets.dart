@@ -9,8 +9,11 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 /// Round Up Progress Chart Widget
 ///
@@ -31,6 +34,7 @@ class RoundUpCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return GestureDetector(
       onTap: () => controller.toggleProgressView(),
       child: Container(
@@ -77,7 +81,7 @@ class RoundUpCard extends StatelessWidget {
                     text: '\$${currentAmount.toInt()} ',
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize: 24.rfs,
+                      fontSize:isTab ? 8.sp : 24.rfs,
                       fontWeight: FontWeight.w600,
                       color: DonationConstants.offBlack,
                       height: 28 / 24,
@@ -87,7 +91,7 @@ class RoundUpCard extends StatelessWidget {
                     text: 'of \$${targetAmount.toInt()}',
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize: 24.rfs,
+                      fontSize: isTab ? 8.sp : 24.rfs,
                       fontWeight: FontWeight.w600,
                       color: DonationConstants.offBlack.withValues(alpha: 0.25),
                       height: 28 / 24,
@@ -104,7 +108,7 @@ class RoundUpCard extends StatelessWidget {
               '\$$recentlyRoundedUp recently rounded up',
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
-                fontSize: 14.rfs,
+                fontSize: isTab ? 8.sp : 14.rfs,
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFF818F8D),
                 height: 18 / 14,
@@ -140,6 +144,7 @@ class RoundUpProgressChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return GestureDetector(
       onTap: () => controller.toggleProgressView(),
       child: Container(
@@ -185,7 +190,7 @@ class RoundUpProgressChart extends StatelessWidget {
                   'You\'ve donated a total of',
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: 12.rfs,
+                    fontSize: isTab ? 8.sp : 12.rfs,
                     fontWeight: FontWeight.w400,
                     color: DonationConstants.offBlack,
                     height: 16 / 12,
@@ -199,7 +204,7 @@ class RoundUpProgressChart extends StatelessWidget {
                         text: '\$',
                         style: TextStyle(
                           fontFamily: DonationFonts.familjenGrotesk,
-                          fontSize: 24.rfs,
+                          fontSize: isTab ? 8.sp : 24.rfs,
                           fontWeight: FontWeight.w700,
                           color: DonationConstants.offBlack.withValues(
                             alpha: 0.25,
@@ -211,7 +216,7 @@ class RoundUpProgressChart extends StatelessWidget {
                         text: totalAmount.toStringAsFixed(2),
                         style: TextStyle(
                           fontFamily: DonationFonts.familjenGrotesk,
-                          fontSize: 24.rfs,
+                          fontSize: isTab ? 8.sp : 24.rfs,
                           fontWeight: FontWeight.w700,
                           color: DonationConstants.offBlack,
                           height: 28 / 24,
@@ -226,7 +231,7 @@ class RoundUpProgressChart extends StatelessWidget {
                   'in this month.',
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: 12.rfs,
+                    fontSize: isTab ? 8.sp : 12.rfs,
                     fontWeight: FontWeight.w400,
                     color: DonationConstants.offBlack,
                     height: 16 / 12,
@@ -248,7 +253,7 @@ class RoundUpProgressChart extends StatelessWidget {
                   // padding: math.pi / 80,
                   padding: math.pi / 80,
                   width: 300.rw,
-                  height: 300.rh,
+                  height: isTab ? 450 : 300.rh,
                   // startingAngle: -math.pi * 2 / 3,
                   startingAngle: math.pi / 2,
                   // arcSize: math.pi * 2 / 3 * 2,
@@ -291,10 +296,12 @@ class RoundUpProgressChart extends StatelessWidget {
                     children: [
                       _buildBulletPoint(
                         '• Deposit triggers when you hit \$50 or after 30 days — whichever comes first!',
+                        isTab
                       ),
                       SizedBox(height: 4.rh),
                       _buildBulletPoint(
                         '• Progress resets after deposit — keep the momentum going 🚀',
+                        isTab
                       ),
 
                       SizedBox(height: 16.rh),
@@ -318,12 +325,12 @@ class RoundUpProgressChart extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text('💰 ', style: TextStyle(fontSize: 12.rfs)),
+                    Text('💰 ', style: TextStyle(fontSize:isTab ? 8.sp :  12.rfs)),
                     Text(
                       '\$${todaysRoundUp.toStringAsFixed(2)} rounded up today',
                       style: TextStyle(
                         fontFamily: DonationFonts.interDisplay,
-                        fontSize: 12.rfs,
+                        fontSize: isTab ? 8.sp : 12.rfs,
                         fontWeight: FontWeight.w500,
                         color: DonationConstants.offBlack,
                         height: 16 / 12,
@@ -334,13 +341,13 @@ class RoundUpProgressChart extends StatelessWidget {
                 SizedBox(height: 4.rh),
                 Row(
                   children: [
-                    Text('📆 ', style: TextStyle(fontSize: 12.rfs)),
+                    Text('📆 ', style: TextStyle(fontSize:isTab ? 8.sp :  12.rfs)),
                     Expanded(
                       child: Text(
                         '$daysLeft days left to auto-donate ${orgName ?? ""}',
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
-                          fontSize: 12.rfs,
+                          fontSize: isTab ? 8.sp : 12.rfs,
                           fontWeight: FontWeight.w500,
                           color: DonationConstants.offBlack,
                           height: 16 / 12,
@@ -359,12 +366,12 @@ class RoundUpProgressChart extends StatelessWidget {
     );
   }
 
-  Widget _buildBulletPoint(String text) {
+  Widget _buildBulletPoint(String text, bool isTab) {
     return Text(
       text,
       style: TextStyle(
         fontFamily: DonationFonts.interDisplay,
-        fontSize: 12.rfs,
+        fontSize: isTab ? 8.sp : 12.rfs,
         fontWeight: FontWeight.w400,
         color: DonationConstants.offBlack,
         height: 16 / 12,
@@ -429,6 +436,7 @@ class RecentActivityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return GetX<RoundUpController>(
       builder: (controller) {
         final recentActivities =
@@ -453,7 +461,7 @@ class RecentActivityList extends StatelessWidget {
                 'No recent activities.',
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: 14.rfs,
+                  fontSize: isTab ? 6.sp :  14.rfs,
                   fontWeight: FontWeight.w400,
                   color: DonationConstants.offBlack.withValues(alpha: 0.5),
                   height: 18 / 14,
@@ -490,7 +498,7 @@ class RecentActivityList extends StatelessWidget {
                       recentActivities[index].title,
                       style: TextStyle(
                         fontFamily: DonationFonts.interDisplay,
-                        fontSize: 11.rfs,
+                        fontSize: isTab ? 8.sp :  11.rfs,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey.withValues(alpha: 0.6),
                         height: 16 / 11,
@@ -520,62 +528,6 @@ class RecentActivityList extends StatelessWidget {
               );
             },
           ),
-          // child: Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     // Today section
-          //     Padding(
-          //       padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
-          //       child: Text(
-          //         'Today',
-          //         style: TextStyle(
-          //           fontFamily: DonationFonts.interDisplay,
-          //           fontSize: 11.rfs,
-          //           fontWeight: FontWeight.w500,
-          //           color: Colors.grey.withValues(alpha: 0.6),
-          //           height: 16 / 11,
-          //         ),
-          //       ),
-          //     ),
-
-          //     // Activities list
-          //     ...activities.asMap().entries.map(
-          //       (entry) => ActivityItem(
-          //         activity: entry.value,
-          //         index: entry.key,
-          //         controller: controller,
-          //       ),
-          //     ),
-
-          //     SizedBox(height: 16.rh),
-
-          //     // 20 July section (placeholder for earlier activities)
-          //     Padding(
-          //       padding: EdgeInsets.only(left: 8.rw, bottom: 8.rh),
-          //       child: Text(
-          //         '20 July',
-          //         style: TextStyle(
-          //           fontFamily: DonationFonts.interDisplay,
-          //           fontSize: 11.rfs,
-          //           fontWeight: FontWeight.w500,
-          //           color: Colors.grey.withValues(alpha: 0.6),
-          //           height: 16 / 11,
-          //         ),
-          //       ),
-          //     ),
-
-          //     // Earlier activities from controller
-          //     ...controller.earlierActivities.asMap().entries.map(
-          //       (entry) => ActivityItem(
-          //         activity: entry.value,
-          //         index:
-          //             activities.length +
-          //             entry.key, // Offset by today's activities length
-          //         controller: controller,
-          //       ),
-          //     ),
-          //   ],
-          // ),
         );
       },
     );
@@ -600,6 +552,7 @@ class ActivityItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     final String activityKey = controller.getActivityKey(activity, index);
 
     return GetBuilder(
@@ -643,8 +596,8 @@ class ActivityItem extends StatelessWidget {
                           child: activity.brandLogo.isNotEmpty
                               ? Image.network(
                                   activity.brandLogo,
-                                  width: 44.rw,
-                                  height: 44.rh,
+                                  width: isTab ? 60 :   44.rw,
+                                  height: isTab ? 60 :   44.rh,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     return Container(
@@ -656,7 +609,7 @@ class ActivityItem extends StatelessWidget {
                                                     .toUpperCase()
                                               : '',
                                           style: TextStyle(
-                                            fontSize: 18.rfs,
+                                            fontSize: isTab ? 8.sp :   18.rfs,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
@@ -673,7 +626,7 @@ class ActivityItem extends StatelessWidget {
                                           ? activity.brandName[0].toUpperCase()
                                           : '',
                                       style: TextStyle(
-                                        fontSize: 18.rfs,
+                                        fontSize: isTab ? 8.sp :   18.rfs,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),
@@ -698,7 +651,7 @@ class ActivityItem extends StatelessWidget {
                                   activity.brandName,
                                   style: TextStyle(
                                     fontFamily: DonationFonts.interDisplay,
-                                    fontSize: 14.rfs,
+                                    fontSize: isTab ? 8.sp :   14.rfs,
                                     fontWeight: FontWeight.w500,
                                     color: DonationConstants.offBlack,
                                     height: 18 / 14,
@@ -708,7 +661,7 @@ class ActivityItem extends StatelessWidget {
                                   '\$${activity.purchaseAmount.toStringAsFixed(2)}',
                                   style: TextStyle(
                                     fontFamily: DonationFonts.interDisplay,
-                                    fontSize: 12.rfs,
+                                    fontSize: isTab ? 7.sp :   12.rfs,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey,
                                     height: 16 / 12,
@@ -727,7 +680,7 @@ class ActivityItem extends StatelessWidget {
                                   activity.timeAgo,
                                   style: TextStyle(
                                     fontFamily: DonationFonts.interDisplay,
-                                    fontSize: 12.rfs,
+                                    fontSize: isTab ? 6.sp :   12.rfs,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey,
                                     height: 16 / 12,
@@ -737,7 +690,7 @@ class ActivityItem extends StatelessWidget {
                                   '+\$${activity.roundUpAmount.toStringAsFixed(2)}',
                                   style: TextStyle(
                                     fontFamily: DonationFonts.interDisplay,
-                                    fontSize: 12.rfs,
+                                    fontSize: isTab ? 6.sp :   12.rfs,
                                     fontWeight: FontWeight.w400,
                                     color: const Color(0xFF1AC461),
                                     height: 16 / 12,
@@ -753,8 +706,8 @@ class ActivityItem extends StatelessWidget {
 
                       // Chevron icon
                       Assets.common.arrowDown.svg(
-                        width: 16.rw,
-                        height: 16.rh,
+                        width: isTab ?30 :    16.rw,
+                        height: isTab ?30 :16.rh,
                         colorFilter: ColorFilter.mode(
                           Colors.grey.withValues(alpha: 0.5),
                           BlendMode.srcIn,
@@ -785,7 +738,7 @@ class ActivityItem extends StatelessWidget {
                             'Donated to:',
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: 12.rfs,
+                              fontSize: isTab ? 7.sp :12.rfs,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey,
                               height: 16 / 12,
@@ -795,7 +748,7 @@ class ActivityItem extends StatelessWidget {
                             activity.donatedTo!,
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: 12.rfs,
+                              fontSize:  isTab ? 7.sp : 12.rfs,
                               fontWeight: FontWeight.w400,
                               color: DonationConstants.offBlack,
                               height: 16 / 12,
@@ -816,7 +769,7 @@ class ActivityItem extends StatelessWidget {
                             'Timestamp:',
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: 12.rfs,
+                              fontSize: isTab ? 7.sp  : 12.rfs,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey,
                               height: 16 / 12,
@@ -826,7 +779,7 @@ class ActivityItem extends StatelessWidget {
                             activity.timestamp!,
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: 12.rfs,
+                              fontSize: isTab ? 7.sp : 12.rfs,
                               fontWeight: FontWeight.w400,
                               color: DonationConstants.offBlack,
                               height: 16 / 12,

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../../core/helper/extension/context_extension.dart';
+
 class DonationTypeCard extends StatelessWidget {
   const DonationTypeCard({
     super.key,
@@ -23,6 +25,7 @@ class DonationTypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     // final controller = Get.find<OrganizationDetailsController>();
     final donateNowController = Get.find<DonateNowController>();
     return GestureDetector(
@@ -66,7 +69,7 @@ class DonationTypeCard extends StatelessWidget {
                 // Icon container
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsets.all(10.rw),
+                  padding: EdgeInsets.all( isTab ? 10 : 10.rw),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? const Color(0xFFF1E7FF)

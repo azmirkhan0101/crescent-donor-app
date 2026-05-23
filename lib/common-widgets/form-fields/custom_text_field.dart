@@ -4,7 +4,10 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../core/helper/extension/context_extension.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -70,6 +73,7 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -80,6 +84,7 @@ class CustomTextField extends StatelessWidget {
             style: AppTextStyles.baseStyle().copyWith(
               color: AppColors.black,
               fontWeight: FontWeight.w500,
+              fontSize:  isTab ? 8.sp : null
             ),
           ),
           8.rh.heightWidth,
@@ -110,6 +115,7 @@ class CustomTextField extends StatelessWidget {
             color: AppColors.black,
             fontWeight: FontWeight.w500,
             fontFamily: GoogleFonts.inter().fontFamily,
+              fontSize:  isTab ? 8.sp : null
           ),
           decoration: InputDecoration(
             hintText: hintText,
@@ -117,6 +123,7 @@ class CustomTextField extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: "#CCCCCC".hexColor,
               fontFamily: GoogleFonts.inter().fontFamily,
+                fontSize:  isTab ? 8.sp : null
             ),
             errorText: errorText,
             helperText: helperText,
@@ -124,9 +131,16 @@ class CustomTextField extends StatelessWidget {
               fontSize: 12.rfs,
               color: AppColors.grayColor,
             ),
+            // errorStyle: TextStyle(
+            //   inherit: true,                               // Forces the engine to look at this local configuration
+            //   color: AppColors.redColor,                   // Explicitly forces your app color
+            //   fontSize: isTab ? 8.sp : 12.rfs,             // Forces scale engine calculations
+            //   fontFamily: GoogleFonts.inter().fontFamily,  // Forces explicit font loading
+            //   fontWeight: FontWeight.w500,
+            // ),
             errorStyle: AppTextStyles.baseStyle().copyWith(
-              fontSize: 12.rfs,
-              color: AppColors.redColor,
+              fontSize: isTab ? 6.sp : 12.rfs,
+              color: AppColors.grayColor,
             ),
             prefixIcon: prefixIcon != null
                 ? Padding(

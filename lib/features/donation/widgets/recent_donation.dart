@@ -1,6 +1,9 @@
 import 'package:cresent_charge_user_app/features/donation/models/recent_donations_groupe_model.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class RecentDonation extends StatelessWidget {
   const RecentDonation({super.key, required this.recentDonations});
@@ -9,11 +12,12 @@ class RecentDonation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     if (recentDonations.isEmpty) {
-      return Center(child: Text("No recent donations"));
+      return Center(child: Text("No recent donations", style:  TextStyle(fontSize: isTab ? 8.sp :  null),));
     }
     return Container(
-      padding: EdgeInsets.all(16.rw),
+      padding: EdgeInsets.all( isTab ? 20 : 16.rw),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: const Color(0xFFE4E4E4), width: 1),
@@ -30,7 +34,7 @@ class RecentDonation extends StatelessWidget {
                 Text(
                   recentDonations[groupIndex].title,
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: isTab ? 6.sp :   11,
                     color: Colors.grey,
                     fontWeight: FontWeight.w500,
                     fontFamily: 'Inter',

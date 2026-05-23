@@ -1,6 +1,9 @@
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 /// Section Header Widget
 ///
@@ -19,6 +22,7 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: DonationConstants.paddingHorizontal.rw,
@@ -30,7 +34,7 @@ class SectionHeader extends StatelessWidget {
             title,
             style: TextStyle(
               fontFamily: DonationFonts.familjenGrotesk,
-              fontSize: DonationConstants.fontSize20.rfs,
+              fontSize: isTab ? 8.sp : DonationConstants.fontSize20.rfs,
               fontWeight: FontWeight.w600,
               color: DonationConstants.neutralGray,
               letterSpacing: -0.2,
@@ -44,7 +48,7 @@ class SectionHeader extends StatelessWidget {
                 actionText!,
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: DonationConstants.fontSize14.rfs,
+                  fontSize:isTab ? 8.sp :  DonationConstants.fontSize14.rfs,
                   fontWeight: FontWeight.w500,
                   color: DonationConstants.primaryPurple,
                   height: 20 / 14,

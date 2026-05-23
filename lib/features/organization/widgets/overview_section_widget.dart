@@ -3,6 +3,8 @@ import 'package:cresent_charge_user_app/features/organization/widgets/cause_item
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/helper/extension/context_extension.dart';
+
 class OverviewSectionWidget extends StatelessWidget {
   final String mission;
   final List<OrgDetailsCause> causes;
@@ -15,8 +17,9 @@ class OverviewSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Container(
-      padding: EdgeInsets.all(12.rw),
+      padding: EdgeInsets.all( isTab ? 20 : 12.rw),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.rw),

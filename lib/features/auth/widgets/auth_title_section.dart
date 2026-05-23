@@ -2,6 +2,9 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class AuthTitleSection extends StatelessWidget {
   const AuthTitleSection({super.key, required this.title, this.subtitle});
@@ -10,6 +13,7 @@ class AuthTitleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,7 +26,7 @@ class AuthTitleSection extends StatelessWidget {
         8.heightWidth,
         // Subtitle
         subtitle != null
-            ? subtitle!.text(AppTextStyles.baseStyle())
+            ? subtitle!.text(AppTextStyles.baseStyle().copyWith(fontSize:  isTab ? 8.sp : null))
             : SizedBox.shrink(),
       ],
     );

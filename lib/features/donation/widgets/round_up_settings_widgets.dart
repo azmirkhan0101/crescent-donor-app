@@ -1,6 +1,9 @@
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 /// Special message field widget
 class SpecialMessageField extends StatelessWidget {
@@ -11,6 +14,7 @@ class SpecialMessageField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -19,7 +23,7 @@ class SpecialMessageField extends StatelessWidget {
             text: label ?? 'Add a Special Message',
             style: TextStyle(
               fontFamily: 'Inter Display',
-              fontSize: 16.rfs,
+              fontSize: isTab ? 8.sp : 16.rfs,
               fontWeight: FontWeight.w500,
               color: const Color(0xFF000C0B),
             ),
@@ -28,7 +32,7 @@ class SpecialMessageField extends StatelessWidget {
                 text: '(Optional)',
                 style: TextStyle(
                   color: const Color(0xFFE4E4E4),
-                  fontSize: 12.rfs,
+                  fontSize: isTab ? 7.sp : 12.rfs,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -46,13 +50,13 @@ class SpecialMessageField extends StatelessWidget {
             hintText: 'Enter your special message here...',
             hintStyle: TextStyle(
               fontFamily: 'Inter Display',
-              fontSize: 14.rfs,
+              fontSize: isTab ? 6.sp : 14.rfs,
               color: const Color(0xFF9E9E9E),
             ),
           ),
           style: TextStyle(
             fontFamily: 'Inter Display',
-            fontSize: 14.rfs,
+            fontSize: isTab ? 6.sp : 14.rfs,
             color: const Color(0xFF000C0B),
           ),
         ),

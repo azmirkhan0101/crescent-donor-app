@@ -11,9 +11,12 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class VerifyOtpPage extends StatelessWidget {
   const VerifyOtpPage({
@@ -82,6 +85,7 @@ class VerifyOtpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     // Inject appropriate controller & set initial data
     if (isForSignup) {
       final signupCtrl = Get.isRegistered<SignupOtpController>()
@@ -105,9 +109,11 @@ class VerifyOtpPage extends StatelessWidget {
         AuthTitleSection(title: "Enter Verification Code"),
         Row(
           children: [
-            "We've sent a code to ".text(AppTextStyles.f14W400()),
+            "We've sent a code to ".text(AppTextStyles.f14W400().copyWith(
+                fontSize:  isTab ? 8.sp : null)),
             email
-                .text(AppTextStyles.f14W400())
+                .text(AppTextStyles.f14W400().copyWith(
+                fontSize:  isTab ? 8.sp : null))
                 .fontWeight(FontWeight.w600)
                 .color(AppColors.black),
           ],
@@ -116,40 +122,42 @@ class VerifyOtpPage extends StatelessWidget {
         32.rh.heightWidth,
 
         // OTP field
-        Pinput(
-          autofocus: true,
-          length: 6,
-          onCompleted: (pin) {
-            if (isForSignup) {
-              Get.find<SignupOtpController>().otpValue.value = pin;
-            } else {
-              Get.find<ForgotPasswordOtpController>().otpValue.value = pin;
-            }
-          },
-          onChanged: (pin) {
-            if (isForSignup) {
-              final c = Get.find<SignupOtpController>();
-              c.otpValue.value = pin;
-              c.clearErrors();
-            } else {
-              final c = Get.find<ForgotPasswordOtpController>();
-              c.otpValue.value = pin;
-              c.clearErrors();
-            }
-          },
-          defaultPinTheme: PinTheme(
-            width: 52.rw,
-            height: 52.rw,
-            textStyle: AppTextStyles.f28W700().copyWith(
-              fontSize: 18.rfs,
-              fontWeight: FontWeight.w500,
-              height: 24.rw / 18.rw,
-              fontFamily: AppStrings.interDisplay,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: "#E4E4E4".hexColor, width: 1),
+        Center(
+          child: Pinput(
+            autofocus: true,
+            length: 6,
+            onCompleted: (pin) {
+              if (isForSignup) {
+                Get.find<SignupOtpController>().otpValue.value = pin;
+              } else {
+                Get.find<ForgotPasswordOtpController>().otpValue.value = pin;
+              }
+            },
+            onChanged: (pin) {
+              if (isForSignup) {
+                final c = Get.find<SignupOtpController>();
+                c.otpValue.value = pin;
+                c.clearErrors();
+              } else {
+                final c = Get.find<ForgotPasswordOtpController>();
+                c.otpValue.value = pin;
+                c.clearErrors();
+              }
+            },
+            defaultPinTheme: PinTheme(
+              width: isTab ? 80 : 52.rw,
+              height:  isTab ? 80 : 52.rw,
+              textStyle: AppTextStyles.f28W700().copyWith(
+                fontSize:  isTab ? 12.sp : 18.rfs,
+                fontWeight: FontWeight.w500,
+                height: 24.rw / 18.rw,
+                fontFamily: AppStrings.interDisplay,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: "#E4E4E4".hexColor, width: 1),
+              ),
             ),
           ),
         ),

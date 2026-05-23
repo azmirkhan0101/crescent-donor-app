@@ -42,6 +42,7 @@ class GetPointBalanceController extends GetxController {
         return false;
       },
       (data) {
+        print("Data: $data");
         balance.value = PointBalanceModel.fromJson(data['data'] ?? {});
         return true;
       },

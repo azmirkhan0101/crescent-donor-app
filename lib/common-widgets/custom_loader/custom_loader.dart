@@ -3,6 +3,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 
+import '../../core/helper/extension/context_extension.dart';
+
 /// Custom loader widget with various SpinKit animations
 class CustomLoader extends StatelessWidget {
   const CustomLoader({
@@ -20,8 +22,9 @@ class CustomLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     final Color loaderColor = color ?? AppColors.primaryColor;
-    final double loaderSize = size ?? 50.0.rw;
+    final double loaderSize = size ?? (isTab ? 80 :50.0.rw);
     final Duration animationDuration =
         duration ?? const Duration(milliseconds: 1200);
 

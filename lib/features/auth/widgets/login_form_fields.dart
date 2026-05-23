@@ -7,8 +7,11 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class LoginFormFields extends StatelessWidget {
   final LoginController? controller;
@@ -17,6 +20,7 @@ class LoginFormFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     final loginController = controller ?? Get.find<LoginController>();
 
     return Column(
@@ -42,7 +46,7 @@ class LoginFormFields extends StatelessWidget {
   }
 
   /// Build email input field
-  Widget _buildEmailField(LoginController controller) {
+  Widget _buildEmailField(LoginController controller,) {
     return LoginEmailField(
       controller: controller.emailController,
       onChanged: (value) {
@@ -72,6 +76,7 @@ class LoginFormFields extends StatelessWidget {
     LoginController controller,
     BuildContext context,
   ) {
+    bool isTab = context.isTab;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -106,6 +111,7 @@ class LoginFormFields extends StatelessWidget {
                   color: AppColors.black,
                   height: 20.rw / 14.rw,
                   fontFamily: AppStrings.interDisplay,
+                  fontSize: isTab ? 6.sp : null
                 ),
               ),
             ],
@@ -123,6 +129,7 @@ class LoginFormFields extends StatelessWidget {
               color: AppColors.black,
               decoration: TextDecoration.underline,
               fontFamily: AppStrings.interDisplay,
+                fontSize: isTab ? 6.sp : null
             ),
           ),
         ),

@@ -2,7 +2,10 @@ import 'package:cresent_charge_user_app/common-widgets/custom_loader/custom_load
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../core/helper/extension/context_extension.dart';
 
 class CustomFilledButton extends StatelessWidget {
   const CustomFilledButton({
@@ -23,11 +26,12 @@ class CustomFilledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return FilledButton(
       onPressed: onTap ?? () {},
       style: FilledButton.styleFrom(
         backgroundColor: fillColor ?? AppColors.secondaryColor,
-        fixedSize: Size(double.maxFinite, 56),
+        fixedSize: Size(double.maxFinite, isTab ? 70 : 56),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         side: BorderSide(
           color:
@@ -46,7 +50,7 @@ class CustomFilledButton extends StatelessWidget {
                   Text(
                     loadingText!,
                     style: GoogleFonts.familjenGrotesk(
-                      fontSize: 18,
+                      fontSize: isTab ? 8.sp : 18,
                       color: AppColors.black,
                       fontWeight: FontWeight.w700,
                     ),
@@ -57,7 +61,7 @@ class CustomFilledButton extends StatelessWidget {
           : Text(
               title ?? "Get Started",
               style: GoogleFonts.familjenGrotesk(
-                fontSize: 18,
+                fontSize: isTab ? 8.sp : 18,
                 color: textColor ?? AppColors.black,
                 fontWeight: FontWeight.w700,
               ),

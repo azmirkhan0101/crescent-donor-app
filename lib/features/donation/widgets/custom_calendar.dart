@@ -2,10 +2,14 @@ import 'package:cresent_charge_user_app/features/donation/controllers/donation_c
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 /// Shows custom calendar modal that matches Figma design
 void showCustomCalendarModal(BuildContext context) {
+  bool isTab = context.isTab;
   showDialog(
     context: context,
     barrierDismissible: true,
@@ -14,7 +18,7 @@ void showCustomCalendarModal(BuildContext context) {
       return Dialog(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        insetPadding: EdgeInsets.symmetric(horizontal: 20.rw, vertical: 60.rh),
+        insetPadding: EdgeInsets.symmetric(  horizontal: isTab ? 15 : 20.rw, vertical: isTab ? 15 : 60.rh),
         child: const CustomCalendarModal(),
       );
     },
@@ -67,6 +71,7 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return GetX<DonationController>(
       builder: (controller) {
         _generateSampleCompletedDates();
@@ -75,23 +80,25 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
             color: DonationConstants.cardWhite,
             borderRadius: BorderRadius.circular(20.rw),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 24.rh),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildHeader(),
-              SizedBox(height: 28.rh),
-              _buildWeekdayHeaders(),
-              SizedBox(height: 20.rh),
-              _buildCalendarGrid(),
-            ],
+          padding: EdgeInsets.symmetric(horizontal: isTab ? 20 :  24.rw, vertical: isTab ? 20 : 24.rh),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeader(isTab),
+                SizedBox(height: 28.rh),
+                _buildWeekdayHeaders(isTab),
+                SizedBox(height: 20.rh),
+                _buildCalendarGrid(isTab),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isTab) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -115,7 +122,7 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
           _getMonthYearText(),
           style: TextStyle(
             fontFamily: DonationFonts.familjenGrotesk,
-            fontSize: 18.rfs,
+            fontSize: isTab ? 8.sp : 18.rfs,
             fontWeight: FontWeight.w600,
             color: DonationConstants.offBlack,
             letterSpacing: -0.2,
@@ -141,7 +148,7 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
     );
   }
 
-  Widget _buildWeekdayHeaders() {
+  Widget _buildWeekdayHeaders(bool isTab) {
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
     return Row(
@@ -154,7 +161,7 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
                   day,
                   style: TextStyle(
                     fontFamily: DonationFonts.inter,
-                    fontSize: 12.rfs,
+                    fontSize: isTab ? 6.sp : 12.rfs,
                     fontWeight: FontWeight.w500,
                     color: DonationConstants.mediumGrayText,
                     letterSpacing: -0.1,
@@ -167,7 +174,7 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
     );
   }
 
-  Widget _buildCalendarGrid() {
+  Widget _buildCalendarGrid(bool isTab) {
     final daysInMonth = _getDaysInMonth();
     final firstDayOfMonth = DateTime(_displayDate.year, _displayDate.month, 1);
     final weekdayOfFirstDay =
@@ -198,12 +205,12 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
         final day = dayIndex + 1;
         final date = DateTime(_displayDate.year, _displayDate.month, day);
 
-        return _buildDayCell(day, date);
+        return _buildDayCell(day, date, isTab);
       },
     );
   }
 
-  Widget _buildDayCell(int day, DateTime date) {
+  Widget _buildDayCell(int day, DateTime date, bool isTab) {
     final isToday = _isSameDay(date, _today);
     final isSelected =
         _selectedDate != null && _isSameDay(date, _selectedDate!);
@@ -255,8 +262,8 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
         });
       },
       child: Container(
-        height: 36.rh,
-        width: 36.rw,
+        height: isTab ? 80 :  36.rh,
+        width: isTab ? 80 : 36.rw,
         decoration: BoxDecoration(
           color: backgroundColor,
           border: borderColor != Colors.transparent
@@ -269,7 +276,7 @@ class _CustomCalendarModalState extends State<CustomCalendarModal> {
             day.toString(),
             style: TextStyle(
               fontFamily: DonationFonts.inter,
-              fontSize: 14.rfs,
+              fontSize: isTab ? 8.sp : 14.rfs,
               fontWeight: FontWeight.w500,
               color: textColor,
             ),

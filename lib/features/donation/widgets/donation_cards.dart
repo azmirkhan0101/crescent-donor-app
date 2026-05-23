@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
@@ -42,6 +43,7 @@ class RoundUpCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -53,7 +55,7 @@ class RoundUpCard extends StatelessWidget {
           ),
           border: Border.all(color: DonationConstants.roundUpBorder, width: 1),
         ),
-        padding: EdgeInsets.all(16.rw),
+        padding: EdgeInsets.all( isTab ? 30 : 16.rw),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -79,7 +81,7 @@ class RoundUpCard extends StatelessWidget {
                   'Round Up',
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: DonationConstants.fontSize14.rfs,
+                    fontSize: isTab ? 8.sp : DonationConstants.fontSize14.rfs,
                     fontWeight: FontWeight.w600,
                     color: DonationConstants.offBlack,
                   ),
@@ -92,7 +94,7 @@ class RoundUpCard extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w400,
                       color: AppColors.black,
-                      fontSize: 14.sp,
+                      fontSize: isTab ? 8.sp :  14.sp,
                     ),
                     onChanged: (String? newValue) {
                       if (newValue != null) {
@@ -142,7 +144,7 @@ class RoundUpCard extends StatelessWidget {
                         "You've rounded up",
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
-                          fontSize: DonationConstants.fontSize12.rfs,
+                          fontSize:isTab ? 8.sp :  DonationConstants.fontSize12.rfs,
                           fontWeight: FontWeight.w400,
                           color: DonationConstants.offBlack,
                         ),
@@ -186,7 +188,7 @@ class RoundUpCard extends StatelessWidget {
                     text: TextSpan(
                       style: TextStyle(
                         fontFamily: DonationFonts.interDisplay,
-                        fontSize: DonationConstants.fontSize12.rfs,
+                        fontSize: isTab ? 8.sp : DonationConstants.fontSize12.rfs,
                         fontWeight: FontWeight.w400,
                         color: DonationConstants.offBlack,
                         height: 16 / 12,
@@ -217,7 +219,7 @@ class RoundUpCard extends StatelessWidget {
               "Keep going—You're making real change.",
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
-                fontSize: DonationConstants.fontSize12.rfs,
+                fontSize: isTab ? 8.sp : DonationConstants.fontSize12.rfs,
                 fontWeight: FontWeight.w400,
                 color: DonationConstants.offBlack,
                 height: 16 / 12,
@@ -255,11 +257,13 @@ class SmallDonationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: DonationConstants.smallCardWidth.rw,
-        height: DonationConstants.smallCardHeight.rh,
+        height: isTab ? 200 : DonationConstants.smallCardHeight.rh,
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(
@@ -267,7 +271,7 @@ class SmallDonationCard extends StatelessWidget {
           ),
           border: Border.all(color: borderColor, width: 1),
         ),
-        padding: EdgeInsets.all(16.rw),
+        padding: EdgeInsets.all( isTab ? 20 : 16.rw),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -290,7 +294,7 @@ class SmallDonationCard extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize: DonationConstants.fontSize14.rfs,
+                      fontSize: isTab ? 8.sp : DonationConstants.fontSize14.rfs,
                       fontWeight: FontWeight.w600,
                       color: DonationConstants.offBlack,
                     ),
@@ -355,6 +359,7 @@ class CalendarDayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     Color backgroundColor;
     Color borderColor;
     Color iconColor;
@@ -394,7 +399,7 @@ class CalendarDayWidget extends StatelessWidget {
 
     return Container(
       height: 80.rh,
-      padding: EdgeInsets.all(4.rh),
+      padding: EdgeInsets.all( isTab ? 10 : 4.rh),
       width: 56.rw,
       decoration: BoxDecoration(
         color: backgroundColor,
@@ -415,7 +420,7 @@ class CalendarDayWidget extends StatelessWidget {
             dayName,
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 10.rfs,
+              fontSize:isTab ? 6.sp :  10.rfs,
               fontWeight: FontWeight.w400,
               color: dayColor,
               letterSpacing: -0.24,
@@ -428,7 +433,7 @@ class CalendarDayWidget extends StatelessWidget {
             dayNumber,
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 14.rfs,
+              fontSize: isTab ? 6.sp : 14.rfs,
               fontWeight: FontWeight.w500,
               color: dateColor,
             ),
@@ -441,146 +446,3 @@ class CalendarDayWidget extends StatelessWidget {
     );
   }
 }
-
-/// Badge Card Widget
-///
-/// Displays achievement badges with progress indicators
-// class BadgeCard extends StatelessWidget {
-//   final String badgeName;
-//   final String? progressText;
-//   final String description;
-//   final String? badgeImage;
-//   final double progress; // 0.0 to 1.0
-
-//   const BadgeCard({
-//     super.key,
-//     required this.badgeName,
-//     this.progressText,
-//     required this.description,
-//     this.badgeImage,
-//     required this.progress,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: DonationConstants.badgeCardWidth.rw,
-//       height: 230.rh, // Fixed height to prevent overflow
-//       decoration: BoxDecoration(
-//         color: DonationConstants.cardWhite,
-//         borderRadius: BorderRadius.circular(
-//           DonationConstants.cardBorderRadius.rw,
-//         ),
-//         border: Border.all(color: DonationConstants.cardBorder, width: 1),
-//       ),
-//       padding: EdgeInsets.symmetric(horizontal: 6.rw, vertical: 6.rh),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           // Badge image container
-//           Container(
-//             height: 100.rh, // Reduced height
-//             width: double.infinity,
-//             decoration: BoxDecoration(
-//               color: DonationConstants.offWhite,
-//               borderRadius: BorderRadius.circular(
-//                 DonationConstants.smallCardBorderRadius.rw,
-//               ),
-//             ),
-//             child: badgeImage != null
-//                 ? Center(
-//                     child: Image.asset(
-//                       badgeImage!,
-//                       width: 72.rw, // Reduced size
-//                       height: 72.rw,
-//                       fit: BoxFit.contain,
-//                     ),
-//                   )
-//                 : Icon(
-//                     Icons.emoji_events_outlined,
-//                     size: 72.rfs, // Reduced size
-//                     color: DonationConstants.mediumGrayText,
-//                   ),
-//           ),
-//           SizedBox(height: 6.rh), // Reduced spacing
-//           // Badge info
-//           Expanded(
-//             child: Padding(
-//               padding: EdgeInsets.symmetric(horizontal: 4.rw),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: [
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Expanded(
-//                         child: Text(
-//                           badgeName,
-//                           style: TextStyle(
-//                             fontFamily: DonationFonts.interDisplay,
-//                             fontSize: 12.rfs, // Reduced font size
-//                             fontWeight: FontWeight.w500,
-//                             color: DonationConstants.offBlack,
-//                           ),
-//                           maxLines: 1,
-//                           overflow: TextOverflow.ellipsis,
-//                         ),
-//                       ),
-//                       if (progressText != null)
-//                         Text(
-//                           progressText!,
-//                           style: TextStyle(
-//                             fontFamily: DonationFonts.interDisplay,
-//                             fontSize: 10.rfs, // Reduced font size
-//                             fontWeight: FontWeight.w400,
-//                             color: DonationConstants.mediumGrayText,
-//                           ),
-//                         ),
-//                     ],
-//                   ),
-//                   SizedBox(height: 6.rh), // Reduced spacing
-//                   // Progress bar
-//                   Container(
-//                     height: DonationConstants.progressBarHeight.rh,
-//                     width: double.infinity,
-//                     decoration: BoxDecoration(
-//                       color: DonationConstants.lightGray,
-//                       borderRadius: BorderRadius.circular(24.rw),
-//                     ),
-//                     child: FractionallySizedBox(
-//                       alignment: Alignment.centerLeft,
-//                       widthFactor: progress.clamp(0.0, 1.0),
-//                       child: Container(
-//                         decoration: BoxDecoration(
-//                           color: DonationConstants.offBlack,
-//                           borderRadius: BorderRadius.circular(24.rw),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                   SizedBox(height: 6.rh), // Reduced spacing
-//                   // Description
-//                   Expanded(
-//                     child: Text(
-//                       description,
-//                       style: TextStyle(
-//                         fontFamily: DonationFonts.interDisplay,
-//                         fontSize: 10.rfs, // Reduced font size
-//                         fontWeight: FontWeight.w400,
-//                         color: DonationConstants.mediumGrayText,
-//                         height: 14 / 10,
-//                       ),
-//                       maxLines: 3,
-//                       overflow: TextOverflow.ellipsis,
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

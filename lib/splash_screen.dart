@@ -1,3 +1,4 @@
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,13 +60,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
 
+    bool isTab = context.isTab;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: Image.asset(
           "assets/onboarding/splash_logo.png",
-          height: 212.h,
-          width: 212.w,
+          height: isTab ? 250 : 212.h,
+          width: isTab ? 250 : 212.w,
           fit: BoxFit.cover,
         ),
       )

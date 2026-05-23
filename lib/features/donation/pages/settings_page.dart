@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/cancel_recurring_donation_controller.dart';
 import 'package:cresent_charge_user_app/features/donation/controllers/cancel_roundup_controller.dart';
@@ -19,6 +20,7 @@ import 'package:cresent_charge_user_app/features/payment/controllers/payment_met
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
@@ -104,6 +106,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     // print('Building SettingsPage, isRecurring: ${widget.isRecurring}');
     return Scaffold(
       backgroundColor: DonationConstants.backgroundColor,
@@ -199,6 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
               if (widget.isRecurring)
                 _buildDropDownField(
                   label: 'Organization',
+                  isTab: isTab,
                   items: getRecurringConnectionController
                       .recurringConnectionList
                       .map(
@@ -249,6 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
               if (!widget.isRecurring)
                 _buildDropDownField(
                   label: "Organization",
+                  isTab: isTab,
                   items: [
                     DropdownMenuItem(
                       value: getRoundupController.organizationName,
@@ -302,6 +307,7 @@ class _SettingsPageState extends State<SettingsPage> {
               if (!widget.isRecurring)
                 _buildDropDownField(
                   label: 'Bank Account',
+                  isTab: isTab,
                   items: [
                     DropdownMenuItem(
                       value: getRoundupController.formattedCardNumber,
@@ -342,6 +348,7 @@ class _SettingsPageState extends State<SettingsPage> {
               if (widget.isRecurring)
                 _buildDropDownField(
                   label: 'Payment Method',
+                  isTab: isTab,
                   items: paymentMethodController.paymentMethods
                       .map(
                         (e) => DropdownMenuItem(
@@ -405,7 +412,7 @@ class _SettingsPageState extends State<SettingsPage> {
               if (widget.isRecurring) _buildFrequencySection().paddingB(16.rh),
 
               // Threshold Amount Selection
-              _buildThresholdAmountSection(),
+              _buildThresholdAmountSection(isTab),
 
               SizedBox(height: 16.rh),
 
@@ -415,7 +422,7 @@ class _SettingsPageState extends State<SettingsPage> {
               SizedBox(height: 24.rh),
 
               // Cancel Donation Button
-              _buildCancelDonationButton(settingsCtrl),
+              _buildCancelDonationButton(settingsCtrl, isTab),
 
               SizedBox(height: 24.rh),
 
@@ -432,7 +439,7 @@ class _SettingsPageState extends State<SettingsPage> {
               //   }
               //   return SizedBox.shrink();
               // }),
-              _buildBottomButtons(context),
+              _buildBottomButtons(context, isTab),
             ],
           );
         }),
@@ -442,6 +449,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   /// Build app bar with back button and title
   AppBar _buildAppBar(BuildContext context) {
+    bool isTab = context.isTab;
     return AppBar(
       backgroundColor: DonationConstants.backgroundColor,
       elevation: 0,
@@ -460,28 +468,13 @@ class _SettingsPageState extends State<SettingsPage> {
         widget.isRecurring ? 'Recurring Settings' : 'Round Up Settings',
         style: TextStyle(
           fontFamily: DonationFonts.familjenGrotesk,
-          fontSize: 20.rfs,
+          fontSize: isTab ? 9.sp : 20.rfs,
           fontWeight: FontWeight.bold,
           color: DonationConstants.offBlack,
           letterSpacing: -0.2,
         ),
       ),
       centerTitle: true,
-
-      // actions: [
-      //   const SizedBox(width: 48), // Placeholder for symmetry
-      //   Obx(() {
-      //     return Skeletonizer(
-      //       enabled:
-      //           plaidCtrl.isLoadingConfiguration.value ||
-      //           plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading,
-      //       child: IconButton(
-      //         onPressed: () => plaidCtrl.createLinkTokenConfiguration(),
-      //         icon: Icon(Icons.add),
-      //       ),
-      //     );
-      //   }),
-      // ],
     );
   }
 
@@ -491,6 +484,7 @@ class _SettingsPageState extends State<SettingsPage> {
     required List<DropdownMenuItem<String>>? items,
     required void Function(String?)? onChanged,
     required String? selectedItemName,
+    required bool isTab
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -499,7 +493,7 @@ class _SettingsPageState extends State<SettingsPage> {
           label,
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: 14.rfs,
+            fontSize: isTab ? 8.sp : 14.rfs,
             fontWeight: FontWeight.w500,
             color: DonationConstants.offBlack,
           ),
@@ -526,7 +520,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       selectedItemName ?? 'Select organization',
                       style: TextStyle(
                         fontFamily: DonationFonts.interDisplay,
-                        fontSize: 14.rfs,
+                        fontSize: isTab ? 6.sp : 14.rfs,
                         fontWeight: FontWeight.w500,
                         color: DonationConstants.offBlack,
                       ),
@@ -540,7 +534,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       color: const Color(
                         0xFFC08FFF,
                       ) /* Colors-Primary-Purple */,
-                      fontSize: 14,
+                      fontSize: isTab ? 6.sp : 14,
                       fontFamily: 'Inter Display',
                       fontWeight: FontWeight.w500,
                       height: 1.43,
@@ -716,7 +710,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   /// Build threshold amount selection section
-  Widget _buildThresholdAmountSection() {
+  Widget _buildThresholdAmountSection(bool isTab) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -724,7 +718,7 @@ class _SettingsPageState extends State<SettingsPage> {
           'Select Threshold Amount (Per Month)',
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: 14.rfs,
+            fontSize: isTab ? 8.sp : 14.rfs,
             fontWeight: FontWeight.w500,
             color: DonationConstants.offBlack,
           ),
@@ -767,9 +761,12 @@ class _SettingsPageState extends State<SettingsPage> {
             child: TextField(
               controller: settingsCtrl.customAmountController,
               keyboardType: TextInputType.number,
+              style: TextStyle(fontSize: isTab ? 6.sp : null),
               decoration: InputDecoration(
                 labelText: 'Enter custom amount',
+                labelStyle: TextStyle(fontSize: isTab ? 8.sp : null),
                 hintText: 'e.g., 75',
+                hintStyle: TextStyle(fontSize: isTab ? 6.sp : null),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 12.rw,
                   vertical: 12.rh,
@@ -793,7 +790,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   /// Build cancel donation button
-  Widget _buildCancelDonationButton(SettingsController controller) {
+  Widget _buildCancelDonationButton(SettingsController controller, bool isTab) {
     return Obx(() {
       final isLoading =
           cancelRecurringDonationController.isLoading.value ||
@@ -819,7 +816,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   'Cancel this donation',
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: 14.rfs,
+                    fontSize: isTab ? 6.sp : 14.rfs,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFFF0323C),
                   ),
@@ -830,7 +827,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   /// Build bottom action buttons
-  Widget _buildBottomButtons(BuildContext context) {
+  Widget _buildBottomButtons(BuildContext context, bool isTab) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 56.rw, vertical: 16.rh),
       color: Colors.transparent,
@@ -843,7 +840,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ? _handleRecurringUpdateSettings()
                 : _handleRoundupUpdateSettings(),
             style: ElevatedButton.styleFrom(
-              fixedSize: const Size(double.maxFinite, 52),
+              fixedSize:  Size(double.maxFinite, isTab ? 70 : 52),
               backgroundColor: DonationConstants.secondaryLime,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.rw),
@@ -854,7 +851,7 @@ class _SettingsPageState extends State<SettingsPage> {
               'Update Settings',
               style: TextStyle(
                 fontFamily: DonationFonts.familjenGrotesk,
-                fontSize: 18.rfs,
+                fontSize: isTab ? 7.sp : 18.rfs,
                 fontWeight: FontWeight.bold,
                 color: DonationConstants.offBlack,
                 letterSpacing: -0.36,
@@ -871,7 +868,7 @@ class _SettingsPageState extends State<SettingsPage> {
               'Cancel',
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
-                fontSize: 14.rfs,
+                fontSize: isTab ? 6.sp : 14.rfs,
                 fontWeight: FontWeight.w600,
                 color: DonationConstants.offBlack,
               ),
@@ -1097,360 +1094,4 @@ class _SettingsPageState extends State<SettingsPage> {
       context.pop();
     }
   }
-
-  /// ===================> Unused Methods <==================
-
-  ///
-  // Widget _buildOrganizationField(SettingsController controller) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         'Organization',
-  //         style: TextStyle(
-  //           fontFamily: DonationFonts.interDisplay,
-  //           fontSize: 14.rfs,
-  //           fontWeight: FontWeight.w500,
-  //           color: DonationConstants.offBlack,
-  //         ),
-  //       ),
-
-  //       SizedBox(height: 8.rh),
-
-  //       // TextField(
-  //       //   controller: TextEditingController(),
-  //       //   decoration: InputDecoration(
-  //       //     hintText: 'Search Organization',
-  //       //     contentPadding: EdgeInsets.symmetric(
-  //       //       horizontal: 16.rw,
-  //       //       vertical: 16.rh,
-  //       //     ),
-  //       //   ),
-  //       //   onChanged: (value) async {
-  //       //     await organizationController.fetchAllOrganizations(
-  //       //       searchTerm: value,
-  //       //     );
-  //       //   },
-  //       // ),
-  //       // GetX<OrganizationController>(
-  //       //   builder: (orgCtrl) {
-  //       //     final orgs = orgCtrl.organizationsList;
-  //       //     if (orgs.isEmpty) {
-  //       //       return SizedBox(
-  //       //         height: 64.rh,
-  //       //         child: Center(
-  //       //           child: Text(
-  //       //             'No organizations found',
-  //       //             style: TextStyle(color: DonationConstants.offBlack),
-  //       //           ),
-  //       //         ),
-  //       //       );
-  //       //     }
-
-  //       //     return ListView.builder(
-  //       //       shrinkWrap: true,
-  //       //       physics: const NeverScrollableScrollPhysics(),
-  //       //       itemCount: orgs.length,
-  //       //       itemBuilder: (context, index) {
-  //       //         final organization = orgs[index];
-  //       //         return ListTile(title: Text(organization.name), onTap: () {});
-  //       //       },
-  //       //     );
-  //       //   },
-  //       // ),
-  //       // SizedBox(height: 8.rh),
-  //       DropdownButtonHideUnderline(
-  //         child: DropdownButton2(
-  //           isExpanded: true,
-  //           items: organizationController.organizationsList
-  //               .map(
-  //                 (e) => DropdownMenuItem(value: e.name, child: Text(e.name)),
-  //               )
-  //               .toList(),
-  //           dropdownSearchData: DropdownSearchData(
-  //             searchController: _orgSearchController,
-  //             searchInnerWidgetHeight: 50,
-  //             searchInnerWidget: Container(
-  //               height: 50,
-  //               padding: EdgeInsets.only(top: 8, bottom: 4, right: 8, left: 8),
-  //               child: TextFormField(
-  //                 controller: _orgSearchController,
-  //                 decoration: InputDecoration(
-  //                   isDense: true,
-  //                   contentPadding: EdgeInsets.symmetric(
-  //                     horizontal: 10,
-  //                     vertical: 8,
-  //                   ),
-  //                   hintText: 'Search organization...',
-  //                   hintStyle: TextStyle(fontSize: 12),
-  //                   border: OutlineInputBorder(
-  //                     borderRadius: BorderRadius.circular(8),
-  //                   ),
-  //                 ),
-  //                 onChanged: (value) {
-  //                   if (_debounce?.isActive ?? false) _debounce!.cancel();
-  //                   _debounce = Timer(
-  //                     const Duration(milliseconds: 500),
-  //                     () async {
-  //                       await organizationController.fetchAllOrganizations(
-  //                         searchTerm: value,
-  //                       );
-  //                     },
-  //                   );
-  //                 },
-  //               ),
-  //             ),
-  //             searchMatchFn: (item, searchValue) {
-  //               return item.value.toString().toLowerCase().contains(
-  //                 searchValue.toLowerCase(),
-  //               );
-  //             },
-  //           ),
-  //           onChanged: (value) {
-  //             if (value == null) return;
-
-  //             int index = organizationController.organizationsList.indexWhere(
-  //               (e) => e.name == value,
-  //             );
-
-  //             if (index >= 0) {
-  //               controller.changeOrganization(index);
-  //             }
-  //             _orgSearchController.clear();
-  //           },
-  //           onMenuStateChange: (isOpen) {
-  //             if (!isOpen) {
-  //               _orgSearchController.clear();
-  //             }
-  //           },
-  //           customButton: Container(
-  //             width: double.infinity,
-  //             padding: EdgeInsets.symmetric(horizontal: 16.rw, vertical: 16.rh),
-  //             decoration: BoxDecoration(
-  //               color: Colors.white,
-  //               borderRadius: BorderRadius.circular(12.rw),
-  //               border: Border.all(color: const Color(0xFFE4E4E4), width: 1),
-  //             ),
-  //             child: Row(
-  //               children: [
-  //                 Expanded(
-  //                   child: Obx(() {
-  //                     final orgs = organizationController.organizationsList;
-  //                     final selIdx = controller.selectedOrganizationIndex.value;
-
-  //                     final name =
-  //                         (orgs.isNotEmpty &&
-  //                             selIdx >= 0 &&
-  //                             selIdx < orgs.length)
-  //                         ? orgs[selIdx].name
-  //                         : 'Select organization';
-
-  //                     return Text(
-  //                       name,
-  //                       style: TextStyle(
-  //                         fontFamily: DonationFonts.interDisplay,
-  //                         fontSize: 14.rfs,
-  //                         fontWeight: FontWeight.w500,
-  //                         color: DonationConstants.offBlack,
-  //                       ),
-  //                     );
-  //                   }),
-  //                 ),
-
-  //                 Text(
-  //                   'Change',
-  //                   textAlign: TextAlign.right,
-  //                   style: TextStyle(
-  //                     color: const Color(
-  //                       0xFFC08FFF,
-  //                     ) /* Colors-Primary-Purple */,
-  //                     fontSize: 14,
-  //                     fontFamily: 'Inter Display',
-  //                     fontWeight: FontWeight.w500,
-  //                     height: 1.43,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  /// Build organization and bank account field
-  // Widget _buildRoundUpFieldField({
-  //   required GetRoundupController controller,
-  //   required String label,
-  //   bool isOrg = false,
-  // }) {
-  //   List<DropdownMenuItem<String>>? items() {
-  //     if (controller.roundupConfig.) {
-  //       return [
-  //         DropdownMenuItem<String>(
-  //           value: null,
-  //           child: Text(
-  //             isOrg ? 'No linked organizations' : 'No linked accounts',
-  //           ),
-  //         ),
-  //       ];
-  //     } else {
-  //       if (isOrg) {
-  //         // Filter for accounts with active round-up organization details
-  //         final orgsWithRoundUp = controller.roundUpBankConnectionModel
-  //             .where(
-  //               (e) =>
-  //                   e.isLinkedToActiveRoundUp &&
-  //                   e.roundUpDetails?.organizationName != null,
-  //             )
-  //             .toList();
-
-  //         if (orgsWithRoundUp.isEmpty) {
-  //           return [
-  //             DropdownMenuItem<String>(
-  //               value: null,
-  //               child: Text('No linked organizations'),
-  //             ),
-  //           ];
-  //         }
-
-  //         return orgsWithRoundUp
-  //             .map(
-  //               (e) => DropdownMenuItem(
-  //                 value: e.roundUpDetails!.organizationName,
-  //                 child: Text(e.roundUpDetails!.organizationName),
-  //               ),
-  //             )
-  //             .toList();
-  //       } else {
-  //         return controller.roundUpBankConnectionModel
-  //             .map(
-  //               (e) => DropdownMenuItem(
-  //                 value: e.institutionName,
-  //                 child: Text(e.institutionName),
-  //               ),
-  //             )
-  //             .toList();
-  //       }
-  //     }
-  //   }
-
-  //   return GetX<SettingsController>(
-  //     builder: (roundUpSettingsCtrl) {
-  //       final roundUpModelList = controller.roundUpBankConnectionModel;
-  //       final selectedIndex =
-  //           roundUpSettingsCtrl.selectedRoundUpModelIndex.value;
-
-  //       String displayText;
-  //       if (roundUpModelList.isEmpty) {
-  //         displayText = isOrg
-  //             ? 'No linked organizations'
-  //             : 'No linked accounts';
-  //       } else if (selectedIndex >= 0 &&
-  //           selectedIndex < roundUpModelList.length) {
-  //         if (isOrg) {
-  //           displayText =
-  //               roundUpModelList[selectedIndex]
-  //                   .roundUpDetails
-  //                   ?.organizationName ??
-  //               'Select organization';
-  //         } else {
-  //           displayText = roundUpModelList[selectedIndex].institutionName;
-  //         }
-  //       } else {
-  //         displayText = isOrg ? 'Select organization' : 'Select account';
-  //       }
-  //       return Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Text(
-  //             label,
-  //             style: TextStyle(
-  //               fontFamily: DonationFonts.interDisplay,
-  //               fontSize: 14.rfs,
-  //               fontWeight: FontWeight.w500,
-  //               color: DonationConstants.offBlack,
-  //             ),
-  //           ),
-
-  //           SizedBox(height: 8.rh),
-
-  //           DropdownButtonHideUnderline(
-  //             child: DropdownButton2(
-  //               items: items() as List<DropdownMenuItem<Object>>?,
-  //               onChanged: (value) {
-  //                 if (controller.roundUpBankConnectionModel.isEmpty ||
-  //                     value == null) {
-  //                   return;
-  //                 }
-  //                 int index;
-  //                 if (isOrg) {
-  //                   // Find by organization name in roundUpDetails
-  //                   index = controller.roundUpBankConnectionModel.indexWhere(
-  //                     (e) => e.roundUpDetails?.organizationName == value,
-  //                   );
-  //                 } else {
-  //                   // Find by institution name
-  //                   index = controller.roundUpBankConnectionModel.indexWhere(
-  //                     (e) => e.institutionName == value,
-  //                   );
-  //                 }
-
-  //                 // Only change if a valid index is found
-  //                 if (index >= 0) {
-  //                   roundUpSettingsCtrl.changeRoundUpModelIndex(index);
-  //                 }
-  //               },
-  //               customButton: Container(
-  //                 width: double.infinity,
-  //                 padding: EdgeInsets.symmetric(
-  //                   horizontal: 16.rw,
-  //                   vertical: 16.rh,
-  //                 ),
-  //                 decoration: BoxDecoration(
-  //                   color: Colors.white,
-  //                   borderRadius: BorderRadius.circular(12.rw),
-  //                   border: Border.all(
-  //                     color: const Color(0xFFE4E4E4),
-  //                     width: 1,
-  //                   ),
-  //                 ),
-  //                 child: Row(
-  //                   children: [
-  //                     Expanded(
-  //                       child: Text(
-  //                         displayText,
-  //                         style: TextStyle(
-  //                           fontFamily: DonationFonts.interDisplay,
-  //                           fontSize: 14.rfs,
-  //                           fontWeight: FontWeight.w500,
-  //                           color: DonationConstants.offBlack,
-  //                         ),
-  //                       ),
-  //                     ),
-
-  //                     Text(
-  //                       'Change',
-  //                       textAlign: TextAlign.right,
-  //                       style: TextStyle(
-  //                         color: const Color(
-  //                           0xFFC08FFF,
-  //                         ) /* Colors-Primary-Purple */,
-  //                         fontSize: 14,
-  //                         fontFamily: 'Inter Display',
-  //                         fontWeight: FontWeight.w500,
-  //                         height: 1.43,
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 }

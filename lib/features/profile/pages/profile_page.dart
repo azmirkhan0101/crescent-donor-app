@@ -10,9 +10,12 @@ import 'package:cresent_charge_user_app/features/profile/models/profile_model.da
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 /// Menu item data model
 class MenuItemData {
@@ -32,6 +35,9 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isTab = context.isTab;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       body: SafeArea(
@@ -49,7 +55,7 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(height: 16.rh),
 
                   // Profile Header Section
-                  _buildProfileHeader(context, profile),
+                  _buildProfileHeader(context, profile, isTab),
 
                   SizedBox(height: 16.rh),
 
@@ -72,15 +78,15 @@ class ProfilePage extends StatelessWidget {
   }
 
   /// Build profile header with avatar and user info
-  Widget _buildProfileHeader(BuildContext context, ProfileModel? profile) {
+  Widget _buildProfileHeader(BuildContext context, ProfileModel? profile, bool isTab) {
     return Column(
       children: [
         // Profile Avatar
         Center(
           child: CustomNetworkImage(
             imageUrl: profile?.image ?? '',
-            height: 120.rw,
-            width: 120.rw,
+            height: isTab ? 90 : 120.rw,
+            width: isTab ? 90 :  120.rw,
             borderRadius: BorderRadius.circular(60.rw),
           ),
         ),
@@ -117,7 +123,7 @@ class ProfilePage extends StatelessWidget {
                             profile?.auth.email ?? 'N/A' : "",
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: 12.rfs,
+                              fontSize: isTab ? 6.sp : 12.rfs,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey,
                             ),

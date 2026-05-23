@@ -9,8 +9,11 @@ import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class ResetPasswordPage extends StatelessWidget {
   const ResetPasswordPage({super.key, required this.resetPasswordToken});
@@ -19,6 +22,7 @@ class ResetPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     final controller = Get.put(ResetPasswordController());
 
     return Scaffold(
@@ -55,6 +59,7 @@ class ResetPasswordPage extends StatelessWidget {
                             onToggleVisibility:
                                 controller.toggleNewPasswordVisibility,
                             textInputAction: TextInputAction.next,
+                            isTab: isTab
                           ),
                           if (controller.newPasswordError.value.isNotEmpty)
                             Padding(
@@ -84,6 +89,7 @@ class ResetPasswordPage extends StatelessWidget {
                             onToggleVisibility:
                                 controller.toggleConfirmPasswordVisibility,
                             textInputAction: TextInputAction.done,
+                            isTab: isTab
                           ),
                           if (controller.confirmPasswordError.value.isNotEmpty)
                             Padding(
@@ -101,7 +107,7 @@ class ResetPasswordPage extends StatelessWidget {
                     ),
                     24.heightWidth,
                     "A strong password must have:".text(
-                      AppTextStyles.f14W400(),
+                      AppTextStyles.f14W400().copyWith(fontSize: isTab ? 8.sp : null),
                     ),
                     16.heightWidth,
                     Column(
@@ -110,6 +116,7 @@ class ResetPasswordPage extends StatelessWidget {
                           () => _buildPasswordRequirement(
                             "At least 8 characters",
                             controller.hasMinLength.value,
+                            isTab
                           ),
                         ),
                         8.heightWidth,
@@ -118,6 +125,7 @@ class ResetPasswordPage extends StatelessWidget {
                             "At least one uppercase and one lowercase letter",
                             controller.hasUppercase.value &&
                                 controller.hasLowercase.value,
+                              isTab
                           ),
                         ),
                         8.heightWidth,
@@ -125,6 +133,7 @@ class ResetPasswordPage extends StatelessWidget {
                           () => _buildPasswordRequirement(
                             "At least one numeral",
                             controller.hasNumber.value,
+                              isTab
                           ),
                         ),
                         8.heightWidth,
@@ -132,6 +141,7 @@ class ResetPasswordPage extends StatelessWidget {
                           () => _buildPasswordRequirement(
                             "At least one special character",
                             controller.hasSpecialChar.value,
+                              isTab
                           ),
                         ),
                         if (controller
@@ -145,6 +155,7 @@ class ResetPasswordPage extends StatelessWidget {
                                 _buildPasswordRequirement(
                                   "Passwords match",
                                   controller.passwordsMatch.value,
+                                    isTab
                                 ),
                               ],
                             );
@@ -220,14 +231,14 @@ class ResetPasswordPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ("Changed your mind?").centerText(
-                                AppTextStyles.f14W400(),
+                                AppTextStyles.f14W400().copyWith(fontSize: isTab ? 8.sp : null),
                               ),
                               4.rw.width,
                               ("Login")
-                                  .centerText(AppTextStyles.f14W400())
+                                  .centerText(AppTextStyles.f14W400().copyWith(fontSize: isTab ? 8.sp : null))
                                   .fontWeight(FontWeight.w600)
                                   .color(AppColors.black)
-                                  .fontSize(14.rfs)
+                                  //.fontSize(14.rfs)
                                   .onTap(() {
                                     context.pushNamed(RoutePath.login);
                                   }),
@@ -252,6 +263,7 @@ class ResetPasswordPage extends StatelessWidget {
     required bool isVisible,
     required VoidCallback onToggleVisibility,
     required TextInputAction textInputAction,
+    required bool isTab
   }) {
     return TextFormField(
       controller: controller,
@@ -261,28 +273,30 @@ class ResetPasswordPage extends StatelessWidget {
       style: AppTextStyles.baseStyle().copyWith(
         color: AppColors.black,
         fontWeight: FontWeight.w500,
+        fontSize: isTab ? 8.sp : null
       ),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: AppTextStyles.baseStyle().copyWith(
           color: AppColors.grayColor.withValues(alpha: 0.6),
           fontWeight: FontWeight.w400,
+          fontSize: isTab ? 8.sp : null
         ),
         prefixIcon: Padding(
-          padding: EdgeInsets.all(12.rw),
+          padding: EdgeInsets.all( isTab ? 20 :12.rw),
           child: Assets.onboarding.lock.svg(
-            width: 20.rw,
-            height: 20.rh,
+            width: isTab ? 30 :20.rw,
+            height:  isTab ? 30 :20.rh,
             colorFilter: ColorFilter.mode(AppColors.grayColor, BlendMode.srcIn),
           ),
         ),
         suffixIcon: GestureDetector(
           onTap: onToggleVisibility,
           child: Padding(
-            padding: EdgeInsets.all(12.rw),
+            padding: EdgeInsets.all(isTab ? 20 :12.rw),
             child: Assets.onboarding.eye.svg(
-              width: 20.rw,
-              height: 20.rh,
+              width: isTab ? 30 :20.rw,
+              height: isTab ? 30 :20.rh,
               colorFilter: ColorFilter.mode(
                 AppColors.grayColor,
                 BlendMode.srcIn,
@@ -316,7 +330,7 @@ class ResetPasswordPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordRequirement(String text, bool isValid) {
+  Widget _buildPasswordRequirement(String text, bool isValid, bool isTab) {
     return Row(
       children: [
         Container(
@@ -334,10 +348,10 @@ class ResetPasswordPage extends StatelessWidget {
               ? Icon(Icons.check, size: 10.rfs, color: Colors.white)
               : null,
         ),
-        12.rw.width,
+        isTab ? 4.rw.width : 12.rw.width,
         Expanded(
           child: text
-              .text(AppTextStyles.f14W400())
+              .text(AppTextStyles.f14W400().copyWith(fontSize: isTab ? 8.sp : null))
               .color(isValid ? Colors.green : AppColors.grayColor),
         ),
       ],

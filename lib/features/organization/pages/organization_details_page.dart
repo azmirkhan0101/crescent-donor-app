@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../core/helper/extension/context_extension.dart';
+
 class OrganizationDetailsPage extends StatefulWidget {
   const OrganizationDetailsPage({super.key, required this.organizationId});
   final String organizationId;
@@ -28,6 +30,7 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: CustomAppBar(

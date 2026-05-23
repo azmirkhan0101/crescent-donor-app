@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/core/theme/app_colors.dart';
@@ -54,7 +55,7 @@ class HomePage extends StatelessWidget {
                 20.rh.heightWidth,
                 _buildImpactSection().paddingR(16.rw),
                 20.rh.heightWidth,
-                _buildCauseCategories(),
+                _buildCauseCategories(context),
                 20.rh.heightWidth,
                 // _buildCauseCategories2(),
                 // 20.rh.heightWidth,
@@ -118,6 +119,7 @@ class HomePage extends StatelessWidget {
     BuildContext context,
     GetProfileController getProfileController,
   ) {
+    bool isTab = context.isTab;
     final profile = getProfileController.profile;
     return SizedBox(
       // height: 44.rh,
@@ -129,14 +131,14 @@ class HomePage extends StatelessWidget {
             child: Center(
               child: CustomNetworkImage(
                 imageUrl: profile.value?.image ?? '',
-                height: 44.rw,
-                width: 44.rw,
+                height: isTab ? 80 : 44.rw,
+                width: isTab ? 80 : 44.rw,
                 borderRadius: BorderRadius.circular(22.rw),
               ),
             ),
           ),
 
-          16.rw.heightWidth,
+          isTab ? 5.rw.heightWidth : 16.rw.heightWidth,
 
           // Welcome text
           Expanded(
@@ -158,8 +160,8 @@ class HomePage extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 44.rw,
-                height: 44.rw,
+                width: isTab ? 80 :  44.rw,
+                height: isTab ? 80 :  44.rw,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20.rw),
@@ -176,8 +178,8 @@ class HomePage extends StatelessWidget {
               GetBuilder<UnseenNotificationCountController>(
                 builder: (unseenCtrl) {
                   return Container(
-                    width: 40.rw,
-                    height: 40.rw,
+                    width: isTab ? 80 :  40.rw,
+                    height: isTab ? 80 :  40.rw,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20.rw),
@@ -186,8 +188,8 @@ class HomePage extends StatelessWidget {
                       child: Stack(
                         children: [
                           Assets.home.notification.svg(
-                            width: 20.rw,
-                            height: 20.rw,
+                            width: isTab ? 40 :  20.rw,
+                            height: isTab ? 40 :  20.rw,
                           ),
                           if (unseenCtrl.hasUnseenNotifications)
                             Positioned(
@@ -236,7 +238,7 @@ class HomePage extends StatelessWidget {
   }
 
   /// Build the cause categories chips
-  Widget _buildCauseCategories() {
+  Widget _buildCauseCategories(BuildContext context) {
     final categories = [
       {"icon": "🌍", "label": "View All", "color": const Color(0xFFC08FFF)},
       {"icon": "💧", "label": "Water", "color": const Color(0xFFCCEEFF)},
@@ -322,12 +324,13 @@ class HomePage extends StatelessWidget {
     ];
 
     return Obx(() {
+      bool isTab = context.isTab;
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           // Note: 'spacing' requires Flutter 3.24+.
           // If on older versions, use Padding on the children instead.
-          spacing: 8.rw,
+          spacing:   isTab ? 8 : 8.rw,
           children: categories.indexed.map((entry) {
             int index = entry.$1;
             Map category = entry.$2;
@@ -353,7 +356,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 child: Container(
-                  padding: EdgeInsets.all(12.rw),
+                  padding: EdgeInsets.all( isTab ? 15 : 12.rw),
                   decoration: BoxDecoration(
                     color: category["color"] as Color,
                     borderRadius: BorderRadius.circular(24.rw),

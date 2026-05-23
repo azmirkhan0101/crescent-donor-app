@@ -4,8 +4,11 @@ import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class CustomInputField extends StatelessWidget {
   const CustomInputField({
@@ -35,6 +38,7 @@ class CustomInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return TextFormField(
       controller: controller,
       minLines: minLines,
@@ -48,6 +52,7 @@ class CustomInputField extends StatelessWidget {
         color: AppColors.black,
         fontWeight: FontWeight.w500,
         fontFamily: GoogleFonts.inter().fontFamily,
+          fontSize:  isTab ? 6.sp : null
       ),
       decoration: InputDecoration(
         hint: hintText?.text(
@@ -55,6 +60,7 @@ class CustomInputField extends StatelessWidget {
             fontWeight: FontWeight.w500,
             color: "#CCCCCC".hexColor,
             fontFamily: GoogleFonts.inter().fontFamily,
+              fontSize:  isTab ? 6.sp : null
           ),
         ),
         prefixIcon: isPrefixIcon

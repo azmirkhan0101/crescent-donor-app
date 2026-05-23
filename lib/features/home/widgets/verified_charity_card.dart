@@ -4,7 +4,10 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class VerifiedCharityCard extends StatelessWidget {
   const VerifiedCharityCard({
@@ -28,6 +31,7 @@ class VerifiedCharityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
@@ -111,7 +115,7 @@ class VerifiedCharityCard extends StatelessWidget {
                     Text(
                       title,
                       style: AppTextStyles.baseStyle().copyWith(
-                        fontSize: 16.rfs,
+                        fontSize: isTab ? 8.sp : 16.rfs,
                         fontWeight: FontWeight.w600,
                         color: Colors.black,
                       ),
@@ -125,7 +129,7 @@ class VerifiedCharityCard extends StatelessWidget {
                       location,
                       style: AppTextStyles.f14W400().copyWith(
                         color: const Color(0xFF64748B),
-                        fontSize: 12.rfs,
+                        fontSize: isTab ? 8.sp : 12.rfs,
                       ),
                     ),
                   ],

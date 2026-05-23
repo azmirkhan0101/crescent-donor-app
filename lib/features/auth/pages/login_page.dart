@@ -16,6 +16,8 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/helper/extension/context_extension.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -48,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Scaffold(
       backgroundColor: AppColors.white,
       resizeToAvoidBottomInset: false,
@@ -57,31 +60,41 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              16.heightWidth,
+              Expanded(child:
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    16.heightWidth,
 
-              // Back button and theme toggle
-              AuthHeader(
-                onTap: () {
-                  context.pushReplacementNamed(RoutePath.getStartPage);
-                },
-              ),
+                    // Back button and theme toggle
+                    AuthHeader(
+                      onTap: () {
+                        context.pushReplacementNamed(RoutePath.getStartPage);
+                      },
+                    ),
 
-              32.heightWidth,
+                    32.heightWidth,
 
-              AuthTitleSection(
-                title: AppStrings.welcomeBack,
-                subtitle: AppStrings.weMissedYourBusinessGrowth,
-              ),
+                    AuthTitleSection(
+                      title: AppStrings.welcomeBack,
+                      subtitle: AppStrings.weMissedYourBusinessGrowth,
+                    ),
 
-              32.rh.heightWidth,
+                    32.rh.heightWidth,
 
-              // Login form fields widget
-              LoginFormFields(controller: loginController),
+                    // Login form fields widget
+                    LoginFormFields(controller: loginController),
+                  ],
+                ),
+              )),
+
 
               // 130.rh.heightWidth,
-              Spacer(),
+              //Spacer(),
 
               // Login buttons and actions
+              //I WANT THIS SECTION TO BE AT THE BOTTOM. IF I USE SPACER NOTHING WORKS
               _buildLoginActions(context, loginController),
             ],
           ),
