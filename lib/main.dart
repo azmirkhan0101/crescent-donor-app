@@ -60,6 +60,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await FirebaseNotificationService.instance.initialize();
 
+
   runApp(DevicePreview(enabled: false, builder: (context) => const MyApp()));
 }
 
