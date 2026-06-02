@@ -5,16 +5,25 @@ import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.d
 import 'package:cresent_charge_user_app/features/auth/models/signin_request_model.dart';
 import 'package:cresent_charge_user_app/features/auth/models/signin_response_model.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
+import 'package:cresent_charge_user_app/service/api_service.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/service/firebase_notification_service.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../../core/helper/api_response.dart';
+import '../../../core/helper/snackbar/snackbars.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../service/google_signin_service.dart';
 
 class LoginController extends GetxController {
+  final ApiService apiService = Get.find<ApiService>();
   // TextEditingControllers
   final emailController = TextEditingController(
     // text: kDebugMode ? 'developer.mukarrom@gmail.com' : '',
@@ -42,6 +51,84 @@ class LoginController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
+  }
+
+  //================GOOGLE SIGN IN==================
+  Future<void> loginWithGoogle() async {
+    try {
+      isLoading.value = true;
+
+      final GoogleSigninService googleSignInService = GoogleSigninService();
+
+      final GoogleSignInAccount account = await googleSignInService
+          .signInWithGoogle();
+
+      final GoogleSignInAuthentication auth = googleSignInService.getAuthTokens(
+          account
+      );
+
+      final AuthCredential authCredential = GoogleAuthProvider.credential( idToken: auth.idToken );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential( authCredential );
+      String? firebaseIdToken = await userCredential.user?.getIdToken();
+      print("Firebase ID Token: $firebaseIdToken");
+      if( firebaseIdToken == null ){
+        throw Exception("Failed to retrieve Firebase ID Token.");
+      }
+
+      Map<String, dynamic> credentials = {
+        "role": "CLIENT",
+        "firebaseIdToken": firebaseIdToken,
+        "displayName": account.displayName ?? "Unknown"
+      };
+      ApiResponse response = await apiService.networkRequest(
+          method: 'POST',
+          isAuthRequired: false,
+          endPoint: ApiEndpoints.socialLogin,
+          body: credentials
+      );
+      print("Endpoint: ${ApiEndpoints.socialLogin}");
+      print("Payload for Backend: $credentials");
+
+      print("Social auth code: ${response.statusCode}");
+      print("Social auth response: ${response.data}");
+
+      if( response.statusCode == 200 || response.statusCode == 201 ){
+        bool requiresProfile = response.data['data']['requiresProfile'];
+        saveOtpResponse(response.data);
+        print("Requires profile = $requiresProfile");
+
+        if( requiresProfile ){
+          Get.offAllNamed(AppRoutes.categorySelection);
+        }else{
+          updateFcmToken();
+        }
+      }else{
+        showApiSnackBar(statusCode: response.statusCode, data: response.data );
+      }
+
+    } on GoogleSignInException catch (e) {
+      print("Google Sign-In Error Code: ${e.code}");
+      print("Description: ${e.description}");
+      print("Details: ${e.details}");
+
+      if (e.code != GoogleSignInExceptionCode.canceled) {
+        showSnackBar(
+            title: "Authentication Error",
+            message: e.description ?? "Google Sign-In was not successful.",
+            backgroundColor: AppColors.error
+        );
+      }
+    } catch (e) {
+      errorSnackBar();
+    }finally{
+      isLoading.value = false;
+    }
+  }
+
+  String? getHighResImageUrl(String? url) {
+    if (url == null) return null;
+    return url.replaceAll('s96-c', 's500-c');
   }
 
   /// Toggle password visibility

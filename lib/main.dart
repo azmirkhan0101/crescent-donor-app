@@ -3,6 +3,7 @@ import 'package:cresent_charge_user_app/core/go-router/app_router.dart';
 import 'package:cresent_charge_user_app/core/theme/theme.dart';
 import 'package:cresent_charge_user_app/firebase_options.dart';
 import 'package:cresent_charge_user_app/global/language/controller/language_controller.dart';
+import 'package:cresent_charge_user_app/service/api_service.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/service/firebase_notification_service.dart';
 import 'package:cresent_charge_user_app/utils/system_utils/system_utils.dart';
@@ -47,7 +48,9 @@ void main() async {
   // initDependencies();
 
   // SocketApi.init();
-
+  await Get.putAsync(() {
+    return ApiService().init();
+  });
   LanguageController languageController = Get.put(LanguageController());
   languageController.getLanguageType();
 

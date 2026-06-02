@@ -21,6 +21,8 @@ class ApiUrl {
 
   /// ======= Auth =======
   static const String login = '$baseUrl/auth/signin/donor';
+  //==============SOCIAL LOGIN===============
+  static const socialLogin = "/auth/social-login";
   static const String guestLogin = '$baseUrl/auth/guest-login';
   static const String guestLogOut = '$baseUrl/auth/guest-remove';
   static const String signup = '$baseUrl/auth/signup';
