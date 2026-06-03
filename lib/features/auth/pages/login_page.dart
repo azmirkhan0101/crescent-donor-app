@@ -12,6 +12,7 @@ import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -133,6 +134,73 @@ class _LoginPageState extends State<LoginPage> {
           ),
 
           16.heightWidth,
+          //===================GOOGLE APPLE LOGIN========================
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 30,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  //controller.activateSocialLogin();
+                  controller.loginWithGoogle(
+                      onLoginSuccess: (){
+                        context.replaceNamed(RoutePath.home);
+                      },
+                    onSocialSignup: (){
+                      //context.replaceNamed(RoutePath.fewDetails);
+                      //SKIPPED UPDATE PROFILE ON SOCIAL SIGNUP
+                      context.replaceNamed(RoutePath.home);
+                    }
+                  );
+                },
+                child: Container(
+                  width: 45,
+                  height: 45,
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        spreadRadius: 1,
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: SvgPicture.asset("assets/icons/google.svg"),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  //controller.activateSocialLogin();
+                },
+                child: Container(
+                  width: 45,
+                  height: 45,
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        spreadRadius: 1,
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: SvgPicture.asset("assets/icons/apple.svg"),
+                ),
+              ),
+            ],
+          ),
+          16.heightWidth,
 
           HaveAccountWidget(),
 
@@ -167,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
   /// Handle guest login button press
   Future<void> _handleGuestLogin(
     BuildContext context,
-    LoginController controller,
+    LoginController controller
   ) async {
     final success = await controller.loginAsGuest();
 

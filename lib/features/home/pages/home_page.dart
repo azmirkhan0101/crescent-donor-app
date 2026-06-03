@@ -29,8 +29,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final getProfileController = Get.find<GetProfileController>();
-    final getOrgsController = Get.put(OrganizationController());
+    final getProfileController = Get.isRegistered<GetProfileController>()
+    ? Get.find<GetProfileController>() : Get.put(GetProfileController());
+    final getOrgsController = Get.isRegistered<OrganizationController>()
+    ? Get.put(OrganizationController()) : Get.put(OrganizationController());
 
     // Initialize FCM token controller
     Get.put(FcmTokenController());

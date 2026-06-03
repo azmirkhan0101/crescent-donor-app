@@ -15,9 +15,6 @@ import '../core/helper/api_response.dart';
 import 'app_storage_service.dart';
 
 class ApiService extends GetxService {
-  Completer<bool>? _refreshCompleter;
-  bool _isRefreshing = false;
-
 
   Future<ApiService> init() async {
     return this;
@@ -96,21 +93,6 @@ class ApiService extends GetxService {
       }
       result = response.body;
       code = response.statusCode;
-      if( response.statusCode == 401 && isAuthRequired ) {
-        bool isRefreshed = await refreshTokenOnce();
-
-        if (isRefreshed) {
-          return await networkRequest(
-            method: method,
-            isAuthRequired: isAuthRequired,
-            endPoint: endPoint,
-            body: body,
-            timeout: timeout,
-          );
-        } else {
-          return ApiResponse(statusCode: 401);
-        }
-      }
 
       return ApiResponse(
         statusCode: response.statusCode,
@@ -239,27 +221,6 @@ class ApiService extends GetxService {
       var responseBody = await response.stream.bytesToString();
       result = responseBody;
 
-      if( response.statusCode == 401 && isAuthRequired ) {
-        bool isRefreshed = await refreshTokenOnce();
-
-        if (isRefreshed) {
-          return await multipartRequest(
-              method: method,
-              endPoint: endPoint,
-              isAuthRequired: isAuthRequired,
-              fields: fields,
-              coverImage: coverImage,
-              logoImage: logoImage,
-              rewardImage: rewardImage,
-              csvFile: csvFile,
-              timeout: timeout,
-              fieldName: fieldName
-          );
-        } else {
-          return ApiResponse(statusCode: 401);
-        }
-      }
-
       return ApiResponse(
         statusCode: response.statusCode,
         data: jsonDecode(responseBody),
@@ -277,68 +238,6 @@ class ApiService extends GetxService {
 
     }
   }
-
-  //REFRESH TOKEN
-  Future<bool> refreshTokenOnce() async {
-    if (_isRefreshing) {
-      return _refreshCompleter?.future ?? Future.value(false);
-    }
-
-    _isRefreshing = true;
-    _refreshCompleter = Completer<bool>();
-
-    try {
-      final refreshToken = await AppStorageService.getRefreshToken();
-      if (refreshToken == null) {
-        await _forceLogout();
-        _refreshCompleter!.complete(false);
-        return false;
-      }
-
-      final response = await http.get(
-        Uri.parse(refre),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $refreshToken"
-        }
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        storage.write(accessTokenKey, data['data']['accessToken']);
-
-        if (data['data']['refreshToken'] != null) {
-          storage.write(refreshTokenKey, data['data']['refreshToken']);
-        }
-
-        _refreshCompleter!.complete(true);
-        return true;
-      } else {
-        await _forceLogout();
-        _refreshCompleter!.complete(false);
-        return false;
-      }
-    } catch (e) {
-      await _forceLogout();
-      if (!_refreshCompleter!.isCompleted) {
-        _refreshCompleter!.complete(false);
-      }
-      return false;
-    } finally {
-      _isRefreshing = false;
-    }
-  }
-
-
-  Future<void> _forceLogout() async {
-    await SubscriptionService.to.logoutUser();
-    await storage.erase();
-    if (Get.currentRoute != AppRoutes.getStarted) {
-      Get.offAllNamed(AppRoutes.getStarted);
-    }
-  }
-
 
   //COMPRESS IMAGE
   //COMPRESS IMAGE

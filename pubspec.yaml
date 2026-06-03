@@ -103,6 +103,7 @@ flutter:
     - assets/donation/
     - assets/profile/
     - assets/3d/
+    - assets/icons/
 
 flutter_launcher_icons:
   android: "launcher_icon"

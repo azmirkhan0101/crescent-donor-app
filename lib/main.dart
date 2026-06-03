@@ -25,29 +25,17 @@ void main() async {
 
   // Initialize Stripe
   try {
-    // Set publishable key from environment variable
     Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY']!;
 
     // Initialize Stripe instance (required for Android)
     await Stripe.instance.applySettings();
-    debugPrint('Stripe initialized successfully');
-  } catch (e) {
-    debugPrint('Failed to initialize Stripe: $e');
-    // Continue app initialization even if Stripe fails
-  }
+  } catch (_) {}
 
   try {
     await AppStorageService.init();
-    debugPrint('Storage service initialized successfully');
-  } catch (e) {
-    debugPrint('Failed to initialize storage service: $e');
-    // Handle initialization error appropriately
-  }
+  }catch(_){}
 
   initGetx();
-  // initDependencies();
-
-  // SocketApi.init();
   await Get.putAsync(() {
     return ApiService().init();
   });
@@ -85,13 +73,12 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: ThemeMode
-                .light, // Automatically switch based on system preference
+                .light,
             routeInformationParser: AppRouter.router.routeInformationParser,
             routerDelegate: AppRouter.router.routerDelegate,
             routeInformationProvider: AppRouter.router.routeInformationProvider,
-            //locale: const Locale("ar", "SA"),
             fallbackLocale: const Locale("en", "US"),
-            translations: Language(),
+            translations: Language()
           );
         },
       ),

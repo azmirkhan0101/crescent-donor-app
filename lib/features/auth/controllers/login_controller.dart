@@ -8,7 +8,6 @@ import 'package:cresent_charge_user_app/features/profile/controllers/get_profile
 import 'package:cresent_charge_user_app/service/api_service.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
-import 'package:cresent_charge_user_app/service/firebase_notification_service.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,7 +17,6 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../core/helper/api_response.dart';
-import '../../../core/helper/snackbar/snackbars.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../service/google_signin_service.dart';
 
@@ -54,7 +52,7 @@ class LoginController extends GetxController {
   }
 
   //================GOOGLE SIGN IN==================
-  Future<void> loginWithGoogle() async {
+  Future<void> loginWithGoogle({required VoidCallback onLoginSuccess, required VoidCallback onSocialSignup}) async {
     try {
       isLoading.value = true;
 
@@ -84,46 +82,61 @@ class LoginController extends GetxController {
       ApiResponse response = await apiService.networkRequest(
           method: 'POST',
           isAuthRequired: false,
-          endPoint: ApiEndpoints.socialLogin,
+          endPoint: ApiUrl.socialLogin,
           body: credentials
       );
-      print("Endpoint: ${ApiEndpoints.socialLogin}");
-      print("Payload for Backend: $credentials");
-
-      print("Social auth code: ${response.statusCode}");
-      print("Social auth response: ${response.data}");
-
+      print("Social login response: ${response.data}");
       if( response.statusCode == 200 || response.statusCode == 201 ){
+        await AppStorageService.saveAuthToken(response.data['data']['accessToken']);
+        await AppStorageService.writeSecure(
+          'refresh_token',
+          response.data['data']['refreshToken'],
+        );
         bool requiresProfile = response.data['data']['requiresProfile'];
-        saveOtpResponse(response.data);
-        print("Requires profile = $requiresProfile");
-
         if( requiresProfile ){
-          Get.offAllNamed(AppRoutes.categorySelection);
+          //onSocialSignup();
+          //SKIPPED UPDATE PROFILE ON SOCIAL SIGNUP
+          handleSocialLoginSuccess( email: account.email, onLoginSuccess: onLoginSuccess );
         }else{
-          updateFcmToken();
+          handleSocialLoginSuccess( email: account.email, onLoginSuccess: onLoginSuccess );
         }
       }else{
-        showApiSnackBar(statusCode: response.statusCode, data: response.data );
+        ToastMsg.api(statusCode: response.statusCode, data: response.data );
       }
 
     } on GoogleSignInException catch (e) {
-      print("Google Sign-In Error Code: ${e.code}");
-      print("Description: ${e.description}");
-      print("Details: ${e.details}");
-
       if (e.code != GoogleSignInExceptionCode.canceled) {
-        showSnackBar(
-            title: "Authentication Error",
-            message: e.description ?? "Google Sign-In was not successful.",
-            backgroundColor: AppColors.error
-        );
+        ToastMsg.api(statusCode: null, data: null, msg: e.description ?? "Google Sign-In was not successful." );
       }
     } catch (e) {
-      errorSnackBar();
+      ToastMsg.error("Something went wrong. Please try again.");
     }finally{
       isLoading.value = false;
     }
+  }
+
+  void handleSocialLoginSuccess({required String email, required VoidCallback onLoginSuccess}) async{
+
+    // save is guest user
+    await AppStorageService.saveIsGuestUser(false);
+
+    // Save user data
+    await AppStorageService.saveUserEmail(email);
+    await AppStorageService.saveUserId(
+      'user_${email.split('@')[0]}',
+    );
+
+    // Clear guest mode since user is now authenticated
+    await AuthGuard.setGuestMode(false);
+
+    // Save last login time
+    await AppStorageService.saveLastLogin(DateTime.now());
+    // Fetch profile after successful login
+    final profileCtrl = Get.isRegistered<GetProfileController>()
+        ? Get.find<GetProfileController>()
+        : Get.put(GetProfileController());
+    profileCtrl.fetchProfile();
+    onLoginSuccess();
   }
 
   String? getHighResImageUrl(String? url) {

@@ -28,7 +28,7 @@ class PlacesSearchField extends StatelessWidget {
     this.hintText,
     this.prefixIconPath,
     this.backgroundColor = Colors.white,
-    this.padding = const[12, 0],
+    this.padding = const[0, 0],
     this.onPlaceSelected
   });
 

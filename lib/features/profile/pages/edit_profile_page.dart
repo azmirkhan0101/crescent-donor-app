@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cresent_charge_user_app/common-widgets/places_search_field/places_search_field.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/theme/app_colors.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
@@ -7,14 +10,14 @@ import 'package:cresent_charge_user_app/features/profile/controllers/update_prof
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 
-/// Edit Profile Page
-///
-/// This page allows users to edit their profile information including
-/// name, phone number, email, address, state, and pin code.
+// name, phone number, email, address, state, and pin code.
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
@@ -24,6 +27,8 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   late final UpdateProfileController _updCtrl;
+  final String googleApiKey = dotenv.env['GOOGLE_API_KEY']!;
+  final FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -251,10 +256,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
         SizedBox(height: 16.rh),
 
         // Address Field
-        _buildInputField(
-          label: 'Address',
-          controller: _updCtrl.addressController,
-          maxLines: 3,
+        // _buildInputField(
+        //   label: 'Address',
+        //   controller: _updCtrl.addressController,
+        //   maxLines: 3,
+        // ),
+        PlacesSearchField(
+            googleApiKey: googleApiKey,
+            textEditingController: _updCtrl.addressController,
+            hintText: "Address",
+            onPlaceSelected: (prediction){
+              _fillFromPlaceDetails(prediction);
+            },
+            onItemClick: (value){
+              _updCtrl.addressController.text = value;
+              _updCtrl.addressController.selection = TextSelection.fromPosition(
+                TextPosition(offset: _updCtrl.addressController.text.length),
+              );
+            },
+            focusNode: focusNode
         ),
 
         SizedBox(height: 16.rh),
@@ -263,6 +283,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _buildStateAndPinCodeRow(),
       ],
     );
+  }
+
+  // Extract address from Google Places details - state, postal code
+  Future<void> _fillFromPlaceDetails(Prediction prediction) async {
+    final placeId = prediction.placeId;
+    if (placeId == null) return;
+
+    final url =
+        'https://maps.googleapis.com/maps/api/place/details/json'
+        '?place_id=$placeId'
+        '&fields=address_component'
+        '&key=$googleApiKey';
+
+    final uri = Uri.parse(url);
+    final res = await NetworkAssetBundle(uri).load("");
+    final json = jsonDecode(utf8.decode(res.buffer.asUint8List()));
+
+    final components = json['result']['address_components'] as List;
+
+    for (var c in components) {
+      final types = List<String>.from(c['types']);
+
+      if (types.contains('administrative_area_level_1')) {
+        _updCtrl.stateController.text = c['short_name'];
+      } else if (types.contains('postal_code')) {
+        _updCtrl.postalCodeController.text = c['long_name'];
+      }
+    }
   }
 
   /// Build individual input field
