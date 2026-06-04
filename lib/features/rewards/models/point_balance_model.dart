@@ -1,28 +1,3 @@
-/*
-{
-    "success": true,
-    "message": "Balance retrieved successfully",
-    "data": {
-        "_id": "693e38f96f1cfc4aede73b6b",
-        "user": {
-            "_id": "69301feaddbf3fdf987e86e8",
-            "name": "Mostafizur",
-            "image": "/images/scaled_18-1765684240320.jpg"
-        },
-        "totalEarned": 40500,
-        "totalSpent": 0,
-        "totalRefunded": 0,
-        "totalAdjusted": 0,
-        "totalExpired": 0,
-        "currentBalance": 40500,
-        "lifetimePoints": 40500,
-        "currentTier": "silver",
-        "createdAt": "2025-12-14T04:11:37.649Z",
-        "updatedAt": "2025-12-14T05:16:02.857Z",
-        "lastTransactionAt": "2025-12-14T05:16:02.857Z"
-    }
-}
-*/
 
 class PointBalanceModel {
   final String id;

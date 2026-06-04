@@ -7,15 +7,9 @@ import 'package:get/get.dart';
 
 class SignupController extends GetxController {
   // TextEditingControllers
-  final emailController = TextEditingController(
-    // text: kDebugMode ? 'crescent@yopmail.com' : '',
-  );
-  final passwordController = TextEditingController(
-    // text: kDebugMode ? 'Abc@1234' : '',
-  );
-  final confirmPasswordController = TextEditingController(
-    // text: kDebugMode ? 'Abc@1234' : '',
-  );
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   // Observable variables
   RxBool isLoading = false.obs;

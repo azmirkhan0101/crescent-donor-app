@@ -2,7 +2,6 @@ import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
-import 'package:cresent_charge_user_app/core/theme/theme.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/donate_now_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/get_org_causes_controller.dart';
 import 'package:cresent_charge_user_app/features/organization/controllers/organization_controller.dart';
@@ -16,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/helper/extension/context_extension.dart';
+import '../../../core/theme/theme_extensions.dart';
 
 /// Donation bottom sheet with donation types and options
 class DonationBottomSheet extends StatefulWidget {

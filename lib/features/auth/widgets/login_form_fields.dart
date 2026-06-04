@@ -1,4 +1,3 @@
-import 'package:cresent_charge_user_app/common-widgets/form-fields/form_fields.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
 import 'package:cresent_charge_user_app/features/auth/controllers/login_controller.dart';
@@ -11,6 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../common-widgets/form-fields/custom_email_field.dart';
+import '../../../common-widgets/form-fields/custom_password_field.dart';
 import '../../../core/helper/extension/context_extension.dart';
 
 class LoginFormFields extends StatelessWidget {

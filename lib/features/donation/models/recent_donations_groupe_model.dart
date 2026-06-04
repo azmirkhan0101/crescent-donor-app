@@ -1,14 +1,3 @@
-/*
-{
-    "donationId": "69385cd5a0438a468b4a384b",
-    "amount": 100,
-    "orgName": "Fahim ORG",
-    "registeredCharityName": "Eden Blankenship",
-    "orgLogo": "public/images/download-(4)-1765001783867.jpg",
-    "timeAgo": "Just now",
-    "createdAt": "2025-12-09T17:31:01.079Z"
-},
-*/
 
 class RecentDonationsGroupModel {
   final List<RecentDonationModel> donations;

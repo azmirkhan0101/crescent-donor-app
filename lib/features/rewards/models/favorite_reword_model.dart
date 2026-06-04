@@ -1,38 +1,3 @@
-/*
-{
-    "success": true,
-    "message": "Favorite reward retrived successfully!",
-    "meta": {
-        "page": 1,
-        "limit": 10,
-        "total": 1,
-        "totalPage": 1
-    },
-    "data": [
-        {
-            "_id": "695cc4fcbcffba30856a0045",
-            "reward": "695c9dc3dbed6694df92c689",
-            "user": "6953af852acf220ff1a08ba7",
-            "favoriteId": "695cc4fcbcffba30856a0045",
-            "title": "Mostafiz Bro 1",
-            "description": "hehehheh",
-            "image": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/rewards/reward-1767677379157",
-            "status": "active",
-            "isActive": true,
-            "inStoreRedemptionMethods": {
-                "qrCode": true,
-                "staticCode": true,
-                "nfcTap": false
-            },
-            "codePrefix": "RWD42D2",
-            "isRedeemed": false,
-            "startDate": "2026-01-06T05:29:16.490Z",
-            "expiryDate": "2026-01-30T18:00:00.000Z",
-            "business": "69521a330ba280e9348ffa74"
-        }
-    ]
-}
-*/
 
 class FavoriteRewardModel {
   final String? id;

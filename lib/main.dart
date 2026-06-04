@@ -1,6 +1,5 @@
 import 'package:cresent_charge_user_app/core/dependency_injection/getx_injection.dart';
 import 'package:cresent_charge_user_app/core/go-router/app_router.dart';
-import 'package:cresent_charge_user_app/core/theme/theme.dart';
 import 'package:cresent_charge_user_app/firebase_options.dart';
 import 'package:cresent_charge_user_app/global/language/controller/language_controller.dart';
 import 'package:cresent_charge_user_app/service/api_service.dart';
@@ -15,6 +14,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
+
+import 'core/theme/app_theme.dart';
+import 'core/theme/theme_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

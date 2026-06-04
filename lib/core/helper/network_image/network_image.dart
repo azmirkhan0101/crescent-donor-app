@@ -38,7 +38,7 @@ class CustomNetworkImage extends StatelessWidget {
           borderRadius: borderRadius,
           shape: boxShape,
         ),
-        child: const Icon(Icons.broken_image, color: Colors.grey),
+        child: const Icon(Icons.image_outlined, color: Colors.grey),
       );
     }
 

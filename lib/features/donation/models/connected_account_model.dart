@@ -1,38 +1,3 @@
-/*
-{
-    "_id": "694148d8a4532242abd6ad7f",
-    "user": "694118ddaee83632dca37e08",
-    "itemId": "vQlDV8rQAXHwvn55G6W9TVLMVwqANMtWqxw85",
-    "accountId": "JXVxe7GX9LtWyELL7aJzUvDkkrqWWqcQyvadP",
-    "accountName": "Plaid Checking",
-    "accountType": "checking",
-    "institutionName": "Citibank Online",
-    "institutionId": "ins_5",
-    "consentGivenAt": "2025-12-16T11:56:08.106Z",
-    "isActive": true,
-    "provider": "basiq",
-    "createdAt": "2025-12-16T11:56:08.115Z",
-    "updatedAt": "2025-12-20T08:00:02.351Z",
-    "__v": 0,
-    "lastSyncAt": "2025-12-20T08:00:02.349Z",
-    "lastSyncCursor": "CAESJTlYNjduOXZYS3J0V1A5dnZ4WEtMVUdMb0tkalJOakY0b1c1cVoaDAjDkoXKBhDIkpfBAiIMCMOShcoGEMiSl8ECKgwIw5KFygYQyJKXwQI=",
-    "isLinkedToActiveRoundUp": true,
-    "activeRoundUpId": "69414923a4532242abd6ad89",
-    "roundUpDetails": {
-        "roundUpId": "69414923a4532242abd6ad89",
-        "monthlyThreshold": 4.41,
-        "currentMonthTotal": 0,
-        "organization": "69411a87aee83632dca37e54",
-        "organizationName": "Test ORG",
-        "cause": "69412fbeeaa7c8a7c9ca04b7",
-        "causeName": "Test",
-        "status": "pending",
-        "enabled": true,
-        
-        "isTaxable": false
-    }
-}
-*/
 
 class RoundUpBankConnectionModel {
   String id;

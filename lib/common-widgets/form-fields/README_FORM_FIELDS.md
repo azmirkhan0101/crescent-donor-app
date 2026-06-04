@@ -262,12 +262,6 @@ customValidator: (value) {
 
 ## 🔧 Integration Guide
 
-### Import
-
-```dart
-import 'package:donor/common-widgets/form-fields/form_fields.dart';
-```
-
 ### Form Integration
 
 ```dart

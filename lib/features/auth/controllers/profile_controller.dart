@@ -11,32 +11,10 @@ import 'package:image_picker/image_picker.dart';
 
 class ProfileController extends GetxController {
   // Few Details Controllers
-  final nameController = TextEditingController(
-    // text: kDebugMode ? 'John Doe' : '',
-  );
-  final addressController = TextEditingController(
-    //text: kDebugMode ? '123 Main Street' : '',
-  );
-  final stateController = TextEditingController(
-    //text: kDebugMode ? 'California' : '',
-  );
-  final postalCodeController = TextEditingController(
-    //text: kDebugMode ? '90001' : '',
-  );
-
-  // // Card Details Controllers
-  // final nameInCardController = TextEditingController(
-  //   // text: kDebugMode ? 'John Doe' : '',
-  // );
-  // final cardNumberController = TextEditingController(
-  //   text: kDebugMode ? '4242424242424242' : '',
-  // );
-  // final cardExpiryDateController = TextEditingController(
-  //   text: kDebugMode ? '05/26' : '',
-  // );
-  // final cardCVCController = TextEditingController(
-  //   text: kDebugMode ? '123' : '',
-  // );
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+  final stateController = TextEditingController();
+  final postalCodeController = TextEditingController();
 
   // Observable variables
   RxBool isLoading = false.obs;
@@ -54,10 +32,6 @@ class ProfileController extends GetxController {
     addressController.dispose();
     stateController.dispose();
     postalCodeController.dispose();
-    // nameInCardController.dispose();
-    // cardNumberController.dispose();
-    // cardExpiryDateController.dispose();
-    // cardCVCController.dispose();
     super.onClose();
   }
 
@@ -188,10 +162,6 @@ class ProfileController extends GetxController {
     // try {
     clearErrors();
 
-    // Validate few details form
-
-    // Validate card details form
-
     isLoading.value = true;
 
     final textData = {
@@ -200,10 +170,6 @@ class ProfileController extends GetxController {
       "address": addressController.text.trim(),
       "state": stateController.text.trim(),
       "postalCode": postalCodeController.text.trim(),
-      // "nameInCard": nameInCardController.text.trim(),
-      // "cardNumber": cardNumberController.text.replaceAll(' ', ''),
-      // "cardExpiryDate": cardExpiryDateController.text.trim(),
-      // "cardCVC": cardCVCController.text.trim(),
     };
 
     // Prepare fields for multipart request
@@ -249,13 +215,6 @@ class ProfileController extends GetxController {
         }
       },
     );
-    // } catch (e) {
-    //   errorMessage.value = 'Profile creation failed. Please try again.';
-    //   debugPrint('❌ Create profile error: $e');
-    //   return false;
-    // } finally {
-    //   isLoading.value = false;
-    // }
   }
 
   /// Check if few details form is valid
@@ -266,11 +225,4 @@ class ProfileController extends GetxController {
         postalCodeController.text.isNotEmpty;
   }
 
-  /// Check if card details form is valid
-  // bool get isCardDetailsValid {
-  //   return nameInCardController.text.isNotEmpty &&
-  //       cardNumberController.text.isNotEmpty &&
-  //       cardExpiryDateController.text.isNotEmpty &&
-  //       cardCVCController.text.isNotEmpty;
-  // }
 }

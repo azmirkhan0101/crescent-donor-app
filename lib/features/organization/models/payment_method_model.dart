@@ -1,27 +1,3 @@
-/*
-{
-  "success": true,
-  "message": "Payment methods retrieved successfully!",
-  "data": [
-    {
-      "_id": "64xyz123",
-      "user": "6930158addbf3fdf987e86c4",
-      "stripePaymentMethodId": "pm_1SeBFAGWHt6mKfvJkXX8QwRm",
-      "stripeCustomerId": "cus_TOzhLDzvHmwhbE",
-      "type": "card",
-      "cardBrand": "visa",
-      "cardLast4": "4242",
-      "cardExpMonth": 12,
-      "cardExpYear": 2027,
-      "cardHolderName": "John Doe",
-      "isDefault": true,
-      "isActive": true,
-      "createdAt": "2025-12-14T09:05:35.140Z",
-      "updatedAt": "2025-12-14T09:05:35.140Z"
-    }
-  ]
-}
-*/
 
 class PaymentMethodModel {
   final String id;

@@ -1,13 +1,4 @@
-/*
-{
-    "_id": "6942d397af3e0d14a9fdf58f",
-    "name": "Mostafizur",
-    "image": "https://crecent-changes.s3.ap-southeast-2.amazonaws.com/profiles/clients/client-6942d044af3e0d14a9fdf55d-1766486304922",
-    "donationDate": "2025-12-25T04:01:48.892Z",
-    "amount": 10.5,
-    "cause": "6943896c2f333b75a39823c3"
-}
-*/
+
 class DonorModel {
   final String id;
   final String name;
