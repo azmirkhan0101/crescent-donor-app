@@ -35,9 +35,9 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
     connectedBankAccountsController.fetchRoundUpBankConnection();
 
     // Set up callback to refresh bank accounts after successful Plaid link
-    plaidCtrl.onSuccessCallback = (event) {
-      connectedBankAccountsController.fetchRoundUpBankConnection();
-    };
+    // plaidCtrl.onSuccessCallback = (event) {
+    //   connectedBankAccountsController.fetchRoundUpBankConnection();
+    // };
   }
 
   // final bool hasLinkedAccounts = true;
@@ -96,11 +96,12 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
         Obx(() {
           return BankConnectionPopupMenu(
             isLoading:
-                plaidCtrl.isLoadingConfiguration.value ||
-                plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
+                //plaidCtrl.isLoadingConfiguration.value ||
+                //plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
                 basiqController.isLoading.value,
             icon: Assets.common.add.svg(),
-            onPlaidSelected: () => plaidCtrl.createLinkTokenConfiguration(),
+            //onPlaidSelected: () => plaidCtrl.createLinkTokenConfiguration(),
+            onPlaidSelected: (){},
             onBasiqSelected: _connectBasiq,
           );
         }),
@@ -161,16 +162,17 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
             // Connect Account Button
             Obx(() {
               return BankConnectionPopupMenu(
-                onPlaidSelected: () {
-                  if (!plaidCtrl.isLoadingConfiguration.value &&
-                      !plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading) {
-                    plaidCtrl.createLinkTokenConfiguration();
-                  }
-                },
+                // onPlaidSelected: () {
+                //   if (!plaidCtrl.isLoadingConfiguration.value &&
+                //       !plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading) {
+                //     plaidCtrl.createLinkTokenConfiguration();
+                //   }
+                // },
+                onPlaidSelected: () {},
                 onBasiqSelected: _connectBasiq,
                 isLoading:
-                    plaidCtrl.isLoadingConfiguration.value ||
-                    plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
+                    //plaidCtrl.isLoadingConfiguration.value ||
+                    //plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
                     basiqController.isLoading.value,
                 icon: Container(
                   padding: EdgeInsets.symmetric(
@@ -184,17 +186,17 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (plaidCtrl.isLoadingConfiguration.value ||
-                          plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading)
-                        SizedBox(
-                          width: 20.rw,
-                          height: 20.rh,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.red,
-                          ),
-                        )
-                      else
+                      // if (plaidCtrl.isLoadingConfiguration.value ||
+                      //     plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading)
+                      //   SizedBox(
+                      //     width: 20.rw,
+                      //     height: 20.rh,
+                      //     child: CircularProgressIndicator(
+                      //       strokeWidth: 2,
+                      //       color: Colors.red,
+                      //     ),
+                      //   )
+                      // else
                         Text(
                           'Connect Bank Account',
                           style: TextStyle(
@@ -325,13 +327,13 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
             // Add another account
             Obx(() {
               bool isLoading =
-                  plaidCtrl.isLoadingConfiguration.value ||
-                  plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
+                  //plaidCtrl.isLoadingConfiguration.value ||
+                  //plaidCtrl.createPlaidTokenCtrl.isLinkTokenLoading ||
                   basiqController.isLoading.value;
               return BankConnectionPopupMenu(
                 onPlaidSelected: () {
                   if (!isLoading) {
-                    plaidCtrl.createLinkTokenConfiguration();
+                    //plaidCtrl.createLinkTokenConfiguration();
                   }
                   print('Plaid connection selected');
                 },

@@ -38,130 +38,125 @@ class _GetStartPageState extends State<GetStartPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            24.rh.heightWidth,
-
-            // app logo
-            Assets.onboarding.appLogoName.svg(width: 150.rw, height: 40.rh),
-            38.rh.heightWidth,
-
-            // saving coins illustration image
-            Assets.onboarding.onboardingSavingCoins.svg(
-              width: 177.rw,
-              height: 304.rh,
-            ),
-            38.rh.heightWidth,
-
-            // Turn your small change into real change
-            Text(
-               AppStrings.turnYourSmallChangeIntoRealChange,
-              style: AppTextStyles.f28W700().copyWith(fontSize: context.isTab ? 36 : 26),
-              textAlign: TextAlign.center,
-            ),
-            12.rh.heightWidth,
-
-            // Discover rewards and cash back offers
-            AppStrings.discoverRewards.centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 8.sp : null)),
-            //Spacer(),
-
-            // Get Started button
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width * 0.5,
-              child: CustomFilledButton(
-                title: "Get Started",
-                onTap: () {
-                  context.pushNamed(RoutePath.howToWorkPage);
-                },
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              24.rh.heightWidth,
+              // app logo
+              Assets.onboarding.appLogoName.svg(width: 150.rw, height: 40.rh),
+              38.rh.heightWidth,
+              // saving coins illustration image
+              Assets.onboarding.onboardingSavingCoins.svg(
+                width: 177.rw,
+                height: 304.rh,
               ),
-            ),
-
-            15.rh.heightWidth,
-            //===================GOOGLE APPLE LOGIN========================
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 30,
-              children: [
-                GestureDetector(
+              38.rh.heightWidth,
+              // Turn your small change into real change
+              Text(
+                 AppStrings.turnYourSmallChangeIntoRealChange,
+                style: AppTextStyles.f28W700().copyWith(fontSize: context.isTab ? 36 : 26),
+                textAlign: TextAlign.center,
+              ),
+              12.rh.heightWidth,
+              // Discover rewards and cash back offers
+              AppStrings.discoverRewards.centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 8.sp : null)),
+              //Spacer(),
+              // Get Started button
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width * 0.5,
+                child: CustomFilledButton(
+                  title: "Get Started",
                   onTap: () {
-                    //controller.activateSocialLogin();
-                    controller.loginWithGoogle(
-                        onLoginSuccess: (){
-                          context.replaceNamed(RoutePath.home);
-                        },
-                        onSocialSignup: (){
-                          //context.replaceNamed(RoutePath.fewDetails);
-                          //SKIPPED UPDATE PROFILE ON SOCIAL SIGNUP
-                          context.replaceNamed(RoutePath.home);
-                        }
-                    );
+                    context.pushNamed(RoutePath.howToWorkPage);
                   },
-                  child: Container(
-                    width: 45,
-                    height: 45,
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          spreadRadius: 1,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: SvgPicture.asset("assets/icons/google.svg"),
-                  ),
                 ),
-                //=================APPLE LOGIN IF IPHONE==================
-                if( Platform.isIOS )
-                GestureDetector(
-                  onTap: () {
-                    controller.loginWithApple(
-                        onLoginSuccess: (){
-                          context.replaceNamed(RoutePath.home);
-                        },
-                        onSocialSignup: (){
-                          //context.replaceNamed(RoutePath.fewDetails);
-                          //SKIPPED UPDATE PROFILE ON SOCIAL SIGNUP
-                          context.replaceNamed(RoutePath.home);
-                        }
-                    );
-                  },
-                  child: Container(
-                    width: 45,
-                    height: 45,
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.08),
-                          spreadRadius: 1,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
+              ),
+              15.rh.heightWidth,
+              //===================GOOGLE APPLE LOGIN========================
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 30,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      //controller.activateSocialLogin();
+                      controller.loginWithGoogle(
+                          onLoginSuccess: (){
+                            context.replaceNamed(RoutePath.home);
+                          },
+                          onSocialSignup: (){
+                            //context.replaceNamed(RoutePath.fewDetails);
+                            //SKIPPED UPDATE PROFILE ON SOCIAL SIGNUP
+                            context.replaceNamed(RoutePath.home);
+                          }
+                      );
+                    },
+                    child: Container(
+                      width: 45,
+                      height: 45,
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        shape: BoxShape.rectangle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            spreadRadius: 1,
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: SvgPicture.asset("assets/icons/google.svg"),
                     ),
-                    child: SvgPicture.asset("assets/icons/apple.svg"),
                   ),
-                ),
-              ],
-            ),
-            15.rh.heightWidth,
-
-            // Already have an account? Sign In
-            HaveAccountWidget(haveAccount: true),
-            24.rh.heightWidth,
-          ],
-        ).paddingXY(X: 40.rw),
+                  //=================APPLE LOGIN IF IPHONE==================
+                  if( Platform.isIOS )
+                  GestureDetector(
+                    onTap: () {
+                      controller.loginWithApple(
+                          onLoginSuccess: (){
+                            context.replaceNamed(RoutePath.home);
+                          },
+                          onSocialSignup: (){
+                            //context.replaceNamed(RoutePath.fewDetails);
+                            //SKIPPED UPDATE PROFILE ON SOCIAL SIGNUP
+                            context.replaceNamed(RoutePath.home);
+                          }
+                      );
+                    },
+                    child: Container(
+                      width: 45,
+                      height: 45,
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        shape: BoxShape.rectangle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            spreadRadius: 1,
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: SvgPicture.asset("assets/icons/apple.svg"),
+                    ),
+                  ),
+                ],
+              ),
+              15.rh.heightWidth,
+              // Already have an account? Sign In
+              HaveAccountWidget(haveAccount: true),
+              24.rh.heightWidth,
+            ],
+          ).paddingXY(X: 40.rw),
+        ),
       ),
     );
   }

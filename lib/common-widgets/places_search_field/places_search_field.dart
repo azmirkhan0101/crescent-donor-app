@@ -64,7 +64,7 @@ class PlacesSearchField extends StatelessWidget {
                   focusedBorder: InputBorder.none,
                 ),
                 debounceTime: 400,
-                //countries: ["in", "fr"],
+                countries: [],
                 isLatLngRequired: true,
                 getPlaceDetailWithLatLng: (Prediction prediction) {
                   if( onPlaceSelected != null ){

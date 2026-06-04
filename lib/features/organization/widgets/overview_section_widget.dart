@@ -40,6 +40,7 @@ class OverviewSectionWidget extends StatelessWidget {
               ),
             ),
           SizedBox(height: 12.rh),
+          if( causes.isNotEmpty )
           Text(
             'Causes We Support',
             style: TextStyle(

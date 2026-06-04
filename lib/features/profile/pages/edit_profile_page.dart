@@ -126,25 +126,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               gradient: !hasImage
                   ? const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xFFC08FFF), Color(0xFF8B5CF6)],
-                    )
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFFC08FFF), Color(0xFF8B5CF6)],
+              )
                   : null,
+              // Only apply the local FileImage here.
+              // Network image is handled as a child to catch 404 exceptions safely.
               image: selectedImage != null
                   ? DecorationImage(
-                      image: FileImage(selectedImage),
-                      fit: BoxFit.cover,
-                    )
-                  : (existingImageUrl.isNotEmpty
-                        ? DecorationImage(
-                            image: CachedNetworkImageProvider(existingImageUrl),
-                            fit: BoxFit.cover,
-                          )
-                        : null),
+                image: FileImage(selectedImage),
+                fit: BoxFit.cover,
+              )
+                  : null,
             ),
             child: Stack(
               children: [
+                // Safe network image handling inside a ClipOval to match the circle shape
+                if (selectedImage == null && existingImageUrl.isNotEmpty)
+                  Positioned.fill(
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: existingImageUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => const SizedBox.shrink(),
+                        // If a 404 occurs, it renders an empty widget allowing the
+                        // container's background/gradient to show through instead of crashing
+                        errorWidget: (context, url, error) => const SizedBox.shrink(),
+                      ),
+                    ),
+                  ),
                 if (!hasImage)
                   Center(
                     child: Icon(
