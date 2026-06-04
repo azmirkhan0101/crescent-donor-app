@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cresent_charge_user_app/common-widgets/fill-button/custom_filled_button.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
@@ -174,9 +176,20 @@ class _LoginPageState extends State<LoginPage> {
                   child: SvgPicture.asset("assets/icons/google.svg"),
                 ),
               ),
+              //=================APPLE LOGIN IF IPHONE==================
+              if( Platform.isIOS )
               GestureDetector(
                 onTap: () {
-                  //controller.activateSocialLogin();
+                  controller.loginWithApple(
+                      onLoginSuccess: (){
+                        context.replaceNamed(RoutePath.home);
+                      },
+                      onSocialSignup: (){
+                        //context.replaceNamed(RoutePath.fewDetails);
+                        //SKIPPED UPDATE PROFILE ON SOCIAL SIGNUP
+                        context.replaceNamed(RoutePath.home);
+                      }
+                  );
                 },
                 child: Container(
                   width: 45,

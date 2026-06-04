@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cresent_charge_user_app/core/go-router/guard/auth_guard.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
@@ -9,26 +11,22 @@ import 'package:cresent_charge_user_app/service/api_service.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../core/helper/api_response.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../service/google_signin_service.dart';
 
 class LoginController extends GetxController {
   final ApiService apiService = Get.find<ApiService>();
   // TextEditingControllers
-  final emailController = TextEditingController(
-    // text: kDebugMode ? 'developer.mukarrom@gmail.com' : '',
-  );
-  final passwordController = TextEditingController(
-    // text: kDebugMode ? 'Abc@1234' : '',
-  );
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   // Observable variables
   RxBool isLoading = false.obs;
@@ -113,6 +111,122 @@ class LoginController extends GetxController {
     }finally{
       isLoading.value = false;
     }
+  }
+  
+  //==================APPLE SIGN IN=================
+  //==================APPLE SIGN IN=================
+  Future<void> loginWithApple({required VoidCallback onLoginSuccess, required VoidCallback onSocialSignup}) async {
+    // Ensure this runs only on iOS devices
+    if (!Platform.isIOS) {
+      ToastMsg.error("Apple Sign-In is only supported on iOS devices.");
+      return;
+    }
+
+    try {
+      isLoading.value = true;
+
+      // 1. Generate secure nonces to prevent replay attacks (required by Firebase)
+      final String rawNonce = _generateNonce();
+      final String hashedNonce = _sha256ofString(rawNonce);
+
+      // 2. Request credentials from Apple
+      final AuthorizationCredentialAppleID appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: hashedNonce,
+      );
+
+      // 3. Create a Firebase OAuthCredential
+      // Passing the authorizationCode as the accessToken is a recommended practice to avoid validation issues
+      final AuthCredential authCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        rawNonce: rawNonce,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      // 4. Sign in to Firebase using the Apple credential
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
+
+      String? firebaseIdToken = await userCredential.user?.getIdToken();
+      print("Firebase ID Token: $firebaseIdToken");
+      if (firebaseIdToken == null) {
+        throw Exception("Failed to retrieve Firebase ID Token.");
+      }
+
+      // 5. Handle Name & Email extraction
+      // Note: Apple only returns the email and name on the FIRST sign-in.
+      // For subsequent sign-ins, we extract these details from the Firebase user object.
+      String email = appleCredential.email ?? userCredential.user?.email ?? "";
+      if (email.isEmpty) {
+        throw Exception("Failed to retrieve user email from Apple Sign-In.");
+      }
+
+      String displayName = "Unknown";
+      if (appleCredential.givenName != null) {
+        displayName = "${appleCredential.givenName} ${appleCredential.familyName ?? ''}".trim();
+      } else if (userCredential.user?.displayName != null && userCredential.user!.displayName!.isNotEmpty) {
+        displayName = userCredential.user!.displayName!;
+      }
+
+      // 6. Assemble payload and verify session with your backend
+      Map<String, dynamic> credentials = {
+        "role": "CLIENT",
+        "firebaseIdToken": firebaseIdToken,
+        "displayName": displayName,
+      };
+
+      ApiResponse response = await apiService.networkRequest(
+          method: 'POST',
+          isAuthRequired: false,
+          endPoint: ApiUrl.socialLogin,
+          body: credentials
+      );
+      print("Social login response: ${response.data}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await AppStorageService.saveAuthToken(response.data['data']['accessToken']);
+        await AppStorageService.writeSecure(
+          'refresh_token',
+          response.data['data']['refreshToken'],
+        );
+        bool requiresProfile = response.data['data']['requiresProfile'];
+        if (requiresProfile) {
+          // onSocialSignup();
+          // SKIPPED UPDATE PROFILE ON SOCIAL SIGNUP
+          handleSocialLoginSuccess(email: email, onLoginSuccess: onLoginSuccess);
+        } else {
+          handleSocialLoginSuccess(email: email, onLoginSuccess: onLoginSuccess);
+        }
+      } else {
+        ToastMsg.api(statusCode: response.statusCode, data: response.data);
+      }
+
+    } on SignInWithAppleAuthorizationException catch (e) {
+      // Silence errors if the user explicitly cancels the iOS native bottom sheet
+      if (e.code != AuthorizationErrorCode.canceled) {
+        ToastMsg.api(statusCode: null, data: null, msg: e.message);
+      }
+    } catch (e) {
+      ToastMsg.error("Something went wrong. Please try again.");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Helper method: Generates a cryptographically secure random nonce
+  String _generateNonce([int length = 32]) {
+    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+  }
+
+  // Helper method: Returns the sha256 hash of the input in hex notation
+  String _sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
   }
 
   void handleSocialLoginSuccess({required String email, required VoidCallback onLoginSuccess}) async{
