@@ -15,13 +15,13 @@ class ProfileController extends GetxController {
     // text: kDebugMode ? 'John Doe' : '',
   );
   final addressController = TextEditingController(
-    text: kDebugMode ? '123 Main Street' : '',
+    //text: kDebugMode ? '123 Main Street' : '',
   );
   final stateController = TextEditingController(
-    text: kDebugMode ? 'California' : '',
+    //text: kDebugMode ? 'California' : '',
   );
   final postalCodeController = TextEditingController(
-    text: kDebugMode ? '90001' : '',
+    //text: kDebugMode ? '90001' : '',
   );
 
   // // Card Details Controllers
