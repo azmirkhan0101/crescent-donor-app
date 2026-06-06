@@ -7,6 +7,18 @@ import 'package:get/get.dart';
 /// bottom navigation, current tab selection, and any shared state
 /// across the main app sections.
 class MainLayoutController extends GetxController {
+
+  // @override
+  // void onInit() {
+  //
+  //   final DonationCompleteController controller = Get.isRegistered<DonationCompleteController>()
+  //   ? Get.find<DonationCompleteController>()
+  //   : Get.put(DonationCompleteController());
+  //
+  //   controller.downloadReceipt( "https://www.rd.usda.gov/sites/default/files/pdf-sample_0.pdf", "azmir.pdf" );
+  //
+  //   super.onInit();
+  // }
   /// Currently selected tab index
   final RxInt selectedIndex = 0.obs;
 

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
-import 'package:cresent_charge_user_app/features/organization/controllers/get_donation_full_status_controller.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -78,45 +78,6 @@ class DonationCompleteController extends GetxController {
     Get.offAllNamed('/home');
   }
 
-  // /// Start auto-refresh timer if receiptId is not available
-  // void startAutoRefreshIfNeeded(
-  //   GetDonationFullStatusController controller,
-  //   String donationId,
-  // ) {
-  //   // Cancel any existing timer
-  //   _refreshTimer?.cancel();
-
-  //   // Check if receiptId is available
-  //   final receiptId =
-  //       controller.donationFullStatus.value?.donation.receiptId?.id;
-
-  //   if (receiptId == null || receiptId.isEmpty) {
-  //     debugPrint('Receipt ID not available, starting auto-refresh timer...');
-
-  //     // Start a periodic timer that runs every 5 seconds
-  //     _refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-  //       debugPrint('Auto-refreshing donation status...');
-
-  //       final success = await controller.fetchDonationFullStatus(donationId);
-
-  //       if (success) {
-  //         final newReceiptId =
-  //             controller.donationFullStatus.value?.donation.receiptId?.id;
-
-  //         if (newReceiptId != null && newReceiptId.isNotEmpty) {
-  //           debugPrint(
-  //             'Receipt ID received: $newReceiptId, stopping auto-refresh',
-  //           );
-  //           timer.cancel();
-  //           _refreshTimer = null;
-  //         }
-  //       }
-  //     });
-  //   } else {
-  //     debugPrint('Receipt ID already available: $receiptId');
-  //   }
-  // }
-
   /// Initialize notification channel for downloads
   Future<void> initializeNotifications() async {
     // Initialize with callback for notification tap
@@ -154,7 +115,6 @@ class DonationCompleteController extends GetxController {
   void _onNotificationTapped(NotificationResponse response) {
     final payload = response.payload;
     if (payload != null && payload.isNotEmpty) {
-      debugPrint('Notification tapped, opening file: $payload');
       openDownloadedFile(payload);
     }
   }
@@ -164,32 +124,16 @@ class DonationCompleteController extends GetxController {
     try {
       final file = File(filePath);
       if (await file.exists()) {
-        debugPrint('Opening file: $filePath');
 
-        // Use open_filex to open the file (handles FileProvider automatically)
         final result = await OpenFilex.open(filePath);
 
-        if (result.type == ResultType.done) {
-          debugPrint('File opened successfully: $filePath');
-        } else if (result.type == ResultType.noAppToOpen) {
-          debugPrint('No app found to open PDF file');
-          ToastMsg.error('No app found to open PDF files');
-        } else if (result.type == ResultType.permissionDenied) {
-          debugPrint('Permission denied to open file');
-          ToastMsg.error('Permission denied');
-        } else if (result.type == ResultType.fileNotFound) {
-          debugPrint('File not found: $filePath');
-          ToastMsg.error('File not found');
-        } else {
-          debugPrint('Failed to open file: ${result.message}');
+        if (result.type != ResultType.done) {
           ToastMsg.error('Failed to open file');
         }
       } else {
-        debugPrint('File does not exist: $filePath');
         ToastMsg.error('File not found');
       }
     } catch (e) {
-      debugPrint('Error opening file: $e');
       ToastMsg.error('Failed to open file');
     }
   }
@@ -209,64 +153,26 @@ class DonationCompleteController extends GetxController {
     }
   }
 
-  /// Download PDF file from URL and save to device
   Future<void> downloadReceipt(String url, String fileName) async {
     const int notificationId = 0;
+    File? tempFile;
 
     try {
       // Initialize notifications
       await initializeNotifications();
 
-      Directory? directory;
-
+      // Request notification permission for Android 13+ (Safe permission, no storage access needed)
       if (Platform.isAndroid) {
-        // For Android, use external storage directory
-        // For Android 13+ (API 33+), scoped storage is used automatically
-        // For older versions, we need storage permission
-        final storageStatus = await Permission.storage.status;
-
-        if (!storageStatus.isGranted && !storageStatus.isLimited) {
-          final result = await Permission.storage.request();
-          if (!result.isGranted && !result.isLimited) {
-            debugPrint('Storage permission denied');
-            // Continue anyway for Android 13+ where permission is not required
-          }
+        final notificationStatus = await Permission.notification.status;
+        if (!notificationStatus.isGranted) {
+          await Permission.notification.request();
         }
-
-        // Request notification permission for Android 13+
-        if (Platform.isAndroid) {
-          final notificationStatus = await Permission.notification.status;
-          if (!notificationStatus.isGranted) {
-            await Permission.notification.request();
-          }
-        }
-
-        // Get external storage directory and create Downloads folder
-        final externalDir = await getExternalStorageDirectory();
-        if (externalDir != null) {
-          // Navigate to Downloads folder: /storage/emulated/0/Download
-          final downloadPath = '/storage/emulated/0/Download';
-          directory = Directory(downloadPath);
-
-          // Create directory if it doesn't exist
-          if (!await directory.exists()) {
-            await directory.create(recursive: true);
-          }
-        }
-      } else if (Platform.isIOS) {
-        // For iOS, use application documents directory
-        directory = await getApplicationDocumentsDirectory();
       }
 
-      if (directory == null) {
-        debugPrint('Unable to access storage directory');
-        ToastMsg.error('Unable to access storage directory');
-        return;
-      }
-
-      // Create the file path
-      final filePath = '${directory.path}/$fileName.pdf';
-      debugPrint('Downloading receipt to: $filePath');
+      // 1. Get temporary directory (Requires 0 permissions on Android/iOS)
+      final tempDir = await getTemporaryDirectory();
+      final tempFilePath = '${tempDir.path}/$fileName.pdf';
+      tempFile = File(tempFilePath);
 
       // Show initial download notification
       await _showDownloadNotification(
@@ -275,14 +181,13 @@ class DonationCompleteController extends GetxController {
         0,
       );
 
-      // Download the file with progress tracking
+      // 2. Download the file with progress tracking into the temporary cache file
       final request = http.Request('GET', Uri.parse(url));
       final response = await http.Client().send(request);
 
       if (response.statusCode == 200) {
         final contentLength = response.contentLength ?? 0;
-        final file = File(filePath);
-        final sink = file.openWrite();
+        final sink = tempFile.openWrite();
 
         int downloaded = 0;
         int lastProgress = 0;
@@ -296,7 +201,7 @@ class DonationCompleteController extends GetxController {
               ? ((downloaded / contentLength) * 100).toInt()
               : 0;
 
-          // Update notification every 10% to avoid excessive updates
+          // Update notification every 10% to avoid flooding the system
           if (progress - lastProgress >= 10 || progress == 100) {
             lastProgress = progress;
             await _showDownloadNotification(
@@ -310,37 +215,55 @@ class DonationCompleteController extends GetxController {
         await sink.flush();
         await sink.close();
 
-        debugPrint('Receipt saved successfully to: $filePath');
+        // 3. Open the Native "Save As" file dialog
+        // This is handled natively by the operating system, so it is fully permissionless.
+        if (Platform.isAndroid || Platform.isIOS) {
+          final params = SaveFileDialogParams(sourceFilePath: tempFile.path);
+          final finalPath = await FlutterFileDialog.saveFile(params: params);
 
-        // Show success notification with file path as payload
-        await _showDownloadCompleteNotification(
-          notificationId,
-          'Receipt downloaded successfully',
-          filePath,
-        );
+          if (finalPath != null) {
+            // Show success notification with the final public file path as payload
+            await _showDownloadCompleteNotification(
+              notificationId,
+              'Receipt downloaded successfully',
+              finalPath,
+            );
 
-        // Show success toast
-        ToastMsg.success('Receipt downloaded to Downloads folder');
+            // Show success toast
+            ToastMsg.success('Receipt saved successfully');
+          } else {
+            // Handle cancellation by clearing progress notification or setting it to cancelled
+            await _showDownloadErrorNotification(
+                notificationId, 'Save cancelled');
+            ToastMsg.error('Save cancelled');
+          }
+        } else {
+          // Fallback for other platforms if needed
+          final docDir = await getApplicationDocumentsDirectory();
+          final fallbackPath = '${docDir.path}/$fileName.pdf';
+          await tempFile.copy(fallbackPath);
+
+          await _showDownloadCompleteNotification(
+            notificationId,
+            'Receipt downloaded successfully',
+            fallbackPath,
+          );
+        }
       } else {
-        debugPrint(
-          'Failed to download receipt. Status: ${response.statusCode}',
-        );
-
-        // Show error notification
         await _showDownloadErrorNotification(notificationId, 'Download failed');
-
         ToastMsg.error('Failed to download receipt');
       }
     } catch (e) {
-      debugPrint('Error downloading receipt: $e');
-
-      // Show error notification
       await _showDownloadErrorNotification(
         notificationId,
         'Download failed: $e',
       );
-
       ToastMsg.error('Failed to download receipt');
+    } finally {
+      // 4. Clean up temporary cache file on completion or failure
+      if (tempFile != null && await tempFile.exists()) {
+        await tempFile.delete();
+      }
     }
   }
 
