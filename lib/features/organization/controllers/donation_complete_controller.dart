@@ -361,7 +361,7 @@ class DonationCompleteController extends GetxController {
       progress: progress,
       onlyAlertOnce: true,
       ongoing: progress < 100,
-      autoCancel: false,
+      autoCancel: false
     );
 
     final notificationDetails = NotificationDetails(android: androidDetails);
