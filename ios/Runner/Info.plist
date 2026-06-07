@@ -27,7 +27,30 @@
     <key>LSRequiresIPhoneOS</key>
     <true/>
 
-    <!-- Camera and Photo Library Permissions -->
+    <!-- Google Sign-In configuration -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.279971282218-h2an2l9086tshdqj9jgofhtqdbs61ol8</string>
+            </array>
+        </dict>
+    </array>
+    <key>GIDClientID</key>
+
+    <string>279971282218-h2an2l9086tshdqj9jgofhtqdbs61ol8.apps.googleusercontent.com</string>
+
+    <!-- Cleartext HTTP support (Equivalent to android:usesCleartextTraffic="true") -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+
+    <!-- Camera, Photo Library, and Microphone Permissions -->
     <key>NSCameraUsageDescription</key>
     <string>Crescent Change Donor needs access to your camera to scan QR codes or take photos for your donation profile.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>

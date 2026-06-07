@@ -56,16 +56,14 @@ class DefaultFirebaseOptions {
     projectId: 'crescent-change-a7f3e',
     storageBucket: 'crescent-change-a7f3e.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDmUL43GH-r46h4Av11l1KPoBMV5l2XW-E',
     appId: '1:279971282218:ios:2a1cbfa1dd35d91387b253',
     messagingSenderId: '279971282218',
     projectId: 'crescent-change-a7f3e',
     storageBucket: 'crescent-change-a7f3e.firebasestorage.app',
-    androidClientId: '279971282218-9o8cb8hqi558qg8su364pb10midbq9ah.apps.googleusercontent.com',
+    androidClientId: '279971282218-55m6bk2dkpukop9haml79qb42gr604rq.apps.googleusercontent.com',
     iosClientId: '279971282218-h2an2l9086tshdqj9jgofhtqdbs61ol8.apps.googleusercontent.com',
     iosBundleId: 'com.crescentchange.donorapp',
   );
-
 }

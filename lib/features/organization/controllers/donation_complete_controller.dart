@@ -79,21 +79,55 @@ class DonationCompleteController extends GetxController {
   }
 
   /// Initialize notification channel for downloads
+  /// Initialize notification channel for downloads
   Future<void> initializeNotifications() async {
     // Initialize with callback for notification tap
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
-    const iosSettings = DarwinInitializationSettings();
+
+    // Configure modern Darwin presentation options
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings(
+          requestAlertPermission:
+              false, // Leave as false to request manually below
+          requestBadgePermission: false,
+          requestSoundPermission: false,
+          defaultPresentAlert: true,
+          defaultPresentBadge: true,
+          defaultPresentSound: true,
+          defaultPresentBanner:
+              true, // Required to show foreground banners on iOS 14+
+          defaultPresentList:
+              true, // Required to show in notification center on iOS 14+
+        );
+
     const initSettings = InitializationSettings(
       android: androidSettings,
-      iOS: iosSettings,
+      iOS: initializationSettingsDarwin,
     );
 
     await _notificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: _onNotificationTapped,
     );
+
+    // ✅ Request permissions programmatically for iOS
+    if (Platform.isIOS) {
+      await _notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
+    }
+    // ✅ Optional: Request permissions programmatically for Android 13+
+    else if (Platform.isAndroid) {
+      await _notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.requestNotificationsPermission();
+    }
 
     const androidChannel = AndroidNotificationChannel(
       'download_channel',
@@ -125,7 +159,6 @@ class DonationCompleteController extends GetxController {
     try {
       final file = File(filePath);
       if (await file.exists()) {
-
         final result = await OpenFilex.open(filePath);
 
         if (result.type != ResultType.done) {
@@ -157,7 +190,8 @@ class DonationCompleteController extends GetxController {
   Future<void> downloadReceipt(String url, String fileName) async {
     const int notificationId = 0;
     File? tempFile;
-    bool isSavedSuccessfully = false; // Track if we should preserve the cache file
+    bool isSavedSuccessfully =
+        false; // Track if we should preserve the cache file
 
     try {
       // Initialize notifications
@@ -228,7 +262,8 @@ class DonationCompleteController extends GetxController {
         final finalPath = await FlutterFileDialog.saveFile(params: params);
 
         if (finalPath != null) {
-          isSavedSuccessfully = true; // Mark true so 'finally' doesn't delete it
+          isSavedSuccessfully =
+              true; // Mark true so 'finally' doesn't delete it
 
           // CRITICAL: Pass the internal tempFile.path as the payload, NOT finalPath
           await _showDownloadCompleteNotification(
@@ -240,7 +275,9 @@ class DonationCompleteController extends GetxController {
           ToastMsg.success('Receipt saved successfully');
         } else {
           await _showDownloadErrorNotification(
-              notificationId, 'Save cancelled');
+            notificationId,
+            'Save cancelled',
+          );
           ToastMsg.error('Save cancelled');
         }
       } else {
@@ -280,7 +317,9 @@ class DonationCompleteController extends GetxController {
             // Checks if the file age exceeds 6 hours
             if (now.difference(lastModified).inHours > 6) {
               await entity.delete();
-              debugPrint('Successfully purged old export cache: ${entity.path}');
+              debugPrint(
+                'Successfully purged old export cache: ${entity.path}',
+              );
             }
           }
         }
@@ -307,10 +346,24 @@ class DonationCompleteController extends GetxController {
       progress: progress,
       onlyAlertOnce: true,
       ongoing: progress < 100,
-      autoCancel: false
+      autoCancel: false,
     );
 
-    final notificationDetails = NotificationDetails(android: androidDetails);
+    // iOS config for active progress updates.
+    // Set sound and banner alerts to false so it updates quietly in the shade
+    // without vibrating/playing sound every 1% tick.
+    final darwinDetails = DarwinNotificationDetails(
+      presentAlert: false,
+      presentBanner: false,
+      presentList: true, // Keep it visible in the notification center list
+      presentSound: false,
+      presentBadge: false,
+    );
+
+    final notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: darwinDetails,
+    );
 
     await _notificationsPlugin.show(
       id,
@@ -338,7 +391,19 @@ class DonationCompleteController extends GetxController {
       icon: '@mipmap/ic_launcher',
     );
 
-    final notificationDetails = NotificationDetails(android: androidDetails);
+    // iOS config to sound the alarm and display a pop-up banner when complete
+    const darwinDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBanner: true,
+      presentList: true,
+      presentSound: true,
+      presentBadge: true,
+    );
+
+    final notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: darwinDetails,
+    );
 
     await _notificationsPlugin.show(
       id,
@@ -362,7 +427,19 @@ class DonationCompleteController extends GetxController {
       autoCancel: true,
     );
 
-    final notificationDetails = NotificationDetails(android: androidDetails);
+    // iOS config to display the error banner
+    const darwinDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBanner: true,
+      presentList: true,
+      presentSound: true,
+      presentBadge: true,
+    );
+
+    final notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: darwinDetails,
+    );
 
     await _notificationsPlugin.show(
       id,
