@@ -121,6 +121,7 @@ class DonationCompleteController extends GetxController {
 
   /// Open the downloaded PDF file
   Future<void> openDownloadedFile(String filePath) async {
+    await Future.delayed(const Duration(milliseconds: 500));
     try {
       final file = File(filePath);
       if (await file.exists()) {
@@ -156,12 +157,16 @@ class DonationCompleteController extends GetxController {
   Future<void> downloadReceipt(String url, String fileName) async {
     const int notificationId = 0;
     File? tempFile;
+    bool isSavedSuccessfully = false; // Track if we should preserve the cache file
 
     try {
       // Initialize notifications
       await initializeNotifications();
 
-      // Request notification permission for Android 13+ (Safe permission, no storage access needed)
+      // 1. Run the clear cache routine at the start to tidy up old files
+      await clearOldExportCache();
+
+      // Request notification permission for Android 13+
       if (Platform.isAndroid) {
         final notificationStatus = await Permission.notification.status;
         if (!notificationStatus.isGranted) {
@@ -169,9 +174,14 @@ class DonationCompleteController extends GetxController {
         }
       }
 
-      // 1. Get temporary directory (Requires 0 permissions on Android/iOS)
+      // 2. Align with the 'exports' subfolder used by your cleanup routine
       final tempDir = await getTemporaryDirectory();
-      final tempFilePath = '${tempDir.path}/$fileName.pdf';
+      final exportDir = Directory('${tempDir.path}/exports');
+      if (!await exportDir.exists()) {
+        await exportDir.create(recursive: true);
+      }
+
+      final tempFilePath = '${exportDir.path}/$fileName.pdf';
       tempFile = File(tempFilePath);
 
       // Show initial download notification
@@ -181,7 +191,7 @@ class DonationCompleteController extends GetxController {
         0,
       );
 
-      // 2. Download the file with progress tracking into the temporary cache file
+      // 3. Download the file with progress tracking (UNTOUCHED LOGIC)
       final request = http.Request('GET', Uri.parse(url));
       final response = await http.Client().send(request);
 
@@ -196,12 +206,10 @@ class DonationCompleteController extends GetxController {
           sink.add(chunk);
           downloaded += chunk.length;
 
-          // Calculate progress percentage
           final progress = contentLength > 0
               ? ((downloaded / contentLength) * 100).toInt()
               : 0;
 
-          // Update notification every 10% to avoid flooding the system
           if (progress - lastProgress >= 10 || progress == 100) {
             lastProgress = progress;
             await _showDownloadNotification(
@@ -215,39 +223,25 @@ class DonationCompleteController extends GetxController {
         await sink.flush();
         await sink.close();
 
-        // 3. Open the Native "Save As" file dialog
-        // This is handled natively by the operating system, so it is fully permissionless.
-        if (Platform.isAndroid || Platform.isIOS) {
-          final params = SaveFileDialogParams(sourceFilePath: tempFile.path);
-          final finalPath = await FlutterFileDialog.saveFile(params: params);
+        // 4. Open the Native "Save As" file dialog
+        final params = SaveFileDialogParams(sourceFilePath: tempFile.path);
+        final finalPath = await FlutterFileDialog.saveFile(params: params);
 
-          if (finalPath != null) {
-            // Show success notification with the final public file path as payload
-            await _showDownloadCompleteNotification(
-              notificationId,
-              'Receipt downloaded successfully',
-              finalPath,
-            );
+        if (finalPath != null) {
+          isSavedSuccessfully = true; // Mark true so 'finally' doesn't delete it
 
-            // Show success toast
-            ToastMsg.success('Receipt saved successfully');
-          } else {
-            // Handle cancellation by clearing progress notification or setting it to cancelled
-            await _showDownloadErrorNotification(
-                notificationId, 'Save cancelled');
-            ToastMsg.error('Save cancelled');
-          }
-        } else {
-          // Fallback for other platforms if needed
-          final docDir = await getApplicationDocumentsDirectory();
-          final fallbackPath = '${docDir.path}/$fileName.pdf';
-          await tempFile.copy(fallbackPath);
-
+          // CRITICAL: Pass the internal tempFile.path as the payload, NOT finalPath
           await _showDownloadCompleteNotification(
             notificationId,
             'Receipt downloaded successfully',
-            fallbackPath,
+            tempFile.path,
           );
+
+          ToastMsg.success('Receipt saved successfully');
+        } else {
+          await _showDownloadErrorNotification(
+              notificationId, 'Save cancelled');
+          ToastMsg.error('Save cancelled');
         }
       } else {
         await _showDownloadErrorNotification(notificationId, 'Download failed');
@@ -260,10 +254,39 @@ class DonationCompleteController extends GetxController {
       );
       ToastMsg.error('Failed to download receipt');
     } finally {
-      // 4. Clean up temporary cache file on completion or failure
-      if (tempFile != null && await tempFile.exists()) {
+      // 5. Smart Cleanup: Only delete immediately if the process failed or was cancelled.
+      // If successful, leave it alive so the user can tap the notification to view it!
+      if (!isSavedSuccessfully && tempFile != null && await tempFile.exists()) {
         await tempFile.delete();
       }
+    }
+  }
+
+  /// Scans the internal app sandbox and deletes temporary export files
+  /// that have been sitting around for more than 6 hours.
+  Future<void> clearOldExportCache() async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final exportDir = Directory('${tempDir.path}/exports');
+
+      if (await exportDir.exists()) {
+        final now = DateTime.now();
+
+        // Asynchronously list files in the exports directory
+        await for (final entity in exportDir.list()) {
+          if (entity is File) {
+            final lastModified = await entity.lastModified();
+
+            // Checks if the file age exceeds 6 hours
+            if (now.difference(lastModified).inHours > 6) {
+              await entity.delete();
+              debugPrint('Successfully purged old export cache: ${entity.path}');
+            }
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error clearing export cache: $e');
     }
   }
 
