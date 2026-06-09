@@ -60,8 +60,9 @@ class _GetStartPageState extends State<GetStartPage> {
               ),
               12.rh.heightWidth,
               // Discover rewards and cash back offers
-              AppStrings.discoverRewards.centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 8.sp : null)),
+              AppStrings.discoverRewards.centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 10.sp : null)),
               //Spacer(),
+              const SizedBox(height: 20,),
               // Get Started button
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.5,
@@ -94,8 +95,8 @@ class _GetStartPageState extends State<GetStartPage> {
                       );
                     },
                     child: Container(
-                      width: 45,
-                      height: 45,
+                      width: isTab ? 60 : 45,
+                      height: isTab ? 60 : 45,
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -129,8 +130,8 @@ class _GetStartPageState extends State<GetStartPage> {
                       );
                     },
                     child: Container(
-                      width: 45,
-                      height: 45,
+                      width: isTab ? 60 : 45,
+                      height: isTab ? 60 : 45,
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),

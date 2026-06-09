@@ -82,7 +82,7 @@ class ForgotPasswordPage extends StatelessWidget {
               children: [
                 AppStrings.email
                     .text(AppTextStyles.baseStyle().copyWith(
-                    fontSize:  isTab ? 8.sp : null))
+                    fontSize:  isTab ? 12.sp : null))
                     .color("#000C0B".hexColor),
                 8.rh.heightWidth,
                 CustomInputField(
@@ -139,6 +139,8 @@ class ForgotPasswordPage extends StatelessWidget {
                 HaveAccountWidget(),
               ],
             ).paddingXY(X: 40.rw),
+            if( isTab )
+              const SizedBox(height: 40,)
           ],
         ).paddingAll(16.rw),
       ),

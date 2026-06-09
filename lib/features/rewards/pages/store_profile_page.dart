@@ -1,10 +1,12 @@
 import 'package:cresent_charge_user_app/common-widgets/custom_app_bar.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_store_profile_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/store_overview_tab.dart';
 import 'package:cresent_charge_user_app/features/rewards/widgets/store_rewards_tab.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class StoreProfilePage extends StatefulWidget {
@@ -34,6 +36,9 @@ class _StoreProfilePageState extends State<StoreProfilePage>
 
   @override
   Widget build(BuildContext context) {
+
+    bool isTab  = context.isTab;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: CustomAppBar(
@@ -176,7 +181,7 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                     controller.storeProfile.value?.tagLine ?? '',
                     style: TextStyle(
                       color: const Color(0xFF818F8D),
-                      fontSize: 12.rfs,
+                      fontSize: isTab ? 12.sp : 12.rfs,
                       fontFamily: 'Inter Display',
                       fontWeight: FontWeight.w400,
                     ),
@@ -187,7 +192,7 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                     'You shop, ${controller.storeProfile.value?.name ?? ''} gives!',
                     style: TextStyle(
                       color: const Color(0xFF000C0B),
-                      fontSize: 14.rfs,
+                      fontSize: isTab ? 12.sp : 14.rfs,
                       fontFamily: 'Inter Display',
                       fontWeight: FontWeight.w500,
                     ),
@@ -208,14 +213,14 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     // indicatorPadding: const EdgeInsets.only(bottom: 16),
                     indicatorSize: TabBarIndicatorSize.tab,
-                    labelStyle: const TextStyle(
+                    labelStyle: TextStyle(
                       fontFamily: 'InterDisplay',
-                      fontSize: 14,
+                      fontSize: isTab ? 12.sp : 14,
                       fontWeight: FontWeight.w600,
                     ),
-                    unselectedLabelStyle: const TextStyle(
+                    unselectedLabelStyle: TextStyle(
                       fontFamily: 'InterDisplay',
-                      fontSize: 14,
+                      fontSize: isTab ? 12.sp : 14,
                       fontWeight: FontWeight.w400,
                     ),
                     labelPadding: const EdgeInsets.symmetric(
@@ -234,8 +239,8 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                     builder: (context, child) {
                       if (_tabController.index == 0) {
                         if (controller.storeProfile.value == null) {
-                          return const Center(
-                            child: Text('No store profile data available.'),
+                          return Center(
+                            child: Text('No store profile data available.', style: isTab ? TextStyle(fontSize: 12.sp) : null,),
                           );
                         }
                         return StoreOverviewTab(
@@ -244,8 +249,8 @@ class _StoreProfilePageState extends State<StoreProfilePage>
                       } else {
                         final profile = controller.storeProfile.value;
                         if (profile == null) {
-                          return const Center(
-                            child: Text('No store profile data available.'),
+                          return Center(
+                            child: Text('No store profile data available.', style: isTab ? TextStyle(fontSize: 12.sp) : null,),
                           );
                         }
                         return StoreRewardsTab(businessId: profile.id);

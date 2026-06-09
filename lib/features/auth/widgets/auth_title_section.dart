@@ -20,13 +20,13 @@ class AuthTitleSection extends StatelessWidget {
         title.text(
           AppTextStyles.f28W700().copyWith(
             color: "#171717".hexColor,
-            fontSize: 32.rfs,
+            fontSize: isTab ? 16.sp : 32.rfs,
           ),
         ),
         8.heightWidth,
         // Subtitle
         subtitle != null
-            ? subtitle!.text(AppTextStyles.baseStyle().copyWith(fontSize:  isTab ? 8.sp : null))
+            ? subtitle!.text(AppTextStyles.baseStyle().copyWith(fontSize:  isTab ? 12.sp : null))
             : SizedBox.shrink(),
       ],
     );

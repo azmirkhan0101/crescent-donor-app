@@ -23,7 +23,7 @@ class SpecialMessageField extends StatelessWidget {
             text: label ?? 'Add a Special Message',
             style: TextStyle(
               fontFamily: 'Inter Display',
-              fontSize: isTab ? 8.sp : 16.rfs,
+              fontSize: isTab ? 10.sp : 16.rfs,
               fontWeight: FontWeight.w500,
               color: const Color(0xFF000C0B),
             ),
@@ -31,8 +31,8 @@ class SpecialMessageField extends StatelessWidget {
               TextSpan(
                 text: '(Optional)',
                 style: TextStyle(
-                  color: const Color(0xFFE4E4E4),
-                  fontSize: isTab ? 7.sp : 12.rfs,
+                  color: const Color(0xFFD4D4D4),
+                  fontSize: isTab ? 9.sp : 12.rfs,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -50,13 +50,13 @@ class SpecialMessageField extends StatelessWidget {
             hintText: 'Enter your special message here...',
             hintStyle: TextStyle(
               fontFamily: 'Inter Display',
-              fontSize: isTab ? 6.sp : 14.rfs,
+              fontSize: isTab ? 10.sp : 14.rfs,
               color: const Color(0xFF9E9E9E),
             ),
           ),
           style: TextStyle(
             fontFamily: 'Inter Display',
-            fontSize: isTab ? 6.sp : 14.rfs,
+            fontSize: isTab ? 10.sp : 14.rfs,
             color: const Color(0xFF000C0B),
           ),
         ),

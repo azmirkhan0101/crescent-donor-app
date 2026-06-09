@@ -34,7 +34,7 @@ class SectionHeader extends StatelessWidget {
             title,
             style: TextStyle(
               fontFamily: DonationFonts.familjenGrotesk,
-              fontSize: isTab ? 8.sp : DonationConstants.fontSize20.rfs,
+              fontSize: isTab ? 10.sp : DonationConstants.fontSize20.rfs,
               fontWeight: FontWeight.w600,
               color: DonationConstants.neutralGray,
               letterSpacing: -0.2,

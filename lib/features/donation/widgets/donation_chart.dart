@@ -63,7 +63,7 @@ class DonationChart extends StatelessWidget {
                           '${value.toInt()}',
                           style: TextStyle(
                             fontFamily: DonationFonts.inter,
-                            fontSize: isTab ? 6.sp : 10.rfs,
+                            fontSize: isTab ? 10.sp : 10.rfs,
                             fontWeight: FontWeight.w400,
                             color: DonationConstants.offBlack,
                           ),
@@ -85,7 +85,7 @@ class DonationChart extends StatelessWidget {
                             labels[index],
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: 10.rfs,
+                              fontSize: isTab ? 10.sp : 10.rfs,
                               fontWeight: FontWeight.w400,
                               color: DonationConstants.offBlack,
                             ),
@@ -160,7 +160,7 @@ class DonationChart extends StatelessWidget {
                         TextStyle(
                           color: DonationConstants.cardWhite,
                           fontWeight: FontWeight.w600,
-                          fontSize: isTab ? 8.sp : 12.rfs,
+                          fontSize: isTab ? 10.sp : 12.rfs,
                           fontFamily: DonationFonts.inter,
                         ),
                       );

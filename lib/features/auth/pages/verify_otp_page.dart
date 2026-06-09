@@ -110,10 +110,10 @@ class VerifyOtpPage extends StatelessWidget {
         Row(
           children: [
             "We've sent a code to ".text(AppTextStyles.f14W400().copyWith(
-                fontSize:  isTab ? 8.sp : null)),
+                fontSize:  isTab ? 10.sp : null)),
             email
                 .text(AppTextStyles.f14W400().copyWith(
-                fontSize:  isTab ? 8.sp : null))
+                fontSize:  isTab ? 10.sp : null))
                 .fontWeight(FontWeight.w600)
                 .color(AppColors.black),
           ],

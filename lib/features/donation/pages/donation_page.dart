@@ -13,6 +13,8 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/helper/extension/context_extension.dart';
+
 /// Donation Page
 ///
 /// This page displays donation overview, progress tracking, calendar, and achievements.
@@ -39,6 +41,9 @@ class _DonationPageState extends State<DonationPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isTab = context.isTab;
+
     return Scaffold(
       backgroundColor: DonationConstants.backgroundColor,
       body: SafeArea(

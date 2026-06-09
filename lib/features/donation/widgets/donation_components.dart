@@ -73,7 +73,7 @@ class DonationHeader extends StatelessWidget {
                   'Points Earned:',
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: isTab ? 8.sp : DonationConstants.fontSize14.rfs,
+                    fontSize: isTab ? 10.sp : DonationConstants.fontSize14.rfs,
                     fontWeight: FontWeight.w400,
                     color: DonationConstants.grayText,
                     height: 18 / 14,
@@ -112,7 +112,7 @@ class DonationHeader extends StatelessWidget {
                         option,
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
-                          fontSize: isTab ? 7.sp : DonationConstants.fontSize14.rfs,
+                          fontSize: isTab ? 10.sp : DonationConstants.fontSize14.rfs,
                           fontWeight: FontWeight.w500,
                           color: DonationConstants.offBlack,
                         ),
@@ -142,7 +142,7 @@ class DonationHeader extends StatelessWidget {
                         controller.selectedFilter.value,
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
-                          fontSize: isTab ? 7.sp : DonationConstants.fontSize14.rfs,
+                          fontSize: isTab ? 10.sp : DonationConstants.fontSize14.rfs,
                           fontWeight: FontWeight.w500,
                           color: DonationConstants.offBlack,
                           height: 16 / 14,
@@ -226,7 +226,7 @@ class ProgressTrackingCard extends StatelessWidget {
                     'Total Donations',
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize: isTab ? 8.sp : DonationConstants.fontSize14.rfs,
+                      fontSize: isTab ? 10.sp : DonationConstants.fontSize14.rfs,
                       fontWeight: FontWeight.w600,
                       color: DonationConstants.offBlack,
                     ),
@@ -239,7 +239,7 @@ class ProgressTrackingCard extends StatelessWidget {
                 "You've donated a total of",
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: isTab ? 8.sp : DonationConstants.fontSize12.rfs,
+                  fontSize: isTab ? 10.sp : DonationConstants.fontSize12.rfs,
                   fontWeight: FontWeight.w400,
                   color: DonationConstants.offBlack,
                   height: 16 / 12,
@@ -271,7 +271,7 @@ class ProgressTrackingCard extends StatelessWidget {
                               '0.00',
                           style: TextStyle(
                             fontFamily: DonationFonts.familjenGrotesk,
-                            fontSize:isTab ? 8.sp :  DonationConstants.fontSize24.rfs,
+                            fontSize:isTab ? 10.sp :  DonationConstants.fontSize24.rfs,
                             fontWeight: FontWeight.w700,
                             color: DonationConstants.offBlack,
                             letterSpacing: -0.7,
@@ -287,7 +287,7 @@ class ProgressTrackingCard extends StatelessWidget {
                       'in last 30 days.',
                       style: TextStyle(
                         fontFamily: DonationFonts.interDisplay,
-                        fontSize: isTab ? 8.sp : DonationConstants.fontSize12.rfs,
+                        fontSize: isTab ? 10.sp : DonationConstants.fontSize12.rfs,
                         fontWeight: FontWeight.w400,
                         color: DonationConstants.offBlack,
                         height: 16 / 12,
@@ -310,7 +310,7 @@ class ProgressTrackingCard extends StatelessWidget {
                     'Avg. daily donation:',
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize: isTab ? 8.sp : DonationConstants.fontSize12.rfs,
+                      fontSize: isTab ? 10.sp : DonationConstants.fontSize12.rfs,
                       fontWeight: FontWeight.w400,
                       color: DonationConstants.offBlack,
                       height: 16 / 12,
@@ -321,7 +321,7 @@ class ProgressTrackingCard extends StatelessWidget {
                     '\$${controller.clientStats.value?.averageDonation.toStringAsFixed(2) ?? '0.00'}',
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize: isTab ? 8.sp : DonationConstants.fontSize12.rfs,
+                      fontSize: isTab ? 10.sp : DonationConstants.fontSize12.rfs,
                       fontWeight: FontWeight.w500,
                       color: DonationConstants.primaryPurpleDark,
                       height: 16 / 12,
@@ -336,7 +336,7 @@ class ProgressTrackingCard extends StatelessWidget {
                     'Donation streak:',
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize:isTab ? 8.sp :  DonationConstants.fontSize12.rfs,
+                      fontSize:isTab ? 10.sp :  DonationConstants.fontSize12.rfs,
                       fontWeight: FontWeight.w400,
                       color: DonationConstants.offBlack,
                       height: 16 / 12,
@@ -347,7 +347,7 @@ class ProgressTrackingCard extends StatelessWidget {
                     '${controller.clientStats.value?.maxConsistencyStreak ?? '0'} days',
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize:isTab ? 8.sp :  DonationConstants.fontSize12.rfs,
+                      fontSize:isTab ? 10.sp :  DonationConstants.fontSize12.rfs,
                       fontWeight: FontWeight.w500,
                       color: DonationConstants.primaryPurpleDark,
                       height: 16 / 12,

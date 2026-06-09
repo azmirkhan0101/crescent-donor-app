@@ -5,9 +5,12 @@ import 'package:cresent_charge_user_app/features/rewards/controllers/business_we
 import 'package:cresent_charge_user_app/features/rewards/models/store_profile_model.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class StoreOverviewTab extends StatelessWidget {
   const StoreOverviewTab({super.key, required this.storeProfile});
@@ -16,6 +19,9 @@ class StoreOverviewTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isTab = context.isTab;
+
     return Container(
       padding: EdgeInsets.all(16.rw),
       child: Column(
@@ -27,6 +33,7 @@ class StoreOverviewTab extends StatelessWidget {
               // Website Card
               Expanded(
                 child: _buildContactCard(
+                  isTab: isTab,
                   icon: Assets.common.globe.path,
                   iconBg: const Color(0xFFE5D2FB),
                   backgroundColor: const Color(0xFFEBDFFA),
@@ -45,6 +52,7 @@ class StoreOverviewTab extends StatelessWidget {
               // Business Phone Card
               Expanded(
                 child: _buildContactCard(
+                  isTab: isTab,
                   icon: Assets.common.call.path,
                   iconBg: const Color(0xFFF5FDDE),
                   backgroundColor: const Color(0xFFEAFABA),
@@ -57,6 +65,7 @@ class StoreOverviewTab extends StatelessWidget {
           12.rh.heightWidth,
           // Email Card (Full Width)
           _buildContactCard(
+            isTab: isTab,
             icon: Assets.common.mail.path,
             iconBg: const Color(0xFFFFF8CC),
             backgroundColor: const Color(0xFFF9F3CB),
@@ -82,7 +91,7 @@ class StoreOverviewTab extends StatelessWidget {
             'Shop Online Today with ${storeProfile.name} — Browse & discover millions of products. Read customer reviews and find best sellers. Yes, we ship to you. Shop top brands in electronics, clothing, books & more.',
             style: TextStyle(
               color: const Color(0xFF515A59),
-              fontSize: 14.rfs,
+              fontSize: isTab ? 12.sp : 14.rfs,
               fontFamily: 'Inter Display',
               fontWeight: FontWeight.w400,
               height: 1.5,
@@ -121,6 +130,7 @@ class StoreOverviewTab extends StatelessWidget {
   }
 
   Widget _buildContactCard({
+    required bool isTab,
     required String icon,
     required Color iconBg,
     required Color backgroundColor,
@@ -169,7 +179,7 @@ class StoreOverviewTab extends StatelessWidget {
               subtitle,
               style: TextStyle(
                 color: const Color(0xFF515A59),
-                fontSize: 12.rfs,
+                fontSize: isTab ? 12.sp : 12.rfs,
                 fontFamily: 'Inter Display',
                 fontWeight: FontWeight.w400,
               ),

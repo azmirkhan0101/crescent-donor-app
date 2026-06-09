@@ -24,12 +24,12 @@ class HaveAccountWidget extends StatelessWidget {
         (!haveAccount
                 ? AppStrings.dontHaveAccount
                 : AppStrings.alreadyHaveAnAccount)
-            .centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 6.sp : null))
+            .centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 10.sp : null))
             .fontFamily(GoogleFonts.inter().fontFamily),
         4.rw.heightWidth,
 
         (!haveAccount ? AppStrings.signUp : AppStrings.login)
-            .centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 6.sp : null))
+            .centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 10.sp : null))
             .fontWeight(FontWeight.w700)
             .color(Colors.black)
             .fontFamily(GoogleFonts.inter().fontFamily)

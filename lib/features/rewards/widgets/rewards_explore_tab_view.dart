@@ -1,6 +1,7 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_business_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
@@ -9,6 +10,7 @@ import 'package:cresent_charge_user_app/features/rewards/widgets/redeem_card.dar
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,6 +25,7 @@ class RewardsExploreTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     final controller = Get.find<YourRewardsController>();
     // final getAllRewardsController = Get.find<GetAllRewardsController>();
     return Padding(
@@ -35,7 +38,7 @@ class RewardsExploreTabView extends StatelessWidget {
           // Suggested for you
           Text(
             'Suggested for you',
-            style: AppTextStyles.f14W400().copyWith(color: _textGray),
+            style: AppTextStyles.f14W400().copyWith(color: _textGray, fontSize: isTab ? 12.sp : null),
           ),
 
           12.rh.heightWidth,
@@ -48,7 +51,7 @@ class RewardsExploreTabView extends StatelessWidget {
           // Rewards for you
           Text(
             'Rewards for you',
-            style: AppTextStyles.f14W400().copyWith(color: _textGray),
+            style: AppTextStyles.f14W400().copyWith(color: _textGray, fontSize: isTab ? 12.sp : null),
           ),
 
           12.rh.heightWidth,

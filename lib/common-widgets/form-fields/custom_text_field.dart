@@ -84,7 +84,7 @@ class CustomTextField extends StatelessWidget {
             style: AppTextStyles.baseStyle().copyWith(
               color: AppColors.black,
               fontWeight: FontWeight.w500,
-              fontSize:  isTab ? 8.sp : null
+              fontSize:  isTab ? 12.sp : null
             ),
           ),
           8.rh.heightWidth,
@@ -115,7 +115,7 @@ class CustomTextField extends StatelessWidget {
             color: AppColors.black,
             fontWeight: FontWeight.w500,
             fontFamily: GoogleFonts.inter().fontFamily,
-              fontSize:  isTab ? 8.sp : null
+              fontSize:  isTab ? 10.sp : null
           ),
           decoration: InputDecoration(
             hintText: hintText,
@@ -123,7 +123,7 @@ class CustomTextField extends StatelessWidget {
               fontWeight: FontWeight.w500,
               color: "#CCCCCC".hexColor,
               fontFamily: GoogleFonts.inter().fontFamily,
-                fontSize:  isTab ? 8.sp : null
+                fontSize:  isTab ? 10.sp : null
             ),
             errorText: errorText,
             helperText: helperText,

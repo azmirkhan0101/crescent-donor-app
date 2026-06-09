@@ -6,8 +6,11 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -15,10 +18,11 @@ class FooterSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<HowToWorksController>();
+    bool isTab = context.isTab;
     return Row(
       children: [
         // Skip button
-        AppStrings.skip.centerText(AppTextStyles.baseStyle()).onTap(() {
+        AppStrings.skip.centerText(AppTextStyles.baseStyle().copyWith(fontSize: isTab ? 12.sp : null)).onTap(() {
           onClickSkip(context);
         }),
 

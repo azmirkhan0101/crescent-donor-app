@@ -50,7 +50,7 @@ class CustomFilledButton extends StatelessWidget {
                   Text(
                     loadingText!,
                     style: GoogleFonts.familjenGrotesk(
-                      fontSize: isTab ? 8.sp : 18,
+                      fontSize: isTab ? 10.sp : 18,
                       color: AppColors.black,
                       fontWeight: FontWeight.w700,
                     ),
@@ -61,7 +61,7 @@ class CustomFilledButton extends StatelessWidget {
           : Text(
               title ?? "Get Started",
               style: GoogleFonts.familjenGrotesk(
-                fontSize: isTab ? 8.sp : 18,
+                fontSize: isTab ? 10.sp : 18,
                 color: textColor ?? AppColors.black,
                 fontWeight: FontWeight.w700,
               ),

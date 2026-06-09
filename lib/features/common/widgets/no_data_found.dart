@@ -45,7 +45,7 @@ class NoDataFound extends StatelessWidget {
               title,
               style: TextStyle(
                 fontFamily: DonationFonts.familjenGrotesk,
-                fontSize: isTab ? 8.sp : 18.rfs,
+                fontSize: isTab ? 12.sp : 18.rfs,
                 fontWeight: FontWeight.w600,
                 color: DonationConstants.offBlack,
               ),
@@ -58,7 +58,7 @@ class NoDataFound extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: isTab ? 6.sp : 14.rfs,
+                  fontSize: isTab ? 10.sp : 14.rfs,
                   color: const Color(0xFF515A59),
                   height: 1.4,
                 ),

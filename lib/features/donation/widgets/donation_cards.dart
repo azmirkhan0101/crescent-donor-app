@@ -81,7 +81,7 @@ class RoundUpCard extends StatelessWidget {
                   'Round Up',
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: isTab ? 8.sp : DonationConstants.fontSize14.rfs,
+                    fontSize: isTab ? 10.sp : DonationConstants.fontSize14.rfs,
                     fontWeight: FontWeight.w600,
                     color: DonationConstants.offBlack,
                   ),
@@ -94,7 +94,7 @@ class RoundUpCard extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w400,
                       color: AppColors.black,
-                      fontSize: isTab ? 8.sp :  14.sp,
+                      fontSize: isTab ? 10.sp :  14.sp,
                     ),
                     onChanged: (String? newValue) {
                       if (newValue != null) {
@@ -144,7 +144,7 @@ class RoundUpCard extends StatelessWidget {
                         "You've rounded up",
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
-                          fontSize:isTab ? 8.sp :  DonationConstants.fontSize12.rfs,
+                          fontSize:isTab ? 10.sp :  DonationConstants.fontSize12.rfs,
                           fontWeight: FontWeight.w400,
                           color: DonationConstants.offBlack,
                         ),
@@ -188,7 +188,7 @@ class RoundUpCard extends StatelessWidget {
                     text: TextSpan(
                       style: TextStyle(
                         fontFamily: DonationFonts.interDisplay,
-                        fontSize: isTab ? 8.sp : DonationConstants.fontSize12.rfs,
+                        fontSize: isTab ? 10.sp : DonationConstants.fontSize12.rfs,
                         fontWeight: FontWeight.w400,
                         color: DonationConstants.offBlack,
                         height: 16 / 12,
@@ -219,7 +219,7 @@ class RoundUpCard extends StatelessWidget {
               "Keep going—You're making real change.",
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
-                fontSize: isTab ? 8.sp : DonationConstants.fontSize12.rfs,
+                fontSize: isTab ? 10.sp : DonationConstants.fontSize12.rfs,
                 fontWeight: FontWeight.w400,
                 color: DonationConstants.offBlack,
                 height: 16 / 12,
@@ -294,7 +294,7 @@ class SmallDonationCard extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize: isTab ? 8.sp : DonationConstants.fontSize14.rfs,
+                      fontSize: isTab ? 10.sp : DonationConstants.fontSize14.rfs,
                       fontWeight: FontWeight.w600,
                       color: DonationConstants.offBlack,
                     ),
@@ -420,7 +420,7 @@ class CalendarDayWidget extends StatelessWidget {
             dayName,
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize:isTab ? 6.sp :  10.rfs,
+              fontSize:isTab ? 10.sp :  10.rfs,
               fontWeight: FontWeight.w400,
               color: dayColor,
               letterSpacing: -0.24,
@@ -433,7 +433,7 @@ class CalendarDayWidget extends StatelessWidget {
             dayNumber,
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: isTab ? 6.sp : 14.rfs,
+              fontSize: isTab ? 10.sp : 14.rfs,
               fontWeight: FontWeight.w500,
               color: dateColor,
             ),

@@ -52,7 +52,7 @@ class CustomInputField extends StatelessWidget {
         color: AppColors.black,
         fontWeight: FontWeight.w500,
         fontFamily: GoogleFonts.inter().fontFamily,
-          fontSize:  isTab ? 6.sp : null
+          fontSize:  isTab ? 10.sp : null
       ),
       decoration: InputDecoration(
         hint: hintText?.text(
@@ -60,7 +60,7 @@ class CustomInputField extends StatelessWidget {
             fontWeight: FontWeight.w500,
             color: "#CCCCCC".hexColor,
             fontFamily: GoogleFonts.inter().fontFamily,
-              fontSize:  isTab ? 6.sp : null
+              fontSize:  isTab ? 10.sp : null
           ),
         ),
         prefixIcon: isPrefixIcon

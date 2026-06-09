@@ -112,7 +112,7 @@ class LoginFormFields extends StatelessWidget {
                   color: AppColors.black,
                   height: 20.rw / 14.rw,
                   fontFamily: AppStrings.interDisplay,
-                  fontSize: isTab ? 6.sp : null
+                  fontSize: isTab ? 10.sp : null
                 ),
               ),
             ],
@@ -130,7 +130,7 @@ class LoginFormFields extends StatelessWidget {
               color: AppColors.black,
               decoration: TextDecoration.underline,
               fontFamily: AppStrings.interDisplay,
-                fontSize: isTab ? 6.sp : null
+                fontSize: isTab ? 10.sp : null
             ),
           ),
         ),

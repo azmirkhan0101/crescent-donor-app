@@ -1,8 +1,11 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+
+import '../../core/helper/extension/context_extension.dart';
 
 class PlacesSearchField extends StatelessWidget {
 
@@ -34,6 +37,7 @@ class PlacesSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Container(
       padding: EdgeInsets.symmetric( horizontal: padding[0], vertical: padding[1]),
       decoration: BoxDecoration(
@@ -49,6 +53,7 @@ class PlacesSearchField extends StatelessWidget {
             child: IntrinsicHeight(
               child: GooglePlaceAutoCompleteTextField(
                 validator: validator,
+                textStyle: TextStyle(fontSize: isTab ? 10.sp : null),
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.text,
                 textEditingController: textEditingController,
@@ -57,6 +62,7 @@ class PlacesSearchField extends StatelessWidget {
                 boxDecoration: const BoxDecoration(),
                 inputDecoration: InputDecoration(
                   hintText: hintText,
+                  hintStyle: isTab ? TextStyle(fontSize: 10.sp) : null,
                   errorStyle: const TextStyle(height: 0),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,

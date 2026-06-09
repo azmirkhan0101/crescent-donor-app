@@ -97,8 +97,9 @@ class _LoginPageState extends State<LoginPage> {
               //Spacer(),
 
               // Login buttons and actions
-              //I WANT THIS SECTION TO BE AT THE BOTTOM. IF I USE SPACER NOTHING WORKS
               _buildLoginActions(context, loginController),
+              if( isTab )
+              const SizedBox(height: 40,)
             ],
           ),
         ),
@@ -108,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
 
   /// Build login actions section (login button, guest login, etc.)
   Widget _buildLoginActions(BuildContext context, LoginController controller) {
+    bool isTab = context.isTab;
     return Obx(() {
       return Column(
         children: [
@@ -157,8 +159,8 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
                 child: Container(
-                  width: 45,
-                  height: 45,
+                  width: isTab ? 60 : 45,
+                  height: isTab ? 60 : 45,
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
@@ -192,8 +194,8 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
                 child: Container(
-                  width: 45,
-                  height: 45,
+                  width: isTab ? 60 : 45,
+                  height: isTab ? 60 : 45,
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),

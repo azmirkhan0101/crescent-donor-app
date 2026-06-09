@@ -461,7 +461,7 @@ class RecentActivityList extends StatelessWidget {
                 'No recent activities.',
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: isTab ? 6.sp :  14.rfs,
+                  fontSize: isTab ? 10.sp :  14.rfs,
                   fontWeight: FontWeight.w400,
                   color: DonationConstants.offBlack.withValues(alpha: 0.5),
                   height: 18 / 14,
@@ -498,7 +498,7 @@ class RecentActivityList extends StatelessWidget {
                       recentActivities[index].title,
                       style: TextStyle(
                         fontFamily: DonationFonts.interDisplay,
-                        fontSize: isTab ? 8.sp :  11.rfs,
+                        fontSize: isTab ? 10.sp :  11.rfs,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey.withValues(alpha: 0.6),
                         height: 16 / 11,
@@ -609,7 +609,7 @@ class ActivityItem extends StatelessWidget {
                                                     .toUpperCase()
                                               : '',
                                           style: TextStyle(
-                                            fontSize: isTab ? 8.sp :   18.rfs,
+                                            fontSize: isTab ? 10.sp :   18.rfs,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
@@ -626,7 +626,7 @@ class ActivityItem extends StatelessWidget {
                                           ? activity.brandName[0].toUpperCase()
                                           : '',
                                       style: TextStyle(
-                                        fontSize: isTab ? 8.sp :   18.rfs,
+                                        fontSize: isTab ? 10.sp :   18.rfs,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),
@@ -651,7 +651,7 @@ class ActivityItem extends StatelessWidget {
                                   activity.brandName,
                                   style: TextStyle(
                                     fontFamily: DonationFonts.interDisplay,
-                                    fontSize: isTab ? 8.sp :   14.rfs,
+                                    fontSize: isTab ? 10.sp :   14.rfs,
                                     fontWeight: FontWeight.w500,
                                     color: DonationConstants.offBlack,
                                     height: 18 / 14,
@@ -661,7 +661,7 @@ class ActivityItem extends StatelessWidget {
                                   '\$${activity.purchaseAmount.toStringAsFixed(2)}',
                                   style: TextStyle(
                                     fontFamily: DonationFonts.interDisplay,
-                                    fontSize: isTab ? 7.sp :   12.rfs,
+                                    fontSize: isTab ? 10.sp :   12.rfs,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey,
                                     height: 16 / 12,
@@ -680,7 +680,7 @@ class ActivityItem extends StatelessWidget {
                                   activity.timeAgo,
                                   style: TextStyle(
                                     fontFamily: DonationFonts.interDisplay,
-                                    fontSize: isTab ? 6.sp :   12.rfs,
+                                    fontSize: isTab ? 10.sp :   12.rfs,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.grey,
                                     height: 16 / 12,
@@ -690,7 +690,7 @@ class ActivityItem extends StatelessWidget {
                                   '+\$${activity.roundUpAmount.toStringAsFixed(2)}',
                                   style: TextStyle(
                                     fontFamily: DonationFonts.interDisplay,
-                                    fontSize: isTab ? 6.sp :   12.rfs,
+                                    fontSize: isTab ? 10.sp :   12.rfs,
                                     fontWeight: FontWeight.w400,
                                     color: const Color(0xFF1AC461),
                                     height: 16 / 12,
@@ -738,7 +738,7 @@ class ActivityItem extends StatelessWidget {
                             'Donated to:',
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: isTab ? 7.sp :12.rfs,
+                              fontSize: isTab ? 10.sp :12.rfs,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey,
                               height: 16 / 12,
@@ -748,7 +748,7 @@ class ActivityItem extends StatelessWidget {
                             activity.donatedTo!,
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize:  isTab ? 7.sp : 12.rfs,
+                              fontSize:  isTab ? 10.sp : 12.rfs,
                               fontWeight: FontWeight.w400,
                               color: DonationConstants.offBlack,
                               height: 16 / 12,
@@ -769,7 +769,7 @@ class ActivityItem extends StatelessWidget {
                             'Timestamp:',
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: isTab ? 7.sp  : 12.rfs,
+                              fontSize: isTab ? 10.sp  : 12.rfs,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey,
                               height: 16 / 12,
@@ -779,7 +779,7 @@ class ActivityItem extends StatelessWidget {
                             activity.timestamp!,
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: isTab ? 7.sp : 12.rfs,
+                              fontSize: isTab ? 10.sp : 12.rfs,
                               fontWeight: FontWeight.w400,
                               color: DonationConstants.offBlack,
                               height: 16 / 12,

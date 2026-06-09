@@ -38,7 +38,7 @@ class CapsuleButton extends StatelessWidget {
           title,
           style: TextStyle(
             fontFamily: 'Inter Display',
-            fontSize: isTab ? 6.sp : 14.rfs,
+            fontSize: isTab ? 10.sp : 14.rfs,
             fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
             color: const Color(0xFF000C0B),
           ),

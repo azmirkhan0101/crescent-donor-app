@@ -1,5 +1,6 @@
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_business_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_all_rewards_controller.dart';
 import 'package:cresent_charge_user_app/features/rewards/controllers/get_point_balance_controller.dart';
@@ -10,6 +11,7 @@ import 'package:cresent_charge_user_app/utils/app_colors/app_colors.dart';
 import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
@@ -224,7 +226,7 @@ class YourRewardsPage extends StatelessWidget {
                     BlendMode.srcIn,
                   ),
                 ),
-                "Donate Now".text().fontSize(16.rfs).color(Color(0xFF40520A)),
+                "Donate Now".text().fontSize( context.isTab ? 10.sp : 16.rfs).color(Color(0xFF40520A)),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: Color(0xFF40520A),

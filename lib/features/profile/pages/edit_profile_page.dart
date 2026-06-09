@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cresent_charge_user_app/common-widgets/places_search_field/places_search_field.dart';
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:cresent_charge_user_app/core/theme/app_colors.dart';
 import 'package:cresent_charge_user_app/features/donation/utils/donation_constants.dart';
 import 'package:cresent_charge_user_app/features/profile/controllers/get_profile_controller.dart';
@@ -12,6 +13,7 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -44,6 +46,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isTab = context.isTab;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: _buildAppBar(),
@@ -54,7 +59,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             SizedBox(height: 8.rh),
 
             // Profile Avatar Section
-            _buildProfileAvatar(),
+            _buildProfileAvatar(isTab),
 
             SizedBox(height: 16.rh),
 
@@ -104,7 +109,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   /// Build profile avatar with edit button
-  Widget _buildProfileAvatar() {
+  Widget _buildProfileAvatar(bool isTab) {
     return Obx(() {
       final selectedImage = _updCtrl.imageFile.value;
       final profile = Get.find<GetProfileController>().profile.value;
@@ -116,8 +121,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         children: [
           // Main Avatar
           Container(
-            width: 120.rw,
-            height: 120.rh,
+            width: isTab ? 180 : 120.rw,
+            height: isTab ? 180 : 120.rh,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
@@ -331,6 +336,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     int maxLines = 1,
     bool readOnly = false,
   }) {
+    bool isTab = context.isTab;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -338,7 +344,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           label,
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: 14,
+            fontSize: isTab ? 10.sp : 14,
             fontWeight: FontWeight.w500,
             color: AppColors.secondary,
           ),
@@ -365,7 +371,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 14,
+              fontSize: isTab ? 10.sp : 14,
               fontWeight: maxLines > 1 ? FontWeight.w400 : FontWeight.w500,
               color: readOnly ? Colors.grey[600] : AppColors.secondary,
             ),
@@ -377,6 +383,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   /// Build phone number field with country code dropdown
   Widget _buildPhoneNumberField() {
+    bool isTab = context.isTab;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -384,7 +391,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           'Phone Number',
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: 14,
+            fontSize: isTab ? 10.sp : 14,
             fontWeight: FontWeight.w500,
             color: AppColors.secondary,
           ),
@@ -410,7 +417,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             style: TextStyle(
               fontFamily: DonationFonts.interDisplay,
-              fontSize: 14,
+              fontSize: isTab ? 10.sp : 14,
               fontWeight: FontWeight.w400,
               color: AppColors.secondary,
             ),
@@ -422,6 +429,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   /// Build state and pin code row
   Widget _buildStateAndPinCodeRow() {
+    bool isTab = context.isTab;
     return Row(
       children: [
         // State Field
@@ -433,7 +441,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 'State',
                 style: TextStyle(
                   fontFamily: DonationFonts.interDisplay,
-                  fontSize: 14,
+                  fontSize: isTab ? 10.sp : 14,
                   fontWeight: FontWeight.w500,
                   color: AppColors.secondary,
                 ),
@@ -453,13 +461,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   controller: _updCtrl.stateController,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
+                    contentPadding: EdgeInsets.symmetric(vertical: 8),
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: 14,
+                    fontSize: isTab ? 10.sp : 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.secondary,
                   ),
@@ -484,6 +492,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   /// Build action buttons (Save and Discard Changes)
   Widget _buildActionButtons() {
+    bool isTab = context.isTab;
     return SizedBox(
       width: 263,
       child: Column(
@@ -491,7 +500,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           // Save Button
           SizedBox(
             width: double.infinity,
-            height: 52,
+            height: isTab ? 70 : 52,
             child: ElevatedButton(
               onPressed: _saveProfile,
               style: ElevatedButton.styleFrom(
@@ -505,7 +514,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 'Save',
                 style: TextStyle(
                   fontFamily: DonationFonts.familjenGrotesk,
-                  fontSize: 18,
+                  fontSize: isTab ? 12.sp : 18,
                   fontWeight: FontWeight.bold,
                   color: AppColors.secondary,
                   letterSpacing: -0.36,
@@ -523,7 +532,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               'Discard Changes',
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
-                fontSize: 14,
+                fontSize: isTab ? 10.sp : 14,
                 fontWeight: FontWeight.w600,
                 color: AppColors.secondary,
               ),

@@ -14,8 +14,11 @@ import 'package:cresent_charge_user_app/utils/sizer/sizer.dart';
 import 'package:cresent_charge_user_app/utils/static_strings/static_strings.dart';
 import 'package:cresent_charge_user_app/utils/text_style/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/helper/extension/context_extension.dart';
 
 class RedeemCard extends StatelessWidget {
   const RedeemCard({super.key, required this.index, required this.reward});
@@ -25,6 +28,9 @@ class RedeemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isTab = context.isTab;
+
     return GestureDetector(
       onTap: () => _handleCardTap(context),
       child: Card(
@@ -99,9 +105,9 @@ class RedeemCard extends StatelessWidget {
                                           ? reward.business!.name[0]
                                                 .toUpperCase()
                                           : 'B',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20,
+                                        fontSize: isTab ? 14.sp : 20,
                                         fontWeight: FontWeight.w900,
                                         fontFamily: 'Inter Display',
                                       ),
@@ -115,9 +121,9 @@ class RedeemCard extends StatelessWidget {
                                           reward.business!.name.isNotEmpty
                                       ? reward.business!.name[0].toUpperCase()
                                       : 'B',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 20,
+                                    fontSize: isTab ? 14.sp : 20,
                                     fontWeight: FontWeight.w900,
                                     fontFamily: 'Inter Display',
                                   ),
@@ -140,6 +146,7 @@ class RedeemCard extends StatelessWidget {
                       reward.title,
                       style: AppTextStyles.f16W500().copyWith(
                         fontWeight: FontWeight.w500,
+                        fontSize: isTab ? 14.sp : null
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -156,7 +163,7 @@ class RedeemCard extends StatelessWidget {
                       ),
                       // "450"
                       "${reward.pointsCost}"
-                          .text(AppTextStyles.f16W500())
+                          .text(AppTextStyles.f16W500().copyWith(fontSize: isTab ? 12.sp : null))
                           .fontWeight(FontWeight.w600)
                           .fontFamily(AppStrings.interDisplay),
                     ],
@@ -172,7 +179,7 @@ class RedeemCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: const Color(0xFF808E8D),
-                  fontSize: 12,
+                  fontSize: isTab ? 12.sp : 12,
                   fontFamily: 'Inter Display',
                   fontWeight: FontWeight.w400,
                   height: 1.33,
@@ -186,7 +193,7 @@ class RedeemCard extends StatelessWidget {
                   text: 'Expires:',
                   style: TextStyle(
                     color: const Color(0xFF808E8D),
-                    fontSize: 12,
+                    fontSize: isTab ? 12.sp : 12,
                     fontFamily: 'Inter Display',
                     fontWeight: FontWeight.w500,
                     height: 1.33,
@@ -204,7 +211,7 @@ class RedeemCard extends StatelessWidget {
                           return ' N/A';
                         }
                       }(),
-                      style: TextStyle(fontWeight: FontWeight.w400),
+                      style: TextStyle(fontWeight: FontWeight.w400, fontSize: isTab ? 12.sp : null),
                     ),
                   ],
                 ),
@@ -248,7 +255,7 @@ class RedeemCard extends StatelessWidget {
                                 : "claimed",
                             style: TextStyle(
                               color: const Color(0xFF000C0B),
-                              fontSize: 12,
+                              fontSize: isTab ? 12.sp : 12,
                               fontFamily: 'Inter Display',
                               fontWeight: FontWeight.w600,
                               height: 1.33,

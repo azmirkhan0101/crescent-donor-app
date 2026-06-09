@@ -123,7 +123,7 @@ class ProfilePage extends StatelessWidget {
                             profile?.auth.email ?? 'N/A' : "",
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
-                              fontSize: isTab ? 6.sp : 12.rfs,
+                              fontSize: isTab ? 10.sp : 12.rfs,
                               fontWeight: FontWeight.w400,
                               color: Colors.grey,
                             ),
@@ -174,7 +174,7 @@ class ProfilePage extends StatelessWidget {
                   text: TextSpan(
                     style: TextStyle(
                       fontFamily: DonationFonts.interDisplay,
-                      fontSize: 12.rfs,
+                      fontSize: isTab ? 12.sp : 12.rfs,
                       fontWeight: FontWeight.w400,
                       color: const Color(0xFF000C0B),
                       height: 1.33,

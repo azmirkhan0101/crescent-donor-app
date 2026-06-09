@@ -115,11 +115,12 @@ class VerifiedCharityCard extends StatelessWidget {
                     Text(
                       title,
                       style: AppTextStyles.baseStyle().copyWith(
-                        fontSize: isTab ? 8.sp : 16.rfs,
+                        fontSize: isTab ? 12.sp : 16.rfs,
                         fontWeight: FontWeight.w600,
                         color: Colors.black,
+                        letterSpacing: isTab ? 0 : null
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     4.rh.heightWidth,
@@ -129,7 +130,7 @@ class VerifiedCharityCard extends StatelessWidget {
                       location,
                       style: AppTextStyles.f14W400().copyWith(
                         color: const Color(0xFF64748B),
-                        fontSize: isTab ? 8.sp : 12.rfs,
+                        fontSize: isTab ? 10.sp : 12.rfs,
                       ),
                     ),
                   ],

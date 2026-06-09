@@ -133,7 +133,7 @@ class RoundUpPage extends StatelessWidget {
                             'Donated to',
                             style: TextStyle(
                               fontFamily: DonationFonts.familjenGrotesk,
-                              fontSize: isTab ? 8.sp : 20.rfs,
+                              fontSize: isTab ? 10.sp : 20.rfs,
                               fontWeight: FontWeight.w600,
                               color: DonationConstants.offBlack,
                               letterSpacing: -0.2,
@@ -185,7 +185,7 @@ class RoundUpPage extends StatelessWidget {
                           'Recent Activity',
                           style: TextStyle(
                             fontFamily: DonationFonts.familjenGrotesk,
-                            fontSize: isTab ? 8.sp : 20.rfs,
+                            fontSize: isTab ? 10.sp : 20.rfs,
                             fontWeight: FontWeight.w600,
                             color: DonationConstants.offBlack,
                             letterSpacing: -0.2,

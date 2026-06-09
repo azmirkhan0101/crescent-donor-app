@@ -493,7 +493,7 @@ class _SettingsPageState extends State<SettingsPage> {
           label,
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: isTab ? 8.sp : 14.rfs,
+            fontSize: isTab ? 10.sp : 14.rfs,
             fontWeight: FontWeight.w500,
             color: DonationConstants.offBlack,
           ),
@@ -520,7 +520,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       selectedItemName ?? 'Select organization',
                       style: TextStyle(
                         fontFamily: DonationFonts.interDisplay,
-                        fontSize: isTab ? 6.sp : 14.rfs,
+                        fontSize: isTab ? 10.sp : 14.rfs,
                         fontWeight: FontWeight.w500,
                         color: DonationConstants.offBlack,
                       ),
@@ -534,7 +534,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       color: const Color(
                         0xFFC08FFF,
                       ) /* Colors-Primary-Purple */,
-                      fontSize: isTab ? 6.sp : 14,
+                      fontSize: isTab ? 10.sp : 14,
                       fontFamily: 'Inter Display',
                       fontWeight: FontWeight.w500,
                       height: 1.43,
@@ -718,7 +718,7 @@ class _SettingsPageState extends State<SettingsPage> {
           'Select Threshold Amount (Per Month)',
           style: TextStyle(
             fontFamily: DonationFonts.interDisplay,
-            fontSize: isTab ? 8.sp : 14.rfs,
+            fontSize: isTab ? 10.sp : 14.rfs,
             fontWeight: FontWeight.w500,
             color: DonationConstants.offBlack,
           ),
@@ -816,7 +816,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   'Cancel this donation',
                   style: TextStyle(
                     fontFamily: DonationFonts.interDisplay,
-                    fontSize: isTab ? 6.sp : 14.rfs,
+                    fontSize: isTab ? 10.sp : 14.rfs,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFFF0323C),
                   ),
@@ -851,7 +851,7 @@ class _SettingsPageState extends State<SettingsPage> {
               'Update Settings',
               style: TextStyle(
                 fontFamily: DonationFonts.familjenGrotesk,
-                fontSize: isTab ? 7.sp : 18.rfs,
+                fontSize: isTab ? 10.sp : 18.rfs,
                 fontWeight: FontWeight.bold,
                 color: DonationConstants.offBlack,
                 letterSpacing: -0.36,
@@ -868,7 +868,7 @@ class _SettingsPageState extends State<SettingsPage> {
               'Cancel',
               style: TextStyle(
                 fontFamily: DonationFonts.interDisplay,
-                fontSize: isTab ? 6.sp : 14.rfs,
+                fontSize: isTab ? 10.sp : 14.rfs,
                 fontWeight: FontWeight.w600,
                 color: DonationConstants.offBlack,
               ),

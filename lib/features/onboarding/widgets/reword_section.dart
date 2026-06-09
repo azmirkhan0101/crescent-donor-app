@@ -24,7 +24,7 @@ class RewordSection extends StatelessWidget {
           ),
           // Grab a coffee or shop online — and unlock rewards instantly.
           controller.rewardsList[controller.currentIndex.value][1].centerText(
-            AppTextStyles.baseStyle().copyWith(letterSpacing: 1, fontSize: isTab ? 8.sp : null),
+            AppTextStyles.baseStyle().copyWith(letterSpacing: 1, fontSize: isTab ? 12.sp : null),
           ),
         ],
       ).paddingXY(X: 40.rw);

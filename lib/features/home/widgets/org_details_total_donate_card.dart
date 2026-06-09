@@ -1,4 +1,6 @@
+import 'package:cresent_charge_user_app/core/helper/extension/context_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrgDetailTotalDonationsCard extends StatelessWidget {
   const OrgDetailTotalDonationsCard({
@@ -16,6 +18,7 @@ class OrgDetailTotalDonationsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab = context.isTab;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(8),
@@ -39,7 +42,7 @@ class OrgDetailTotalDonationsCard extends StatelessWidget {
                 'Total Donations',
                 style: TextStyle(
                   color: const Color(0xFF000C0B) /* Colors-Off-Black */,
-                  fontSize: 14,
+                  fontSize: isTab ? 12.sp : 14,
                   fontFamily: 'Inter Display',
                   fontWeight: FontWeight.w400,
                   height: 1.29,
@@ -72,7 +75,7 @@ class OrgDetailTotalDonationsCard extends StatelessWidget {
                       '+${totalDonors - recentDonorsImageUrl.length} People have already donated',
                       style: TextStyle(
                         color: const Color(0xFF647270),
-                        fontSize: 12,
+                        fontSize: isTab ? 10.sp : 12,
                         fontFamily: 'Inter Display',
                         fontWeight: FontWeight.w400,
                         height: 1.33,
@@ -83,7 +86,7 @@ class OrgDetailTotalDonationsCard extends StatelessWidget {
                       '$totalDonors People have already donated',
                       style: TextStyle(
                         color: const Color(0xFF647270),
-                        fontSize: 12,
+                        fontSize: isTab ? 10.sp : 12,
                         fontFamily: 'Inter Display',
                         fontWeight: FontWeight.w400,
                         height: 1.33,
