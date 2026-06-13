@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:cresent_charge_user_app/features/auth/models/create_profile_response_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';

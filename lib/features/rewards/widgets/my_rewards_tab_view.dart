@@ -506,25 +506,25 @@ class _MyRewardsTabViewState extends State<MyRewardsTabView> {
 
     switch (status) {
       case RewardStatus.emailSent:
-        backgroundColor = const Color(0xFF9DF2C1).withOpacity(0.5);
+        backgroundColor = const Color(0xFF9DF2C1).withValues(alpha: 0.5);
         textColor = const Color(0xFF049758);
         iconData = Icons.mail_outline;
         statusText = 'Email Sent';
         break;
       case RewardStatus.expired:
-        backgroundColor = const Color(0xFFF0323C).withOpacity(0.08);
+        backgroundColor = const Color(0xFFF0323C).withValues(alpha: 0.08);
         textColor = const Color(0xFFF0323C);
         iconData = Icons.error_outline;
         statusText = 'Expired';
         break;
       case RewardStatus.usedInStore:
-        backgroundColor = const Color(0xFFFEE88B).withOpacity(0.5);
+        backgroundColor = const Color(0xFFFEE88B).withValues(alpha: 0.5);
         textColor = const Color(0xFFA18200);
         iconData = Icons.store_outlined;
         statusText = 'Used In Store';
         break;
       case RewardStatus.favorite:
-        backgroundColor = const Color(0xFFFFE0E0).withOpacity(0.5);
+        backgroundColor = const Color(0xFFFFE0E0).withValues(alpha: 0.5);
         textColor = const Color(0xFFFF0000);
         iconData = Icons.favorite;
         statusText = 'Favorite';

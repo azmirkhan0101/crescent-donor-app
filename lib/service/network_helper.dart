@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:cresent_charge_user_app/global/model/error_response_model.dart';
 import 'package:cresent_charge_user_app/service/app_storage_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +13,6 @@ import 'package:mime/mime.dart';
 
 /// Network service for handling HTTP requests with error handling and timeout support
 class NetworkHelper extends GetxService {
-  static final _logger = Logger();
 
   /// Default timeout duration for HTTP requests
   static const Duration defaultTimeout = Duration(seconds: 30);

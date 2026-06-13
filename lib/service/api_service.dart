@@ -103,15 +103,7 @@ class ApiService extends GetxService {
     } on TimeoutException {
       return ApiResponse(statusCode: 408);
     } catch (e) {
-      if( shouldPrint ) print("🛑 Error: $e");
       return ApiResponse(statusCode: 500);
-    }finally{
-      if( shouldPrint ){
-        print("🌐 Endpoint: $endPoint");
-        print("🟢 Code: $code");
-        //developer.log("✅ Result: $result");
-        logPrettyJson(result.toString());
-      }
     }
   }
 
@@ -230,12 +222,7 @@ class ApiService extends GetxService {
     } on TimeoutException {
       return ApiResponse(statusCode: 408);
     } catch (e) {
-      print("🛑 Error: $e");
       return ApiResponse(statusCode: 500);
-    }finally{
-      print("🌐 Endpoint: $endPoint");
-      print("✅ Result: $result");
-
     }
   }
 

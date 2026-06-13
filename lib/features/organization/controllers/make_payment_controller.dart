@@ -37,8 +37,9 @@ class MakePaymentController extends GetxController {
 
     // Handle number input
     if (number == '.' && _amount.value.contains('.')) return;
-    if (_amount.value.contains('.') && _amount.value.split('.')[1].length >= 2)
+    if (_amount.value.contains('.') && _amount.value.split('.')[1].length >= 2) {
       return;
+    }
     _amount.value += number;
   }
 
@@ -81,10 +82,5 @@ class MakePaymentController extends GetxController {
 
   bool isButtonHighlighted(String buttonText) {
     return _highlightedButton.value == buttonText;
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

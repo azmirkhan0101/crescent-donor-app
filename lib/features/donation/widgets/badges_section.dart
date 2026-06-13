@@ -11,16 +11,12 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../core/helper/extension/context_extension.dart';
-
 /// Horizontal scrolling badges with progress indicators
 class BadgesSection extends StatelessWidget {
   const BadgesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    bool isTab = context.isTab;
 
     return GetX<GetBadgesProgressController>(
       initState: (state) {

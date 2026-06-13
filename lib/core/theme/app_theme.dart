@@ -124,12 +124,12 @@ class AppTheme {
       scaffoldBackgroundColor: colorScheme.surface,
 
       // Splash color
-      splashColor: colorScheme.primary.withOpacity(0.12),
-      highlightColor: colorScheme.primary.withOpacity(0.08),
+      splashColor: colorScheme.primary.withValues(alpha: 0.12),
+      highlightColor: colorScheme.primary.withValues(alpha: 0.08),
 
       // Focus color
-      focusColor: colorScheme.primary.withOpacity(0.12),
-      hoverColor: colorScheme.primary.withOpacity(0.08),
+      focusColor: colorScheme.primary.withValues(alpha: 0.12),
+      hoverColor: colorScheme.primary.withValues(alpha: 0.08),
 
       // Icon theme
       iconTheme: IconThemeData(color: colorScheme.onSurface, size: 24.0),
@@ -673,7 +673,7 @@ class AppTheme {
       activeTrackColor: colorScheme.primary,
       inactiveTrackColor: colorScheme.surfaceVariant,
       thumbColor: colorScheme.primary,
-      overlayColor: colorScheme.primary.withOpacity(0.12),
+      overlayColor: colorScheme.primary.withValues(alpha: 0.12),
       valueIndicatorColor: colorScheme.primary,
       valueIndicatorTextStyle: TextStyle(
         fontFamily: 'InterDisplay',

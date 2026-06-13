@@ -27,7 +27,6 @@ class DonationCompletePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final donationCompleteController = Get.put(DonationCompleteController());
     final donateNowCtrl = Get.find<DonateNowController>();
-    print('Donation ID: ${donateNowCtrl.donationResponse.value?.donation?.id}');
 
     return Scaffold(
       backgroundColor: AppColors.lightPageBackground,

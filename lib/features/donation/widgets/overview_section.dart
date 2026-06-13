@@ -10,8 +10,6 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../core/helper/extension/context_extension.dart';
-
 /// Overview Section Widget
 ///
 /// Contains round-up card and two small cards (Recurring & One Time)
@@ -20,7 +18,6 @@ class OverviewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isTab = context.isTab;
     return GetX<DonationController>(
       initState: (state){
         state.controller?.fetchOrgs();

@@ -48,7 +48,6 @@ class SettingsController extends GetxController {
 
   void changeCustomInterval(String unit, int value) {
     customInterval.value = {"unit": unit, "value": value};
-    print('Custom Interval updated: $customInterval');
   }
 
   var selectedOrganizationIndex = 0.obs;

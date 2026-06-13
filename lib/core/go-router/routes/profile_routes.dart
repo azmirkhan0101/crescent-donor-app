@@ -5,7 +5,6 @@ import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dar
 import 'package:cresent_charge_user_app/features/profile/pages/change_password_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/edit_profile_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/notification_settings_page.dart';
-import 'package:cresent_charge_user_app/features/profile/pages/subscription_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/terms_and_conditions_page.dart';
 import 'package:cresent_charge_user_app/features/profile/pages/transaction_history_page.dart';
 import 'package:go_router/go_router.dart';
@@ -42,14 +41,6 @@ class ProfileRoutes extends AppRouteConfig {
       name: RoutePath.changePassword,
       path: RoutePath.changePassword.addBasePath,
       builder: (context, state) => const ChangePasswordPage(),
-      redirect: AuthGuard.guestAllowed.redirect,
-    ),
-
-    // Subscription Page
-    GoRoute(
-      name: RoutePath.subscription,
-      path: RoutePath.subscription.addBasePath,
-      builder: (context, state) => const SubscriptionPage(),
       redirect: AuthGuard.guestAllowed.redirect,
     ),
 

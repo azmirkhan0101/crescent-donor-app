@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cresent_charge_user_app/core/custom_assets/assets.gen.dart';
 import 'package:cresent_charge_user_app/core/go-router/paths/route_path.dart';
 import 'package:cresent_charge_user_app/core/helper/extension/base_extension.dart';
@@ -7,7 +5,6 @@ import 'package:cresent_charge_user_app/core/helper/extension/context_extension.
 import 'package:cresent_charge_user_app/core/helper/network_image/network_image.dart';
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/core/theme/app_colors.dart';
-import 'package:cresent_charge_user_app/features/home/controllers/cause_categories_controller.dart';
 import 'package:cresent_charge_user_app/features/home/controllers/causes_controller.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/donation_cause_card.dart';
 import 'package:cresent_charge_user_app/features/home/widgets/verified_charity_card.dart';
@@ -70,49 +67,6 @@ class HomePage extends StatelessWidget {
           }),
         ),
       ),
-    );
-  }
-
-  GetX<CauseCategoriesController> _buildCauseCategories2() {
-    return GetX<CauseCategoriesController>(
-      init: CauseCategoriesController(),
-      initState: (state) {
-        state.controller!.fetchCategories();
-      },
-      builder: (controller) {
-        return SizedBox(
-          height: 48.rh,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              final category = controller.categories[index];
-              return Container(
-                padding: EdgeInsets.all(12.rw),
-                decoration: BoxDecoration(
-                  color: controller.colors[index % controller.colors.length],
-                  // Cycle colors
-                  borderRadius: BorderRadius.circular(20.rw),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      category.label,
-                      style: AppTextStyles.f14W400().copyWith(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-            separatorBuilder: (context, index) => 8.rw.heightWidth,
-            itemCount: controller.categories.length,
-          ),
-        );
-      },
     );
   }
 

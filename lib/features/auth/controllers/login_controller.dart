@@ -67,7 +67,6 @@ class LoginController extends GetxController {
 
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential( authCredential );
       String? firebaseIdToken = await userCredential.user?.getIdToken();
-      print("Firebase ID Token: $firebaseIdToken");
       if( firebaseIdToken == null ){
         throw Exception("Failed to retrieve Firebase ID Token.");
       }
@@ -83,7 +82,6 @@ class LoginController extends GetxController {
           endPoint: ApiUrl.socialLogin,
           body: credentials
       );
-      print("Social login response: ${response.data}");
       if( response.statusCode == 200 || response.statusCode == 201 ){
         await AppStorageService.saveAuthToken(response.data['data']['accessToken']);
         await AppStorageService.writeSecure(
@@ -150,7 +148,6 @@ class LoginController extends GetxController {
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
 
       String? firebaseIdToken = await userCredential.user?.getIdToken();
-      print("Firebase ID Token: $firebaseIdToken");
       if (firebaseIdToken == null) {
         throw Exception("Failed to retrieve Firebase ID Token.");
       }
@@ -183,7 +180,6 @@ class LoginController extends GetxController {
           endPoint: ApiUrl.socialLogin,
           body: credentials
       );
-      print("Social login response: ${response.data}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         await AppStorageService.saveAuthToken(response.data['data']['accessToken']);

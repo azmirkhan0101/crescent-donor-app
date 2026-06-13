@@ -9,7 +9,16 @@ class GetPointBalanceController extends GetxController {
   var isLoadingPoints = false.obs;
   var errorMessagePoints = ''.obs;
   var balance = Rx<PointBalanceModel?>(null);
-  var userId = Get.find<GetProfileController>().profile.value?.id ?? '';
+  //var userId = Get.find<GetProfileController>().profile.value?.id ?? '';
+  String userId = "";
+
+  @override
+  void onInit() {
+
+    userId = Get.find<GetProfileController>().profile.value?.id ?? '';
+    super.onInit();
+  }
+
   var availableTiersOld = <String>["colour", "bronze", "silver", "gold"].obs;
   RxList<TireModel> availableTiers = [
     TireModel(tierName: "bronze", requiredPoints: 0),
@@ -23,6 +32,7 @@ class GetPointBalanceController extends GetxController {
   // PLATINUM: 100000, // $1000 donated
 
   Future<bool> fetchUserPoints() async {
+    userId = Get.find<GetProfileController>().profile.value?.id ?? '';
     // print('Fetching points for userId: $userId');
     // return false;
     isLoadingPoints.value = true;
@@ -42,7 +52,6 @@ class GetPointBalanceController extends GetxController {
         return false;
       },
       (data) {
-        print("Data: $data");
         balance.value = PointBalanceModel.fromJson(data['data'] ?? {});
         return true;
       },

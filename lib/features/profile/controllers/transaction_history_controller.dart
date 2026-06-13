@@ -252,9 +252,6 @@ class TransactionHistoryController extends GetxController {
     final currentState = _activityExpansionStates[activityKey] ?? false;
     _activityExpansionStates[activityKey] = !currentState;
 
-    // Debug print to confirm the toggle is working
-    print('Toggling activity $activityKey: ${!currentState}');
-
     update(); // Trigger UI update for GetBuilder widgets
   }
 

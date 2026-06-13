@@ -34,10 +34,8 @@ class GetRewardDetailController extends GetxController {
       (data) {
         // final rewardDetailResponse = RewardDetailsModel.fromJson(data['data']);
         rewardDetail.value = RewardDetailsModel.fromJson(data['data']);
-        print(rewardDetail.value?.isAlreadySaved);
         // Update favorite state from API response
         isFavorite.value = rewardDetail.value?.isAlreadySaved ?? false;
-        print(isFavorite.value);
 
         if (rewardDetail.value?.claimDetails != null) {
           redeemptionCode.value =

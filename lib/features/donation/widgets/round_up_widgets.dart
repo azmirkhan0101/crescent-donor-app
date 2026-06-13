@@ -344,7 +344,7 @@ class RoundUpProgressChart extends StatelessWidget {
                     Text('📆 ', style: TextStyle(fontSize:isTab ? 8.sp :  12.rfs)),
                     Expanded(
                       child: Text(
-                        '$daysLeft days left to auto-donate ${orgName ?? ""}',
+                        '$daysLeft days left to auto-donate $orgName',
                         style: TextStyle(
                           fontFamily: DonationFonts.interDisplay,
                           fontSize: isTab ? 8.sp : 12.rfs,

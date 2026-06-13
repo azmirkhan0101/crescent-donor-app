@@ -21,7 +21,6 @@ class LoginFormFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isTab = context.isTab;
     final loginController = controller ?? Get.find<LoginController>();
 
     return Column(

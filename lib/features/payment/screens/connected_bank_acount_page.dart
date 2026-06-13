@@ -335,7 +335,6 @@ class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
                   if (!isLoading) {
                     //plaidCtrl.createLinkTokenConfiguration();
                   }
-                  print('Plaid connection selected');
                 },
                 onBasiqSelected: _connectBasiq,
                 isLoading: isLoading,

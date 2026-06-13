@@ -138,6 +138,7 @@ class DonationController extends GetxController {
       donationChartPoints.map((point) => point.label).toList();
 
   Future<void> fetchClientStats({required String roundupId}) async {
+    if( roundupId.isEmpty ) return;
     isLoadingClientStats.value = true;
     errorMessageClientStats.value = '';
 

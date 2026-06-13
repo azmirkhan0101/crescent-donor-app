@@ -171,10 +171,6 @@ class _DateTimeSelectionBottomSheetState
                   // Continue Button
                   ElevatedButton(
                     onPressed: () {
-                      print(
-                        '---- Continue pressed ----\n dataTime: ${donateNowController.recurringStartDateTime.value}, frequency: ${donateNowController.selectedFrequency.value}, interval: ${donateNowController.intervalValue.value}, unit: ${donateNowController.frequencyUnit.value}',
-                      );
-
                       // _saveRecurringSettings();
                       // Navigator.pop(context); // Close the bottom sheet
                       GoRouter.of(context).pop();

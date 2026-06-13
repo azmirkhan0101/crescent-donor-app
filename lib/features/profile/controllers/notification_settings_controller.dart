@@ -17,11 +17,6 @@ class NotificationSettingsController extends GetxController {
       rewardsAndPerksEnabled.value = false;
     }
 
-    print("Push Notification: $value");
-    print("Push Notification: ${pushNotificationsEnabled.value}");
-    print("Donation Notification: ${donationUpdateNNotificationEnabled.value}");
-    print("Rewards Notification: ${rewardsAndPerksEnabled.value}");
-
     await Duration(milliseconds: 100).delay();
 
     await updateNotificationSettings();
@@ -33,10 +28,6 @@ class NotificationSettingsController extends GetxController {
       pushNotificationsEnabled.value = true;
     }
 
-    print("Push Notification: ${pushNotificationsEnabled.value}");
-    print("Donation Notification: ${donationUpdateNNotificationEnabled.value}");
-    print("Rewards Notification: ${rewardsAndPerksEnabled.value}");
-
     await Duration(milliseconds: 100).delay();
 
     await updateNotificationSettings();
@@ -47,10 +38,6 @@ class NotificationSettingsController extends GetxController {
     if (value == true) {
       pushNotificationsEnabled.value = true;
     }
-
-    print("Push Notification: ${pushNotificationsEnabled.value}");
-    print("Donation Notification: ${donationUpdateNNotificationEnabled.value}");
-    print("Rewards Notification: ${rewardsAndPerksEnabled.value}");
 
     await Duration(milliseconds: 100).delay();
 

@@ -53,7 +53,6 @@ class _TabbedRedemptionBottomSheetState
   }
 
   void _copyCodeToClipboard() {
-    print('Copying code: ${widget.redemptionCode}');
     Clipboard.setData(ClipboardData(text: widget.redemptionCode));
     ToastMsg.success('Redemption code copied to clipboard');
   }
@@ -61,7 +60,6 @@ class _TabbedRedemptionBottomSheetState
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      String? redemptionCode = rewardDetailsController.redeemptionCode.value;
       return Container(
         decoration: const BoxDecoration(
           color: Colors.white,

@@ -13,7 +13,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/helper/extension/context_extension.dart';
+import '../../profile/controllers/get_profile_controller.dart';
 
 /// Donation Page
 ///
@@ -30,10 +30,12 @@ class _DonationPageState extends State<DonationPage> {
   final donationController = Get.find<DonationController>();
   final getBalanceController = Get.find<GetPointBalanceController>();
   final getBadgesProgressController = Get.find<GetBadgesProgressController>();
+  final getProfileController = Get.isRegistered<GetProfileController>()
+      ? Get.find<GetProfileController>() : Get.put(GetProfileController());
 
   Future<void> _refreshData() async {
     await Future.wait([
-      donationController.fetchClientStats(roundupId: donationController.roundUpIds.first),
+      donationController.fetchClientStats(roundupId: donationController.roundUpIds.isNotEmpty ? donationController.roundUpIds.first : ""),
       getBalanceController.fetchUserPoints(),
       getBadgesProgressController.fetchBadgesProgress(),
     ]);
@@ -41,8 +43,6 @@ class _DonationPageState extends State<DonationPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    bool isTab = context.isTab;
 
     return Scaffold(
       backgroundColor: DonationConstants.backgroundColor,
@@ -59,8 +59,10 @@ class _DonationPageState extends State<DonationPage> {
                     SizedBox(height: 8.rh),
                     Obx(() {
                       return DonationHeader(
+                        // profileImageUrl:
+                        //     getBalanceController.balance.value?.user?.image,
                         profileImageUrl:
-                            getBalanceController.balance.value?.user?.image,
+                        getProfileController.profile.value?.image ?? "",
                         pointsEarned:
                             getBalanceController.balance.value?.currentBalance
                                 .toString() ??
