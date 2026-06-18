@@ -86,11 +86,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
       leading: IconButton(
         onPressed: () => context.pop(),
         icon: Container(
-          padding: EdgeInsets.all(12.rw),
+          padding: EdgeInsets.all(5.rw),
           child: SvgPicture.asset(
             Assets.common.arrowLeft.path,
-            width: 20.rw,
-            height: 20.rh,
+            width: 30.rw,
+            height: 30.rh,
           ),
         ),
       ),

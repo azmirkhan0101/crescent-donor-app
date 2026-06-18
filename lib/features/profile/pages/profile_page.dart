@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/helper/extension/context_extension.dart';
+import '../controllers/delete_account_controller.dart';
 
 /// Menu item data model
 class MenuItemData {
@@ -31,11 +32,12 @@ class MenuItemData {
 /// This page displays user profile information, settings, and account management.
 /// Users can update their personal details and app preferences.
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final DeleteAccountController deleteAccountController = Get.put(
+    DeleteAccountController(),
+  );
 
   @override
   Widget build(BuildContext context) {
-
     bool isTab = context.isTab;
 
     return Scaffold(
@@ -67,6 +69,10 @@ class ProfilePage extends StatelessWidget {
                   // Logout Button
                   _buildLogoutButton(context, profile?.auth.id ?? ''),
 
+                  SizedBox(height: 16.rh),
+
+                  _buildDeleteAccountButton(context, "profileId"),
+
                   SizedBox(height: 80.rh),
                 ],
               );
@@ -78,7 +84,11 @@ class ProfilePage extends StatelessWidget {
   }
 
   /// Build profile header with avatar and user info
-  Widget _buildProfileHeader(BuildContext context, ProfileModel? profile, bool isTab) {
+  Widget _buildProfileHeader(
+    BuildContext context,
+    ProfileModel? profile,
+    bool isTab,
+  ) {
     return Column(
       children: [
         // Profile Avatar
@@ -86,7 +96,7 @@ class ProfilePage extends StatelessWidget {
           child: CustomNetworkImage(
             imageUrl: profile?.image ?? '',
             height: isTab ? 90 : 120.rw,
-            width: isTab ? 90 :  120.rw,
+            width: isTab ? 90 : 120.rw,
             borderRadius: BorderRadius.circular(60.rw),
           ),
         ),
@@ -117,10 +127,11 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 4.rh),
-                        Obx((){
+                        Obx(() {
                           return Text(
-                            !Get.find<GetProfileController>().isGuestUser.value ?
-                            profile?.auth.email ?? 'N/A' : "",
+                            !Get.find<GetProfileController>().isGuestUser.value
+                                ? profile?.auth.email ?? 'N/A'
+                                : "",
                             style: TextStyle(
                               fontFamily: DonationFonts.interDisplay,
                               fontSize: isTab ? 10.sp : 12.rfs,
@@ -128,7 +139,7 @@ class ProfilePage extends StatelessWidget {
                               color: Colors.grey,
                             ),
                           );
-                        })
+                        }),
                       ],
                     ),
                   ),
@@ -365,36 +376,185 @@ class ProfilePage extends StatelessWidget {
           bool isSuccess = await logOutController.logOut(profileId);
           if (isSuccess) {
             // 1. Grab the current values before the wipe
-            final email = await AppStorageService.readSecure('remembered_email') ?? "";
-            final pass = await AppStorageService.readSecure('remembered_password') ?? "";
-            final isRemembered = AppStorageService.readPreferenceBool('remember_password') ?? false;
+            final email =
+                await AppStorageService.readSecure('remembered_email') ?? "";
+            final pass =
+                await AppStorageService.readSecure('remembered_password') ?? "";
+            final isRemembered =
+                AppStorageService.readPreferenceBool('remember_password') ??
+                false;
             // 2. Wipe the storage
             await AppStorageService.clearAll();
 
             // 3. Restore the credentials if the user wanted them remembered
-            if( isRemembered ){
+            if (isRemembered) {
               await AppStorageService.writeSecure('remembered_email', email);
               await AppStorageService.writeSecure('remembered_password', pass);
-              await AppStorageService.writePreferenceBool('remember_password', true);
+              await AppStorageService.writePreferenceBool(
+                'remember_password',
+                true,
+              );
             }
             context.goNamed(RoutePath.login);
           }
         } else {
-          final email = await AppStorageService.readSecure('remembered_email') ?? "";
-          final pass = await AppStorageService.readSecure('remembered_password') ?? "";
-          final isRemembered = AppStorageService.readPreferenceBool('remember_password') ?? false;
+          final email =
+              await AppStorageService.readSecure('remembered_email') ?? "";
+          final pass =
+              await AppStorageService.readSecure('remembered_password') ?? "";
+          final isRemembered =
+              AppStorageService.readPreferenceBool('remember_password') ??
+              false;
           // 2. Wipe the storage
           await AppStorageService.clearAll();
 
           // 3. Restore the credentials if the user wanted them remembered
-          if( isRemembered ){
+          if (isRemembered) {
             await AppStorageService.writeSecure('remembered_email', email);
             await AppStorageService.writeSecure('remembered_password', pass);
-            await AppStorageService.writePreferenceBool('remember_password', true);
+            await AppStorageService.writePreferenceBool(
+              'remember_password',
+              true,
+            );
           }
           context.goNamed(RoutePath.login);
         }
       });
     });
+  }
+
+  Widget _buildDeleteAccountButton(BuildContext context, String profileId) {
+    final logOutController = Get.put(LogOutController());
+    return Obx(() {
+      return Container(
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 56.rw),
+        padding: EdgeInsets.symmetric(horizontal: 24.rw, vertical: 16.rh),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF0323C).withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12.rw),
+          border: Border.all(color: const Color(0xFFF0323C), width: 1),
+        ),
+        child: Center(
+          child: Text(
+            deleteAccountController.isDeleting.value
+                ? 'Deleting...'
+                : 'Delete Account',
+            style: TextStyle(
+              fontFamily: DonationFonts.familjenGrotesk,
+              fontSize: 18.rfs,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFF0323C),
+              letterSpacing: -0.36,
+            ),
+          ),
+        ),
+      ).onTap(() async {
+        showDeleteDialog(context);
+      });
+    });
+  }
+
+  //DELETE ALERT
+  void showDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.delete, color: Colors.red),
+              Text(
+                "Delete Account",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            "Are you sure you want to delete your account?",
+            style: TextStyle(fontSize: 15, color: Colors.black54),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
+          actionsPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 10,
+          ),
+          actions: [
+            Row(
+              children: [
+                // Cancel button
+                Expanded(
+                  child: Container(
+                    //height: 42,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEEEEEE),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(width: 12.w), // Spacing between buttons
+                // Delete button
+                Expanded(
+                  child: Container(
+                    //height: 42,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE53935),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TextButton(
+                      onPressed: () async {
+                        // 1. Capture the router and navigator states while context is still alive
+                        final router = GoRouter.of(context);
+                        final navigator = Navigator.of(context);
+
+                        // 2. Pop the dialog immediately
+                        navigator.pop();
+
+                        // 3. Do the async work
+                        bool isSuccess = await deleteAccountController
+                            .deleteAccount();
+
+                        if (isSuccess) {
+                          await AppStorageService.clearAll();
+                          // 4. Use the saved router instance instead of 'context'
+                          router.goNamed(RoutePath.login);
+                        } else {
+                          ToastMsg.error(
+                            "Failed to delete account, please try again.",
+                          );
+                        }
+                      },
+                      child: const Text(
+                        "Delete",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 }

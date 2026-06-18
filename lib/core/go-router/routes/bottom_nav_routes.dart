@@ -51,7 +51,7 @@ class BottomNavRoutes extends AppRouteConfig {
         GoRoute(
           name: RoutePath.profile,
           path: RoutePath.profile.addBasePath,
-          builder: (context, state) => const ProfilePage(),
+          builder: (context, state) => ProfilePage(),
           redirect: AuthGuard.authRequired.redirect,
         ),
       ],

@@ -179,4 +179,7 @@ class ApiUrl {
   /// ======= Receipt =======
   static String getReceipt(String receiptId) => '$baseUrl/receipt/$receiptId';
   static const String generateReceipt = '$baseUrl/api/receipts/generate';
+
+//DELETE ACCOUNT
+  static const deleteAccount = "/auth/delete-account";
 }
