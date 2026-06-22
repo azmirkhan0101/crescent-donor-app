@@ -24,9 +24,9 @@ class ConnectedBankAccountPage extends StatefulWidget {
 class _ConnectedBankAccountPageState extends State<ConnectedBankAccountPage> {
   final paymentMethodController = Get.put(PaymentMethodController());
   final connectedBankAccountsController = Get.find<GetRoundUpBankConnection>();
-  final PlaidController plaidCtrl = Get.isRegistered<PlaidController>()
-      ? Get.find<PlaidController>()
-      : Get.put(PlaidController());
+  // final PlaidController plaidCtrl = Get.isRegistered<PlaidController>()
+  //     ? Get.find<PlaidController>()
+  //     : Get.put(PlaidController());
   final basiqController = Get.find<ConnectBasiqController>();
 
   @override

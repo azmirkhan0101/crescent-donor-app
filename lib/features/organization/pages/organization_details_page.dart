@@ -28,6 +28,9 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    print("Iddddddddddddddd: ${widget.organizationId}");
+
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
       appBar: CustomAppBar(

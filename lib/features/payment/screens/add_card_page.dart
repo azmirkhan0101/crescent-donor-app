@@ -87,7 +87,6 @@ class _AddCardPageState extends State<AddCardPage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('is from signup:=========> ${widget.fromSignup}');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const CustomAppBar(

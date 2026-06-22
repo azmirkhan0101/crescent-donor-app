@@ -169,11 +169,6 @@ class PaymentMethodController extends GetxController {
         return false;
       }
 
-      if (kDebugMode) {
-        print('Setup Intent Created:');
-        print('  ID: ${setupIntentData.setupIntentId}');
-        print('  Client Secret: ${setupIntentData.clientSecret}');
-      }
 
       // Step 2: Confirm setup intent with Stripe using card field
       final result = await stripe.Stripe.instance.confirmSetupIntent(
@@ -183,12 +178,6 @@ class PaymentMethodController extends GetxController {
         ),
       );
 
-      if (kDebugMode) {
-        print('Stripe Confirmation Result:');
-        print('  Status: ${result.status}');
-        print('  ID: ${result.id}');
-        print('  Payment Method ID: ${result.paymentMethodId}');
-      }
 
       // Check if confirmation was successful
       // For setup intents, status is a String enum value
@@ -202,17 +191,9 @@ class PaymentMethodController extends GetxController {
       final paymentMethodId = result.paymentMethodId;
       if (paymentMethodId.isEmpty) {
         errorMessage.value = 'Payment method ID not found after confirmation';
-        if (kDebugMode) {
-          print('ERROR: Payment method ID is empty');
-        }
+
         isAddingCard.value = false;
         return false;
-      }
-
-      if (kDebugMode) {
-        print(
-          'Successfully confirmed setup intent with payment method: $paymentMethodId',
-        );
       }
 
       // Step 3: Add payment method to backend
