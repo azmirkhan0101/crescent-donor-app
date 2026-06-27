@@ -50,15 +50,13 @@ class FirebaseNotificationService {
       await _initializeLocalNotifications();
 
       // Get and log FCM token
-      final token = await getToken();
-      debugPrint('FCM Token: $token');
+      //final token = await getToken();
+      //debugPrint('FCM Token: $token');
 
       // Setup message handlers
       _setupMessageHandlers();
 
-      debugPrint('Firebase Notification Service initialized successfully');
-    } catch (e) {
-      debugPrint('Error initializing Firebase Notification Service: $e');
+    } catch (_) {
     }
   }
 
@@ -72,10 +70,6 @@ class FirebaseNotificationService {
       criticalAlert: false,
       provisional: false,
       sound: true,
-    );
-
-    debugPrint(
-      'Notification permission status: ${settings.authorizationStatus}',
     );
   }
 
@@ -115,10 +109,6 @@ class FirebaseNotificationService {
 
   /// Handle messages when app is in foreground
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    debugPrint('Foreground message received: ${message.messageId}');
-    debugPrint('Title: ${message.notification?.title}');
-    debugPrint('Body: ${message.notification?.body}');
-    debugPrint('Data: ${message.data}');
 
     // Show local notification when app is in foreground
     if (message.notification != null) {
@@ -128,7 +118,6 @@ class FirebaseNotificationService {
 
   /// Handle notification tap (when app is in background)
   void _handleNotificationTap(RemoteMessage message) {
-    debugPrint('Notification tapped: ${message.messageId}');
     _navigateBasedOnPayload(message.data);
   }
 
@@ -136,7 +125,6 @@ class FirebaseNotificationService {
   Future<void> _handleInitialMessage() async {
     final initialMessage = await _firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
-      debugPrint('App opened from notification: ${initialMessage.messageId}');
       _navigateBasedOnPayload(initialMessage.data);
     }
   }
@@ -146,7 +134,7 @@ class FirebaseNotificationService {
     const androidDetails = AndroidNotificationDetails(
       'default_channel', // Channel ID
       'Default Notifications', // Channel name
-      channelDescription: 'General notifications for Crescent Charge',
+      channelDescription: 'General notifications for Crescent Change',
       importance: Importance.high,
       priority: Priority.high,
       showWhen: true,
@@ -166,7 +154,7 @@ class FirebaseNotificationService {
 
     await _localNotifications.show(
       message.hashCode,
-      message.notification?.title ?? 'Crescent Charge',
+      message.notification?.title ?? 'Crescent Change',
       message.notification?.body ?? '',
       notificationDetails,
       payload: jsonEncode(message.data),
@@ -179,8 +167,7 @@ class FirebaseNotificationService {
       try {
         final data = jsonDecode(response.payload!) as Map<String, dynamic>;
         _navigateBasedOnPayload(data);
-      } catch (e) {
-        debugPrint('Error parsing notification payload: $e');
+      } catch (_) {
       }
     }
   }
@@ -190,8 +177,6 @@ class FirebaseNotificationService {
     // Extract navigation data
     final type = data['type'] as String?;
     final route = data['route'] as String?;
-
-    debugPrint('Notification payload - type: $type, route: $route');
 
     // Navigate based on notification type
     if (route != null && route.isNotEmpty) {
@@ -237,7 +222,6 @@ class FirebaseNotificationService {
       token = await _firebaseMessaging.getToken();
       return token;
     } catch (e) {
-      debugPrint('Error getting FCM token: $e');
       return null;
     }
   }
@@ -248,7 +232,6 @@ class FirebaseNotificationService {
   /// Call this to get notified when token changes
   void onTokenRefresh(Function(String) callback) {
     _firebaseMessaging.onTokenRefresh.listen((newToken) {
-      debugPrint('FCM Token refreshed: $newToken');
       callback(newToken);
     });
   }
@@ -259,9 +242,7 @@ class FirebaseNotificationService {
   Future<void> deleteToken() async {
     try {
       await _firebaseMessaging.deleteToken();
-      debugPrint('FCM token deleted');
-    } catch (e) {
-      debugPrint('Error deleting FCM token: $e');
+    } catch (_) {
     }
   }
 
@@ -272,9 +253,7 @@ class FirebaseNotificationService {
   Future<void> subscribeToTopic(String topic) async {
     try {
       await _firebaseMessaging.subscribeToTopic(topic);
-      debugPrint('Subscribed to topic: $topic');
-    } catch (e) {
-      debugPrint('Error subscribing to topic: $e');
+    } catch (_) {
     }
   }
 
@@ -282,9 +261,7 @@ class FirebaseNotificationService {
   Future<void> unsubscribeFromTopic(String topic) async {
     try {
       await _firebaseMessaging.unsubscribeFromTopic(topic);
-      debugPrint('Unsubscribed from topic: $topic');
-    } catch (e) {
-      debugPrint('Error unsubscribing from topic: $e');
+    } catch (_) {
     }
   }
 }
@@ -295,8 +272,4 @@ class FirebaseNotificationService {
 /// Handles notifications when app is terminated
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('Background message: ${message.messageId}');
-  debugPrint('Title: ${message.notification?.title}');
-  debugPrint('Body: ${message.notification?.body}');
-  debugPrint('Data: ${message.data}');
 }

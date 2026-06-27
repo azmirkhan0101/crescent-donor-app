@@ -156,6 +156,13 @@ class _OrganizationDetailsPageState extends State<OrganizationDetailsPage> {
               controller.organizationDetails.value?.isRoundup ?? false;
         }
 
+        //TODO: OPEN WEBSITE IF IOS
+        // if( currentOrgId == null ){
+        //   return;
+        // }
+        //
+        // controller.openWebPage(context, currentOrgId);
+
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,

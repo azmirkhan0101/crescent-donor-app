@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
         builder: (controller) {
           return GetMaterialApp.router(
             debugShowCheckedModeBanner: false,
-            title: 'Crescent Charge',
+            title: 'Crescent Change',
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: ThemeMode
