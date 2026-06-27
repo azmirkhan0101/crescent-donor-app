@@ -381,6 +381,8 @@ class LoginController extends GetxController {
         withAuth: false,
       );
 
+      result.printError();
+
       return result.fold(
         (error) {
           // Handle error
@@ -419,10 +421,10 @@ class LoginController extends GetxController {
             // Save credentials if remember password is enabled
             await _saveCredentialsIfRemembered();
             // Fetch profile after successful login
-            final profileCtrl = Get.isRegistered<GetProfileController>()
-                ? Get.find<GetProfileController>()
-                : Get.put(GetProfileController());
-            profileCtrl.fetchProfile();
+            // final profileCtrl = Get.isRegistered<GetProfileController>()
+            //     ? Get.find<GetProfileController>()
+            //     : Get.put(GetProfileController());
+            // profileCtrl.fetchProfile();
             return true;
           } else {
             errorMessage.value = response.message;

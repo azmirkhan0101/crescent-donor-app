@@ -120,7 +120,9 @@ class _LoginPageState extends State<LoginPage> {
               final success = await controller.login();
               if (!context.mounted) return;
               if (success) {
-                final getProfileController = Get.put(GetProfileController());
+                final getProfileController = Get.isRegistered<GetProfileController>()
+                    ? Get.find<GetProfileController>()
+                    : Get.put(GetProfileController());
                 await getProfileController.fetchProfile();
 
                 // Make sure context is still valid after the async gap

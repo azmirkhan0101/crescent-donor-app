@@ -91,6 +91,8 @@ class NetworkHelper extends GetxService {
           return Left(ErrorResponseModel(message: "Invalid HTTP method"));
       }
 
+      print("Response: ${response.body}");
+
       return _handleResponse<T>(method, url, response, parser);
     } on TimeoutException catch (e, st) {
       // _logger.d(

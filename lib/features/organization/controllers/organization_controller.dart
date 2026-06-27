@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:cresent_charge_user_app/core/helper/tost_message/toast_message.dart';
 import 'package:cresent_charge_user_app/features/common/models/meta_model.dart';
 import 'package:cresent_charge_user_app/features/home/models/organization_model.dart';
 import 'package:cresent_charge_user_app/features/organization/models/organization_details_model.dart';
 import 'package:cresent_charge_user_app/service/api_url.dart';
 import 'package:cresent_charge_user_app/service/network_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrganizationController extends GetxController {
   @override
@@ -169,5 +173,29 @@ class OrganizationController extends GetxController {
         update();
       },
     );
+  }
+
+  Future<void> openWebPage(BuildContext context, String organizationId) async {
+    // Define your base URL.
+    // Replace '3000' with your local server's port.
+    String baseUrl = 'http://localhost:3000';
+
+    if (Platform.isAndroid) {
+      // Android emulator needs 10.0.2.2 to access the host's localhost
+      baseUrl = 'http://10.0.2.2:3000';
+    }
+
+    // Construct the URL with the organization ID as a query parameter or path parameter
+    //final Uri url = Uri.parse('$baseUrl/organization/$organizationId');
+    final Uri url = Uri.parse('$baseUrl/$organizationId');
+
+    if (await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      // Browser opened successfully
+    } else {
+      // Handle error (e.g., show a snackbar)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch the website.'))
+      );
+    }
   }
 }
