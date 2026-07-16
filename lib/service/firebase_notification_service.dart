@@ -14,55 +14,36 @@ import 'package:get/get.dart';
 /// - Background notification handling
 /// - Notification permission requests
 /// - Local notification display
-///
-/// Usage:
-/// ```dart
-/// // Initialize in main.dart before runApp
-/// await FirebaseNotificationService.instance.initialize();
-///
-/// // Get FCM token (for sending to backend)
-/// String? token = await FirebaseNotificationService.instance.getToken();
-///
-/// // Listen to token refresh
-/// FirebaseNotificationService.instance.onTokenRefresh((newToken) {
-///   // Send updated token to backend
-/// });
-/// ```
 class FirebaseNotificationService {
   FirebaseNotificationService._();
   static final FirebaseNotificationService instance =
-      FirebaseNotificationService._();
+  FirebaseNotificationService._();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
 
   /// Initialize Firebase Messaging and Local Notifications
-  ///
-  /// Call this method in main.dart before runApp()
-  /// Requests notification permissions and sets up handlers
   Future<void> initialize() async {
     try {
-      // Request notification permissions (iOS)
+      // Request notification permissions
       await _requestPermission();
+
+      // Turn off native popups when app is open (Prevents duplicate popups in foreground)
+      await _configureForegroundPresentation();
 
       // Initialize local notifications
       await _initializeLocalNotifications();
 
-      // Get and log FCM token
-      //final token = await getToken();
-      //debugPrint('FCM Token: $token');
-
       // Setup message handlers
       _setupMessageHandlers();
-
     } catch (_) {
     }
   }
 
   /// Request notification permissions
   Future<void> _requestPermission() async {
-    final settings = await _firebaseMessaging.requestPermission(
+    await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -73,10 +54,21 @@ class FirebaseNotificationService {
     );
   }
 
+  /// Force Firebase to turn off native UI banners in foreground so local notifications take control cleanly
+  Future<void> _configureForegroundPresentation() async {
+    await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+      alert: false,
+      badge: true,
+      sound: true,
+    );
+  }
+
   /// Initialize Flutter Local Notifications
   Future<void> _initializeLocalNotifications() async {
+    // Standardize your modern monochrome notification asset name here
+    // (e.g., 'ic_stat_notification' instead of the full app launcher icon to prevent solid white squares)
     const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+      'ic_stat_notification',
     );
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -109,6 +101,9 @@ class FirebaseNotificationService {
 
   /// Handle messages when app is in foreground
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
+    if (kDebugMode) {
+      print("Foreground received");
+    }
 
     // Show local notification when app is in foreground
     if (message.notification != null) {
@@ -132,13 +127,13 @@ class FirebaseNotificationService {
   /// Show local notification
   Future<void> _showLocalNotification(RemoteMessage message) async {
     const androidDetails = AndroidNotificationDetails(
-      'default_channel', // Channel ID
-      'Default Notifications', // Channel name
+      'default_channel',
+      'Default Notifications',
       channelDescription: 'General notifications for Crescent Change',
       importance: Importance.high,
       priority: Priority.high,
       showWhen: true,
-      icon: '@mipmap/ic_launcher',
+      icon: 'ic_stat_notification', // Updated to use the correct drawable resource string
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -174,46 +169,22 @@ class FirebaseNotificationService {
 
   /// Navigate to appropriate screen based on notification data
   void _navigateBasedOnPayload(Map<String, dynamic> data) {
-    // Extract navigation data
-    final type = data['type'] as String?;
     final route = data['route'] as String?;
 
-    // Navigate based on notification type
     if (route != null && route.isNotEmpty) {
       Get.toNamed(route);
-    } else {
-      // Default navigation based on type
-      switch (type) {
-        case 'donation':
-          // Navigate to donation screen
-          // Get.toNamed('/donation');
-          break;
-        case 'reward':
-          // Navigate to rewards screen
-          // Get.toNamed('/rewards');
-          break;
-        case 'profile':
-          // Navigate to profile screen
-          // Get.toNamed('/profile');
-          break;
-        default:
-          debugPrint('Unknown notification type: $type');
-      }
     }
   }
 
   /// Get FCM token
-  ///
-  /// Returns the current FCM token for this device
-  /// Use this token to send notifications from your backend
   Future<String?> getToken() async {
     try {
       String? token;
-      if( Platform.isIOS ){
+      if (Platform.isIOS) {
         String? apnsToken;
-        for( int i = 0; i < 5; i++ ){
+        for (int i = 0; i < 5; i++) {
           apnsToken = await _firebaseMessaging.getAPNSToken();
-          if( apnsToken != null ){
+          if (apnsToken != null) {
             break;
           }
           await Future.delayed(const Duration(seconds: 2));
@@ -227,9 +198,6 @@ class FirebaseNotificationService {
   }
 
   /// Listen to token refresh events
-  ///
-  /// FCM tokens can be refreshed by Firebase
-  /// Call this to get notified when token changes
   void onTokenRefresh(Function(String) callback) {
     _firebaseMessaging.onTokenRefresh.listen((newToken) {
       callback(newToken);
@@ -237,8 +205,6 @@ class FirebaseNotificationService {
   }
 
   /// Delete FCM token
-  ///
-  /// Call this when user logs out to remove the token
   Future<void> deleteToken() async {
     try {
       await _firebaseMessaging.deleteToken();
@@ -247,9 +213,6 @@ class FirebaseNotificationService {
   }
 
   /// Subscribe to a topic
-  ///
-  /// Use this to subscribe users to specific notification topics
-  /// Example: subscribeToTopic('all_users')
   Future<void> subscribeToTopic(String topic) async {
     try {
       await _firebaseMessaging.subscribeToTopic(topic);
@@ -267,9 +230,7 @@ class FirebaseNotificationService {
 }
 
 /// Background message handler
-///
-/// This must be a top-level function (not inside a class)
-/// Handles notifications when app is terminated
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Silent execution handler. System native handler will draw background UI alerts automatically.
 }

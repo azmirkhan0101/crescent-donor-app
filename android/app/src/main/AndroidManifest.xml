@@ -19,6 +19,17 @@
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
+
+<!--         Set custom default icon for FCM status bar -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_notification" />
+
+        <!-- Optional: Set the accent background color behind the icon in the notification tray -->
+<!--        <meta-data-->
+<!--            android:name="com.google.firebase.messaging.default_notification_color"-->
+<!--            android:resource="@color/notification_color" />-->
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
